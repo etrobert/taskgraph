@@ -1,0 +1,16 @@
+@font-face {
+  font-family: "PermanentMarker";
+  src: url("fonts/PermanentMarker/PermanentMarker-Regular.ttf")
+    format("truetype");
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+#cy {
+  width: 100vw;
+  height: 100vh;
+  background-color: rgb(139, 108, 68);
+}
