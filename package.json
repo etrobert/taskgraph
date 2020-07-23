@@ -8,8 +8,6 @@
   },
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "cytoscape": "^3.15.2"
-  },
+  "dependencies": {},
   "devDependencies": {}
 }
