@@ -1,5 +1,11 @@
 "use strict";
 
+const container = document.body;
+
+function addTask(name) {
+  container.insertAdjacentHTML("beforeend", `<div class="task">${name}</div>`);
+}
+
 document.addEventListener("DOMContentLoaded", (event) => {
   const newTask = document.getElementById("newTask");
   document.onkeyup = (event) => {
@@ -10,16 +16,17 @@ document.addEventListener("DOMContentLoaded", (event) => {
   };
   newTask.onkeypress = (event) => {
     if (event.key == "Enter") {
-      console.log("New task: " + newTask.value);
+      addTask(newTask.value);
       newTask.style.display = "none";
       newTask.value = "";
     }
   };
 
   const task = document.getElementById("task");
-  const container = document.body;
-  task.onpointerdown = (event) => {
+  container.onpointerdown = (event) => {
     event.preventDefault();
+    const task = event.target;
+    if (!task.classList.contains("task")) return;
     container.setPointerCapture(event.pointerId);
     const offsetX = event.offsetX;
     const offsetY = event.offsetY;
