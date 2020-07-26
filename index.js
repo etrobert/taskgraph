@@ -15,4 +15,21 @@ document.addEventListener("DOMContentLoaded", (event) => {
       newTask.value = "";
     }
   };
+
+  const task = document.getElementById("task");
+  const container = document.body;
+  task.onpointerdown = (event) => {
+    event.preventDefault();
+    container.setPointerCapture(event.pointerId);
+    const offsetX = event.offsetX;
+    const offsetY = event.offsetY;
+    container.onpointermove = (event) => {
+      task.style.left = event.clientX - offsetX + "px";
+      task.style.top = event.clientY - offsetY + "px";
+    };
+    container.onpointerup = (event) => {
+      container.onpointermove = null;
+      container.onpointerup = null;
+    };
+  };
 });
