@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
     "path"
   );
 
-  const updateSuperPath = () => {
+  const updatePath = (path) => {
     const center = (element) => {
       const bb = element.getBoundingClientRect();
       return {
@@ -24,8 +24,8 @@ document.addEventListener("DOMContentLoaded", (event) => {
         y: parseFloat(bb.y) + parseFloat(bb.height) / 2,
       };
     };
-    const centerA = center(nodeA);
-    const centerB = center(nodeB);
+    const centerA = center(path.from);
+    const centerB = center(path.to);
     superPath.setAttributeNS(
       null,
       "d",
@@ -34,7 +34,10 @@ document.addEventListener("DOMContentLoaded", (event) => {
   };
 
   const arrows = document.getElementById("arrows");
-  updateSuperPath();
+  superPath.from = nodeA;
+  superPath.to = nodeB;
+
+  updatePath(superPath);
   arrows.appendChild(superPath);
   // TEMPORARY HARDCODED LINK CODE END
 
@@ -63,7 +66,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
     container.onpointermove = (event) => {
       task.style.left = event.clientX - offsetX + "px";
       task.style.top = event.clientY - offsetY + "px";
-      updateSuperPath();
+      updatePath(superPath);
     };
     container.onpointerup = (event) => {
       container.onpointermove = null;
