@@ -3,7 +3,12 @@
 const container = document.body;
 
 function addTask(name) {
-  container.insertAdjacentHTML("beforeend", `<div class="task">${name}</div>`);
+  const task = document.createElement("div");
+  task.classList.add("task");
+  task.textContent = name;
+  task.from = [];
+  task.to = [];
+  container.appendChild(task);
 }
 
 document.addEventListener("DOMContentLoaded", (event) => {
