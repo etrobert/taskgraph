@@ -12,7 +12,9 @@ function addTask(name) {
 }
 
 document.addEventListener("DOMContentLoaded", (event) => {
-  const updatePath = (path) => {
+  // updates the visual representation of path
+  // if dest if specified, use instead of path.to
+  const updatePath = (path, dest) => {
     const center = (element) => {
       const bb = element.getBoundingClientRect();
       return {
@@ -21,7 +23,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
       };
     };
     const centerA = center(path.from);
-    const centerB = center(path.to);
+    const centerB = dest ? dest : center(path.to);
     path.setAttributeNS(
       null,
       "d",
@@ -71,18 +73,48 @@ document.addEventListener("DOMContentLoaded", (event) => {
     event.preventDefault();
     const task = event.target;
     if (!task.classList.contains("task")) return;
-    container.setPointerCapture(event.pointerId);
-    const offsetX = event.offsetX;
-    const offsetY = event.offsetY;
-    container.onpointermove = (event) => {
-      task.style.left = event.clientX - offsetX + "px";
-      task.style.top = event.clientY - offsetY + "px";
-      for (let i = 0; i < task.from.length; i++) updatePath(task.from[i]);
-      for (let i = 0; i < task.to.length; i++) updatePath(task.to[i]);
-    };
-    container.onpointerup = (event) => {
-      container.onpointermove = null;
-      container.onpointerup = null;
-    };
+    if (event.shiftKey) {
+      // Initiate link creation
+      const path = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "path"
+      );
+      path.from = task;
+      arrows.appendChild(path);
+      container.onpointermove = (event) => {
+        updatePath(path, { x: event.clientX, y: event.clientY });
+      };
+      container.onpointerup = (event) => {
+        container.onpointermove = null;
+        container.onpointerup = null;
+        const targetTask = event.target;
+        // TODO Prevent a link to itself
+        // TODO Prevent a link to a dependency
+        // TODO Prevent a link to a target from which it's a dependency
+        if (!targetTask.classList.contains("task")) {
+          arrows.removeChild(path);
+          return;
+        }
+        path.to = targetTask;
+        task.from.push(path);
+        targetTask.to.push(path);
+        updatePath(path);
+      };
+    } else {
+      // Initiate Drag
+      container.setPointerCapture(event.pointerId);
+      const offsetX = event.offsetX;
+      const offsetY = event.offsetY;
+      container.onpointermove = (event) => {
+        task.style.left = event.clientX - offsetX + "px";
+        task.style.top = event.clientY - offsetY + "px";
+        for (let i = 0; i < task.from.length; i++) updatePath(task.from[i]);
+        for (let i = 0; i < task.to.length; i++) updatePath(task.to[i]);
+      };
+      container.onpointerup = (event) => {
+        container.onpointermove = null;
+        container.onpointerup = null;
+      };
+    }
   };
 });
