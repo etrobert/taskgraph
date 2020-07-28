@@ -7,15 +7,6 @@ function addTask(name) {
 }
 
 document.addEventListener("DOMContentLoaded", (event) => {
-  // TEMPORARY HARDCODED LINK CODE
-  const nodeA = document.getElementById("nodeA");
-  const nodeB = document.getElementById("nodeB");
-
-  const superPath = document.createElementNS(
-    "http://www.w3.org/2000/svg",
-    "path"
-  );
-
   const updatePath = (path) => {
     const center = (element) => {
       const bb = element.getBoundingClientRect();
@@ -26,18 +17,33 @@ document.addEventListener("DOMContentLoaded", (event) => {
     };
     const centerA = center(path.from);
     const centerB = center(path.to);
-    superPath.setAttributeNS(
+    path.setAttributeNS(
       null,
       "d",
       `M${centerA.x},${centerA.y} L${centerB.x},${centerB.y}`
     );
   };
 
+  // TEMPORARY HARDCODED LINK CODE
+  const nodeA = document.getElementById("nodeA");
+  nodeA.from = [];
+  nodeA.to = [];
+
+  const nodeB = document.getElementById("nodeB");
+  nodeB.from = [];
+  nodeB.to = [];
+
+  const superPath = document.createElementNS(
+    "http://www.w3.org/2000/svg",
+    "path"
+  );
+
   const arrows = document.getElementById("arrows");
   superPath.from = nodeA;
   superPath.to = nodeB;
 
-  updatePath(superPath);
+  nodeA.from.push(superPath);
+  nodeB.to.push(superPath);
   arrows.appendChild(superPath);
   // TEMPORARY HARDCODED LINK CODE END
 
@@ -66,7 +72,8 @@ document.addEventListener("DOMContentLoaded", (event) => {
     container.onpointermove = (event) => {
       task.style.left = event.clientX - offsetX + "px";
       task.style.top = event.clientY - offsetY + "px";
-      updatePath(superPath);
+      for (let i = 0; i < task.from.length; i++) updatePath(task.from[i]);
+      for (let i = 0; i < task.to.length; i++) updatePath(task.to[i]);
     };
     container.onpointerup = (event) => {
       container.onpointermove = null;
