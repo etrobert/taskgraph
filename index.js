@@ -11,6 +11,21 @@ function addTask(name) {
   container.appendChild(task);
 }
 
+function saveGraph() {
+  const isTask = (e) => e.classList.contains("task");
+  const tasksHtml= Array.from(container.children).filter(isTask);
+  const tasks = tasksHtml.map((e) => ({ name: e.textContent }));
+
+  const isDependency = (e) => e.tagName == "path";
+  const dependenciesHtml = Array.from(arrows.children).filter(isDependency);
+  const dependencies = dependenciesHtml.map((e) => ({
+    predecessor: e.from.textContent,
+    successor: e.to.textContent,
+  }));
+  const graph = {tasks, dependencies};
+  console.log(graph);
+}
+
 document.addEventListener("DOMContentLoaded", (event) => {
   // updates the visual representation of path
   // if dest if specified, use instead of path.to
