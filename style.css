@@ -15,6 +15,7 @@ body {
   position: absolute;
   font-family: "PermanentMarker";
   font-size: 2em;
+  line-height: 1em; /* ensure that the bounding box is not too high */
 }
 
 #arrows {
