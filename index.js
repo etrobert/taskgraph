@@ -13,16 +13,26 @@ function addTask(name) {
 
 function saveGraph() {
   const isTask = (e) => e.classList.contains("task");
-  const tasksHtml= Array.from(container.children).filter(isTask);
-  const tasks = tasksHtml.map((e) => ({ name: e.textContent }));
-
+  const tasksHtml = Array.from(container.children).filter(isTask);
+  const tasks = tasksHtml.map((e) => {
+    const bb = e.getBoundingClientRect();
+    return {
+      name: e.textContent,
+      pos: { x: bb.left, y: bb.top },
+    };
+  });
   const isDependency = (e) => e.tagName == "path";
   const dependenciesHtml = Array.from(arrows.children).filter(isDependency);
   const dependencies = dependenciesHtml.map((e) => ({
     predecessor: e.from.textContent,
     successor: e.to.textContent,
   }));
-  const graph = {tasks, dependencies};
+  const graph = { tasks, dependencies };
+  window.localStorage.setItem("graph", JSON.stringify(graph));
+}
+
+function loadGraph() {
+  const graph = JSON.parse(window.localStorage.getItem("graph"));
   console.log(graph);
 }
 
