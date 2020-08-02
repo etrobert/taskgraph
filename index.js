@@ -11,9 +11,26 @@ function addTask(name) {
   container.appendChild(task);
 }
 
-function saveGraph() {
+function getTasks() {
   const isTask = (e) => e.classList.contains("task");
-  const tasksHtml = Array.from(container.children).filter(isTask);
+  return Array.from(container.children).filter(isTask);
+}
+
+function getDependencies() {
+  const isDependency = (e) => e.tagName == "path";
+  return Array.from(arrows.children).filter(isDependency);
+}
+
+function clearGraph() {
+  const removeElement = (e) => e.parentNode.removeChild(e);
+  const tasks = getTasks();
+  tasks.forEach(removeElement);
+  const dependencies = getDependencies();
+  dependencies.forEach(removeElement);
+}
+
+function saveGraph() {
+  const tasksHtml = getTasks();
   const tasks = tasksHtml.map((e) => {
     const bb = e.getBoundingClientRect();
     return {
@@ -21,8 +38,7 @@ function saveGraph() {
       pos: { x: bb.left, y: bb.top },
     };
   });
-  const isDependency = (e) => e.tagName == "path";
-  const dependenciesHtml = Array.from(arrows.children).filter(isDependency);
+  const dependenciesHtml = getDependencies();
   const dependencies = dependenciesHtml.map((e) => ({
     predecessor: e.from.textContent,
     successor: e.to.textContent,
@@ -32,7 +48,11 @@ function saveGraph() {
 }
 
 function loadGraph() {
-  const graph = JSON.parse(window.localStorage.getItem("graph"));
+  const graphItem = window.localStorage.getItem("graph");
+  if (!graphItem) return;
+  clearGraph();
+  const graph = JSON.parse(graphItem);
+  graph.tasks.forEach((task) => addTask(task.name));
   console.log(graph);
 }
 
@@ -146,6 +166,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
       };
     }
   };
+  loadGraph();
 });
 
 function getBoxCenter(box) {
