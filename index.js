@@ -11,6 +11,41 @@ function addTask(name) {
   container.appendChild(task);
 }
 
+function addDependency(dependency) {
+  const dependencyHtml = document.createElementNS(
+    "http://www.w3.org/2000/svg",
+    "path"
+  );
+  const tasks = getTasks();
+  const predecessor = tasks.find(
+    (task) => task.textContent == dependency.predecessor
+  );
+  if (!predecessor) {
+    console.error(
+      "Could not add dependency: predecessor not found",
+      dependency
+    );
+    return;
+  }
+  const successor = tasks.find(
+    (task) => task.textContent == dependency.successor
+  );
+  if (!successor) {
+    console.error("Could not add dependency: successor not found.", dependency);
+    return;
+  }
+  dependencyHtml.from = predecessor;
+  dependencyHtml.to = successor;
+
+  predecessor.from.push(dependencyHtml);
+  successor.to.push(dependencyHtml);
+
+  const arrows = document.getElementById("arrows");
+  arrows.appendChild(dependencyHtml);
+
+  updatePath(dependencyHtml);
+}
+
 function getTasks() {
   const isTask = (e) => e.classList.contains("task");
   return Array.from(container.children).filter(isTask);
@@ -53,33 +88,33 @@ function loadGraph() {
   clearGraph();
   const graph = JSON.parse(graphItem);
   graph.tasks.forEach((task) => addTask(task.name));
-  console.log(graph);
+  graph.dependencies.forEach(addDependency);
 }
 
+// updates the visual representation of path
+// if dest if specified, use instead of path.to
+function updatePath(path, dest) {
+  const nodeABox = path.from.getBoundingClientRect();
+  const nodeBBox = dest ? null : path.to.getBoundingClientRect();
+
+  const centerA = getBoxCenter(nodeABox);
+  const centerB = dest ? dest : getBoxCenter(nodeBBox);
+
+  const pathPointA = intersectLineBox(centerA, centerB, getExpandedBox(nodeABox, 8));
+  const pathPointB = dest ? dest : intersectLineBox(centerA, centerB, getExpandedBox(nodeBBox, 8));
+
+  if (pathPointA && pathPointB) {
+    path.setAttributeNS(
+      null,
+      "d",
+      `M${pathPointA.x},${pathPointA.y} L${pathPointB.x},${pathPointB.y}`
+    );
+  } else {
+    path.setAttributeNS(null, "d", "");
+  }
+};
+
 document.addEventListener("DOMContentLoaded", (event) => {
-  // updates the visual representation of path
-  // if dest if specified, use instead of path.to
-  const updatePath = (path, dest) => {
-    const nodeABox = path.from.getBoundingClientRect();
-    const nodeBBox = dest ? null : path.to.getBoundingClientRect();
-
-    const centerA = getBoxCenter(nodeABox);
-    const centerB = dest ? dest : getBoxCenter(nodeBBox);
-
-    const pathPointA = intersectLineBox(centerA, centerB, getExpandedBox(nodeABox, 8));
-    const pathPointB = dest ? dest : intersectLineBox(centerA, centerB, getExpandedBox(nodeBBox, 8));
-
-    if (pathPointA && pathPointB) {
-      path.setAttributeNS(
-        null,
-        "d",
-        `M${pathPointA.x},${pathPointA.y} L${pathPointB.x},${pathPointB.y}`
-      );
-    } else {
-      path.setAttributeNS(null, "d", "");
-    }
-  };
-
   // TEMPORARY HARDCODED LINK CODE
   const nodeA = document.getElementById("nodeA");
   nodeA.from = [];
@@ -115,6 +150,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
       addTask(newTask.value);
       newTask.style.display = "none";
       newTask.value = "";
+      saveGraph();
     }
   };
 
@@ -148,6 +184,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
         task.from.push(path);
         targetTask.to.push(path);
         updatePath(path);
+        saveGraph();
       };
     } else {
       // Initiate Drag
