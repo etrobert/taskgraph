@@ -17,6 +17,7 @@ body {
   font-family: "PermanentMarker";
   font-size: 2em;
   line-height: 1em; /* ensure that the bounding box is not too high */
+  cursor: pointer;
 }
 
 #arrows {
@@ -50,4 +51,16 @@ body {
 
   font-family: "PermanentMarker";
   font-size: 1.5em;
+}
+
+#create-task-button {
+  position: absolute;
+  left: 5px;
+  top: 50px;
+}
+
+#link-mode-checkbox {
+  position: absolute;
+  left: 5px;
+  top: 85px;
 }

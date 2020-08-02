@@ -145,6 +145,10 @@ document.addEventListener("DOMContentLoaded", (event) => {
       newTask.focus();
     }
   };
+  document.getElementById("create-task-button").onclick = () => {
+    newTask.style.display = "block";
+    newTask.focus();
+  }
   newTask.onkeypress = (event) => {
     if (event.key == "Enter") {
       addTask(newTask.value);
@@ -154,11 +158,13 @@ document.addEventListener("DOMContentLoaded", (event) => {
     }
   };
 
-  container.onpointerdown = (event) => {
+  container.onpointerdown = event => {
     event.preventDefault();
     const task = event.target;
     if (!task.classList.contains("task")) return;
-    if (event.shiftKey) {
+    if (event.shiftKey || document.querySelector("#link-mode-checkbox input").checked) {
+      const pointerId = event.pointerId;
+      container.setPointerCapture(pointerId);
       // Initiate link creation
       const path = document.createElementNS(
         "http://www.w3.org/2000/svg",
@@ -166,41 +172,55 @@ document.addEventListener("DOMContentLoaded", (event) => {
       );
       path.from = task;
       arrows.appendChild(path);
-      container.onpointermove = (event) => {
+      function onPointerMove(event) {
+        if (event.pointerId !== pointerId) return;
         updatePath(path, { x: event.clientX, y: event.clientY });
       };
-      container.onpointerup = (event) => {
-        container.onpointermove = null;
-        container.onpointerup = null;
-        const targetTask = event.target;
+      function onPointerEnd(event) {
+        if (event.pointerId !== pointerId) return;
+        container.releasePointerCapture(pointerId);
+        container.removeEventListener("pointermove", onPointerMove);
+        container.removeEventListener("pointerup", onPointerEnd);
+        container.removeEventListener("pointercancel", onPointerEnd);
+        const target = document.elementFromPoint(event.pageX, event.pageY);
         // TODO Prevent a link to itself
         // TODO Prevent a link to a dependency
         // TODO Prevent a link to a target from which it's a dependency
-        if (!targetTask.classList.contains("task")) {
+        if (!target || !target.classList.contains("task")) {
           arrows.removeChild(path);
           return;
         }
-        path.to = targetTask;
+        path.to = target;
         task.from.push(path);
-        targetTask.to.push(path);
+        target.to.push(path);
         updatePath(path);
         saveGraph();
       };
+      container.addEventListener("pointermove", onPointerMove);
+      container.addEventListener("pointerup", onPointerEnd);
+      container.addEventListener("pointercancel", onPointerEnd);
     } else {
       // Initiate Drag
-      container.setPointerCapture(event.pointerId);
+      const pointerId = event.pointerId;
+      container.setPointerCapture(pointerId);
       const offsetX = event.offsetX;
       const offsetY = event.offsetY;
-      container.onpointermove = (event) => {
+      function onPointerMove(event) {
+        if (event.pointerId !== pointerId) return;
         task.style.left = event.clientX - offsetX + "px";
         task.style.top = event.clientY - offsetY + "px";
-        for (let i = 0; i < task.from.length; i++) updatePath(task.from[i]);
-        for (let i = 0; i < task.to.length; i++) updatePath(task.to[i]);
-      };
-      container.onpointerup = (event) => {
-        container.onpointermove = null;
-        container.onpointerup = null;
-      };
+        for (const path of [...task.from, ...task.to]) updatePath(path);
+      }
+      function onPointerEnd(event) {
+        if (event.pointerId !== pointerId) return;
+        container.removeEventListener("pointermove", onPointerMove);
+        container.removeEventListener("pointerup", onPointerEnd);
+        container.removeEventListener("pointercancel", onPointerEnd);
+        container.releasePointerCapture(pointerId);
+      }
+      container.addEventListener("pointermove", onPointerMove)
+      container.addEventListener("pointerup", onPointerEnd);
+      container.addEventListener("pointercancel", onPointerEnd);
     }
   };
   loadGraph();
