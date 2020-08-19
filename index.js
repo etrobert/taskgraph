@@ -9,6 +9,7 @@ function addTask(name) {
   task.from = [];
   task.to = [];
   container.appendChild(task);
+  return task;
 }
 
 function addDependency(dependency) {
@@ -87,7 +88,11 @@ function loadGraph() {
   if (!graphItem) return;
   clearGraph();
   const graph = JSON.parse(graphItem);
-  graph.tasks.forEach((task) => addTask(task.name));
+  graph.tasks.forEach((task) => {
+    const htmlTask = addTask(task.name);
+    htmlTask.style.left = task.pos.x + "px";
+    htmlTask.style.top = task.pos.y + "px";
+  });
   graph.dependencies.forEach(addDependency);
 }
 

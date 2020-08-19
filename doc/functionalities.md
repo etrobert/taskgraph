@@ -10,7 +10,7 @@
 ## Saving
 
 - **DONE** Save/Load to/from localstorage
-- **PRIORITY** Load task positions
+- **DONE** Load task positions
 - **PRIORITY** Save/Load to file
 
 ## Task Completion
