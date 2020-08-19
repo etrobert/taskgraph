@@ -2,12 +2,13 @@
 
 ## Currently
 
-| Functionnality      | Keyboard + Mouse  | Touch Screen     | Keyboard only |
-| -----------------   | ----------------- | ---------------- | ------------- |
-| Create Task         | Press i           |                  | Press i       |
-| Create Dependency   | Hold Shift + Drag |                  |               |
-| Move Task           | Drag              | Drag
-| Select Task         | Click Task        | Click Task
+| Functionnality        | Keyboard + Mouse  | Touch Screen     | Keyboard only  |
+| -----------------     | ----------------- | ---------------- | -------------  |
+| Create Task           | Press i           |                  | Press i        |
+| Create Dependency     | Hold Shift + Drag |                  |                |
+| Move Task             | Drag              | Drag
+| Select Task           | Click Task        | Click Task
+| Delete Selected Tasks | Press d or Del    |                  | Press d or Del |
 
 ## Ideally
 

@@ -2,6 +2,10 @@
 
 const container = document.body;
 
+function removeFromArray(array, element) {
+  array.splice(array.indexOf(element), 1);
+}
+
 function addTask(name) {
   const task = document.createElement("div");
   task.classList.add("task");
@@ -66,6 +70,19 @@ function addDependency(dependency) {
 function getTasks() {
   const isTask = (e) => e.classList.contains("task");
   return Array.from(container.children).filter(isTask);
+}
+
+function deleteDependency(dependency) {
+  removeFromArray(dependency.from.from, dependency);
+  removeFromArray(dependency.to.to, dependency);
+  const arrows = document.getElementById("arrows");
+  arrows.removeChild(dependency);
+}
+
+function deleteTask(task) {
+  task.from.forEach(deleteDependency);
+  task.to.forEach(deleteDependency);
+  container.removeChild(task);
 }
 
 function getDependencies() {
@@ -141,6 +158,10 @@ document.addEventListener("DOMContentLoaded", (event) => {
     if (event.key == "i") {
       newTask.style.display = "block";
       newTask.focus();
+    } else if (event.key == "d" || event.key == "Delete") {
+      const selected = getSelected();
+      selected.forEach(deleteTask)
+      saveGraph();
     }
   };
   document.getElementById("create-task-button").onclick = () => {
