@@ -8,8 +8,24 @@ function addTask(name) {
   task.textContent = name;
   task.from = [];
   task.to = [];
+  task.onclick = event => {
+    if (!event.shiftKey)
+      resetSelected();
+    task.classList.add("selected");
+    event.stopPropagation(); // Prevents the click on container to resetSelected
+  };
   container.appendChild(task);
   return task;
+}
+
+function getSelected() {
+  const isSelected = (e) => e.classList.contains("selected");
+  return getTasks().filter(isSelected);
+}
+
+function resetSelected() {
+  const selectedTasks = getSelected();
+  selectedTasks.forEach(task => task.classList.remove("selected"));
 }
 
 function addDependency(dependency) {
@@ -139,6 +155,8 @@ document.addEventListener("DOMContentLoaded", (event) => {
       saveGraph();
     }
   };
+
+  container.onclick = resetSelected;
 
   container.onpointerdown = event => {
     event.preventDefault();

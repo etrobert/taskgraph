@@ -4,6 +4,7 @@
 
 - **DONE** Add Task
 - **DONE** Add Dependency
+- **DONE** Select Task
 - **PRIORITY** Delete Task
 - **PRIORITY** Delete Dependency
 

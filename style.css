@@ -20,6 +20,10 @@ body {
   cursor: pointer;
 }
 
+.selected {
+  background-color: aquamarine;
+}
+
 #arrows {
   position: absolute;
   left: 0;
