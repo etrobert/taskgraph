@@ -120,29 +120,6 @@ function updatePath(path, dest) {
 };
 
 document.addEventListener("DOMContentLoaded", (event) => {
-  // TEMPORARY HARDCODED LINK CODE
-  const nodeA = document.getElementById("nodeA");
-  nodeA.from = [];
-  nodeA.to = [];
-
-  const nodeB = document.getElementById("nodeB");
-  nodeB.from = [];
-  nodeB.to = [];
-
-  const superPath = document.createElementNS(
-    "http://www.w3.org/2000/svg",
-    "path"
-  );
-
-  const arrows = document.getElementById("arrows");
-  superPath.from = nodeA;
-  superPath.to = nodeB;
-
-  nodeA.from.push(superPath);
-  nodeB.to.push(superPath);
-  arrows.appendChild(superPath);
-  // TEMPORARY HARDCODED LINK CODE END
-
   const newTask = document.getElementById("newTask");
   document.onkeyup = (event) => {
     if (event.key == "i") {
