@@ -6,6 +6,19 @@ function removeFromArray(array, element) {
   array.splice(array.indexOf(element), 1);
 }
 
+function downloadFile(filename, text, type='data:text/plain;charset=utf-8') {
+  var element = document.createElement('a');
+  element.setAttribute('href',  `${type}, ${encodeURIComponent(text)}`);
+  element.setAttribute('download', filename);
+
+  element.style.display = 'none';
+  document.body.appendChild(element);
+
+  element.click();
+
+  document.body.removeChild(element);
+}
+
 function addTask(name) {
   const task = document.createElement("div");
   task.classList.add("task");
@@ -120,6 +133,15 @@ function saveToLocalStorage() {
   window.localStorage.setItem("graph", JSON.stringify(graph));
 }
 
+function saveToFile() {
+  const graph = getGraph();
+  downloadFile(
+    "graph.json",
+    JSON.stringify(graph),
+    "data:text/json;charset=utf-8"
+  );
+}
+
 function loadGraph() {
   const graphItem = window.localStorage.getItem("graph");
   if (!graphItem) return;
@@ -166,6 +188,8 @@ document.addEventListener("DOMContentLoaded", (event) => {
       const selected = getSelected();
       selected.forEach(deleteTask)
       saveToLocalStorage();
+    } else if (event.key == "s") {
+      saveToFile();
     }
   };
   document.getElementById("create-task-button").onclick = () => {
