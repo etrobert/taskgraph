@@ -1,13 +1,13 @@
 @font-face {
   font-family: "PermanentMarker";
-  src: url("fonts/PermanentMarker/PermanentMarker-Regular.ttf")
+  src: url("resources/fonts/PermanentMarker/PermanentMarker-Regular.ttf")
     format("truetype");
 }
 
 body {
   margin: 0;
   padding: 0;
-  background-color: rgb(139, 108, 68);
+  background: url("resources/Brown-Paper.jpg");
   touch-action: none;
 }
 
