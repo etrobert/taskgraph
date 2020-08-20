@@ -7,6 +7,16 @@
     <link rel="stylesheet" type="text/css" href="style.css" />
   </head>
   <body>
+    <div id="toolbar">
+      <input id="fileInput" type="file" accept="text/json" />
+      <label id="link-mode-checkbox">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-link"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+        <input type="checkbox">
+      </label>
+      <a id="create-task-button">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="main-button feather feather-plus-square"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
+      </a>
+    </div>
     <svg id="arrows">
       <defs>
         <marker id="Triangle" viewBox="0 0 5 5" refX="3.8" refY="2.5" markerWidth="2" markerHeight="2" orient="auto">
@@ -15,11 +25,5 @@
       </defs>
     </svg>
     <input id="newTask" type="text"></input>
-    <button id="create-task-button">Create task</button>
-    <label id="link-mode-checkbox">
-      Link mode
-      <input type="checkbox">
-    </label>
-    <input id="fileInput" type="file" accept="text/json" />
   </body>
 </html>
