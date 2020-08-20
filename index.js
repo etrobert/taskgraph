@@ -93,8 +93,10 @@ function deleteDependency(dependency) {
 }
 
 function deleteTask(task) {
-  task.from.forEach(deleteDependency);
-  task.to.forEach(deleteDependency);
+  const from = task.from.slice();
+  from.forEach(deleteDependency);
+  const to = task.to.slice();
+  to.forEach(deleteDependency);
   container.removeChild(task);
 }
 
