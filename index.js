@@ -228,11 +228,11 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
   container.onpointerdown = event => {
     event.preventDefault();
+    let moved = false;
     const task = event.target;
     if (!task.classList.contains("task")) return;
     if (event.shiftKey || document.querySelector("#link-mode-checkbox input").checked) {
       const pointerId = event.pointerId;
-      container.setPointerCapture(pointerId);
       // Initiate link creation
       const path = document.createElementNS(
         "http://www.w3.org/2000/svg",
@@ -242,11 +242,15 @@ document.addEventListener("DOMContentLoaded", (event) => {
       arrows.appendChild(path);
       function onPointerMove(event) {
         if (event.pointerId !== pointerId) return;
+        if (!moved) {
+          container.setPointerCapture(pointerId);
+          moved = true;
+        }
         updatePath(path, { x: event.clientX, y: event.clientY });
       };
       function onPointerEnd(event) {
         if (event.pointerId !== pointerId) return;
-        container.releasePointerCapture(pointerId);
+        if (moved) container.releasePointerCapture(pointerId);
         container.removeEventListener("pointermove", onPointerMove);
         container.removeEventListener("pointerup", onPointerEnd);
         container.removeEventListener("pointercancel", onPointerEnd);
@@ -270,11 +274,14 @@ document.addEventListener("DOMContentLoaded", (event) => {
     } else {
       // Initiate Drag
       const pointerId = event.pointerId;
-      container.setPointerCapture(pointerId);
       const offsetX = event.offsetX;
       const offsetY = event.offsetY;
       function onPointerMove(event) {
         if (event.pointerId !== pointerId) return;
+        if (!moved) {
+          container.setPointerCapture(pointerId);
+          moved = true;
+        }
         task.style.left = event.clientX - offsetX + "px";
         task.style.top = event.clientY - offsetY + "px";
         for (const path of [...task.from, ...task.to]) updatePath(path);
@@ -284,7 +291,8 @@ document.addEventListener("DOMContentLoaded", (event) => {
         container.removeEventListener("pointermove", onPointerMove);
         container.removeEventListener("pointerup", onPointerEnd);
         container.removeEventListener("pointercancel", onPointerEnd);
-        container.releasePointerCapture(pointerId);
+        if (moved)
+          container.releasePointerCapture(pointerId);
       }
       container.addEventListener("pointermove", onPointerMove)
       container.addEventListener("pointerup", onPointerEnd);
