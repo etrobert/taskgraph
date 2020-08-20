@@ -142,17 +142,21 @@ function saveToFile() {
   );
 }
 
-function loadGraph() {
-  const graphItem = window.localStorage.getItem("graph");
-  if (!graphItem) return;
+function loadGraph(graph) {
   clearGraph();
-  const graph = JSON.parse(graphItem);
   graph.tasks.forEach((task) => {
     const htmlTask = addTask(task.name);
     htmlTask.style.left = task.pos.x + "px";
     htmlTask.style.top = task.pos.y + "px";
   });
   graph.dependencies.forEach(addDependency);
+}
+
+function loadFromLocalStorage() {
+  const graphItem = window.localStorage.getItem("graph");
+  if (!graphItem) return;
+  const graph = JSON.parse(graphItem);
+  loadGraph(graph);
 }
 
 // updates the visual representation of path
@@ -272,7 +276,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
       container.addEventListener("pointercancel", onPointerEnd);
     }
   };
-  loadGraph();
+  loadFromLocalStorage();
 });
 
 function getBoxCenter(box) {
