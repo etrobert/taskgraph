@@ -139,7 +139,7 @@ function saveToFile() {
   const graph = getGraph();
   downloadFile(
     "graph.json",
-    JSON.stringify(graph),
+    JSON.stringify(graph, null, 2),
     "data:text/json;charset=utf-8"
   );
 }
