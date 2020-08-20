@@ -98,7 +98,7 @@ function clearGraph() {
   dependencies.forEach(removeElement);
 }
 
-function saveGraph() {
+function getGraph() {
   const tasksHtml = getTasks();
   const tasks = tasksHtml.map((e) => {
     const bb = e.getBoundingClientRect();
@@ -112,7 +112,11 @@ function saveGraph() {
     predecessor: e.from.textContent,
     successor: e.to.textContent,
   }));
-  const graph = { tasks, dependencies };
+  return { tasks, dependencies };
+}
+
+function saveToLocalStorage() {
+  const graph = getGraph();
   window.localStorage.setItem("graph", JSON.stringify(graph));
 }
 
@@ -161,7 +165,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
     } else if (event.key == "d" || event.key == "Delete") {
       const selected = getSelected();
       selected.forEach(deleteTask)
-      saveGraph();
+      saveToLocalStorage();
     }
   };
   document.getElementById("create-task-button").onclick = () => {
@@ -173,7 +177,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
       addTask(newTask.value);
       newTask.style.display = "none";
       newTask.value = "";
-      saveGraph();
+      saveToLocalStorage();
     }
   };
 
@@ -215,7 +219,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
         task.from.push(path);
         target.to.push(path);
         updatePath(path);
-        saveGraph();
+        saveToLocalStorage();
       };
       container.addEventListener("pointermove", onPointerMove);
       container.addEventListener("pointerup", onPointerEnd);
