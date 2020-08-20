@@ -209,6 +209,19 @@ document.addEventListener("DOMContentLoaded", (event) => {
     }
   };
 
+  const fileInput = document.getElementById("fileInput");
+  fileInput.onchange = () => {
+    const files = fileInput.files;
+    if (files.length == 0)
+      return;
+    const file = files[0];
+    if (file.type != "application/json")
+      return;
+    const reader  = new FileReader();
+    reader.addEventListener("load", () => loadGraph(JSON.parse(reader.result)));
+    reader.readAsText(file);
+  }
+
   container.onclick = resetSelected;
 
   container.onpointerdown = event => {

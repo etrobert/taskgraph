@@ -68,3 +68,9 @@ body {
   left: 5px;
   top: 85px;
 }
+
+#fileInput {
+  position: absolute;
+  left: 5px;
+  top: 150px;
+}
