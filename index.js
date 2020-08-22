@@ -25,14 +25,13 @@ function addTask(name) {
   task.textContent = name;
   task.from = [];
   task.to = [];
-  task.onclick = event => {
-    if (!event.shiftKey)
-      resetSelected();
-    task.classList.add("selected");
-    event.stopPropagation(); // Prevents the click on container to resetSelected
-  };
   container.appendChild(task);
   return task;
+}
+
+function onTaskClicked(task, event) {
+  if (!event.shiftKey) resetSelected();
+  task.classList.add("selected");
 }
 
 function getSelected() {
@@ -238,15 +237,17 @@ document.addEventListener("DOMContentLoaded", (event) => {
     reader.readAsText(file);
   }
 
-  container.onclick = resetSelected;
-
   container.onpointerdown = event => {
     event.preventDefault();
     let moved = false;
     const task = event.target;
-    if (!task.classList.contains("task")) return;
+    if (!task.classList.contains("task")) {
+      resetSelected();
+      return;
+    }
+    const pointerId = event.pointerId;
+    container.setPointerCapture(pointerId);
     if (event.shiftKey || document.querySelector("#linkModeCheckbox input").checked) {
-      const pointerId = event.pointerId;
       // Initiate link creation
       const path = document.createElementNS(
         "http://www.w3.org/2000/svg",
@@ -256,15 +257,13 @@ document.addEventListener("DOMContentLoaded", (event) => {
       arrows.appendChild(path);
       function onPointerMove(event) {
         if (event.pointerId !== pointerId) return;
-        if (!moved) {
-          container.setPointerCapture(pointerId);
-          moved = true;
-        }
+        moved = true;
         updatePath(path, { x: event.clientX, y: event.clientY });
       };
       function onPointerEnd(event) {
         if (event.pointerId !== pointerId) return;
-        if (moved) container.releasePointerCapture(pointerId);
+        if (!moved)
+          onTaskClicked(task, event);
         container.removeEventListener("pointermove", onPointerMove);
         container.removeEventListener("pointerup", onPointerEnd);
         container.removeEventListener("pointercancel", onPointerEnd);
@@ -287,15 +286,11 @@ document.addEventListener("DOMContentLoaded", (event) => {
       container.addEventListener("pointercancel", onPointerEnd);
     } else {
       // Initiate Drag
-      const pointerId = event.pointerId;
       const offsetX = event.offsetX;
       const offsetY = event.offsetY;
       function onPointerMove(event) {
         if (event.pointerId !== pointerId) return;
-        if (!moved) {
-          container.setPointerCapture(pointerId);
-          moved = true;
-        }
+        moved = true;
         task.style.left = event.clientX - offsetX + "px";
         task.style.top = event.clientY - offsetY + "px";
         for (const path of [...task.from, ...task.to]) updatePath(path);
@@ -305,10 +300,10 @@ document.addEventListener("DOMContentLoaded", (event) => {
         container.removeEventListener("pointermove", onPointerMove);
         container.removeEventListener("pointerup", onPointerEnd);
         container.removeEventListener("pointercancel", onPointerEnd);
-        if (moved) {
-          container.releasePointerCapture(pointerId);
+        if (moved)
           saveToLocalStorage();
-        }
+        else
+          onTaskClicked(task, event);
       }
       container.addEventListener("pointermove", onPointerMove)
       container.addEventListener("pointerup", onPointerEnd);
