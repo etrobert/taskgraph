@@ -211,6 +211,8 @@ document.addEventListener("DOMContentLoaded", (event) => {
     saveToLocalStorage();
   });
 
+  document.getElementById("saveButton").addEventListener("click", saveToFile);
+
   newTask.onkeypress = (event) => {
     if (event.key == "Enter") {
       addTask(newTask.value);

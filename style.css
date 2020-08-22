@@ -68,8 +68,8 @@ body {
 }
 
 #toolbar button {
-  width: 6em;
-  height: 6em;
+  width: 4em;
+  height: 4em;
   background-position: center;
   background-size: contain;
   background-repeat: no-repeat;
@@ -92,4 +92,8 @@ button {
 
 #createTaskButton {
   background-image: url('resources/feather/plus-circle.svg');
+}
+
+#saveButton {
+  background-image: url('resources/feather/save.svg');
 }

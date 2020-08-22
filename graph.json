@@ -50,20 +50,6 @@
       }
     },
     {
-      "name": "add save button",
-      "pos": {
-        "x": 1378,
-        "y": 728
-      }
-    },
-    {
-      "name": "Touch support",
-      "pos": {
-        "x": 1406,
-        "y": 624
-      }
-    },
-    {
       "name": "Chrom compatibility",
       "pos": {
         "x": 763,
@@ -121,10 +107,6 @@
     }
   ],
   "dependencies": [
-    {
-      "predecessor": "add save button",
-      "successor": "Touch support"
-    },
     {
       "predecessor": "test chrome compatibility",
       "successor": "Chrom compatibility"
