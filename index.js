@@ -161,6 +161,11 @@ function loadFromLocalStorage() {
   loadGraph(graph);
 }
 
+function deleteSelected() {
+  const selected = getSelected();
+  selected.forEach(deleteTask)
+}
+
 // updates the visual representation of path
 // if dest if specified, use instead of path.to
 function updatePath(path, dest) {
@@ -191,8 +196,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
       newTask.style.display = "block";
       newTask.focus();
     } else if (event.key == "d" || event.key == "Delete") {
-      const selected = getSelected();
-      selected.forEach(deleteTask)
+      deleteSelected();
       saveToLocalStorage();
     } else if (event.key == "s") {
       saveToFile();
@@ -202,6 +206,11 @@ document.addEventListener("DOMContentLoaded", (event) => {
     newTask.style.display = "block";
     newTask.focus();
   }
+  document.getElementById("deleteTaskButton").addEventListener("click", () => {
+    deleteSelected();
+    saveToLocalStorage();
+  });
+
   newTask.onkeypress = (event) => {
     if (event.key == "Enter") {
       addTask(newTask.value);

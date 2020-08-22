@@ -58,11 +58,13 @@ body {
 }
 
 #toolbar {
-  padding: 0.2em;
+  padding: 2em;
   position: fixed;
   bottom: 0;
   right: 0;
   z-index: 1;
+  display: flex;
+  align-items: center;
 }
 
 #toolbar svg {
@@ -72,9 +74,4 @@ body {
 .feather {
   width: 6em;
   height: 6em;
-}
-
-.main-button {
-  width: 9em;
-  height: 9em;
 }
