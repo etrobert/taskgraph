@@ -202,7 +202,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
       saveToFile();
     }
   };
-  document.getElementById("create-task-button").onclick = () => {
+  document.getElementById("createTaskButton").onclick = () => {
     newTask.style.display = "block";
     newTask.focus();
   }
@@ -240,7 +240,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
     let moved = false;
     const task = event.target;
     if (!task.classList.contains("task")) return;
-    if (event.shiftKey || document.querySelector("#link-mode-checkbox input").checked) {
+    if (event.shiftKey || document.querySelector("#linkModeCheckbox input").checked) {
       const pointerId = event.pointerId;
       // Initiate link creation
       const path = document.createElementNS(

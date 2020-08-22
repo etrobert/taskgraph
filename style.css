@@ -67,11 +67,29 @@ body {
   align-items: center;
 }
 
-#toolbar svg {
+#toolbar button {
+  width: 6em;
+  height: 6em;
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-color: transparent;
+  border: none;
+}
+
+button {
   cursor: pointer;
 }
 
-.feather {
+#link-mode-checkbox svg {
   width: 6em;
   height: 6em;
+}
+
+#deleteTaskButton {
+  background-image: url('resources/feather/trash-2.svg');
+}
+
+#createTaskButton {
+  background-image: url('resources/feather/plus-circle.svg');
 }
