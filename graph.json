@@ -17,8 +17,8 @@
     {
       "name": "fix save prompt when adding task",
       "pos": {
-        "x": 6,
-        "y": 359
+        "x": 219,
+        "y": 422
       }
     },
     {
@@ -26,13 +26,6 @@
       "pos": {
         "x": 272,
         "y": 587
-      }
-    },
-    {
-      "name": "make proper menu bar",
-      "pos": {
-        "x": 1275,
-        "y": 344
       }
     },
     {
@@ -45,8 +38,8 @@
     {
       "name": "dont select when dragging",
       "pos": {
-        "x": 140,
-        "y": 487
+        "x": 248,
+        "y": 512
       }
     },
     {
@@ -57,24 +50,17 @@
       }
     },
     {
-      "name": "Add delete button",
-      "pos": {
-        "x": 1584,
-        "y": 740
-      }
-    },
-    {
       "name": "add save button",
       "pos": {
-        "x": 1205,
-        "y": 742
+        "x": 1378,
+        "y": 728
       }
     },
     {
       "name": "Touch support",
       "pos": {
-        "x": 1402,
-        "y": 612
+        "x": 1406,
+        "y": 624
       }
     },
     {
@@ -101,22 +87,42 @@
     {
       "name": "Improve selected background",
       "pos": {
-        "x": 1373,
-        "y": 414
+        "x": 1435,
+        "y": 421
+      }
+    },
+    {
+      "name": "Add icon",
+      "pos": {
+        "x": 1251,
+        "y": 429
+      }
+    },
+    {
+      "name": "save with a backend",
+      "pos": {
+        "x": 454,
+        "y": 745
+      }
+    },
+    {
+      "name": "",
+      "pos": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "name": "use escape to exit input",
+      "pos": {
+        "x": 512,
+        "y": 804
       }
     }
   ],
   "dependencies": [
     {
-      "predecessor": "make proper menu bar",
-      "successor": "Improve Appearance"
-    },
-    {
       "predecessor": "add save button",
-      "successor": "Touch support"
-    },
-    {
-      "predecessor": "Add delete button",
       "successor": "Touch support"
     },
     {
@@ -133,6 +139,10 @@
     },
     {
       "predecessor": "Improve selected background",
+      "successor": "Improve Appearance"
+    },
+    {
+      "predecessor": "Add icon",
       "successor": "Improve Appearance"
     }
   ]
