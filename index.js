@@ -231,7 +231,10 @@ document.addEventListener("DOMContentLoaded", (event) => {
     if (file.type != "application/json")
       return;
     const reader  = new FileReader();
-    reader.addEventListener("load", () => loadGraph(JSON.parse(reader.result)));
+    reader.addEventListener("load", () => {
+      loadGraph(JSON.parse(reader.result));
+      saveToLocalStorage();
+    });
     reader.readAsText(file);
   }
 
