@@ -22,13 +22,6 @@
       }
     },
     {
-      "name": "save when dragging task",
-      "pos": {
-        "x": 272,
-        "y": 587
-      }
-    },
-    {
       "name": "Improve Appearance",
       "pos": {
         "x": 1317,
@@ -38,8 +31,8 @@
     {
       "name": "dont select when dragging",
       "pos": {
-        "x": 248,
-        "y": 512
+        "x": 342,
+        "y": 522
       }
     },
     {
@@ -73,8 +66,8 @@
     {
       "name": "Improve selected background",
       "pos": {
-        "x": 1435,
-        "y": 421
+        "x": 1357,
+        "y": 538
       }
     },
     {

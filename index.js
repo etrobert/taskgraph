@@ -302,8 +302,10 @@ document.addEventListener("DOMContentLoaded", (event) => {
         container.removeEventListener("pointermove", onPointerMove);
         container.removeEventListener("pointerup", onPointerEnd);
         container.removeEventListener("pointercancel", onPointerEnd);
-        if (moved)
+        if (moved) {
           container.releasePointerCapture(pointerId);
+          saveToLocalStorage();
+        }
       }
       container.addEventListener("pointermove", onPointerMove)
       container.addEventListener("pointerup", onPointerEnd);
