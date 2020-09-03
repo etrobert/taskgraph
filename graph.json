@@ -15,13 +15,6 @@
       }
     },
     {
-      "name": "fix save prompt when adding task",
-      "pos": {
-        "x": 219,
-        "y": 422
-      }
-    },
-    {
       "name": "Improve Appearance",
       "pos": {
         "x": 1317,

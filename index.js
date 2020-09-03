@@ -197,7 +197,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
     } else if (event.key == "d" || event.key == "Delete") {
       deleteSelected();
       saveToLocalStorage();
-    } else if (event.key == "s") {
+    } else if (event.key == "s" && newTask.style.display === "none") {
       saveToFile();
     }
   };
