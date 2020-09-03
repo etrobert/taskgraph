@@ -117,7 +117,7 @@ export function loadGraph(graph) {
 export function getGraph() {
   const tasksHtml = getTasks();
   const tasks = tasksHtml.map((e) => {
-    const bb = e.getBoundingClientRect();
+    const bb = getOffsetBox(e);
     return {
       name: e.textContent,
       pos: { x: bb.left, y: bb.top },
@@ -144,6 +144,17 @@ function getExpandedBox(box, offset) {
     top: box.top - offset,
     right: box.right + offset,
     bottom: box.bottom + offset,
+  }
+}
+
+function getOffsetBox(element) {
+  return {
+    left: element.offsetLeft,
+    top: element.offsetTop,
+    right: element.offsetLeft + element.offsetWidth,
+    bottom: element.offsetTop + element.offsetHeight,
+    width: element.offsetWidth,
+    height: element.offsetHeight,
   }
 }
 
@@ -207,8 +218,8 @@ function intersectLines(p1, p2, p3, p4) {
 // updates the visual representation of path
 // if dest if specified, use instead of path.to
 function updatePath(path, dest) {
-  const nodeABox = path.from.getBoundingClientRect();
-  const nodeBBox = dest ? null : path.to.getBoundingClientRect();
+  const nodeABox = getOffsetBox(path.from);
+  const nodeBBox = dest ? null : getOffsetBox(path.to);
 
   const centerA = getBoxCenter(nodeABox);
   const centerB = dest ? dest : getBoxCenter(nodeBBox);
@@ -249,7 +260,7 @@ export function initGraph() {
       function onPointerMove(event) {
         if (event.pointerId !== pointerId) return;
         moved = true;
-        updatePath(path, { x: event.clientX, y: event.clientY });
+        updatePath(path, { x: event.offsetX, y: event.offsetY });
       };
       function onPointerEnd(event) {
         if (event.pointerId !== pointerId) return;
@@ -282,8 +293,8 @@ export function initGraph() {
       function onPointerMove(event) {
         if (event.pointerId !== pointerId) return;
         moved = true;
-        task.style.left = event.clientX - offsetX + "px";
-        task.style.top = event.clientY - offsetY + "px";
+        task.style.left = event.offsetX - offsetX + "px";
+        task.style.top = event.offsetY - offsetY + "px";
         for (const path of [...task.from, ...task.to]) updatePath(path);
       }
       function onPointerEnd(event) {
