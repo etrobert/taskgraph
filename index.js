@@ -188,6 +188,11 @@ function updatePath(path, dest) {
   }
 };
 
+const stopNewTask = () => {
+  newTask.style.display = "none";
+  newTask.value = "";
+}
+
 document.addEventListener("DOMContentLoaded", (event) => {
   const newTask = document.getElementById("newTask");
   document.onkeyup = (event) => {
@@ -212,11 +217,12 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
   document.getElementById("saveButton").addEventListener("click", saveToFile);
 
+  newTask.onblur = stopNewTask;
+
   newTask.onkeypress = (event) => {
     if (event.key == "Enter") {
       addTask(newTask.value);
-      newTask.style.display = "none";
-      newTask.value = "";
+      stopNewTask();
       saveToLocalStorage();
     }
   };
