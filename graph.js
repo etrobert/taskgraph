@@ -1,6 +1,6 @@
 "use strict";
 
-const container = document.body;
+const container = document.getElementById("graph");
 
 function getTasks() {
   const isTask = (e) => e.classList.contains("task");
