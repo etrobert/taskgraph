@@ -63,7 +63,8 @@ body {
 
 #arrows > path {
   stroke: black;
-  stroke-width: 4px;
+  stroke-width: 6px;
+  stroke-linecap: round;
   marker-end: url(#Triangle);
 }
 
