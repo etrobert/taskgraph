@@ -1,10 +1,16 @@
 "use strict";
 
-const container = document.getElementById("graph");
+// Has the correct size
+// Used to initially capture mouse events
+const graphContainer = document.getElementById("graph");
+
+// Contains the tasks and dependencies
+// Will get translated around
+const itemsContainer = document.getElementById("itemsContainer");
 
 function getTasks() {
   const isTask = (e) => e.classList.contains("task");
-  return Array.from(container.children).filter(isTask);
+  return Array.from(itemsContainer.children).filter(isTask);
 }
 
 function getDependencies() {
@@ -26,7 +32,7 @@ export function addTask(name) {
   task.textContent = name;
   task.from = [];
   task.to = [];
-  container.appendChild(task);
+  itemsContainer.appendChild(task);
   return task;
 }
 
@@ -70,7 +76,7 @@ function deleteTask(task) {
   from.forEach(deleteDependency);
   const to = task.to.slice();
   to.forEach(deleteDependency);
-  container.removeChild(task);
+  itemsContainer.removeChild(task);
 }
 
 function removeFromArray(array, element) {
@@ -238,17 +244,35 @@ function updatePath(path, dest) {
   }
 }
 
+let graphOffset = { x: 0, y: 0 };
+
+function onGraphDragStart(event) {
+  itemsContainer.setPointerCapture(event.pointerId);
+  const onPointerMove = event => {
+    graphOffset.x += event.movementX;
+    graphOffset.y += event.movementY;
+    itemsContainer.style.transform = `translate(${graphOffset.x}px, ${graphOffset.y}px)`;
+  };
+  const onPointerEnd = event => {
+    itemsContainer.removeEventListener("pointermove", onPointerMove);
+    itemsContainer.removeEventListener("pointerup", onPointerEnd);
+  }
+  itemsContainer.addEventListener("pointermove", onPointerMove);
+  itemsContainer.addEventListener("pointerup", onPointerEnd);
+}
+
 export function initGraph() {
-  container.onpointerdown = event => {
+  graphContainer.onpointerdown = event => {
     event.preventDefault();
     let moved = false;
     const task = event.target;
     if (!task.classList.contains("task")) {
       resetSelected();
+      onGraphDragStart(event);
       return;
     }
     const pointerId = event.pointerId;
-    container.setPointerCapture(pointerId);
+    itemsContainer.setPointerCapture(pointerId);
     if (event.shiftKey || document.querySelector("#linkModeCheckbox input").checked) {
       // Initiate link creation
       const path = document.createElementNS(
@@ -266,9 +290,9 @@ export function initGraph() {
         if (event.pointerId !== pointerId) return;
         if (!moved)
           onTaskClicked(task, event);
-        container.removeEventListener("pointermove", onPointerMove);
-        container.removeEventListener("pointerup", onPointerEnd);
-        container.removeEventListener("pointercancel", onPointerEnd);
+        itemsContainer.removeEventListener("pointermove", onPointerMove);
+        itemsContainer.removeEventListener("pointerup", onPointerEnd);
+        itemsContainer.removeEventListener("pointercancel", onPointerEnd);
         const target = document.elementFromPoint(event.pageX, event.pageY);
         // TODO Prevent a link to itself
         // TODO Prevent a link to a dependency
@@ -283,9 +307,9 @@ export function initGraph() {
         updatePath(path);
         if (onnewdependency) onnewdependency();
       };
-      container.addEventListener("pointermove", onPointerMove);
-      container.addEventListener("pointerup", onPointerEnd);
-      container.addEventListener("pointercancel", onPointerEnd);
+      itemsContainer.addEventListener("pointermove", onPointerMove);
+      itemsContainer.addEventListener("pointerup", onPointerEnd);
+      itemsContainer.addEventListener("pointercancel", onPointerEnd);
     } else {
       // Initiate Drag
       const offsetX = event.offsetX;
@@ -299,18 +323,18 @@ export function initGraph() {
       }
       function onPointerEnd(event) {
         if (event.pointerId !== pointerId) return;
-        container.removeEventListener("pointermove", onPointerMove);
-        container.removeEventListener("pointerup", onPointerEnd);
-        container.removeEventListener("pointercancel", onPointerEnd);
+        itemsContainer.removeEventListener("pointermove", onPointerMove);
+        itemsContainer.removeEventListener("pointerup", onPointerEnd);
+        itemsContainer.removeEventListener("pointercancel", onPointerEnd);
         if (moved) {
           if (ontaskmoved) ontaskmoved();
         }
         else
           onTaskClicked(task, event);
       }
-      container.addEventListener("pointermove", onPointerMove)
-      container.addEventListener("pointerup", onPointerEnd);
-      container.addEventListener("pointercancel", onPointerEnd);
+      itemsContainer.addEventListener("pointermove", onPointerMove)
+      itemsContainer.addEventListener("pointerup", onPointerEnd);
+      itemsContainer.addEventListener("pointercancel", onPointerEnd);
     }
   };
 }

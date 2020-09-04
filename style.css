@@ -9,6 +9,11 @@ body {
   padding: 0;
   background: url("resources/Brown-Paper.jpg");
   touch-action: none;
+  overflow: hidden;
+}
+
+#graph {
+  height: 100vh;
 }
 
 .task {
