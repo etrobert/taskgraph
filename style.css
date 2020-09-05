@@ -111,9 +111,17 @@ button {
   cursor: pointer;
 }
 
-#link-mode-checkbox svg {
-  width: 6em;
-  height: 6em;
+#linkModeCheckbox svg {
+  width: 4em;
+  height: 4em;
+}
+
+#linkModeCheckbox input:checked + svg {
+  border-bottom: 0.2rem solid;
+}
+
+#linkModeCheckbox input {
+  display: none;
 }
 
 #deleteTaskButton {
