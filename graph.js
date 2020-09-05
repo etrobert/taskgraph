@@ -248,9 +248,11 @@ let graphOffset = { x: 0, y: 0 };
 
 function onGraphDragStart(event) {
   itemsContainer.setPointerCapture(event.pointerId);
+  let previousPosition = { x: event.clientX, y: event.clientY };
   const onPointerMove = event => {
-    graphOffset.x += event.movementX;
-    graphOffset.y += event.movementY;
+    graphOffset.x += event.clientX - previousPosition.x;
+    graphOffset.y += event.clientY - previousPosition.y;
+    previousPosition = { x: event.clientX, y: event.clientY };
     itemsContainer.style.transform = `translate(${graphOffset.x}px, ${graphOffset.y}px)`;
   };
   const onPointerEnd = event => {
