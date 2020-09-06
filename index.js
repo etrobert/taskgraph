@@ -52,7 +52,32 @@ const stopNewTask = () => {
   newTask.value = "";
 }
 
+function setupMenubar() {
+  const menubar = document.getElementById("menubar")
+
+  const menubarButton = document.getElementById("menubarOpenButton");
+  menubarButton.addEventListener("click", () => {
+    menubar.classList.add("active");
+  });
+
+  const menubarCloseButton = document.getElementById("menubarCloseButton");
+  menubarCloseButton.addEventListener("click", () => {
+    menubar.classList.remove("active");
+  });
+
+  const menubarLoadButton = document.getElementById("menubarLoadButton");
+  menubarLoadButton.addEventListener("click", () => {
+    console.log("Load");
+  });
+
+  const menubarSaveButton = document.getElementById("menubarSaveButton");
+  menubarSaveButton.addEventListener("click", () => {
+    saveToFile();
+  });
+}
+
 document.addEventListener("DOMContentLoaded", (event) => {
+  setupMenubar();
   const newTask = document.getElementById("newTask");
   document.onkeyup = (event) => {
     if (event.key == "i") {
@@ -73,8 +98,6 @@ document.addEventListener("DOMContentLoaded", (event) => {
     deleteSelected();
     saveToLocalStorage();
   });
-
-  document.getElementById("saveButton").addEventListener("click", saveToFile);
 
   newTask.onblur = stopNewTask;
 

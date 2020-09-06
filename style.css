@@ -4,9 +4,12 @@
     format("truetype");
 }
 
-body {
+* {
   margin: 0;
   padding: 0;
+}
+
+body {
   background: url("resources/Brown-Paper.jpg");
   touch-action: none;
   overflow: hidden;
@@ -100,9 +103,10 @@ body {
 #toolbar button {
   width: 4em;
   height: 4em;
-  background-position: center;
+}
+
+.iconButton {
   background-size: contain;
-  background-repeat: no-repeat;
   background-color: transparent;
   border: none;
 }
@@ -132,6 +136,72 @@ button {
   background-image: url('resources/feather/plus-circle.svg');
 }
 
-#saveButton {
-  background-image: url('resources/feather/save.svg');
+#menubar {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  background-color: #f9f9f9;
+  z-index: 2;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  row-gap: 2em;
+
+  padding: 2em;
+
+  transform: translate(-100%);
+}
+
+#menubarCloseButton {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 2.1rem;
+  height: 2.1rem;
+  margin: 1rem;
+  background-image: url('resources/feather/x.svg');
+}
+
+#menubar ul {
+  list-style: none;
+}
+
+h1 {
+  font-family: "PermanentMarker";
+  font-size: 3rem;
+}
+
+#menubar.active {
+  transform: translate(0);
+  box-shadow: 0.2rem 0 1rem rgba(0, 0, 0, 0.5);
+}
+
+#menubar button {
+  border: none;
+  background-color: transparent;
+}
+
+#menubar button:hover {
+  text-decoration: underline;
+}
+
+#menubarOpenButton {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 2.1rem;
+  height: 2.1rem;
+  margin-left: 1rem;
+  margin-top: 0.8rem;
+  z-index: 1;
+  background-image: url('resources/feather/menu.svg');
+}
+
+#githubLink {
+  width: 1.5rem;
+  height: 1.5rem;
+  background-size: contain;
+  background-image: url('resources/feather/github.svg');
 }
