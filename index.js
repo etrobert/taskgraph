@@ -92,13 +92,15 @@ document.addEventListener("DOMContentLoaded", (event) => {
   setupMenubar();
   const newTask = document.getElementById("newTask");
   document.onkeyup = (event) => {
+    // Do not register commands when adding new task
+    if (newTask.style.display !== "none") return;
     if (event.key == "i") {
       newTask.style.display = "block";
       newTask.focus();
     } else if (event.key == "d" || event.key == "Delete") {
       deleteSelected();
       saveToLocalStorage();
-    } else if (event.key == "s" && newTask.style.display === "none") {
+    } else if (event.key == "s") {
       saveToFile();
     }
   };
