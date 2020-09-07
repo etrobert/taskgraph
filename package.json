@@ -4,10 +4,17 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "live-server",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": {
+    "name": "Étienne Robert",
+    "email": "etiennerobert33@gmail.com",
+    "url": "http://github.com/etrobert"
+  },
   "license": "ISC",
   "dependencies": {},
-  "devDependencies": {}
+  "devDependencies": {
+    "live-server": "^1.2.1"
+  }
 }
