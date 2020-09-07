@@ -1,5 +1,9 @@
 # TaskGraph
 
+## Code Style
+
+Code style is enforced using [Prettier](https://prettier.io/).
+
 ## Resources
 
 Font: <https://www.1001fonts.com/permanent-marker-font.html>

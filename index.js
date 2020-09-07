@@ -13,12 +13,12 @@ import {
 onTaskMoved(saveToLocalStorage);
 onNewDependency(saveToLocalStorage);
 
-function downloadFile(filename, text, type='data:text/plain;charset=utf-8') {
-  var element = document.createElement('a');
-  element.setAttribute('href',  `${type}, ${encodeURIComponent(text)}`);
-  element.setAttribute('download', filename);
+function downloadFile(filename, text, type = "data:text/plain;charset=utf-8") {
+  var element = document.createElement("a");
+  element.setAttribute("href", `${type}, ${encodeURIComponent(text)}`);
+  element.setAttribute("download", filename);
 
-  element.style.display = 'none';
+  element.style.display = "none";
   document.body.appendChild(element);
 
   element.click();
@@ -50,10 +50,10 @@ function loadFromLocalStorage() {
 const stopNewTask = () => {
   newTask.style.display = "none";
   newTask.value = "";
-}
+};
 
 function setupMenubar() {
-  const menubar = document.getElementById("menubar")
+  const menubar = document.getElementById("menubar");
 
   const menubarButton = document.getElementById("menubarOpenButton");
   menubarButton.addEventListener("click", () => {
@@ -93,7 +93,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
   document.getElementById("createTaskButton").onclick = () => {
     newTask.style.display = "block";
     newTask.focus();
-  }
+  };
   document.getElementById("deleteTaskButton").addEventListener("click", () => {
     deleteSelected();
     saveToLocalStorage();
@@ -112,18 +112,16 @@ document.addEventListener("DOMContentLoaded", (event) => {
   const fileInput = document.getElementById("fileInput");
   fileInput.onchange = () => {
     const files = fileInput.files;
-    if (files.length == 0)
-      return;
+    if (files.length == 0) return;
     const file = files[0];
-    if (file.type != "application/json")
-      return;
-    const reader  = new FileReader();
+    if (file.type != "application/json") return;
+    const reader = new FileReader();
     reader.addEventListener("load", () => {
       loadGraph(JSON.parse(reader.result));
       saveToLocalStorage();
     });
     reader.readAsText(file);
-  }
+  };
 
   initGraph();
 

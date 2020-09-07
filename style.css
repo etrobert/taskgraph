@@ -129,11 +129,11 @@ button {
 }
 
 #deleteTaskButton {
-  background-image: url('resources/feather/trash-2.svg');
+  background-image: url("resources/feather/trash-2.svg");
 }
 
 #createTaskButton {
-  background-image: url('resources/feather/plus-circle.svg');
+  background-image: url("resources/feather/plus-circle.svg");
 }
 
 #menubar {
@@ -161,7 +161,7 @@ button {
   width: 2.1rem;
   height: 2.1rem;
   margin: 1rem;
-  background-image: url('resources/feather/x.svg');
+  background-image: url("resources/feather/x.svg");
 }
 
 #menubar ul {
@@ -196,12 +196,12 @@ h1 {
   margin-left: 1rem;
   margin-top: 0.8rem;
   z-index: 1;
-  background-image: url('resources/feather/menu.svg');
+  background-image: url("resources/feather/menu.svg");
 }
 
 #githubLink {
   width: 1.5rem;
   height: 1.5rem;
   background-size: contain;
-  background-image: url('resources/feather/github.svg');
+  background-image: url("resources/feather/github.svg");
 }

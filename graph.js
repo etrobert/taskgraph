@@ -92,7 +92,7 @@ function deleteDependency(dependency) {
 
 export function deleteSelected() {
   const selected = getSelected();
-  selected.forEach(deleteTask)
+  selected.forEach(deleteTask);
 }
 
 function onTaskClicked(task, event) {
@@ -107,7 +107,7 @@ function getSelected() {
 
 function resetSelected() {
   const selectedTasks = getSelected();
-  selectedTasks.forEach(task => task.classList.remove("selected"));
+  selectedTasks.forEach((task) => task.classList.remove("selected"));
 }
 
 export function loadGraph(graph) {
@@ -139,9 +139,9 @@ export function getGraph() {
 
 function getBoxCenter(box) {
   return {
-    x: box.left + (box.width / 2),
-    y: box.top + (box.height / 2),
-  }
+    x: box.left + box.width / 2,
+    y: box.top + box.height / 2,
+  };
 }
 
 function getExpandedBox(box, offset) {
@@ -150,7 +150,7 @@ function getExpandedBox(box, offset) {
     top: box.top - offset,
     right: box.right + offset,
     bottom: box.bottom + offset,
-  }
+  };
 }
 
 function getOffsetBox(element) {
@@ -161,64 +161,70 @@ function getOffsetBox(element) {
     bottom: element.offsetTop + element.offsetHeight,
     width: element.offsetWidth,
     height: element.offsetHeight,
-  }
+  };
 }
 
 // Finds the intersection point between the line segment p1->p2 and the given bounding box.
 // If the line segment and the box don't intersect, null is returned.
 function intersectLineBox(p1, p2, box) {
   const left = {
-    p1: {x: box.left, y: box.top},
-    p2: {x: box.left, y: box.bottom},
+    p1: { x: box.left, y: box.top },
+    p2: { x: box.left, y: box.bottom },
   };
   const top = {
-    p1: {x: box.left,  y: box.top},
-    p2: {x: box.right, y: box.top},
+    p1: { x: box.left, y: box.top },
+    p2: { x: box.right, y: box.top },
   };
   const right = {
-    p1: {x: box.right, y: box.top},
-    p2: {x: box.right, y: box.bottom},
+    p1: { x: box.right, y: box.top },
+    p2: { x: box.right, y: box.bottom },
   };
   const bottom = {
-    p1: {x: box.left,  y: box.bottom},
-    p2: {x: box.right, y: box.bottom},
+    p1: { x: box.left, y: box.bottom },
+    p2: { x: box.right, y: box.bottom },
   };
 
-  return intersectLines(p1, p2, left.p1, left.p2) ||
-         intersectLines(p1, p2, top.p1, top.p2) ||
-         intersectLines(p1, p2, right.p1, right.p2) ||
-         intersectLines(p1, p2, bottom.p1, bottom.p2);
+  return (
+    intersectLines(p1, p2, left.p1, left.p2) ||
+    intersectLines(p1, p2, top.p1, top.p2) ||
+    intersectLines(p1, p2, right.p1, right.p2) ||
+    intersectLines(p1, p2, bottom.p1, bottom.p2)
+  );
 }
 
 // Finds the intersection point between the line segments p1->p2 and p3->p4.
 // If the segments don't intersect, null is returned.
 function intersectLines(p1, p2, p3, p4) {
-
   // Check if none of the lines are of length 0
   if ((p1.x === p2.x && p1.y === p2.y) || (p3.x === p4.x && p3.y === p4.y)) {
-    return null
+    return null;
   }
 
-  const denominator = ((p4.y - p3.y) * (p2.x - p1.x) - (p4.x - p3.x) * (p2.y - p1.y))
+  const denominator =
+    (p4.y - p3.y) * (p2.x - p1.x) - (p4.x - p3.x) * (p2.y - p1.y);
 
   // Lines are parallel
   if (denominator === 0) {
-    return null
+    return null;
   }
 
-  let ua = ((p4.x - p3.x) * (p1.y - p3.y) - (p4.y - p3.y) * (p1.x - p3.x)) / denominator
-  let ub = ((p2.x - p1.x) * (p1.y - p3.y) - (p2.y - p1.y) * (p1.x - p3.x)) / denominator
+  let ua =
+    ((p4.x - p3.x) * (p1.y - p3.y) - (p4.y - p3.y) * (p1.x - p3.x)) /
+    denominator;
+  let ub =
+    ((p2.x - p1.x) * (p1.y - p3.y) - (p2.y - p1.y) * (p1.x - p3.x)) /
+    denominator;
 
   // is the intersection along the segments
   if (ua < 0 || ua > 1 || ub < 0 || ub > 1) {
-    return null
+    return null;
   }
 
   // Return a object with the x and y coordinates of the intersection
-  let x = p1.x + ua * (p2.x - p1.x)
-  let y = p1.y + ua * (p2.y - p1.y)
+  let x = p1.x + ua * (p2.x - p1.x);
+  let y = p1.y + ua * (p2.y - p1.y);
 
-  return {x, y}
+  return { x, y };
 }
 
 // updates the visual representation of path
@@ -230,8 +236,14 @@ function updatePath(path, dest) {
   const centerA = getBoxCenter(nodeABox);
   const centerB = dest ? dest : getBoxCenter(nodeBBox);
 
-  const pathPointA = intersectLineBox(centerA, centerB, getExpandedBox(nodeABox, 8));
-  const pathPointB = dest ? dest : intersectLineBox(centerA, centerB, getExpandedBox(nodeBBox, 8));
+  const pathPointA = intersectLineBox(
+    centerA,
+    centerB,
+    getExpandedBox(nodeABox, 8)
+  );
+  const pathPointB = dest
+    ? dest
+    : intersectLineBox(centerA, centerB, getExpandedBox(nodeBBox, 8));
 
   if (pathPointA && pathPointB) {
     path.setAttributeNS(
@@ -249,22 +261,22 @@ let graphOffset = { x: 0, y: 0 };
 function onGraphDragStart(event) {
   itemsContainer.setPointerCapture(event.pointerId);
   let previousPosition = { x: event.clientX, y: event.clientY };
-  const onPointerMove = event => {
+  const onPointerMove = (event) => {
     graphOffset.x += event.clientX - previousPosition.x;
     graphOffset.y += event.clientY - previousPosition.y;
     previousPosition = { x: event.clientX, y: event.clientY };
     itemsContainer.style.transform = `translate(${graphOffset.x}px, ${graphOffset.y}px)`;
   };
-  const onPointerEnd = event => {
+  const onPointerEnd = (event) => {
     itemsContainer.removeEventListener("pointermove", onPointerMove);
     itemsContainer.removeEventListener("pointerup", onPointerEnd);
-  }
+  };
   itemsContainer.addEventListener("pointermove", onPointerMove);
   itemsContainer.addEventListener("pointerup", onPointerEnd);
 }
 
 export function initGraph() {
-  graphContainer.onpointerdown = event => {
+  graphContainer.onpointerdown = (event) => {
     event.preventDefault();
     let moved = false;
     const task = event.target;
@@ -275,7 +287,10 @@ export function initGraph() {
     }
     const pointerId = event.pointerId;
     itemsContainer.setPointerCapture(pointerId);
-    if (event.shiftKey || document.querySelector("#linkModeCheckbox input").checked) {
+    if (
+      event.shiftKey ||
+      document.querySelector("#linkModeCheckbox input").checked
+    ) {
       // Initiate link creation
       const path = document.createElementNS(
         "http://www.w3.org/2000/svg",
@@ -287,11 +302,10 @@ export function initGraph() {
         if (event.pointerId !== pointerId) return;
         moved = true;
         updatePath(path, { x: event.offsetX, y: event.offsetY });
-      };
+      }
       function onPointerEnd(event) {
         if (event.pointerId !== pointerId) return;
-        if (!moved)
-          onTaskClicked(task, event);
+        if (!moved) onTaskClicked(task, event);
         itemsContainer.removeEventListener("pointermove", onPointerMove);
         itemsContainer.removeEventListener("pointerup", onPointerEnd);
         itemsContainer.removeEventListener("pointercancel", onPointerEnd);
@@ -308,7 +322,7 @@ export function initGraph() {
         target.to.push(path);
         updatePath(path);
         if (onnewdependency) onnewdependency();
-      };
+      }
       itemsContainer.addEventListener("pointermove", onPointerMove);
       itemsContainer.addEventListener("pointerup", onPointerEnd);
       itemsContainer.addEventListener("pointercancel", onPointerEnd);
@@ -330,11 +344,9 @@ export function initGraph() {
         itemsContainer.removeEventListener("pointercancel", onPointerEnd);
         if (moved) {
           if (ontaskmoved) ontaskmoved();
-        }
-        else
-          onTaskClicked(task, event);
+        } else onTaskClicked(task, event);
       }
-      itemsContainer.addEventListener("pointermove", onPointerMove)
+      itemsContainer.addEventListener("pointermove", onPointerMove);
       itemsContainer.addEventListener("pointerup", onPointerEnd);
       itemsContainer.addEventListener("pointercancel", onPointerEnd);
     }
