@@ -7,6 +7,7 @@ import {
   addTask,
   deleteSelected,
   clearGraph,
+  completeSelected,
 } from "./graph.js";
 
 function downloadFile(filename, text, type = "data:text/plain;charset=utf-8") {
@@ -83,6 +84,25 @@ function setupMenubar() {
   });
 }
 
+function setupToolbar() {
+  document.getElementById("createTaskButton").onclick = () => {
+    newTask.style.display = "block";
+    newTask.focus();
+  };
+
+  document.getElementById("deleteTaskButton").addEventListener("click", () => {
+    deleteSelected();
+    saveToLocalStorage();
+  });
+
+  document
+    .getElementById("completeTaskButton")
+    .addEventListener("click", () => {
+      completeSelected();
+      saveToLocalStorage();
+    });
+}
+
 document.addEventListener("DOMContentLoaded", (event) => {
   setupMenubar();
 
@@ -104,20 +124,14 @@ document.addEventListener("DOMContentLoaded", (event) => {
       saveToFile();
     }
   };
-  document.getElementById("createTaskButton").onclick = () => {
-    newTask.style.display = "block";
-    newTask.focus();
-  };
-  document.getElementById("deleteTaskButton").addEventListener("click", () => {
-    deleteSelected();
-    saveToLocalStorage();
-  });
+
+  setupToolbar();
 
   newTask.onblur = stopNewTask;
 
   newTask.onkeypress = (event) => {
     if (event.key == "Enter") {
-      addTask(newTask.value);
+      addTask({ name: newTask.value });
       stopNewTask();
       saveToLocalStorage();
     }

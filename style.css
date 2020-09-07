@@ -132,6 +132,10 @@ button {
   background-image: url("resources/feather/trash-2.svg");
 }
 
+#completeTaskButton {
+  background-image: url("resources/feather/check-circle.svg");
+}
+
 #createTaskButton {
   background-image: url("resources/feather/plus-circle.svg");
 }

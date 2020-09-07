@@ -26,14 +26,15 @@ export function clearGraph() {
   dependencies.forEach(removeElement);
 }
 
-export function addTask(name) {
-  const task = document.createElement("div");
-  task.classList.add("task");
-  task.textContent = name;
-  task.from = [];
-  task.to = [];
-  itemsContainer.appendChild(task);
-  return task;
+export function addTask(task) {
+  const htmlTask = document.createElement("div");
+  htmlTask.classList.add("task");
+  htmlTask.textContent = task.name;
+  htmlTask.from = [];
+  htmlTask.to = [];
+  if (task.status === "completed") htmlTask.classList.add("completed");
+  itemsContainer.appendChild(htmlTask);
+  return htmlTask;
 }
 
 function addDependency(dependency) {
@@ -95,6 +96,11 @@ export function deleteSelected() {
   selected.forEach(deleteTask);
 }
 
+export function completeSelected() {
+  const selected = getSelected();
+  selected.forEach((task) => task.classList.toggle("completed"));
+}
+
 function onTaskClicked(task, event) {
   if (!event.shiftKey) resetSelected();
   task.classList.add("selected");
@@ -113,7 +119,7 @@ function resetSelected() {
 export function loadGraph(graph) {
   clearGraph();
   graph.tasks.forEach((task) => {
-    const htmlTask = addTask(task.name);
+    const htmlTask = addTask(task);
     htmlTask.style.left = task.pos.x + "px";
     htmlTask.style.top = task.pos.y + "px";
   });
@@ -127,6 +133,7 @@ export function getGraph() {
     return {
       name: e.textContent,
       pos: { x: bb.left, y: bb.top },
+      status: e.classList.contains("completed") ? "completed" : "todo",
     };
   });
   const dependenciesHtml = getDependencies();
