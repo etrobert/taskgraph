@@ -321,7 +321,7 @@ export function initGraph() {
         task.from.push(path);
         target.to.push(path);
         updatePath(path);
-        if (onnewdependency) onnewdependency();
+        graphContainer.dispatchEvent(new CustomEvent("newdependency"));
       }
       itemsContainer.addEventListener("pointermove", onPointerMove);
       itemsContainer.addEventListener("pointerup", onPointerEnd);
@@ -343,7 +343,9 @@ export function initGraph() {
         itemsContainer.removeEventListener("pointerup", onPointerEnd);
         itemsContainer.removeEventListener("pointercancel", onPointerEnd);
         if (moved) {
-          if (ontaskmoved) ontaskmoved();
+          graphContainer.dispatchEvent(
+            new CustomEvent("taskmoved", { detail: { task } })
+          );
         } else onTaskClicked(task, event);
       }
       itemsContainer.addEventListener("pointermove", onPointerMove);
@@ -351,14 +353,4 @@ export function initGraph() {
       itemsContainer.addEventListener("pointercancel", onPointerEnd);
     }
   };
-}
-
-let ontaskmoved = null;
-export function onTaskMoved(f) {
-  ontaskmoved = f;
-}
-
-let onnewdependency = null;
-export function onNewDependency(f) {
-  onnewdependency = f;
 }

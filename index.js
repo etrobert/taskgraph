@@ -6,13 +6,8 @@ import {
   getGraph,
   addTask,
   deleteSelected,
-  onTaskMoved,
-  onNewDependency,
   clearGraph,
 } from "./graph.js";
-
-onTaskMoved(saveToLocalStorage);
-onNewDependency(saveToLocalStorage);
 
 function downloadFile(filename, text, type = "data:text/plain;charset=utf-8") {
   var element = document.createElement("a");
@@ -90,6 +85,11 @@ function setupMenubar() {
 
 document.addEventListener("DOMContentLoaded", (event) => {
   setupMenubar();
+
+  const graph = document.getElementById("graph");
+  graph.addEventListener("taskmoved", saveToLocalStorage);
+  graph.addEventListener("newdependency", saveToLocalStorage);
+
   const newTask = document.getElementById("newTask");
   document.onkeyup = (event) => {
     // Do not register commands when adding new task
