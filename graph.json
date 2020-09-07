@@ -10,29 +10,22 @@
     {
       "name": "test chrome compatibility",
       "pos": {
-        "x": 832,
-        "y": 272
+        "x": 803,
+        "y": 170
       }
     },
     {
       "name": "Improve Appearance",
       "pos": {
-        "x": 1317,
-        "y": 205
-      }
-    },
-    {
-      "name": "dont select when dragging",
-      "pos": {
-        "x": 342,
-        "y": 522
+        "x": 1500,
+        "y": 297
       }
     },
     {
       "name": "use unique int ids instead of names",
       "pos": {
-        "x": 364,
-        "y": 680
+        "x": 1314,
+        "y": -61
       }
     },
     {
@@ -45,36 +38,22 @@
     {
       "name": "fix selecting",
       "pos": {
-        "x": 472,
-        "y": 270
+        "x": 512,
+        "y": 143
       }
     },
     {
       "name": "fix insert input too big",
       "pos": {
-        "x": 223,
-        "y": 163
-      }
-    },
-    {
-      "name": "Improve selected background",
-      "pos": {
-        "x": 1357,
-        "y": 538
+        "x": 321,
+        "y": 85
       }
     },
     {
       "name": "Add icon",
       "pos": {
-        "x": 1251,
-        "y": 429
-      }
-    },
-    {
-      "name": "save with a backend",
-      "pos": {
-        "x": 454,
-        "y": 745
+        "x": 1328,
+        "y": 379
       }
     },
     {
@@ -89,6 +68,139 @@
       "pos": {
         "x": 512,
         "y": 804
+      }
+    },
+    {
+      "name": "Make the toolbar contextual",
+      "pos": {
+        "x": 159,
+        "y": 354
+      }
+    },
+    {
+      "name": "Make the new elements appear on screen",
+      "pos": {
+        "x": 79,
+        "y": 417
+      }
+    },
+    {
+      "name": "Fix phone compatibility",
+      "pos": {
+        "x": 229,
+        "y": 268
+      }
+    },
+    {
+      "name": "Fix new tasks finishing by an s",
+      "pos": {
+        "x": 973,
+        "y": 681
+      }
+    },
+    {
+      "name": "Rethink new task interface",
+      "pos": {
+        "x": 981,
+        "y": 749
+      }
+    },
+    {
+      "name": "Update/Delete doc",
+      "pos": {
+        "x": 828,
+        "y": 401
+      }
+    },
+    {
+      "name": "Improve selected style",
+      "pos": {
+        "x": 1530,
+        "y": 403
+      }
+    },
+    {
+      "name": "Implement a handle",
+      "pos": {
+        "x": 45,
+        "y": 625
+      }
+    },
+    {
+      "name": "Design a handle",
+      "pos": {
+        "x": 469,
+        "y": 624
+      }
+    },
+    {
+      "name": "Move the codebase to Typescript",
+      "pos": {
+        "x": 911,
+        "y": 540
+      }
+    },
+    {
+      "name": "Have a good dependency interface for touch",
+      "pos": {
+        "x": 46,
+        "y": 491
+      }
+    },
+    {
+      "name": "Add a handle",
+      "pos": {
+        "x": 285,
+        "y": 559
+      }
+    },
+    {
+      "name": "Add task renaming",
+      "pos": {
+        "x": 1454,
+        "y": -139
+      }
+    },
+    {
+      "name": "Add dependency deletion",
+      "pos": {
+        "x": 1341,
+        "y": 46
+      }
+    },
+    {
+      "name": "Add dependency selection",
+      "pos": {
+        "x": 1334,
+        "y": 123
+      }
+    },
+    {
+      "name": "Add task completion",
+      "pos": {
+        "x": -358,
+        "y": 298
+      }
+    },
+    {
+      "name": "Add multiple selection",
+      "pos": {
+        "x": -458,
+        "y": 547
+      }
+    },
+    {
+      "name": "Add search",
+      "pos": {
+        "x": 570,
+        "y": -80
+      }
+    },
+    {
+      "name": "Add time management",
+      "pos": {
+        "x": -247,
+        "y": 170
       }
     }
   ],
@@ -106,12 +218,36 @@
       "successor": "Chrom compatibility"
     },
     {
-      "predecessor": "Improve selected background",
+      "predecessor": "Add icon",
       "successor": "Improve Appearance"
     },
     {
-      "predecessor": "Add icon",
+      "predecessor": "Improve selected style",
       "successor": "Improve Appearance"
+    },
+    {
+      "predecessor": "Add a handle",
+      "successor": "Have a good dependency interface for touch"
+    },
+    {
+      "predecessor": "Implement a handle",
+      "successor": "Add a handle"
+    },
+    {
+      "predecessor": "Design a handle",
+      "successor": "Add a handle"
+    },
+    {
+      "predecessor": "use unique int ids instead of names",
+      "successor": "Add task renaming"
+    },
+    {
+      "predecessor": "Add dependency selection",
+      "successor": "Add dependency deletion"
+    },
+    {
+      "predecessor": "Add task completion",
+      "successor": "Add time management"
     }
   ]
 }
