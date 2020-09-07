@@ -8,6 +8,7 @@ import {
   deleteSelected,
   onTaskMoved,
   onNewDependency,
+  clearGraph,
 } from "./graph.js";
 
 onTaskMoved(saveToLocalStorage);
@@ -55,15 +56,17 @@ const stopNewTask = () => {
 function setupMenubar() {
   const menubar = document.getElementById("menubar");
 
+  const closeMenubar = () => {
+    menubar.classList.remove("active");
+  };
+
   const menubarButton = document.getElementById("menubarOpenButton");
   menubarButton.addEventListener("click", () => {
     menubar.classList.add("active");
   });
 
   const menubarCloseButton = document.getElementById("menubarCloseButton");
-  menubarCloseButton.addEventListener("click", () => {
-    menubar.classList.remove("active");
-  });
+  menubarCloseButton.addEventListener("click", closeMenubar);
 
   const menubarLoadButton = document.getElementById("menubarLoadButton");
   menubarLoadButton.addEventListener("click", () => {
@@ -73,6 +76,15 @@ function setupMenubar() {
   const menubarSaveButton = document.getElementById("menubarSaveButton");
   menubarSaveButton.addEventListener("click", () => {
     saveToFile();
+    closeMenubar();
+  });
+
+  const menubarNewGraphButton = document.getElementById(
+    "menubarNewGraphButton"
+  );
+  menubarNewGraphButton.addEventListener("click", () => {
+    clearGraph();
+    closeMenubar();
   });
 }
 

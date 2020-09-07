@@ -18,7 +18,7 @@ function getDependencies() {
   return Array.from(arrows.children).filter(isDependency);
 }
 
-function clearGraph() {
+export function clearGraph() {
   const removeElement = (e) => e.parentNode.removeChild(e);
   const tasks = getTasks();
   tasks.forEach(removeElement);
