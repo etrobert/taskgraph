@@ -113,7 +113,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
   const newTask = document.getElementById("newTask");
   document.onkeyup = (event) => {
     // Do not register commands when adding new task
-    if (newTask.style.display !== "none") return;
+    if (newTask.style.display === "block") return;
     if (event.key == "i") {
       newTask.style.display = "block";
       newTask.focus();
