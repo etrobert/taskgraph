@@ -44,11 +44,6 @@ function loadFromLocalStorage() {
   loadGraph(graph);
 }
 
-const stopNewTask = () => {
-  newTask.style.display = "none";
-  newTask.value = "";
-};
-
 function setupMenubar() {
   const menubar = document.getElementById("menubar");
 
@@ -103,8 +98,29 @@ function setupToolbar() {
     });
 }
 
+function setupNewTask() {
+  const stopNewTask = () => {
+    newTask.style.display = "none";
+    newTask.value = "";
+  };
+
+  const newTask = document.getElementById("newTask");
+
+  newTask.onblur = stopNewTask;
+
+  newTask.onkeypress = (event) => {
+    if (event.key == "Enter") {
+      addTask({ name: newTask.value });
+      stopNewTask();
+      saveToLocalStorage();
+    }
+  };
+}
+
 document.addEventListener("DOMContentLoaded", (event) => {
   setupMenubar();
+  setupToolbar();
+  setupNewTask();
 
   const graph = document.getElementById("graph");
   graph.addEventListener("taskmoved", saveToLocalStorage);
@@ -122,18 +138,6 @@ document.addEventListener("DOMContentLoaded", (event) => {
       saveToLocalStorage();
     } else if (event.key == "s") {
       saveToFile();
-    }
-  };
-
-  setupToolbar();
-
-  newTask.onblur = stopNewTask;
-
-  newTask.onkeypress = (event) => {
-    if (event.key == "Enter") {
-      addTask({ name: newTask.value });
-      stopNewTask();
-      saveToLocalStorage();
     }
   };
 
