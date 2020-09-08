@@ -102,8 +102,11 @@ export function completeSelected() {
 }
 
 function onTaskClicked(task, event) {
-  if (!event.shiftKey) resetSelected();
-  task.classList.add("selected");
+  if (event.shiftKey) task.classList.toggle("selected");
+  else {
+    resetSelected();
+    task.classList.add("selected");
+  }
 }
 
 function getSelected() {
