@@ -116,6 +116,7 @@ function deleteDependency(dependency) {
 export function deleteSelected() {
   const selected = getSelected();
   selected.forEach(deleteTask);
+  sendSelectionChanged([]);
 }
 
 export function completeSelected() {
@@ -124,11 +125,26 @@ export function completeSelected() {
 }
 
 function onTaskClicked(task, event) {
-  if (event.shiftKey) task.classList.toggle("selected");
-  else {
+  if (event.shiftKey) {
+    task.classList.toggle("selected");
+    sendSelectionChanged();
+  } else {
     resetSelected();
     task.classList.add("selected");
+    sendSelectionChanged([task]);
   }
+}
+
+/**
+ * sends out a "selectionchanged" event
+ * @param {[HTMLElement]} selection if known by the caller, passthrough
+ */
+function sendSelectionChanged(selection) {
+  graphContainer.dispatchEvent(
+    new CustomEvent("selectionchanged", {
+      detail: selection ? selection : getSelected(),
+    })
+  );
 }
 
 function getSelected() {
@@ -310,6 +326,7 @@ export function initGraph() {
     const task = event.target;
     if (!task.classList.contains("task")) {
       resetSelected();
+      sendSelectionChanged([]);
       onGraphDragStart(event);
       return;
     }
@@ -381,4 +398,5 @@ export function initGraph() {
       itemsContainer.addEventListener("pointercancel", onPointerEnd);
     }
   };
+  sendSelectionChanged([]);
 }

@@ -98,6 +98,17 @@ function setupToolbar() {
     });
 }
 
+function updateToolbar(selection) {
+  const createTaskButton = document.getElementById("createTaskButton");
+  const deleteTaskButton = document.getElementById("deleteTaskButton");
+  const completeTaskButton = document.getElementById("completeTaskButton");
+  const linkModeCheckbox = document.getElementById("linkModeCheckbox");
+  createTaskButton.style.display = !selection ? "block" : "none";
+  deleteTaskButton.style.display = selection ? "block" : "none";
+  completeTaskButton.style.display = selection ? "block" : "none";
+  linkModeCheckbox.style.display = !selection ? "block" : "none";
+}
+
 function setupNewTask() {
   const stopNewTask = () => {
     newTask.style.display = "none";
@@ -125,6 +136,9 @@ document.addEventListener("DOMContentLoaded", (event) => {
   const graph = document.getElementById("graph");
   graph.addEventListener("taskmoved", saveToLocalStorage);
   graph.addEventListener("newdependency", saveToLocalStorage);
+  graph.addEventListener("selectionchanged", (event) => {
+    updateToolbar(event.detail.length > 0);
+  });
 
   const newTask = document.getElementById("newTask");
   document.onkeyup = (event) => {
