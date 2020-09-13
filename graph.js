@@ -26,6 +26,25 @@ export function clearGraph() {
   dependencies.forEach(removeElement);
 }
 
+function getViewCenter() {
+  const box = getOffsetBox(graphContainer);
+  const viewCenter = getBoxCenter(box);
+  return {
+    x: viewCenter.x - graphOffset.x,
+    y: viewCenter.y - graphOffset.y,
+  };
+}
+
+function computeCenteredPos(element) {
+  const viewCenter = getViewCenter();
+  const width = element.offsetWidth;
+  const height = element.offsetHeight;
+  return {
+    x: viewCenter.x - width / 2,
+    y: viewCenter.y - height / 2,
+  };
+}
+
 export function addTask(task) {
   const htmlTask = document.createElement("div");
   htmlTask.classList.add("task");
@@ -34,6 +53,9 @@ export function addTask(task) {
   htmlTask.to = [];
   if (task.status === "completed") htmlTask.classList.add("completed");
   itemsContainer.appendChild(htmlTask);
+  const pos = task.pos ? task.pos : computeCenteredPos(htmlTask);
+  htmlTask.style.left = pos.x + "px";
+  htmlTask.style.top = pos.y + "px";
   return htmlTask;
 }
 
@@ -121,11 +143,7 @@ function resetSelected() {
 
 export function loadGraph(graph) {
   clearGraph();
-  graph.tasks.forEach((task) => {
-    const htmlTask = addTask(task);
-    htmlTask.style.left = task.pos.x + "px";
-    htmlTask.style.top = task.pos.y + "px";
-  });
+  graph.tasks.forEach(addTask);
   graph.dependencies.forEach(addDependency);
 }
 
