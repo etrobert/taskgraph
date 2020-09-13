@@ -5,203 +5,272 @@
       "pos": {
         "x": 0,
         "y": 0
-      }
+      },
+      "status": "todo"
     },
     {
       "name": "test chrome compatibility",
       "pos": {
         "x": 803,
         "y": 170
-      }
+      },
+      "status": "todo"
     },
     {
       "name": "Improve Appearance",
       "pos": {
         "x": 1500,
         "y": 297
-      }
+      },
+      "status": "todo"
     },
     {
       "name": "use unique int ids instead of names",
       "pos": {
         "x": 1314,
         "y": -61
-      }
+      },
+      "status": "todo"
     },
     {
       "name": "Chrom compatibility",
       "pos": {
         "x": 763,
         "y": 73
-      }
+      },
+      "status": "todo"
     },
     {
       "name": "fix selecting",
       "pos": {
         "x": 512,
         "y": 143
-      }
+      },
+      "status": "todo"
     },
     {
       "name": "fix insert input too big",
       "pos": {
         "x": 321,
         "y": 85
-      }
+      },
+      "status": "todo"
     },
     {
       "name": "Add icon",
       "pos": {
         "x": 1328,
         "y": 379
-      }
+      },
+      "status": "todo"
     },
     {
       "name": "",
       "pos": {
         "x": 0,
         "y": 0
-      }
+      },
+      "status": "todo"
     },
     {
       "name": "use escape to exit input",
       "pos": {
         "x": 512,
         "y": 804
-      }
+      },
+      "status": "todo"
     },
     {
       "name": "Make the toolbar contextual",
       "pos": {
         "x": 159,
         "y": 354
-      }
-    },
-    {
-      "name": "Make the new elements appear on screen",
-      "pos": {
-        "x": 79,
-        "y": 417
-      }
+      },
+      "status": "todo"
     },
     {
       "name": "Fix phone compatibility",
       "pos": {
         "x": 229,
         "y": 268
-      }
+      },
+      "status": "todo"
     },
     {
       "name": "Fix new tasks finishing by an s",
       "pos": {
         "x": 973,
         "y": 681
-      }
+      },
+      "status": "todo"
     },
     {
       "name": "Rethink new task interface",
       "pos": {
         "x": 981,
         "y": 749
-      }
+      },
+      "status": "todo"
     },
     {
       "name": "Update/Delete doc",
       "pos": {
         "x": 828,
         "y": 401
-      }
+      },
+      "status": "todo"
     },
     {
       "name": "Improve selected style",
       "pos": {
         "x": 1530,
         "y": 403
-      }
+      },
+      "status": "todo"
     },
     {
       "name": "Implement a handle",
       "pos": {
         "x": 45,
         "y": 625
-      }
+      },
+      "status": "todo"
     },
     {
       "name": "Design a handle",
       "pos": {
         "x": 469,
         "y": 624
-      }
+      },
+      "status": "todo"
     },
     {
       "name": "Move the codebase to Typescript",
       "pos": {
-        "x": 911,
-        "y": 540
-      }
+        "x": 1213,
+        "y": 816
+      },
+      "status": "todo"
     },
     {
       "name": "Have a good dependency interface for touch",
       "pos": {
         "x": 46,
         "y": 491
-      }
+      },
+      "status": "todo"
     },
     {
       "name": "Add a handle",
       "pos": {
         "x": 285,
         "y": 559
-      }
+      },
+      "status": "todo"
     },
     {
       "name": "Add task renaming",
       "pos": {
         "x": 1454,
         "y": -139
-      }
+      },
+      "status": "todo"
     },
     {
       "name": "Add dependency deletion",
       "pos": {
         "x": 1341,
         "y": 46
-      }
+      },
+      "status": "todo"
     },
     {
       "name": "Add dependency selection",
       "pos": {
         "x": 1334,
         "y": 123
-      }
+      },
+      "status": "todo"
     },
     {
       "name": "Add task completion",
       "pos": {
         "x": -358,
         "y": 298
-      }
+      },
+      "status": "todo"
     },
     {
       "name": "Add multiple selection",
       "pos": {
         "x": -458,
         "y": 547
-      }
+      },
+      "status": "todo"
     },
     {
       "name": "Add search",
       "pos": {
         "x": 570,
         "y": -80
-      }
+      },
+      "status": "todo"
     },
     {
       "name": "Add time management",
       "pos": {
         "x": -247,
         "y": 170
-      }
+      },
+      "status": "todo"
+    },
+    {
+      "name": "Make menu close on save/load",
+      "pos": {
+        "x": -120,
+        "y": 749
+      },
+      "status": "todo"
+    },
+    {
+      "name": "Learn from Paul Lewis Videos",
+      "pos": {
+        "x": 1470,
+        "y": 582
+      },
+      "status": "todo"
+    },
+    {
+      "name": "Update directory structure",
+      "pos": {
+        "x": 1380,
+        "y": 986
+      },
+      "status": "todo"
+    },
+    {
+      "name": "checkout karma",
+      "pos": {
+        "x": 1962,
+        "y": 669
+      },
+      "status": "todo"
+    },
+    {
+      "name": "Try more web components",
+      "pos": {
+        "x": 1727,
+        "y": 488
+      },
+      "status": "todo"
+    },
+    {
+      "name": "Investigate Bootstrap meaning",
+      "pos": {
+        "x": 1745,
+        "y": 846
+      },
+      "status": "todo"
     }
   ],
   "dependencies": [
@@ -248,6 +317,26 @@
     {
       "predecessor": "Add task completion",
       "successor": "Add time management"
+    },
+    {
+      "predecessor": "Update directory structure",
+      "successor": "Learn from Paul Lewis Videos"
+    },
+    {
+      "predecessor": "Update directory structure",
+      "successor": "Move the codebase to Typescript"
+    },
+    {
+      "predecessor": "checkout karma",
+      "successor": "Learn from Paul Lewis Videos"
+    },
+    {
+      "predecessor": "Try more web components",
+      "successor": "Learn from Paul Lewis Videos"
+    },
+    {
+      "predecessor": "Investigate Bootstrap meaning",
+      "successor": "Learn from Paul Lewis Videos"
     }
   ]
 }
