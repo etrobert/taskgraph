@@ -9,58 +9,42 @@
       "status": "todo"
     },
     {
-      "name": "test chrome compatibility",
-      "pos": {
-        "x": 803,
-        "y": 170
-      },
-      "status": "todo"
-    },
-    {
       "name": "Improve Appearance",
       "pos": {
-        "x": 1500,
-        "y": 297
+        "x": 193,
+        "y": 631
       },
       "status": "todo"
     },
     {
       "name": "use unique int ids instead of names",
       "pos": {
-        "x": 1314,
-        "y": -61
+        "x": -1374,
+        "y": 864
       },
       "status": "todo"
     },
     {
       "name": "Chrom compatibility",
       "pos": {
-        "x": 763,
-        "y": 73
-      },
-      "status": "todo"
-    },
-    {
-      "name": "fix selecting",
-      "pos": {
-        "x": 512,
-        "y": 143
+        "x": 40,
+        "y": 120
       },
       "status": "todo"
     },
     {
       "name": "fix insert input too big",
       "pos": {
-        "x": 321,
-        "y": 85
+        "x": 244,
+        "y": 208
       },
       "status": "todo"
     },
     {
       "name": "Add icon",
       "pos": {
-        "x": 1328,
-        "y": 379
+        "x": 70,
+        "y": 576
       },
       "status": "todo"
     },
@@ -75,18 +59,18 @@
     {
       "name": "use escape to exit input",
       "pos": {
-        "x": 512,
-        "y": 804
+        "x": -686,
+        "y": 1028
       },
       "status": "todo"
     },
     {
       "name": "Make the toolbar contextual",
       "pos": {
-        "x": 159,
-        "y": 354
+        "x": 146,
+        "y": 426
       },
-      "status": "todo"
+      "status": "completed"
     },
     {
       "name": "Fix phone compatibility",
@@ -99,16 +83,16 @@
     {
       "name": "Fix new tasks finishing by an s",
       "pos": {
-        "x": 973,
-        "y": 681
+        "x": 50,
+        "y": 321
       },
       "status": "todo"
     },
     {
       "name": "Rethink new task interface",
       "pos": {
-        "x": 981,
-        "y": 749
+        "x": 682,
+        "y": 678
       },
       "status": "todo"
     },
@@ -123,112 +107,112 @@
     {
       "name": "Improve selected style",
       "pos": {
-        "x": 1530,
-        "y": 403
+        "x": 367,
+        "y": 564
       },
       "status": "todo"
     },
     {
       "name": "Implement a handle",
       "pos": {
-        "x": 45,
-        "y": 625
+        "x": 5,
+        "y": 885
       },
       "status": "todo"
     },
     {
       "name": "Design a handle",
       "pos": {
-        "x": 469,
-        "y": 624
+        "x": 411,
+        "y": 877
       },
-      "status": "todo"
+      "status": "completed"
     },
     {
       "name": "Move the codebase to Typescript",
       "pos": {
-        "x": 1213,
-        "y": 816
+        "x": 1075,
+        "y": 843
       },
       "status": "todo"
     },
     {
       "name": "Have a good dependency interface for touch",
       "pos": {
-        "x": 46,
-        "y": 491
+        "x": -32,
+        "y": 738
       },
       "status": "todo"
     },
     {
       "name": "Add a handle",
       "pos": {
-        "x": 285,
-        "y": 559
+        "x": 217,
+        "y": 803
       },
       "status": "todo"
     },
     {
       "name": "Add task renaming",
       "pos": {
-        "x": 1454,
-        "y": -139
+        "x": -1249,
+        "y": 765
       },
       "status": "todo"
     },
     {
       "name": "Add dependency deletion",
       "pos": {
-        "x": 1341,
-        "y": 46
+        "x": -672,
+        "y": 847
       },
       "status": "todo"
     },
     {
       "name": "Add dependency selection",
       "pos": {
-        "x": 1334,
-        "y": 123
+        "x": -696,
+        "y": 766
       },
       "status": "todo"
     },
     {
       "name": "Add task completion",
       "pos": {
-        "x": -358,
-        "y": 298
+        "x": -672,
+        "y": 586
       },
       "status": "todo"
     },
     {
       "name": "Add multiple selection",
       "pos": {
-        "x": -458,
-        "y": 547
+        "x": -694,
+        "y": 722
       },
       "status": "todo"
     },
     {
       "name": "Add search",
       "pos": {
-        "x": 570,
-        "y": -80
+        "x": -597,
+        "y": 440
       },
       "status": "todo"
     },
     {
       "name": "Add time management",
       "pos": {
-        "x": -247,
-        "y": 170
+        "x": -683,
+        "y": 518
       },
       "status": "todo"
     },
     {
       "name": "Make menu close on save/load",
       "pos": {
-        "x": -120,
-        "y": 749
+        "x": -729,
+        "y": 1133
       },
       "status": "todo"
     },
@@ -271,17 +255,113 @@
         "y": 846
       },
       "status": "todo"
+    },
+    {
+      "name": "",
+      "pos": {
+        "x": 634,
+        "y": 994
+      },
+      "status": "todo"
+    },
+    {
+      "name": "Chrome Android compatibility",
+      "pos": {
+        "x": -7,
+        "y": -54
+      },
+      "status": "todo"
+    },
+    {
+      "name": "Fix arrow inversion",
+      "pos": {
+        "x": -8,
+        "y": 31
+      },
+      "status": "todo"
+    },
+    {
+      "name": "Romain High Priority",
+      "pos": {
+        "x": -584,
+        "y": -92
+      },
+      "status": "todo"
+    },
+    {
+      "name": "Add free drawing",
+      "pos": {
+        "x": -508,
+        "y": 279
+      },
+      "status": "todo"
+    },
+    {
+      "name": "Add Colorful tags",
+      "pos": {
+        "x": -798,
+        "y": 251
+      },
+      "status": "todo"
+    },
+    {
+      "name": "",
+      "pos": {
+        "x": -312,
+        "y": 200
+      },
+      "status": "todo"
+    },
+    {
+      "name": "Romain Ideas",
+      "pos": {
+        "x": -614,
+        "y": 333
+      },
+      "status": "todo"
+    },
+    {
+      "name": "fix background moving",
+      "pos": {
+        "x": -142,
+        "y": 205
+      },
+      "status": "todo"
+    },
+    {
+      "name": "Add zoom",
+      "pos": {
+        "x": -564,
+        "y": 122
+      },
+      "status": "todo"
+    },
+    {
+      "name": "Add Task Groups",
+      "pos": {
+        "x": -1208,
+        "y": 532
+      },
+      "status": "todo"
+    },
+    {
+      "name": "Think of a new Design",
+      "pos": {
+        "x": 232,
+        "y": 985
+      },
+      "status": "todo"
+    },
+    {
+      "name": "Think how to incorporate color",
+      "pos": {
+        "x": 160,
+        "y": 1058
+      },
+      "status": "todo"
     }
   ],
   "dependencies": [
-    {
-      "predecessor": "test chrome compatibility",
-      "successor": "Chrom compatibility"
-    },
-    {
-      "predecessor": "fix selecting",
-      "successor": "Chrom compatibility"
-    },
     {
       "predecessor": "fix insert input too big",
       "successor": "Chrom compatibility"
@@ -337,6 +417,34 @@
     {
       "predecessor": "Investigate Bootstrap meaning",
       "successor": "Learn from Paul Lewis Videos"
+    },
+    {
+      "predecessor": "Chrome Android compatibility",
+      "successor": "Romain High Priority"
+    },
+    {
+      "predecessor": "Fix arrow inversion",
+      "successor": "Romain High Priority"
+    },
+    {
+      "predecessor": "Romain Ideas",
+      "successor": "Add Colorful tags"
+    },
+    {
+      "predecessor": "Romain Ideas",
+      "successor": "Add free drawing"
+    },
+    {
+      "predecessor": "fix background moving",
+      "successor": "Chrom compatibility"
+    },
+    {
+      "predecessor": "Add zoom",
+      "successor": "Romain High Priority"
+    },
+    {
+      "predecessor": "Think how to incorporate color",
+      "successor": "Think of a new Design"
     }
   ]
 }
