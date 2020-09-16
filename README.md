@@ -4,6 +4,10 @@ TaskGraph is a web application to manage tasks in a graph form.
 
 It is running live at [taskgraph.net](https://taskgraph.net).
 
+## Graphics
+
+The project's graphics are developed on [Figma](https://www.figma.com/file/WclIMqlhIUVXFMjfhsTldN/TaskGraph?node-id=0%3A1).
+
 ## Run locally
 
 _Warning_: Intended for development purposes only.
