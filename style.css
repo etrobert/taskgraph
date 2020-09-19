@@ -10,17 +10,22 @@
 }
 
 body {
-  background: url("resources/Brown-Paper.jpg");
   touch-action: none;
   overflow: hidden;
 }
 
 #graph {
   height: 100vh;
+  background-color: #ccc;
 }
 
 .task {
-  /* border: 1px solid black; */
+  border-radius: 3px;
+  background-color: #ddd;
+  padding: 0.2em 0.4em;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  transition: box-shadow 0.2s ease;
+
   position: absolute;
   font-family: "PermanentMarker";
   font-size: 2em;
@@ -29,7 +34,12 @@ body {
   white-space: nowrap;
 }
 
+.task:hover {
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+}
+
 .selected {
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
   background-color: aquamarine;
 }
 
