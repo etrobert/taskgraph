@@ -221,6 +221,10 @@ h1 {
   background-image: url("resources/feather/menu.svg");
 }
 
+#fileInput {
+  display: none;
+}
+
 #githubLink {
   width: 1.5rem;
   height: 1.5rem;

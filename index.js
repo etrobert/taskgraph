@@ -60,8 +60,9 @@ function setupMenubar() {
   menubarCloseButton.addEventListener("click", closeMenubar);
 
   const menubarLoadButton = document.getElementById("menubarLoadButton");
+  const fileInput = document.getElementById("fileInput");
   menubarLoadButton.addEventListener("click", () => {
-    console.log("Load");
+    fileInput.click();
   });
 
   const menubarSaveButton = document.getElementById("menubarSaveButton");
