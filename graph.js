@@ -396,6 +396,7 @@ export function initGraph() {
       // Initiate Drag
       const offsetX = event.offsetX;
       const offsetY = event.offsetY;
+      task.classList.add("dragged");
       function onPointerMove(event) {
         if (event.pointerId !== pointerId) return;
         moved = true;
@@ -408,6 +409,7 @@ export function initGraph() {
         itemsContainer.removeEventListener("pointermove", onPointerMove);
         itemsContainer.removeEventListener("pointerup", onPointerEnd);
         itemsContainer.removeEventListener("pointercancel", onPointerEnd);
+        task.classList.remove("dragged");
         if (moved) {
           graphContainer.dispatchEvent(
             new CustomEvent("taskmoved", { detail: { task } })
