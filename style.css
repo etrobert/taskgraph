@@ -19,6 +19,13 @@ body {
   background-color: #ccc;
 }
 
+#zoomIndicator {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 1;
+}
+
 .task {
   user-select: none;
   border-radius: 3px;

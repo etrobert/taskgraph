@@ -326,10 +326,16 @@ function onGraphDragStart(event) {
   itemsContainer.addEventListener("pointerup", onPointerEnd);
 }
 
+function updateZoomIndicator() {
+  const zoomIndicator = document.getElementById("zoomIndicator");
+  zoomIndicator.textContent = Math.floor(panzoom.zoom * 100) + "% zoom";
+}
+
 function setupZoom() {
   graphContainer.onwheel = (event) => {
     panzoom.zoom *= event.deltaY < 0 ? 1.1 : 0.9;
     updatePanzoom();
+    updateZoomIndicator();
   };
 }
 
@@ -414,4 +420,5 @@ export function initGraph() {
     }
   };
   sendSelectionChanged([]);
+  updateZoomIndicator();
 }
