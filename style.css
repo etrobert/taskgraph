@@ -20,6 +20,7 @@ body {
 }
 
 .task {
+  user-select: none;
   border-radius: 3px;
   background-color: #ddd;
   padding: 0.2em 0.4em;
