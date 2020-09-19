@@ -16,7 +16,7 @@
 
 ## Task Completion
 
-- **PRIORITY** Mark Task as Done
+- **DONE** Mark Task as Done
 - **PRIORITY** Hide Completed Task
 - Hide Completed Tasks after Timeout
 - Option to Show Completed Tasks
@@ -24,8 +24,8 @@
 ## Movement
 
 - **DONE** Drag Task
-- Zoom
-- Drag Space
+- **DONE** Zoom
+- **DONE** Drag Space
 
 ## Search
 
