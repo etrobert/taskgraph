@@ -1,14 +1,6 @@
  {
   "tasks": [
     {
-      "name": "",
-      "pos": {
-        "x": 0,
-        "y": 0
-      },
-      "status": "todo"
-    },
-    {
       "name": "Improve Appearance",
       "pos": {
         "x": 193,
@@ -45,14 +37,6 @@
       "pos": {
         "x": 70,
         "y": 576
-      },
-      "status": "todo"
-    },
-    {
-      "name": "",
-      "pos": {
-        "x": 0,
-        "y": 0
       },
       "status": "todo"
     },
@@ -107,8 +91,8 @@
     {
       "name": "Improve selected style",
       "pos": {
-        "x": 367,
-        "y": 564
+        "x": 371,
+        "y": 559
       },
       "status": "todo"
     },
@@ -139,7 +123,7 @@
     {
       "name": "Have a good dependency interface for touch",
       "pos": {
-        "x": -32,
+        "x": -34,
         "y": 738
       },
       "status": "todo"
@@ -252,31 +236,15 @@
       "name": "Investigate Bootstrap meaning",
       "pos": {
         "x": 1745,
-        "y": 846
+        "y": 848
       },
-      "status": "todo"
-    },
-    {
-      "name": "",
-      "pos": {
-        "x": 634,
-        "y": 994
-      },
-      "status": "todo"
+      "status": "completed"
     },
     {
       "name": "Chrome Android compatibility",
       "pos": {
-        "x": -7,
-        "y": -54
-      },
-      "status": "todo"
-    },
-    {
-      "name": "Fix arrow inversion",
-      "pos": {
-        "x": -8,
-        "y": 31
+        "x": -998,
+        "y": 48
       },
       "status": "todo"
     },
@@ -291,8 +259,8 @@
     {
       "name": "Add free drawing",
       "pos": {
-        "x": -508,
-        "y": 279
+        "x": -429,
+        "y": 255
       },
       "status": "todo"
     },
@@ -301,14 +269,6 @@
       "pos": {
         "x": -798,
         "y": 251
-      },
-      "status": "todo"
-    },
-    {
-      "name": "",
-      "pos": {
-        "x": -312,
-        "y": 200
       },
       "status": "todo"
     },
@@ -334,7 +294,7 @@
         "x": -564,
         "y": 122
       },
-      "status": "todo"
+      "status": "completed"
     },
     {
       "name": "Add Task Groups",
@@ -350,7 +310,7 @@
         "x": 232,
         "y": 985
       },
-      "status": "todo"
+      "status": "completed"
     },
     {
       "name": "Think how to incorporate color",
@@ -359,6 +319,62 @@
         "y": 1058
       },
       "status": "todo"
+    },
+    {
+      "name": "Fix new task not centered on zoom",
+      "pos": {
+        "x": 860,
+        "y": 211
+      },
+      "status": "todo"
+    },
+    {
+      "name": "Fix zoom offset from cursor",
+      "pos": {
+        "x": 852,
+        "y": 151
+      },
+      "status": "todo"
+    },
+    {
+      "name": "Improve zoom display",
+      "pos": {
+        "x": 934,
+        "y": 99
+      },
+      "status": "todo"
+    },
+    {
+      "name": "Add zoom controls",
+      "pos": {
+        "x": 973,
+        "y": 34
+      },
+      "status": "todo"
+    },
+    {
+      "name": "fix arrow inversion",
+      "pos": {
+        "x": -206,
+        "y": 376
+      },
+      "status": "todo"
+    },
+    {
+      "name": "Style dragged tasks",
+      "pos": {
+        "x": 255,
+        "y": 1192
+      },
+      "status": "todo"
+    },
+    {
+      "name": "Fix empty tasks",
+      "pos": {
+        "x": -127,
+        "y": 461
+      },
+      "status": "completed"
     }
   ],
   "dependencies": [
@@ -423,10 +439,6 @@
       "successor": "Romain High Priority"
     },
     {
-      "predecessor": "Fix arrow inversion",
-      "successor": "Romain High Priority"
-    },
-    {
       "predecessor": "Romain Ideas",
       "successor": "Add Colorful tags"
     },
@@ -445,6 +457,10 @@
     {
       "predecessor": "Think how to incorporate color",
       "successor": "Think of a new Design"
+    },
+    {
+      "predecessor": "Romain Ideas",
+      "successor": "fix arrow inversion"
     }
   ]
 }
