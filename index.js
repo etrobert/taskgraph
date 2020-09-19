@@ -121,9 +121,11 @@ function setupNewTask() {
 
   newTask.onkeypress = (event) => {
     if (event.key == "Enter") {
-      addTask({ name: newTask.value });
+      if (newTask.value) {
+        addTask({ name: newTask.value });
+        saveToLocalStorage();
+      }
       stopNewTask();
-      saveToLocalStorage();
     }
   };
 }
