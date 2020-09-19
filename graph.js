@@ -30,8 +30,8 @@ function getViewCenter() {
   const box = getOffsetBox(graphContainer);
   const viewCenter = getBoxCenter(box);
   return {
-    x: viewCenter.x - graphOffset.x,
-    y: viewCenter.y - graphOffset.y,
+    x: viewCenter.x - panzoom.pan.x,
+    y: viewCenter.y - panzoom.pan.y,
   };
 }
 
@@ -300,16 +300,23 @@ function updatePath(path, dest) {
   }
 }
 
-let graphOffset = { x: 0, y: 0 };
+const panzoom = {
+  pan: { x: 0, y: 0 },
+  zoom: 1,
+};
+
+function updatePanzoom() {
+  itemsContainer.style.transform = `translate(${panzoom.pan.x}px, ${panzoom.pan.y}px) scale(${panzoom.zoom})`;
+}
 
 function onGraphDragStart(event) {
   itemsContainer.setPointerCapture(event.pointerId);
   let previousPosition = { x: event.clientX, y: event.clientY };
   const onPointerMove = (event) => {
-    graphOffset.x += event.clientX - previousPosition.x;
-    graphOffset.y += event.clientY - previousPosition.y;
+    panzoom.pan.x += event.clientX - previousPosition.x;
+    panzoom.pan.y += event.clientY - previousPosition.y;
     previousPosition = { x: event.clientX, y: event.clientY };
-    itemsContainer.style.transform = `translate(${graphOffset.x}px, ${graphOffset.y}px)`;
+    updatePanzoom();
   };
   const onPointerEnd = (event) => {
     itemsContainer.removeEventListener("pointermove", onPointerMove);
@@ -319,7 +326,15 @@ function onGraphDragStart(event) {
   itemsContainer.addEventListener("pointerup", onPointerEnd);
 }
 
+function setupZoom() {
+  graphContainer.onwheel = (event) => {
+    panzoom.zoom *= event.deltaY < 0 ? 1.1 : 0.9;
+    updatePanzoom();
+  };
+}
+
 export function initGraph() {
+  setupZoom();
   graphContainer.onpointerdown = (event) => {
     event.preventDefault();
     let moved = false;
