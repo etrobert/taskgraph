@@ -59,8 +59,22 @@ function setupMenubar() {
   const menubarCloseButton = document.getElementById("menubarCloseButton");
   menubarCloseButton.addEventListener("click", closeMenubar);
 
-  const menubarLoadButton = document.getElementById("menubarLoadButton");
   const fileInput = document.getElementById("fileInput");
+  fileInput.onchange = () => {
+    const files = fileInput.files;
+    if (files.length == 0) return;
+    const file = files[0];
+    if (file.type != "application/json") return;
+    const reader = new FileReader();
+    reader.addEventListener("load", () => {
+      loadGraph(JSON.parse(reader.result));
+      saveToLocalStorage();
+    });
+    reader.readAsText(file);
+    closeMenubar();
+  };
+
+  const menubarLoadButton = document.getElementById("menubarLoadButton");
   menubarLoadButton.addEventListener("click", () => {
     fileInput.click();
   });
@@ -156,20 +170,6 @@ document.addEventListener("DOMContentLoaded", (event) => {
     } else if (event.key == "s") {
       saveToFile();
     }
-  };
-
-  const fileInput = document.getElementById("fileInput");
-  fileInput.onchange = () => {
-    const files = fileInput.files;
-    if (files.length == 0) return;
-    const file = files[0];
-    if (file.type != "application/json") return;
-    const reader = new FileReader();
-    reader.addEventListener("load", () => {
-      loadGraph(JSON.parse(reader.result));
-      saveToLocalStorage();
-    });
-    reader.readAsText(file);
   };
 
   initGraph();
