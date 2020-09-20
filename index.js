@@ -8,6 +8,7 @@ import {
   deleteSelected,
   clearGraph,
   completeSelected,
+  selectAll,
 } from "./graph.js";
 
 function downloadFile(filename, text, type = "data:text/plain;charset=utf-8") {
@@ -161,14 +162,22 @@ document.addEventListener("DOMContentLoaded", (event) => {
   document.onkeyup = (event) => {
     // Do not register commands when adding new task
     if (newTask.style.display === "block") return;
-    if (event.key == "i") {
-      newTask.style.display = "block";
-      newTask.focus();
-    } else if (event.key == "d" || event.key == "Delete") {
-      deleteSelected();
-      saveToLocalStorage();
-    } else if (event.key == "s") {
-      saveToFile();
+    switch (event.key) {
+      case "a":
+        if (event.ctrlKey) selectAll();
+        break;
+      case "i":
+        newTask.style.display = "block";
+        newTask.focus();
+        break;
+      case "d":
+      case "Delete":
+        deleteSelected();
+        saveToLocalStorage();
+        break;
+      case "s":
+        saveToFile();
+        break;
     }
   };
 

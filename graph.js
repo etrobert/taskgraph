@@ -113,6 +113,12 @@ function deleteDependency(dependency) {
   arrows.removeChild(dependency);
 }
 
+export function selectAll() {
+  const tasks = getTasks();
+  tasks.forEach((t) => t.classList.add("selected"));
+  sendSelectionChanged(tasks);
+}
+
 export function deleteSelected() {
   const selected = getSelected();
   selected.forEach(deleteTask);
