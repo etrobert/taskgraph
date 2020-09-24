@@ -334,12 +334,19 @@ function onGraphDragStart(event) {
 
 function updateZoomIndicator() {
   const zoomIndicator = document.getElementById("zoomIndicator");
-  zoomIndicator.textContent = Math.floor(panzoom.zoom * 100) + "% zoom";
+  zoomIndicator.textContent =
+    panzoom.zoom === 1 ? "" : Math.floor(panzoom.zoom * 100) + "% zoom";
 }
 
 function setupZoom() {
   graphContainer.onwheel = (event) => {
     panzoom.zoom *= event.deltaY < 0 ? 1.1 : 0.9;
+    /**
+     * Snaps *value* to *target* if close to *target* by less than *offset*
+     */
+    const snap = (target) => (offset) => (value) =>
+      value > target - offset && value < target + offset ? target : value;
+    panzoom.zoom = snap(1)(0.1)(panzoom.zoom);
     updatePanzoom();
     updateZoomIndicator();
   };
