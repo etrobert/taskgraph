@@ -9,14 +9,19 @@
   padding: 0;
 }
 
+html,
+body {
+  height: 100%;
+}
+
 body {
   touch-action: none;
-  overflow: hidden;
 }
 
 #graph {
-  height: 100vh;
+  height: 100%;
   background-color: #ccc;
+  overflow: hidden;
 }
 
 #zoomIndicator {
@@ -82,8 +87,6 @@ body {
   position: absolute;
   left: 0;
   top: 0;
-  height: 100vh;
-  width: 100vw;
   overflow: visible;
 }
 
