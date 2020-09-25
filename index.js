@@ -176,7 +176,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
         saveToLocalStorage();
         break;
       case "s":
-        saveToFile();
+        if (event.ctrlKey) saveToFile();
         break;
     }
   };
