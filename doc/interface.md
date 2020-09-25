@@ -2,27 +2,24 @@
 
 ## Currently
 
-| Functionnality        | Keyboard + Mouse  | Touch Screen     | Keyboard only  |
-| -----------------     | ----------------- | ---------------- | -------------  |
-| Create Task           | Press i           |                  | Press i        |
-| Create Dependency     | Hold Shift + Drag |                  |                |
-| Move Task             | Drag              | Drag
-| Select Task           | Click Task        | Click Task
-| Delete Selected Tasks | Press d or Del    |                  | Press d or Del |
-| Save to File          | Press s           |                  | Press s        |
-| Load from File        | Click Button      | Click Button
+| Functionnality             | Keyboard + Mouse    | Touch Screen                    | Keyboard only           |
+| -------------------------- | ------------------- | ------------------------------- | ----------------------- |
+| Create Task                | Click Add button    | Touch Add button                | Press shortcut i        |
+| Create Dependency          | Hold Shift + Drag   | Go in dependency mode then drag |                         |
+| Mark Selected Task as Done | Click Done Button   | Touch Done Button               |                         |
+| Move Task                  | Drag                | Drag                            |                         |
+| Select Task                | Click Task          | Touch Task                      |                         |
+| Delete Selected            | Click Delete Button | Touch Delete Button             | Press shortcut Del or d |
+| Save Graph to LocalStorage | Automatic           | Automatic                       | Automatic               |
+| Save to File               | Use aside menu      | Use aside menu                  | Press Ctrl-s            |
+| Load from File             | Use aside menu      | Use aside menu                  | Press Ctrl-o            |
 
 ## Ideally
 
-| Functionnality             | Keyboard + Mouse    | Touch Screen        | Keyboard only  |
-| -----------------          | -----------------   | ----------------    | -------------- |
-| Create Task                | Click Add button    | Click Add button    | Press shortcut |
-| Create Dependency          | Hold Shift + Drag<br /> or <br />Select Task + Click Add dependency button  | | 1. Select Task<br /> 2. Press shortcut<br /> 3. Search for dependant |
-| Mark Selected Task as Done | Click Done Button   | Click Done Button   | Press shortcut |
-| Select Task                | Click Task          | Click Task          | Do a search    |
-| Select Dependency          | Click Dependency    | Click Dependency    |
-| Delete Selected Task       | Click Delete Button | Click Delete Button | Press shortcut |
-| Delete Dependency
-| Save Graph to LocalStorage | Automatic           | Automatic           | Automatic      |
-| Save to JSON               | Click Save Button   | Click Save Button   | Press shortcut |
-| Search for a Task          | Click Search Button | Click Search Button | Press shortcut |
+| Functionnality             | Keyboard + Mouse                      | Touch Screen        | Keyboard only                           |
+| -------------------------- | ------------------------------------- | ------------------- | --------------------------------------- |
+| Create Dependency          | Hold Shift + Drag or Drag from handle | Drag from handle    | Select Task, shortcut, Search dependant |
+| Mark Selected Task as Done |                                       |                     | Press shortcut                          |
+| Select Task                |                                       |                     | Do a search                             |
+| Select Dependency          | Click Dependency                      | Touch Dependency    | ?                                       |
+| Search for a Task          | Click Search Button                   | Click Search Button | Press shortcut /                        |
