@@ -45,6 +45,10 @@ function loadFromLocalStorage() {
   loadGraph(graph);
 }
 
+function loadFromFile() {
+  fileInput.click();
+}
+
 function setupMenubar() {
   const menubar = document.getElementById("menubar");
 
@@ -76,9 +80,7 @@ function setupMenubar() {
   };
 
   const menubarLoadButton = document.getElementById("menubarLoadButton");
-  menubarLoadButton.addEventListener("click", () => {
-    fileInput.click();
-  });
+  menubarLoadButton.addEventListener("click", loadFromFile);
 
   const menubarSaveButton = document.getElementById("menubarSaveButton");
   menubarSaveButton.addEventListener("click", () => {
@@ -174,6 +176,9 @@ document.addEventListener("DOMContentLoaded", (event) => {
       case "Delete":
         deleteSelected();
         saveToLocalStorage();
+        break;
+      case "o":
+        if (event.ctrlKey) loadFromFile();
         break;
       case "s":
         if (event.ctrlKey) saveToFile();
