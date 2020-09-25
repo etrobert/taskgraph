@@ -1,4 +1,5 @@
 import {
+  squaredDistance,
   getBoxCenter,
   getExpandedBox,
   getOffsetBox,
@@ -267,6 +268,12 @@ function setupZoom() {
   };
 }
 
+function moveTask(task, pos) {
+  task.style.left = pos.x + "px";
+  task.style.top = pos.y + "px";
+  for (const path of [...task.from, ...task.to]) updatePath(path);
+}
+
 export function initGraph() {
   setupZoom();
   graphContainer.onpointerdown = (event) => {
@@ -281,6 +288,7 @@ export function initGraph() {
     }
     const pointerId = event.pointerId;
     itemsContainer.setPointerCapture(pointerId);
+    const initialPosition = { x: event.clientX, y: event.clientY };
     if (
       event.shiftKey ||
       document.querySelector("#linkModeCheckbox input").checked
@@ -327,10 +335,18 @@ export function initGraph() {
       task.classList.add("dragged");
       function onPointerMove(event) {
         if (event.pointerId !== pointerId) return;
-        moved = true;
-        task.style.left = event.offsetX - offsetX + "px";
-        task.style.top = event.offsetY - offsetY + "px";
-        for (const path of [...task.from, ...task.to]) updatePath(path);
+        const currentPosition = { x: event.clientX, y: event.clientY };
+        const movedThreshold = 5; // px
+        const squaredMovedThreshold = movedThreshold * movedThreshold;
+        if (
+          squaredDistance(initialPosition, currentPosition) >
+          squaredMovedThreshold
+        )
+          moved = true;
+        moveTask(task, {
+          x: event.offsetX - offsetX,
+          y: event.offsetY - offsetY,
+        });
       }
       function onPointerEnd(event) {
         if (event.pointerId !== pointerId) return;
