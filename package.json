@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "live-server",
+    "clean": "rm -rf dist/",
+    "build": "cp -r src/ dist/",
+    "serve": "live-server dist/",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": {
