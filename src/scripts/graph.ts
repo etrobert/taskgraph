@@ -4,35 +4,75 @@ import {
   getExpandedBox,
   getOffsetBox,
   intersectLineBox,
+  Point,
 } from "./geometry.js";
+
+import {
+  getElementById,
+  removeFromArray,
+  snap,
+  querySelector,
+} from "./misc.js";
+
+interface HTMLTaskElement extends HTMLElement {
+  from: HTMLDependencyElement[];
+  to: HTMLDependencyElement[];
+}
+
+interface HTMLDependencyElement extends HTMLElement {
+  from: HTMLTaskElement;
+  to: HTMLTaskElement;
+}
+
+interface Task {
+  name: string;
+  status: "todo" | "completed";
+  pos: Point;
+}
+
+interface Dependency {
+  predecessor: string;
+  successor: string;
+}
+
+interface Graph {
+  tasks: Task[];
+  dependencies: Dependency[];
+}
 
 // Has the correct size
 // Used to initially capture mouse events
-const graphContainer = document.getElementById("graph");
+const graphContainer = getElementById("graph");
 
 // Contains the tasks and dependencies
 // Will get translated around
-const itemsContainer = document.getElementById("itemsContainer");
+const itemsContainer = getElementById("itemsContainer");
 
-function getTasks() {
-  const isTask = (e) => e.classList.contains("task");
-  return Array.from(itemsContainer.children).filter(isTask);
+const arrows = getElementById("arrows");
+
+function getTasks(): HTMLTaskElement[] {
+  const isTask = (e: HTMLElement) => e.classList.contains("task");
+  const elements = Array.from(itemsContainer.children) as HTMLElement[];
+  return elements.filter(isTask) as HTMLTaskElement[];
 }
 
-function getDependencies() {
-  const isDependency = (e) => e.tagName == "path";
-  return Array.from(arrows.children).filter(isDependency);
+function getDependencies(): HTMLDependencyElement[] {
+  const isDependency = (e: HTMLElement) => e.tagName == "path";
+  const elements = Array.from(arrows.children) as HTMLElement[];
+  return elements.filter(isDependency) as HTMLDependencyElement[];
 }
 
 export function clearGraph() {
-  const removeElement = (e) => e.parentNode.removeChild(e);
+  const removeElement = (e: HTMLElement) => {
+    if (e.parentNode) e.parentNode.removeChild(e);
+  };
   const tasks = getTasks();
   tasks.forEach(removeElement);
   const dependencies = getDependencies();
   dependencies.forEach(removeElement);
 }
 
-function getViewCenter() {
+function getViewCenter(): Point {
   const box = getOffsetBox(graphContainer);
   const viewCenter = getBoxCenter(box);
   return {
@@ -41,7 +81,7 @@ function getViewCenter() {
   };
 }
 
-function computeCenteredPos(element) {
+function computeCenteredPos(element: HTMLElement): Point {
   const viewCenter = getViewCenter();
   const width = element.offsetWidth;
   const height = element.offsetHeight;
@@ -51,8 +91,14 @@ function computeCenteredPos(element) {
   };
 }
 
-export function addTask(task) {
-  const htmlTask = document.createElement("div");
+interface AddTask extends Partial<Task> {
+  name: string;
+}
+
+export function addTask(task: AddTask) {
+  const htmlTask = (document.createElement(
+    "div"
+  ) as unknown) as HTMLTaskElement;
   htmlTask.classList.add("task");
   htmlTask.textContent = task.name;
   htmlTask.from = [];
@@ -65,11 +111,11 @@ export function addTask(task) {
   return htmlTask;
 }
 
-function addDependency(dependency) {
-  const dependencyHtml = document.createElementNS(
+function addDependency(dependency: Dependency) {
+  const dependencyHtml = (document.createElementNS(
     "http://www.w3.org/2000/svg",
     "path"
-  );
+  ) as unknown) as HTMLDependencyElement;
   const tasks = getTasks();
   const predecessor = tasks.find(
     (task) => task.textContent == dependency.predecessor
@@ -94,13 +140,12 @@ function addDependency(dependency) {
   predecessor.from.push(dependencyHtml);
   successor.to.push(dependencyHtml);
 
-  const arrows = document.getElementById("arrows");
   arrows.appendChild(dependencyHtml);
 
   updatePath(dependencyHtml);
 }
 
-function deleteTask(task) {
+function deleteTask(task: HTMLTaskElement) {
   const from = task.from.slice();
   from.forEach(deleteDependency);
   const to = task.to.slice();
@@ -108,14 +153,9 @@ function deleteTask(task) {
   itemsContainer.removeChild(task);
 }
 
-function removeFromArray(array, element) {
-  array.splice(array.indexOf(element), 1);
-}
-
-function deleteDependency(dependency) {
+function deleteDependency(dependency: HTMLDependencyElement) {
   removeFromArray(dependency.from.from, dependency);
   removeFromArray(dependency.to.to, dependency);
-  const arrows = document.getElementById("arrows");
   arrows.removeChild(dependency);
 }
 
@@ -136,7 +176,7 @@ export function completeSelected() {
   selected.forEach((task) => task.classList.toggle("completed"));
 }
 
-function onTaskClicked(task, event) {
+function onTaskClicked(task: HTMLTaskElement, event: MouseEvent) {
   if (event.shiftKey) {
     task.classList.toggle("selected");
     sendSelectionChanged();
@@ -151,7 +191,7 @@ function onTaskClicked(task, event) {
  * sends out a "selectionchanged" event
  * @param {[HTMLElement]} selection if known by the caller, passthrough
  */
-function sendSelectionChanged(selection) {
+function sendSelectionChanged(selection?: HTMLTaskElement[]) {
   graphContainer.dispatchEvent(
     new CustomEvent("selectionchanged", {
       detail: selection ? selection : getSelected(),
@@ -160,7 +200,7 @@ function sendSelectionChanged(selection) {
 }
 
 function getSelected() {
-  const isSelected = (e) => e.classList.contains("selected");
+  const isSelected = (e: HTMLTaskElement) => e.classList.contains("selected");
   return getTasks().filter(isSelected);
 }
 
@@ -169,7 +209,7 @@ function resetSelected() {
   selectedTasks.forEach((task) => task.classList.remove("selected"));
 }
 
-export function loadGraph(graph) {
+export function loadGraph(graph: Graph) {
   clearGraph();
   graph.tasks.forEach(addTask);
   graph.dependencies.forEach(addDependency);
@@ -195,21 +235,23 @@ export function getGraph() {
 
 // updates the visual representation of path
 // if dest if specified, use instead of path.to
-function updatePath(path, dest) {
+function updatePath(path: HTMLDependencyElement, dest?: Point) {
   const nodeABox = getOffsetBox(path.from);
   const nodeBBox = dest ? null : getOffsetBox(path.to);
 
   const centerA = getBoxCenter(nodeABox);
-  const centerB = dest ? dest : getBoxCenter(nodeBBox);
+  const centerB = dest ? dest : getBoxCenter(nodeBBox!);
+
+  const offset = 8;
 
   const pathPointA = intersectLineBox(
     centerA,
     centerB,
-    getExpandedBox(nodeABox, 8)
+    getExpandedBox(nodeABox, offset)
   );
   const pathPointB = dest
     ? dest
-    : intersectLineBox(centerA, centerB, getExpandedBox(nodeBBox, 8));
+    : intersectLineBox(centerA, centerB, getExpandedBox(nodeBBox!, offset));
 
   if (pathPointA && pathPointB) {
     path.setAttributeNS(
@@ -231,16 +273,16 @@ function updatePanzoom() {
   itemsContainer.style.transform = `translate(${panzoom.pan.x}px, ${panzoom.pan.y}px) scale(${panzoom.zoom})`;
 }
 
-function onGraphDragStart(event) {
+function onGraphDragStart(event: PointerEvent) {
   itemsContainer.setPointerCapture(event.pointerId);
   let previousPosition = { x: event.clientX, y: event.clientY };
-  const onPointerMove = (event) => {
+  const onPointerMove = (event: PointerEvent) => {
     panzoom.pan.x += event.clientX - previousPosition.x;
     panzoom.pan.y += event.clientY - previousPosition.y;
     previousPosition = { x: event.clientX, y: event.clientY };
     updatePanzoom();
   };
-  const onPointerEnd = (event) => {
+  const onPointerEnd = (event: PointerEvent) => {
     itemsContainer.removeEventListener("pointermove", onPointerMove);
     itemsContainer.removeEventListener("pointerup", onPointerEnd);
   };
@@ -249,26 +291,21 @@ function onGraphDragStart(event) {
 }
 
 function updateZoomIndicator() {
-  const zoomIndicator = document.getElementById("zoomIndicator");
+  const zoomIndicator = getElementById("zoomIndicator");
   zoomIndicator.textContent =
     panzoom.zoom === 1 ? "" : Math.floor(panzoom.zoom * 100) + "% zoom";
 }
 
 function setupZoom() {
   graphContainer.onwheel = (event) => {
-    panzoom.zoom *= event.deltaY < 0 ? 1.1 : 0.9;
-    /**
-     * Snaps *value* to *target* if close to *target* by less than *offset*
-     */
-    const snap = (target) => (offset) => (value) =>
-      value > target - offset && value < target + offset ? target : value;
-    panzoom.zoom = snap(1)(0.1)(panzoom.zoom);
+    const factor = event.deltaY < 0 ? 1.1 : 0.9;
+    panzoom.zoom = snap(1)(0.1)(panzoom.zoom * factor);
     updatePanzoom();
     updateZoomIndicator();
   };
 }
 
-function moveTask(task, pos) {
+function moveTask(task: HTMLTaskElement, pos: Point) {
   task.style.left = pos.x + "px";
   task.style.top = pos.y + "px";
   for (const path of [...task.from, ...task.to]) updatePath(path);
@@ -279,33 +316,34 @@ export function initGraph() {
   graphContainer.onpointerdown = (event) => {
     event.preventDefault();
     let moved = false;
-    const task = event.target;
-    if (!task.classList.contains("task")) {
+    const target = event.target;
+    if (!target || !(target as HTMLElement).classList.contains("task")) {
       resetSelected();
       sendSelectionChanged([]);
       onGraphDragStart(event);
       return;
     }
+    const task = target as HTMLTaskElement;
     const pointerId = event.pointerId;
     itemsContainer.setPointerCapture(pointerId);
     const initialPosition = { x: event.clientX, y: event.clientY };
-    if (
-      event.shiftKey ||
-      document.querySelector("#linkModeCheckbox input").checked
-    ) {
+    const linkModeCheckbox = querySelector(
+      "#linkModeCheckbox input"
+    ) as HTMLInputElement;
+    if (event.shiftKey || linkModeCheckbox.checked) {
       // Initiate link creation
-      const path = document.createElementNS(
+      const path = (document.createElementNS(
         "http://www.w3.org/2000/svg",
         "path"
-      );
+      ) as unknown) as HTMLDependencyElement;
       path.from = task;
       arrows.appendChild(path);
-      function onPointerMove(event) {
+      function onPointerMove(event: PointerEvent) {
         if (event.pointerId !== pointerId) return;
         moved = true;
         updatePath(path, { x: event.offsetX, y: event.offsetY });
       }
-      function onPointerEnd(event) {
+      function onPointerEnd(event: PointerEvent) {
         if (event.pointerId !== pointerId) return;
         if (!moved) onTaskClicked(task, event);
         itemsContainer.removeEventListener("pointermove", onPointerMove);
@@ -319,9 +357,10 @@ export function initGraph() {
           arrows.removeChild(path);
           return;
         }
-        path.to = target;
+        const targetTask = target as HTMLTaskElement;
+        path.to = targetTask;
         task.from.push(path);
-        target.to.push(path);
+        targetTask.to.push(path);
         updatePath(path);
         graphContainer.dispatchEvent(new CustomEvent("newdependency"));
       }
@@ -333,7 +372,7 @@ export function initGraph() {
       const offsetX = event.offsetX;
       const offsetY = event.offsetY;
       task.classList.add("dragged");
-      function onPointerMove(event) {
+      function onPointerMove(event: PointerEvent) {
         if (event.pointerId !== pointerId) return;
         const currentPosition = { x: event.clientX, y: event.clientY };
         const movedThreshold = 5; // px
@@ -348,7 +387,7 @@ export function initGraph() {
           y: event.offsetY - offsetY,
         });
       }
-      function onPointerEnd(event) {
+      function onPointerEnd(event: PointerEvent) {
         if (event.pointerId !== pointerId) return;
         itemsContainer.removeEventListener("pointermove", onPointerMove);
         itemsContainer.removeEventListener("pointerup", onPointerEnd);

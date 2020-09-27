@@ -1,24 +1,40 @@
-export function squaredDistance(p1, p2) {
+export interface Point {
+  x: number;
+  y: number;
+}
+
+export interface Box {
+  left: number;
+  top: number;
+  right: number;
+  bottom: number;
+  width: number;
+  height: number;
+}
+
+export function squaredDistance(p1: Point, p2: Point) {
   return (p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y);
 }
 
-export function getBoxCenter(box) {
+export function getBoxCenter(box: Box): Point {
   return {
     x: box.left + box.width / 2,
     y: box.top + box.height / 2,
   };
 }
 
-export function getExpandedBox(box, offset) {
+export function getExpandedBox(box: Box, offset: number): Box {
   return {
     left: box.left - offset,
     top: box.top - offset,
     right: box.right + offset,
     bottom: box.bottom + offset,
+    width: box.width + offset * 2,
+    height: box.height + offset * 2,
   };
 }
 
-export function getOffsetBox(element) {
+export function getOffsetBox(element: HTMLElement): Box {
   return {
     left: element.offsetLeft,
     top: element.offsetTop,
@@ -31,7 +47,7 @@ export function getOffsetBox(element) {
 
 // Finds the intersection point between the line segment p1->p2 and the given bounding box.
 // If the line segment and the box don't intersect, null is returned.
-export function intersectLineBox(p1, p2, box) {
+export function intersectLineBox(p1: Point, p2: Point, box: Box): Point | null {
   const left = {
     p1: { x: box.left, y: box.top },
     p2: { x: box.left, y: box.bottom },
@@ -59,7 +75,12 @@ export function intersectLineBox(p1, p2, box) {
 
 // Finds the intersection point between the line segments p1->p2 and p3->p4.
 // If the segments don't intersect, null is returned.
-function intersectLines(p1, p2, p3, p4) {
+function intersectLines(
+  p1: Point,
+  p2: Point,
+  p3: Point,
+  p4: Point
+): Point | null {
   // Check if none of the lines are of length 0
   if ((p1.x === p2.x && p1.y === p2.y) || (p3.x === p4.x && p3.y === p4.y)) {
     return null;

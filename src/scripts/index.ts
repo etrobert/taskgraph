@@ -11,7 +11,13 @@ import {
   selectAll,
 } from "./graph.js";
 
-function downloadFile(filename, text, type = "data:text/plain;charset=utf-8") {
+import { getElementById } from "./misc.js";
+
+function downloadFile(
+  filename: string,
+  text: string,
+  type = "data:text/plain;charset=utf-8"
+) {
   var element = document.createElement("a");
   element.setAttribute("href", `${type}, ${encodeURIComponent(text)}`);
   element.setAttribute("download", filename);
@@ -46,51 +52,51 @@ function loadFromLocalStorage() {
 }
 
 function loadFromFile() {
+  const fileInput = getElementById("fileInput");
   fileInput.click();
 }
 
 function setupMenubar() {
-  const menubar = document.getElementById("menubar");
+  const menubar = getElementById("menubar");
 
   const closeMenubar = () => {
     menubar.classList.remove("active");
   };
 
-  const menubarButton = document.getElementById("menubarOpenButton");
+  const menubarButton = getElementById("menubarOpenButton");
   menubarButton.addEventListener("click", () => {
     menubar.classList.add("active");
   });
 
-  const menubarCloseButton = document.getElementById("menubarCloseButton");
+  const menubarCloseButton = getElementById("menubarCloseButton");
   menubarCloseButton.addEventListener("click", closeMenubar);
 
-  const fileInput = document.getElementById("fileInput");
+  const fileInput = getElementById("fileInput") as HTMLInputElement;
   fileInput.onchange = () => {
     const files = fileInput.files;
-    if (files.length == 0) return;
+    if (!files || files.length == 0) return;
     const file = files[0];
     if (file.type != "application/json") return;
     const reader = new FileReader();
     reader.addEventListener("load", () => {
-      loadGraph(JSON.parse(reader.result));
+      const result = reader.result as string;
+      loadGraph(JSON.parse(result));
       saveToLocalStorage();
     });
     reader.readAsText(file);
     closeMenubar();
   };
 
-  const menubarLoadButton = document.getElementById("menubarLoadButton");
+  const menubarLoadButton = getElementById("menubarLoadButton");
   menubarLoadButton.addEventListener("click", loadFromFile);
 
-  const menubarSaveButton = document.getElementById("menubarSaveButton");
+  const menubarSaveButton = getElementById("menubarSaveButton");
   menubarSaveButton.addEventListener("click", () => {
     saveToFile();
     closeMenubar();
   });
 
-  const menubarNewGraphButton = document.getElementById(
-    "menubarNewGraphButton"
-  );
+  const menubarNewGraphButton = getElementById("menubarNewGraphButton");
   menubarNewGraphButton.addEventListener("click", () => {
     clearGraph();
     closeMenubar();
@@ -98,29 +104,28 @@ function setupMenubar() {
 }
 
 function setupToolbar() {
-  document.getElementById("createTaskButton").onclick = () => {
+  const newTask = getElementById("newTask");
+  getElementById("createTaskButton").onclick = () => {
     newTask.style.display = "block";
     newTask.focus();
   };
 
-  document.getElementById("deleteTaskButton").addEventListener("click", () => {
+  getElementById("deleteTaskButton").addEventListener("click", () => {
     deleteSelected();
     saveToLocalStorage();
   });
 
-  document
-    .getElementById("completeTaskButton")
-    .addEventListener("click", () => {
-      completeSelected();
-      saveToLocalStorage();
-    });
+  getElementById("completeTaskButton").addEventListener("click", () => {
+    completeSelected();
+    saveToLocalStorage();
+  });
 }
 
-function updateToolbar(selection) {
-  const createTaskButton = document.getElementById("createTaskButton");
-  const deleteTaskButton = document.getElementById("deleteTaskButton");
-  const completeTaskButton = document.getElementById("completeTaskButton");
-  const linkModeCheckbox = document.getElementById("linkModeCheckbox");
+function updateToolbar(selection: boolean) {
+  const createTaskButton = getElementById("createTaskButton");
+  const deleteTaskButton = getElementById("deleteTaskButton");
+  const completeTaskButton = getElementById("completeTaskButton");
+  const linkModeCheckbox = getElementById("linkModeCheckbox");
   createTaskButton.style.display = !selection ? "block" : "none";
   deleteTaskButton.style.display = selection ? "block" : "none";
   completeTaskButton.style.display = selection ? "block" : "none";
@@ -128,12 +133,11 @@ function updateToolbar(selection) {
 }
 
 function setupNewTask() {
+  const newTask = getElementById("newTask") as HTMLInputElement;
   const stopNewTask = () => {
     newTask.style.display = "none";
     newTask.value = "";
   };
-
-  const newTask = document.getElementById("newTask");
 
   newTask.onblur = stopNewTask;
 
@@ -153,14 +157,14 @@ document.addEventListener("DOMContentLoaded", (event) => {
   setupToolbar();
   setupNewTask();
 
-  const graph = document.getElementById("graph");
+  const graph = getElementById("graph");
   graph.addEventListener("taskmoved", saveToLocalStorage);
   graph.addEventListener("newdependency", saveToLocalStorage);
-  graph.addEventListener("selectionchanged", (event) => {
-    updateToolbar(event.detail.length > 0);
+  graph.addEventListener("selectionchanged", function (event) {
+    updateToolbar((event as CustomEvent<HTMLElement[]>).detail.length > 0);
   });
 
-  const newTask = document.getElementById("newTask");
+  const newTask = getElementById("newTask");
   document.onkeyup = (event) => {
     // Do not register commands when adding new task
     if (newTask.style.display === "block") return;
