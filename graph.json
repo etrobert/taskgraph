@@ -57,14 +57,6 @@
       "status": "completed"
     },
     {
-      "name": "Fix phone compatibility",
-      "pos": {
-        "x": 229,
-        "y": 268
-      },
-      "status": "todo"
-    },
-    {
       "name": "Fix new tasks finishing by an s",
       "pos": {
         "x": 50,
@@ -155,18 +147,18 @@
     {
       "name": "Add dependency selection",
       "pos": {
-        "x": -696,
-        "y": 766
+        "x": -685,
+        "y": 926
       },
       "status": "todo"
     },
     {
       "name": "Add task completion",
       "pos": {
-        "x": -672,
-        "y": 586
+        "x": -669,
+        "y": 599
       },
-      "status": "todo"
+      "status": "completed"
     },
     {
       "name": "Add multiple selection",
@@ -198,7 +190,7 @@
         "x": -729,
         "y": 1133
       },
-      "status": "todo"
+      "status": "completed"
     },
     {
       "name": "Learn from Paul Lewis Videos",
@@ -211,8 +203,8 @@
     {
       "name": "Update directory structure",
       "pos": {
-        "x": 1380,
-        "y": 986
+        "x": 1436,
+        "y": 981
       },
       "status": "todo"
     },
@@ -230,7 +222,7 @@
         "x": 1727,
         "y": 488
       },
-      "status": "todo"
+      "status": "completed"
     },
     {
       "name": "Investigate Bootstrap meaning",
@@ -243,16 +235,16 @@
     {
       "name": "Chrome Android compatibility",
       "pos": {
-        "x": -998,
-        "y": 48
+        "x": -139,
+        "y": -37
       },
-      "status": "todo"
+      "status": "completed"
     },
     {
       "name": "Romain High Priority",
       "pos": {
-        "x": -584,
-        "y": -92
+        "x": 239,
+        "y": -138
       },
       "status": "todo"
     },
@@ -267,8 +259,8 @@
     {
       "name": "Add Colorful tags",
       "pos": {
-        "x": -798,
-        "y": 251
+        "x": -766,
+        "y": 248
       },
       "status": "todo"
     },
@@ -286,13 +278,13 @@
         "x": -142,
         "y": 205
       },
-      "status": "todo"
+      "status": "completed"
     },
     {
       "name": "Add zoom",
       "pos": {
-        "x": -564,
-        "y": 122
+        "x": 404,
+        "y": -48
       },
       "status": "completed"
     },
@@ -363,10 +355,10 @@
     {
       "name": "Style dragged tasks",
       "pos": {
-        "x": 255,
-        "y": 1192
+        "x": 215,
+        "y": 1235
       },
-      "status": "todo"
+      "status": "completed"
     },
     {
       "name": "Fix empty tasks",
@@ -375,6 +367,126 @@
         "y": 461
       },
       "status": "completed"
+    },
+    {
+      "name": "Make tasks web components",
+      "pos": {
+        "x": -1463,
+        "y": 432
+      },
+      "status": "todo"
+    },
+    {
+      "name": "Add Completion date to tasks",
+      "pos": {
+        "x": -1466,
+        "y": 346
+      },
+      "status": "todo"
+    },
+    {
+      "name": "Hide tasks that have been completed for a duration",
+      "pos": {
+        "x": -1638,
+        "y": 250
+      },
+      "status": "todo"
+    },
+    {
+      "name": "CHange light gray boring colors",
+      "pos": {
+        "x": 91,
+        "y": 1163
+      },
+      "status": "todo"
+    },
+    {
+      "name": "Allow to drag all selected tasks",
+      "pos": {
+        "x": -755,
+        "y": 1226
+      },
+      "status": "todo"
+    },
+    {
+      "name": "Add touch zoom",
+      "pos": {
+        "x": 916,
+        "y": -27
+      },
+      "status": "todo"
+    },
+    {
+      "name": "Test Github + Typescript",
+      "pos": {
+        "x": 975,
+        "y": 928
+      },
+      "status": "completed"
+    },
+    {
+      "name": "Have a way to come back to the center when lost",
+      "pos": {
+        "x": -1537,
+        "y": 1027
+      },
+      "status": "todo"
+    },
+    {
+      "name": "add Indicators that tasks are outside of the screen on the sides",
+      "pos": {
+        "x": -1779,
+        "y": 1108
+      },
+      "status": "todo"
+    },
+    {
+      "name": "Have an indicator of the center (+?)",
+      "pos": {
+        "x": -1579,
+        "y": 1219
+      },
+      "status": "todo"
+    },
+    {
+      "name": "Add the ability to download as image",
+      "pos": {
+        "x": -1642,
+        "y": 1315
+      },
+      "status": "todo"
+    },
+    {
+      "name": "Make TaskGraph a PWA",
+      "pos": {
+        "x": 965,
+        "y": 534
+      },
+      "status": "todo"
+    },
+    {
+      "name": "Add a service worker",
+      "pos": {
+        "x": 1051,
+        "y": 609
+      },
+      "status": "todo"
+    },
+    {
+      "name": "Choose a way to do cache versionning",
+      "pos": {
+        "x": 958,
+        "y": 744
+      },
+      "status": "todo"
+    },
+    {
+      "name": "Good mobile experience",
+      "pos": {
+        "x": 1548,
+        "y": 241
+      },
+      "status": "todo"
     }
   ],
   "dependencies": [
@@ -461,6 +573,38 @@
     {
       "predecessor": "Romain Ideas",
       "successor": "fix arrow inversion"
+    },
+    {
+      "predecessor": "Make tasks web components",
+      "successor": "Add Completion date to tasks"
+    },
+    {
+      "predecessor": "Add Completion date to tasks",
+      "successor": "Hide tasks that have been completed for a duration"
+    },
+    {
+      "predecessor": "Add touch zoom",
+      "successor": "Romain High Priority"
+    },
+    {
+      "predecessor": "Test Github + Typescript",
+      "successor": "Move the codebase to Typescript"
+    },
+    {
+      "predecessor": "Add a service worker",
+      "successor": "Make TaskGraph a PWA"
+    },
+    {
+      "predecessor": "Choose a way to do cache versionning",
+      "successor": "Add a service worker"
+    },
+    {
+      "predecessor": "Add touch zoom",
+      "successor": "Good mobile experience"
+    },
+    {
+      "predecessor": "Good mobile experience",
+      "successor": "Make TaskGraph a PWA"
     }
   ]
 }
