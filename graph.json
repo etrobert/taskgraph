@@ -11,8 +11,8 @@
     {
       "name": "use unique int ids instead of names",
       "pos": {
-        "x": -1374,
-        "y": 864
+        "x": -1380,
+        "y": 887
       },
       "status": "todo"
     },
@@ -27,8 +27,8 @@
     {
       "name": "fix insert input too big",
       "pos": {
-        "x": 244,
-        "y": 208
+        "x": 271,
+        "y": 204
       },
       "status": "todo"
     },
@@ -110,7 +110,7 @@
         "x": 1075,
         "y": 843
       },
-      "status": "todo"
+      "status": "completed"
     },
     {
       "name": "Have a good dependency interface for touch",
@@ -131,8 +131,8 @@
     {
       "name": "Add task renaming",
       "pos": {
-        "x": -1249,
-        "y": 765
+        "x": -1456,
+        "y": 763
       },
       "status": "todo"
     },
@@ -206,7 +206,7 @@
         "x": 1436,
         "y": 981
       },
-      "status": "todo"
+      "status": "completed"
     },
     {
       "name": "checkout karma",
@@ -411,8 +411,8 @@
     {
       "name": "Add touch zoom",
       "pos": {
-        "x": 916,
-        "y": -27
+        "x": 958,
+        "y": -100
       },
       "status": "todo"
     },
@@ -485,6 +485,46 @@
       "pos": {
         "x": 1548,
         "y": 241
+      },
+      "status": "todo"
+    },
+    {
+      "name": "Add public backend",
+      "pos": {
+        "x": 973,
+        "y": 1151
+      },
+      "status": "todo"
+    },
+    {
+      "name": "remove arbitrary data in elements",
+      "pos": {
+        "x": -2117,
+        "y": 359
+      },
+      "status": "todo"
+    },
+    {
+      "name": "Think of a way to handle stacking of done tasks",
+      "pos": {
+        "x": -1615,
+        "y": 183
+      },
+      "status": "todo"
+    },
+    {
+      "name": "Priority",
+      "pos": {
+        "x": -29,
+        "y": -480
+      },
+      "status": "todo"
+    },
+    {
+      "name": "Have expanded mode",
+      "pos": {
+        "x": -2003,
+        "y": 540
       },
       "status": "todo"
     }
@@ -605,6 +645,34 @@
     {
       "predecessor": "Good mobile experience",
       "successor": "Make TaskGraph a PWA"
+    },
+    {
+      "predecessor": "Make tasks web components",
+      "successor": "remove arbitrary data in elements"
+    },
+    {
+      "predecessor": "Add dependency deletion",
+      "successor": "Priority"
+    },
+    {
+      "predecessor": "remove arbitrary data in elements",
+      "successor": "Priority"
+    },
+    {
+      "predecessor": "Romain High Priority",
+      "successor": "Priority"
+    },
+    {
+      "predecessor": "Allow to drag all selected tasks",
+      "successor": "Priority"
+    },
+    {
+      "predecessor": "Make tasks web components",
+      "successor": "Make tasks web components"
+    },
+    {
+      "predecessor": "Make tasks web components",
+      "successor": "Have expanded mode"
     }
   ]
 }
