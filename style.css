@@ -62,6 +62,10 @@ body {
   z-index: 1;
 }
 
+.task.completed {
+  opacity: 25%;
+}
+
 .task.completed::before {
   content: "";
   position: absolute;
