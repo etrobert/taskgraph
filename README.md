@@ -12,13 +12,11 @@ The project's graphics are developed on [Figma](https://www.figma.com/file/WclIM
 
 _Warning_: Intended for development purposes only.
 
-Run the following commands to serve the application on `localhost:8080` with live reloading enabled.
+Run the following commands in the root folder to serve the application on `localhost:8080` with live reloading enabled.
 
 ```sh
-cd taskgraph/
 npm install
-npm run build
-npm run serve
+npm run dev
 ```
 
 ## Code Style
