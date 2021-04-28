@@ -4,11 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "snowpack dev",
     "clean": "rm -rf dist/",
-    "build-static": "cp -r src/static/* dist/",
-    "build-scripts": "tsc",
-    "build": "npm run clean && mkdir dist && npm run build-static && npm run build-scripts",
-    "serve": "http-server dist/",
+    "build": "snowpack build",
     "deploy": "gh-pages -d dist/",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
