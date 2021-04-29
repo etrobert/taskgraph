@@ -36,7 +36,7 @@ interface Dependency {
   successor: string;
 }
 
-interface Graph {
+export interface Graph {
   tasks: Task[];
   dependencies: Dependency[];
 }
