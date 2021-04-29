@@ -7,7 +7,7 @@
     "start": "snowpack dev",
     "clean": "rm -rf dist/",
     "build": "snowpack build",
-    "deploy": "gh-pages -d dist/",
+    "deploy": "echo 'taskgraph.net' > dist/CNAME && gh-pages -d dist/",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": {
