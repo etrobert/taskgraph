@@ -177,6 +177,9 @@ export const initApp = () => {
 
   loadFromLocalStorage();
 };
-ReactDOM.render(<App />, document.getElementById("root"));
 
-initApp();
+document.addEventListener("DOMContentLoaded", () => {
+  ReactDOM.render(<App />, document.getElementById("root"));
+
+  initApp();
+});
