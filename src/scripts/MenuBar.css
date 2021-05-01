@@ -30,7 +30,7 @@
   list-style: none;
 }
 
-.MenuBar h1 {
+.MenuBar__title {
   font-family: "PermanentMarker";
   font-size: 3rem;
 }

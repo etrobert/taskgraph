@@ -12,7 +12,7 @@ type Props = {
 const MenuBar = ({ onClose, onLoad, onSave, onNewGraph }: Props) => {
   return (
     <aside id="menubar" className="MenuBar">
-      <h1>TaskGraph</h1>
+      <h1 className="MenuBar__title">TaskGraph</h1>
       <button
         className="MenuBar__close-button iconButton"
         onClick={onClose}
