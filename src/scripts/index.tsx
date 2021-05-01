@@ -67,8 +67,6 @@ export const closeMenubar = () => {
   menubar.classList.remove("active");
 };
 
-function setupMenubar() {}
-
 function setupToolbar() {
   const newTask = getElementById("newTask");
   getElementById("createTaskButton").onclick = () => {
@@ -138,15 +136,6 @@ function setupFileInput() {
 }
 
 export const initApp = () => {
-  setupMenubar();
-
-  const menubar = getElementById("menubar");
-
-  const menubarButton = getElementById("menubarOpenButton");
-  menubarButton.addEventListener("click", () => {
-    menubar.classList.add("active");
-  });
-
   setupToolbar();
   setupNewTask();
   setupFileInput();

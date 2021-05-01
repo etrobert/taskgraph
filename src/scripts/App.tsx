@@ -2,6 +2,9 @@ import React from "react";
 import { closeMenubar, loadFromFile, saveToFile } from ".";
 import { clearGraph } from "./graph";
 import MenuBar from "./MenuBar";
+import { getElementById } from "./misc";
+
+import "./App.css";
 
 const App = (): JSX.Element => {
   const onSave = () => {
@@ -14,13 +17,25 @@ const App = (): JSX.Element => {
     closeMenubar();
   };
 
+  const onMenubarOpenButtonClick = () => {
+    const menubarButton = getElementById("menubar");
+    menubarButton.classList.add("active");
+  };
+
   return (
-    <MenuBar
-      onClose={closeMenubar}
-      onLoad={loadFromFile}
-      onNewGraph={onNewGraph}
-      onSave={onSave}
-    />
+    <>
+      <button
+        className="App__menubar-open-button iconButton"
+        onClick={onMenubarOpenButtonClick}
+      />
+
+      <MenuBar
+        onClose={closeMenubar}
+        onLoad={loadFromFile}
+        onNewGraph={onNewGraph}
+        onSave={onSave}
+      />
+    </>
   );
 };
 
