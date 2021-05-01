@@ -2,6 +2,8 @@
 
 import React from "react";
 import ReactDOM from "react-dom";
+import App from "./App";
+
 import {
   initGraph,
   loadGraph,
@@ -38,7 +40,7 @@ function saveToLocalStorage() {
   window.localStorage.setItem("graph", JSON.stringify(graph));
 }
 
-function saveToFile() {
+export function saveToFile() {
   const graph = getGraph();
   downloadFile(
     "graph.json",
@@ -54,45 +56,18 @@ function loadFromLocalStorage() {
   loadGraph(graph);
 }
 
-function loadFromFile() {
+export function loadFromFile() {
   const fileInput = getElementById("fileInput");
   fileInput.click();
 }
 
-const closeMenubar = () => {
+export const closeMenubar = () => {
   const menubar = getElementById("menubar");
 
   menubar.classList.remove("active");
 };
 
-function setupMenubar() {
-  const onSave = () => {
-    saveToFile();
-    closeMenubar();
-  };
-
-  const onNewGraph = () => {
-    clearGraph();
-    closeMenubar();
-  };
-
-  ReactDOM.render(
-    <MenuBar
-      onClose={closeMenubar}
-      onLoad={loadFromFile}
-      onNewGraph={onNewGraph}
-      onSave={onSave}
-    />,
-    document.getElementById("menuBarRoot")
-  );
-
-  const menubar = getElementById("menubar");
-
-  const menubarButton = getElementById("menubarOpenButton");
-  menubarButton.addEventListener("click", () => {
-    menubar.classList.add("active");
-  });
-}
+function setupMenubar() {}
 
 function setupToolbar() {
   const newTask = getElementById("newTask");
@@ -162,8 +137,16 @@ function setupFileInput() {
   };
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+export const initApp = () => {
   setupMenubar();
+
+  const menubar = getElementById("menubar");
+
+  const menubarButton = getElementById("menubarOpenButton");
+  menubarButton.addEventListener("click", () => {
+    menubar.classList.add("active");
+  });
+
   setupToolbar();
   setupNewTask();
   setupFileInput();
@@ -204,4 +187,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initGraph();
 
   loadFromLocalStorage();
-});
+};
+ReactDOM.render(<App />, document.getElementById("root"));
+
+initApp();
