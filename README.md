@@ -17,8 +17,7 @@ Run the following commands to serve the application on `localhost:8080` with liv
 ```sh
 cd taskgraph/
 npm install
-npm run build
-npm run serve
+npm start
 ```
 
 ## Code Style
