@@ -5,8 +5,11 @@ import MenuBar from "./MenuBar";
 import { getElementById } from "./misc";
 
 import "./App.css";
+import useAppShortcuts from "./useAppShortcuts";
 
 const App = (): JSX.Element => {
+  useAppShortcuts();
+
   const onSave = () => {
     saveToFile();
     closeMenubar();
