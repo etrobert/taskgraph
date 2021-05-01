@@ -11,7 +11,6 @@ import {
   clearGraph,
   completeSelected,
   selectAll,
-  Graph,
 } from "./graph.js";
 import MenuBar from "./MenuBar.js";
 
