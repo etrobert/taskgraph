@@ -2,11 +2,7 @@
 
 TaskGraph is a web application to manage tasks in a graph form.
 
-It is running live at [taskgraph.net](https://taskgraph.net).
-
-## Graphics
-
-The project's graphics are developed on [Figma](https://www.figma.com/file/WclIMqlhIUVXFMjfhsTldN/TaskGraph?node-id=0%3A1).
+An early version is running live at [taskgraph.net](https://taskgraph.net).
 
 ## Run locally
 
@@ -22,12 +18,16 @@ npm start
 
 ## Code Style
 
+Linting is done using [ESLint](https://eslint.org/).
+
 Code style is enforced using [Prettier](https://prettier.io/).
+
+## Graphics
+
+The project's graphics are developed on [Figma](https://www.figma.com/file/WclIMqlhIUVXFMjfhsTldN/TaskGraph?node-id=0%3A1).
 
 ## Resources
 
 Font: [PermanentMarker](https://www.1001fonts.com/permanent-marker-font.html)
-
-Background: [Brown Paper Textures](https://blog.spoongraphics.co.uk/freebies/5-fantastically-high-res-brown-paper-textures)
 
 Icons: [feathericons.com](https://feathericons.com/)
