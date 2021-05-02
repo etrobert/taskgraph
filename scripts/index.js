@@ -1,6 +1,6 @@
 "use strict";
-import React from "../_snowpack/pkg/react.js";
-import ReactDOM from "../_snowpack/pkg/react-dom.js";
+import React from "../snowpack/pkg/react.js";
+import ReactDOM from "../snowpack/pkg/react-dom.js";
 import App from "./App.js";
 import {
   initGraph,

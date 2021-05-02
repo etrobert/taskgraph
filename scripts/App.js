@@ -1,4 +1,4 @@
-import React from "../_snowpack/pkg/react.js";
+import React from "../snowpack/pkg/react.js";
 import {closeMenubar, loadFromFile, saveToFile} from "./index.js";
 import {clearGraph} from "./graph.js";
 import MenuBar from "./MenuBar.js";
