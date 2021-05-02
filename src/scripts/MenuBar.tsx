@@ -43,7 +43,11 @@ const MenuBar = ({
       />
       <p>
         Made by
-        <a href="mailto:etiennerobert33@gmail.com" target="_blank">
+        <a
+          href="mailto:etiennerobert33@gmail.com"
+          target="_blank"
+          rel="noreferrer"
+        >
           Etienne Robert
         </a>
       </p>
