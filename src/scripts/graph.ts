@@ -15,6 +15,7 @@ import {
 } from "./misc.js";
 
 interface HTMLTaskElement extends HTMLElement {
+  textContent: string;
   from: HTMLDependencyElement[];
   to: HTMLDependencyElement[];
 }
@@ -62,7 +63,7 @@ function getDependencies(): HTMLDependencyElement[] {
   return elements.filter(isDependency) as HTMLDependencyElement[];
 }
 
-export function clearGraph() {
+export function clearGraph(): void {
   const removeElement = (e: HTMLElement) => {
     if (e.parentNode) e.parentNode.removeChild(e);
   };
@@ -95,7 +96,7 @@ interface AddTask extends Partial<Task> {
   name: string;
 }
 
-export function addTask(task: AddTask) {
+export function addTask(task: AddTask): HTMLTaskElement {
   const htmlTask = (document.createElement(
     "div"
   ) as unknown) as HTMLTaskElement;
@@ -159,19 +160,19 @@ function deleteDependency(dependency: HTMLDependencyElement) {
   arrows.removeChild(dependency);
 }
 
-export function selectAll() {
+export function selectAll(): void {
   const tasks = getTasks();
   tasks.forEach((t) => t.classList.add("selected"));
   sendSelectionChanged(tasks);
 }
 
-export function deleteSelected() {
+export function deleteSelected(): void {
   const selected = getSelected();
   selected.forEach(deleteTask);
   sendSelectionChanged([]);
 }
 
-export function completeSelected() {
+export function completeSelected(): void {
   const selected = getSelected();
   selected.forEach((task) => task.classList.toggle("completed"));
 }
@@ -209,20 +210,22 @@ function resetSelected() {
   selectedTasks.forEach((task) => task.classList.remove("selected"));
 }
 
-export function loadGraph(graph: Graph) {
+export function loadGraph(graph: Graph): void {
   clearGraph();
   graph.tasks.forEach(addTask);
   graph.dependencies.forEach(addDependency);
 }
 
-export function getGraph() {
+export function getGraph(): Graph {
   const tasksHtml = getTasks();
   const tasks = tasksHtml.map((e) => {
     const bb = getOffsetBox(e);
     return {
       name: e.textContent,
       pos: { x: bb.left, y: bb.top },
-      status: e.classList.contains("completed") ? "completed" : "todo",
+      status: e.classList.contains("completed")
+        ? ("completed" as const)
+        : ("todo" as const),
     };
   });
   const dependenciesHtml = getDependencies();
@@ -240,6 +243,8 @@ function updatePath(path: HTMLDependencyElement, dest?: Point) {
   const nodeBBox = dest ? null : getOffsetBox(path.to);
 
   const centerA = getBoxCenter(nodeABox);
+  // If dest is undefined then nodeBBox is not null
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const centerB = dest ? dest : getBoxCenter(nodeBBox!);
 
   const offset = 8;
@@ -251,7 +256,9 @@ function updatePath(path: HTMLDependencyElement, dest?: Point) {
   );
   const pathPointB = dest
     ? dest
-    : intersectLineBox(centerA, centerB, getExpandedBox(nodeBBox!, offset));
+    : // If dest is undefined then nodeBBox is not null
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      intersectLineBox(centerA, centerB, getExpandedBox(nodeBBox!, offset));
 
   if (pathPointA && pathPointB) {
     path.setAttributeNS(
@@ -282,7 +289,7 @@ function onGraphDragStart(event: PointerEvent) {
     previousPosition = { x: event.clientX, y: event.clientY };
     updatePanzoom();
   };
-  const onPointerEnd = (event: PointerEvent) => {
+  const onPointerEnd = () => {
     itemsContainer.removeEventListener("pointermove", onPointerMove);
     itemsContainer.removeEventListener("pointerup", onPointerEnd);
   };
@@ -311,7 +318,7 @@ function moveTask(task: HTMLTaskElement, pos: Point) {
   for (const path of [...task.from, ...task.to]) updatePath(path);
 }
 
-export function initGraph() {
+export function initGraph(): void {
   setupZoom();
   graphContainer.onpointerdown = (event) => {
     event.preventDefault();
@@ -338,12 +345,12 @@ export function initGraph() {
       ) as unknown) as HTMLDependencyElement;
       path.from = task;
       arrows.appendChild(path);
-      function onPointerMove(event: PointerEvent) {
+      const onPointerMove = (event: PointerEvent) => {
         if (event.pointerId !== pointerId) return;
         moved = true;
         updatePath(path, { x: event.offsetX, y: event.offsetY });
-      }
-      function onPointerEnd(event: PointerEvent) {
+      };
+      const onPointerEnd = (event: PointerEvent) => {
         if (event.pointerId !== pointerId) return;
         if (!moved) onTaskClicked(task, event);
         itemsContainer.removeEventListener("pointermove", onPointerMove);
@@ -363,7 +370,7 @@ export function initGraph() {
         targetTask.to.push(path);
         updatePath(path);
         graphContainer.dispatchEvent(new CustomEvent("newdependency"));
-      }
+      };
       itemsContainer.addEventListener("pointermove", onPointerMove);
       itemsContainer.addEventListener("pointerup", onPointerEnd);
       itemsContainer.addEventListener("pointercancel", onPointerEnd);
@@ -372,7 +379,7 @@ export function initGraph() {
       const offsetX = event.offsetX;
       const offsetY = event.offsetY;
       task.classList.add("dragged");
-      function onPointerMove(event: PointerEvent) {
+      const onPointerMove = (event: PointerEvent) => {
         if (event.pointerId !== pointerId) return;
         const currentPosition = { x: event.clientX, y: event.clientY };
         const movedThreshold = 5; // px
@@ -386,8 +393,8 @@ export function initGraph() {
           x: event.offsetX - offsetX,
           y: event.offsetY - offsetY,
         });
-      }
-      function onPointerEnd(event: PointerEvent) {
+      };
+      const onPointerEnd = (event: PointerEvent) => {
         if (event.pointerId !== pointerId) return;
         itemsContainer.removeEventListener("pointermove", onPointerMove);
         itemsContainer.removeEventListener("pointerup", onPointerEnd);
@@ -398,7 +405,7 @@ export function initGraph() {
             new CustomEvent("taskmoved", { detail: { task } })
           );
         } else onTaskClicked(task, event);
-      }
+      };
       itemsContainer.addEventListener("pointermove", onPointerMove);
       itemsContainer.addEventListener("pointerup", onPointerEnd);
       itemsContainer.addEventListener("pointercancel", onPointerEnd);

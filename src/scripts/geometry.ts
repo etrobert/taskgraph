@@ -12,7 +12,7 @@ export interface Box {
   height: number;
 }
 
-export function squaredDistance(p1: Point, p2: Point) {
+export function squaredDistance(p1: Point, p2: Point): number {
   return (p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y);
 }
 
@@ -94,10 +94,10 @@ function intersectLines(
     return null;
   }
 
-  let ua =
+  const ua =
     ((p4.x - p3.x) * (p1.y - p3.y) - (p4.y - p3.y) * (p1.x - p3.x)) /
     denominator;
-  let ub =
+  const ub =
     ((p2.x - p1.x) * (p1.y - p3.y) - (p2.y - p1.y) * (p1.x - p3.x)) /
     denominator;
 
@@ -107,8 +107,8 @@ function intersectLines(
   }
 
   // Return a object with the x and y coordinates of the intersection
-  let x = p1.x + ua * (p2.x - p1.x);
-  let y = p1.y + ua * (p2.y - p1.y);
+  const x = p1.x + ua * (p2.x - p1.x);
+  const y = p1.y + ua * (p2.y - p1.y);
 
   return { x, y };
 }

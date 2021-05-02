@@ -10,12 +10,14 @@ export function getElementById(id: string): HTMLElement {
   return element;
 }
 
-export function removeFromArray<T>(array: T[], element: T) {
+export function removeFromArray<T>(array: T[], element: T): void {
   array.splice(array.indexOf(element), 1);
 }
 
 /**
  * Snaps *value* to *target* if close to *target* by less than *offset*
  */
-export const snap = (target: number) => (offset: number) => (value: number) =>
+export const snap = (target: number) => (offset: number) => (
+  value: number
+): number =>
   value > target - offset && value < target + offset ? target : value;
