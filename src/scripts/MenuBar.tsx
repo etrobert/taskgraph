@@ -14,6 +14,7 @@ const MenuBar = ({ onClose, onLoad, onSave, onNewGraph }: Props) => {
     <aside id="menubar" className="MenuBar">
       <h1 className="MenuBar__title">TaskGraph</h1>
       <button
+        aria-label="Close Menu"
         className="MenuBar__close-button iconButton"
         onClick={onClose}
       ></button>
@@ -29,6 +30,7 @@ const MenuBar = ({ onClose, onLoad, onSave, onNewGraph }: Props) => {
         </li>
       </ul>
       <a
+        aria-label="Github Repository"
         className="MenuBar__github-link"
         href="https://github.com/etrobert/taskgraph"
         rel="noreferrer noopener"
