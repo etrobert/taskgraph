@@ -10,5 +10,7 @@ module.exports = {
   plugins: ["@snowpack/plugin-typescript"],
   buildOptions: {
     out: "dist",
+    // Github Pages ignores _ prefixed folders
+    metaUrlPath: "snowpack",
   },
 };
