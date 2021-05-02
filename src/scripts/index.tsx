@@ -2,17 +2,16 @@
 
 import React from "react";
 import ReactDOM from "react-dom";
+import App from "./App.js";
 import {
   initGraph,
   loadGraph,
   getGraph,
   addTask,
   deleteSelected,
-  clearGraph,
   completeSelected,
   selectAll,
 } from "./graph.js";
-import MenuBar from "./MenuBar.js";
 
 import { getElementById } from "./misc.js";
 
@@ -38,7 +37,7 @@ function saveToLocalStorage() {
   window.localStorage.setItem("graph", JSON.stringify(graph));
 }
 
-function saveToFile() {
+export function saveToFile(): void {
   const graph = getGraph();
   downloadFile(
     "graph.json",
@@ -54,45 +53,27 @@ function loadFromLocalStorage() {
   loadGraph(graph);
 }
 
-function loadFromFile() {
+export function loadFromFile(): void {
   const fileInput = getElementById("fileInput");
   fileInput.click();
 }
 
-const closeMenubar = () => {
+export const closeMenubar = (): void => {
   const menubar = getElementById("menubar");
 
   menubar.classList.remove("active");
 };
 
-function setupMenubar() {
-  const onSave = () => {
-    saveToFile();
-    closeMenubar();
-  };
-
-  const onNewGraph = () => {
-    clearGraph();
-    closeMenubar();
-  };
-
-  ReactDOM.render(
-    <MenuBar
-      onClose={closeMenubar}
-      onLoad={loadFromFile}
-      onNewGraph={onNewGraph}
-      onSave={onSave}
-    />,
-    document.getElementById("menuBarRoot")
-  );
-
-  const menubar = getElementById("menubar");
+const setupApp = () => {
+  ReactDOM.render(<App />, document.getElementById("root"));
 
   const menubarButton = getElementById("menubarOpenButton");
   menubarButton.addEventListener("click", () => {
+    const menubar = getElementById("menubar");
+
     menubar.classList.add("active");
   });
-}
+};
 
 function setupToolbar() {
   const newTask = getElementById("newTask");
@@ -163,7 +144,7 @@ function setupFileInput() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  setupMenubar();
+  setupApp();
   setupToolbar();
   setupNewTask();
   setupFileInput();
