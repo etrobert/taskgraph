@@ -20,4 +20,9 @@ module.exports = {
   rules: {
     eqeqeq: "error",
   },
+  settings: {
+    react: {
+      version: "detect",
+    },
+  },
 };
