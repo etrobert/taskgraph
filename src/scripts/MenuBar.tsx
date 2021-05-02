@@ -16,7 +16,7 @@ const MenuBar = ({
   onNewGraph,
 }: Props): JSX.Element => {
   return (
-    <aside id="menubar" className="MenuBar">
+    <div id="menubar" className="MenuBar">
       <h1 className="MenuBar__title">TaskGraph</h1>
       <button
         aria-label="Close Menu"
@@ -51,7 +51,7 @@ const MenuBar = ({
           Etienne Robert
         </a>
       </p>
-    </aside>
+    </div>
   );
 };
 
