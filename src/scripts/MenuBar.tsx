@@ -34,6 +34,16 @@ const MenuBar = ({
           <button onClick={onNewGraph}>New Graph</button>
         </li>
       </ul>
+      <section>
+        <h2>Keyboard Shortcuts</h2>
+        <ul>
+          <li>[I]: [I]nsert a new task</li>
+          <li>[D]/[Delete]: [D]elete selected tasks</li>
+          <li>[Ctrl+a]: Select [a]ll tasks</li>
+          <li>[Ctrl+s]: [S]ave to file</li>
+          <li>[Ctrl+o]: Load from file</li>
+        </ul>
+      </section>
       <a
         aria-label="Github Repository"
         className="MenuBar__github-link"
