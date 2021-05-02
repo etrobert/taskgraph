@@ -8,29 +8,9 @@
     <link rel="stylesheet" type="text/css" href="style.css" />
   </head>
   <body>
+    <input id="fileInput" type="file" accept="text/json" />
+    <div id="root"></div>
     <button id="menubarOpenButton" class="iconButton"></button>
-    <aside id="menubar">
-      <h1>TaskGraph</h1>
-      <button id="menubarCloseButton" class="iconButton"></button>
-      <ul>
-        <li><button id="menubarSaveButton">Save</button></li>
-        <li><button id="menubarLoadButton">Load</button></li>
-        <li><input id="fileInput" type="file" accept="text/json" /></li>
-        <li><button id="menubarNewGraphButton">New Graph</button></li>
-      </ul>
-      <a
-        id="githubLink"
-        href="https://github.com/etrobert/taskgraph"
-        rel="noreferrer noopener"
-        target="_blank"
-      ></a>
-      <p>
-        Made by
-        <a href="mailto:etiennerobert33@gmail.com" target="_blank"
-          >Etienne Robert</a
-        >
-      </p>
-    </aside>
     <div id="toolbar">
       <button id="deleteTaskButton" class="iconButton"></button>
       <label id="linkModeCheckbox">

@@ -20,7 +20,7 @@ function getTasks() {
   return elements.filter(isTask);
 }
 function getDependencies() {
-  const isDependency = (e) => e.tagName == "path";
+  const isDependency = (e) => e.tagName === "path";
   const elements = Array.from(arrows.children);
   return elements.filter(isDependency);
 }
@@ -68,12 +68,12 @@ export function addTask(task) {
 function addDependency(dependency) {
   const dependencyHtml = document.createElementNS("http://www.w3.org/2000/svg", "path");
   const tasks = getTasks();
-  const predecessor = tasks.find((task) => task.textContent == dependency.predecessor);
+  const predecessor = tasks.find((task) => task.textContent === dependency.predecessor);
   if (!predecessor) {
     console.error("Could not add dependency: predecessor not found", dependency);
     return;
   }
-  const successor = tasks.find((task) => task.textContent == dependency.successor);
+  const successor = tasks.find((task) => task.textContent === dependency.successor);
   if (!successor) {
     console.error("Could not add dependency: successor not found.", dependency);
     return;

@@ -1,11 +1,13 @@
 "use strict";
+import React from "../_snowpack/pkg/react.js";
+import ReactDOM from "../_snowpack/pkg/react-dom.js";
+import App from "./App.js";
 import {
   initGraph,
   loadGraph,
   getGraph,
   addTask,
   deleteSelected,
-  clearGraph,
   completeSelected,
   selectAll
 } from "./graph.js";
@@ -23,7 +25,7 @@ function saveToLocalStorage() {
   const graph = getGraph();
   window.localStorage.setItem("graph", JSON.stringify(graph));
 }
-function saveToFile() {
+export function saveToFile() {
   const graph = getGraph();
   downloadFile("graph.json", JSON.stringify(graph, null, 2), "data:text/json;charset=utf-8");
 }
@@ -34,51 +36,22 @@ function loadFromLocalStorage() {
   const graph = JSON.parse(graphItem);
   loadGraph(graph);
 }
-function loadFromFile() {
+export function loadFromFile() {
   const fileInput = getElementById("fileInput");
   fileInput.click();
 }
-function setupMenubar() {
+export const closeMenubar = () => {
   const menubar = getElementById("menubar");
-  const closeMenubar = () => {
-    menubar.classList.remove("active");
-  };
+  menubar.classList.remove("active");
+};
+const setupApp = () => {
+  ReactDOM.render(/* @__PURE__ */ React.createElement(App, null), document.getElementById("root"));
   const menubarButton = getElementById("menubarOpenButton");
   menubarButton.addEventListener("click", () => {
+    const menubar = getElementById("menubar");
     menubar.classList.add("active");
   });
-  const menubarCloseButton = getElementById("menubarCloseButton");
-  menubarCloseButton.addEventListener("click", closeMenubar);
-  const fileInput = getElementById("fileInput");
-  fileInput.onchange = () => {
-    const files = fileInput.files;
-    if (!files || files.length == 0)
-      return;
-    const file = files[0];
-    if (file.type != "application/json")
-      return;
-    const reader = new FileReader();
-    reader.addEventListener("load", () => {
-      const result = reader.result;
-      loadGraph(JSON.parse(result));
-      saveToLocalStorage();
-    });
-    reader.readAsText(file);
-    closeMenubar();
-  };
-  const menubarLoadButton = getElementById("menubarLoadButton");
-  menubarLoadButton.addEventListener("click", loadFromFile);
-  const menubarSaveButton = getElementById("menubarSaveButton");
-  menubarSaveButton.addEventListener("click", () => {
-    saveToFile();
-    closeMenubar();
-  });
-  const menubarNewGraphButton = getElementById("menubarNewGraphButton");
-  menubarNewGraphButton.addEventListener("click", () => {
-    clearGraph();
-    closeMenubar();
-  });
-}
+};
 function setupToolbar() {
   const newTask = getElementById("newTask");
   getElementById("createTaskButton").onclick = () => {
@@ -112,7 +85,7 @@ function setupNewTask() {
   };
   newTask.onblur = stopNewTask;
   newTask.onkeypress = (event) => {
-    if (event.key == "Enter") {
+    if (event.key === "Enter") {
       if (newTask.value) {
         addTask({name: newTask.value});
         saveToLocalStorage();
@@ -121,10 +94,30 @@ function setupNewTask() {
     }
   };
 }
+function setupFileInput() {
+  const fileInput = getElementById("fileInput");
+  fileInput.onchange = () => {
+    const files = fileInput.files;
+    if (!files || files.length === 0)
+      return;
+    const file = files[0];
+    if (file.type !== "application/json")
+      return;
+    const reader = new FileReader();
+    reader.addEventListener("load", () => {
+      const result = reader.result;
+      loadGraph(JSON.parse(result));
+      saveToLocalStorage();
+    });
+    reader.readAsText(file);
+    closeMenubar();
+  };
+}
 document.addEventListener("DOMContentLoaded", () => {
-  setupMenubar();
+  setupApp();
   setupToolbar();
   setupNewTask();
+  setupFileInput();
   const graph = getElementById("graph");
   graph.addEventListener("taskmoved", saveToLocalStorage);
   graph.addEventListener("newdependency", saveToLocalStorage);
