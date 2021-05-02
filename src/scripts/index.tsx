@@ -14,11 +14,6 @@ import {
 import { getElementById } from "./misc.js";
 import { loadFromLocalStorage, saveToLocalStorage } from "./storage.js";
 
-export function loadFromFile(): void {
-  const fileInput = getElementById("fileInput");
-  fileInput.click();
-}
-
 export const closeMenubar = (): void => {
   const menubar = getElementById("menubar");
 
@@ -85,30 +80,10 @@ function setupNewTask() {
   };
 }
 
-function setupFileInput() {
-  const fileInput = getElementById("fileInput") as HTMLInputElement;
-
-  fileInput.onchange = () => {
-    const files = fileInput.files;
-    if (!files || files.length === 0) return;
-    const file = files[0];
-    if (file.type !== "application/json") return;
-    const reader = new FileReader();
-    reader.addEventListener("load", () => {
-      const result = reader.result as string;
-      loadGraph(JSON.parse(result));
-      saveToLocalStorage();
-    });
-    reader.readAsText(file);
-    closeMenubar();
-  };
-}
-
 document.addEventListener("DOMContentLoaded", () => {
   setupApp();
   setupToolbar();
   setupNewTask();
-  setupFileInput();
 
   const graph = getElementById("graph");
   graph.addEventListener("taskmoved", saveToLocalStorage);
