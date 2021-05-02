@@ -5,10 +5,10 @@
   "main": "index.js",
   "scripts": {
     "start": "snowpack dev",
-    "clean": "rm -rf dist/",
+    "clean": "rm -rf build/",
     "build": "snowpack build",
     "lint": "eslint src/scripts",
-    "deploy": "echo 'taskgraph.net' > dist/CNAME && gh-pages -d dist/",
+    "deploy": "echo 'taskgraph.net' > build/CNAME && gh-pages -d build/",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": {
