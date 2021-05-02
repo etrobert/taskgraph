@@ -17,7 +17,7 @@ const MenuBar = ({ onClose, onLoad, onSave, onNewGraph }: Props) => {
         aria-label="Close Menu"
         className="MenuBar__close-button iconButton"
         onClick={onClose}
-      ></button>
+      />
       <ul>
         <li>
           <button onClick={onSave}>Save</button>
@@ -35,7 +35,7 @@ const MenuBar = ({ onClose, onLoad, onSave, onNewGraph }: Props) => {
         href="https://github.com/etrobert/taskgraph"
         rel="noreferrer noopener"
         target="_blank"
-      ></a>
+      />
       <p>
         Made by
         <a href="mailto:etiennerobert33@gmail.com" target="_blank">
