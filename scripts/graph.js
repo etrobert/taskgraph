@@ -186,7 +186,7 @@ function onGraphDragStart(event) {
     previousPosition = {x: event2.clientX, y: event2.clientY};
     updatePanzoom();
   };
-  const onPointerEnd = (event2) => {
+  const onPointerEnd = () => {
     itemsContainer.removeEventListener("pointermove", onPointerMove);
     itemsContainer.removeEventListener("pointerup", onPointerEnd);
   };
@@ -229,12 +229,16 @@ export function initGraph() {
     const initialPosition = {x: event.clientX, y: event.clientY};
     const linkModeCheckbox = querySelector("#linkModeCheckbox input");
     if (event.shiftKey || linkModeCheckbox.checked) {
-      let onPointerMove = function(event2) {
+      const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      path.from = task;
+      arrows.appendChild(path);
+      const onPointerMove = (event2) => {
         if (event2.pointerId !== pointerId)
           return;
         moved = true;
         updatePath(path, {x: event2.offsetX, y: event2.offsetY});
-      }, onPointerEnd = function(event2) {
+      };
+      const onPointerEnd = (event2) => {
         if (event2.pointerId !== pointerId)
           return;
         if (!moved)
@@ -254,14 +258,14 @@ export function initGraph() {
         updatePath(path);
         graphContainer.dispatchEvent(new CustomEvent("newdependency"));
       };
-      const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-      path.from = task;
-      arrows.appendChild(path);
       itemsContainer.addEventListener("pointermove", onPointerMove);
       itemsContainer.addEventListener("pointerup", onPointerEnd);
       itemsContainer.addEventListener("pointercancel", onPointerEnd);
     } else {
-      let onPointerMove = function(event2) {
+      const offsetX = event.offsetX;
+      const offsetY = event.offsetY;
+      task.classList.add("dragged");
+      const onPointerMove = (event2) => {
         if (event2.pointerId !== pointerId)
           return;
         const currentPosition = {x: event2.clientX, y: event2.clientY};
@@ -273,7 +277,8 @@ export function initGraph() {
           x: event2.offsetX - offsetX,
           y: event2.offsetY - offsetY
         });
-      }, onPointerEnd = function(event2) {
+      };
+      const onPointerEnd = (event2) => {
         if (event2.pointerId !== pointerId)
           return;
         itemsContainer.removeEventListener("pointermove", onPointerMove);
@@ -285,9 +290,6 @@ export function initGraph() {
         } else
           onTaskClicked(task, event2);
       };
-      const offsetX = event.offsetX;
-      const offsetY = event.offsetY;
-      task.classList.add("dragged");
       itemsContainer.addEventListener("pointermove", onPointerMove);
       itemsContainer.addEventListener("pointerup", onPointerEnd);
       itemsContainer.addEventListener("pointercancel", onPointerEnd);

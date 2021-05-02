@@ -54,12 +54,12 @@ function intersectLines(p1, p2, p3, p4) {
   if (denominator === 0) {
     return null;
   }
-  let ua = ((p4.x - p3.x) * (p1.y - p3.y) - (p4.y - p3.y) * (p1.x - p3.x)) / denominator;
-  let ub = ((p2.x - p1.x) * (p1.y - p3.y) - (p2.y - p1.y) * (p1.x - p3.x)) / denominator;
+  const ua = ((p4.x - p3.x) * (p1.y - p3.y) - (p4.y - p3.y) * (p1.x - p3.x)) / denominator;
+  const ub = ((p2.x - p1.x) * (p1.y - p3.y) - (p2.y - p1.y) * (p1.x - p3.x)) / denominator;
   if (ua < 0 || ua > 1 || ub < 0 || ub > 1) {
     return null;
   }
-  let x = p1.x + ua * (p2.x - p1.x);
-  let y = p1.y + ua * (p2.y - p1.y);
+  const x = p1.x + ua * (p2.x - p1.x);
+  const y = p1.y + ua * (p2.y - p1.y);
   return {x, y};
 }

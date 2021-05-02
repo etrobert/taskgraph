@@ -11,7 +11,7 @@ import {
 } from "./graph.js";
 import {getElementById} from "./misc.js";
 function downloadFile(filename, text, type = "data:text/plain;charset=utf-8") {
-  var element = document.createElement("a");
+  const element = document.createElement("a");
   element.setAttribute("href", `${type}, ${encodeURIComponent(text)}`);
   element.setAttribute("download", filename);
   element.style.display = "none";
@@ -121,23 +121,23 @@ function setupNewTask() {
     }
   };
 }
-document.addEventListener("DOMContentLoaded", (event) => {
+document.addEventListener("DOMContentLoaded", () => {
   setupMenubar();
   setupToolbar();
   setupNewTask();
   const graph = getElementById("graph");
   graph.addEventListener("taskmoved", saveToLocalStorage);
   graph.addEventListener("newdependency", saveToLocalStorage);
-  graph.addEventListener("selectionchanged", function(event2) {
-    updateToolbar(event2.detail.length > 0);
+  graph.addEventListener("selectionchanged", function(event) {
+    updateToolbar(event.detail.length > 0);
   });
   const newTask = getElementById("newTask");
-  document.onkeyup = (event2) => {
+  document.onkeyup = (event) => {
     if (newTask.style.display === "block")
       return;
-    switch (event2.key) {
+    switch (event.key) {
       case "a":
-        if (event2.ctrlKey)
+        if (event.ctrlKey)
           selectAll();
         break;
       case "i":
@@ -150,11 +150,11 @@ document.addEventListener("DOMContentLoaded", (event) => {
         saveToLocalStorage();
         break;
       case "o":
-        if (event2.ctrlKey)
+        if (event.ctrlKey)
           loadFromFile();
         break;
       case "s":
-        if (event2.ctrlKey)
+        if (event.ctrlKey)
           saveToFile();
         break;
     }
