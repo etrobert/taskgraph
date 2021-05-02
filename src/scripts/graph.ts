@@ -15,6 +15,7 @@ import {
 } from "./misc.js";
 
 interface HTMLTaskElement extends HTMLElement {
+  textContent: string;
   from: HTMLDependencyElement[];
   to: HTMLDependencyElement[];
 }
@@ -220,9 +221,7 @@ export function getGraph(): Graph {
   const tasks = tasksHtml.map((e) => {
     const bb = getOffsetBox(e);
     return {
-      // We assume tasks have a textContent
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      name: e.textContent!,
+      name: e.textContent,
       pos: { x: bb.left, y: bb.top },
       status: e.classList.contains("completed")
         ? ("completed" as const)
@@ -231,12 +230,8 @@ export function getGraph(): Graph {
   });
   const dependenciesHtml = getDependencies();
   const dependencies = dependenciesHtml.map((e) => ({
-    // We assume dependencies and tasks are correctly set
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    predecessor: e.from.textContent!,
-    // We assume dependencies and tasks are correctly set
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    successor: e.to.textContent!,
+    predecessor: e.from.textContent,
+    successor: e.to.textContent,
   }));
   return { tasks, dependencies };
 }
