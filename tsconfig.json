@@ -6,6 +6,12 @@
 
     "strict": true,                           /* Enable all strict type-checking options. */
 
-    "forceConsistentCasingInFileNames": true  /* Disallow inconsistently-cased references to the same file. */
+    "forceConsistentCasingInFileNames": true,  /* Disallow inconsistently-cased references to the same file. */
+
+    "moduleResolution": "node", /* Allows to use node_modules */
+
+    "allowSyntheticDefaultImports": true, /* Allows to import React from 'react' */
+
+    "jsx": "react" /* Allows to use React code */
   }
 }
