@@ -9,7 +9,12 @@ type Props = {
   onNewGraph: () => void;
 };
 
-const MenuBar = ({ onClose, onLoad, onSave, onNewGraph }: Props) => {
+const MenuBar = ({
+  onClose,
+  onLoad,
+  onSave,
+  onNewGraph,
+}: Props): JSX.Element => {
   return (
     <aside id="menubar" className="MenuBar">
       <h1 className="MenuBar__title">TaskGraph</h1>
