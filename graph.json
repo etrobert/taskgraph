@@ -62,7 +62,7 @@
         "x": 50,
         "y": 321
       },
-      "status": "todo"
+      "status": "completed"
     },
     {
       "name": "Rethink new task interface",
@@ -198,7 +198,7 @@
         "x": 1470,
         "y": 582
       },
-      "status": "todo"
+      "status": "completed"
     },
     {
       "name": "Update directory structure",
@@ -214,7 +214,7 @@
         "x": 1962,
         "y": 669
       },
-      "status": "todo"
+      "status": "completed"
     },
     {
       "name": "Try more web components",
@@ -369,14 +369,6 @@
       "status": "completed"
     },
     {
-      "name": "Make tasks web components",
-      "pos": {
-        "x": -1463,
-        "y": 432
-      },
-      "status": "todo"
-    },
-    {
       "name": "Add Completion date to tasks",
       "pos": {
         "x": -1466,
@@ -523,8 +515,8 @@
     {
       "name": "Have expanded mode",
       "pos": {
-        "x": -2003,
-        "y": 540
+        "x": -1685,
+        "y": 548
       },
       "status": "todo"
     },
@@ -533,6 +525,38 @@
       "pos": {
         "x": -1087,
         "y": 765
+      },
+      "status": "todo"
+    },
+    {
+      "name": "Migrate to React",
+      "pos": {
+        "x": -2407,
+        "y": 678
+      },
+      "status": "todo"
+    },
+    {
+      "name": "Add testing",
+      "pos": {
+        "x": -2688,
+        "y": 681
+      },
+      "status": "todo"
+    },
+    {
+      "name": "Migrate FileInput",
+      "pos": {
+        "x": -2397,
+        "y": 920
+      },
+      "status": "todo"
+    },
+    {
+      "name": "Migrate Shortcuts",
+      "pos": {
+        "x": -2395,
+        "y": 1061
       },
       "status": "todo"
     }
@@ -623,10 +647,6 @@
       "successor": "fix arrow inversion"
     },
     {
-      "predecessor": "Make tasks web components",
-      "successor": "Add Completion date to tasks"
-    },
-    {
       "predecessor": "Add Completion date to tasks",
       "successor": "Hide tasks that have been completed for a duration"
     },
@@ -655,10 +675,6 @@
       "successor": "Make TaskGraph a PWA"
     },
     {
-      "predecessor": "Make tasks web components",
-      "successor": "remove arbitrary data in elements"
-    },
-    {
       "predecessor": "Add dependency deletion",
       "successor": "Priority"
     },
@@ -675,16 +691,36 @@
       "successor": "Priority"
     },
     {
-      "predecessor": "Make tasks web components",
-      "successor": "Make tasks web components"
+      "predecessor": "Add multiple selection",
+      "successor": "Romain High Priority"
     },
     {
-      "predecessor": "Make tasks web components",
+      "predecessor": "checkout karma",
+      "successor": "checkout karma"
+    },
+    {
+      "predecessor": "Migrate Shortcuts",
+      "successor": "Migrate FileInput"
+    },
+    {
+      "predecessor": "Migrate FileInput",
+      "successor": "Migrate to React"
+    },
+    {
+      "predecessor": "Migrate to React",
+      "successor": "remove arbitrary data in elements"
+    },
+    {
+      "predecessor": "Migrate to React",
+      "successor": "Add Completion date to tasks"
+    },
+    {
+      "predecessor": "Migrate to React",
       "successor": "Have expanded mode"
     },
     {
-      "predecessor": "Add multiple selection",
-      "successor": "Romain High Priority"
+      "predecessor": "Migrate to React",
+      "successor": "use unique int ids instead of names"
     }
   ]
 }
