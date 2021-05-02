@@ -58,7 +58,7 @@ function getTasks(): HTMLTaskElement[] {
 }
 
 function getDependencies(): HTMLDependencyElement[] {
-  const isDependency = (e: HTMLElement) => e.tagName == "path";
+  const isDependency = (e: HTMLElement) => e.tagName === "path";
   const elements = Array.from(arrows.children) as HTMLElement[];
   return elements.filter(isDependency) as HTMLDependencyElement[];
 }
@@ -119,7 +119,7 @@ function addDependency(dependency: Dependency) {
   ) as unknown) as HTMLDependencyElement;
   const tasks = getTasks();
   const predecessor = tasks.find(
-    (task) => task.textContent == dependency.predecessor
+    (task) => task.textContent === dependency.predecessor
   );
   if (!predecessor) {
     console.error(
@@ -129,7 +129,7 @@ function addDependency(dependency: Dependency) {
     return;
   }
   const successor = tasks.find(
-    (task) => task.textContent == dependency.successor
+    (task) => task.textContent === dependency.successor
   );
   if (!successor) {
     console.error("Could not add dependency: successor not found.", dependency);

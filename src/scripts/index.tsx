@@ -133,7 +133,7 @@ function setupNewTask() {
   newTask.onblur = stopNewTask;
 
   newTask.onkeypress = (event) => {
-    if (event.key == "Enter") {
+    if (event.key === "Enter") {
       if (newTask.value) {
         addTask({ name: newTask.value });
         saveToLocalStorage();
@@ -148,9 +148,9 @@ function setupFileInput() {
 
   fileInput.onchange = () => {
     const files = fileInput.files;
-    if (!files || files.length == 0) return;
+    if (!files || files.length === 0) return;
     const file = files[0];
-    if (file.type != "application/json") return;
+    if (file.type !== "application/json") return;
     const reader = new FileReader();
     reader.addEventListener("load", () => {
       const result = reader.result as string;
