@@ -1,13 +1,12 @@
-import React from "react";
-import { closeMenubar, loadFromFile } from ".";
-import { clearGraph } from "./graph";
+import React, { useRef } from "react";
+import { closeMenubar } from ".";
+import GraphInput from "./GraphInput";
+import { clearGraph, Graph, loadGraph } from "./graph";
 import MenuBar from "./MenuBar";
-import { saveToFile } from "./storage";
+import { saveToFile, saveToLocalStorage } from "./storage";
 import useAppShortcuts from "./useAppShortcuts";
 
 const App = (): JSX.Element => {
-  useAppShortcuts();
-
   const onSave = () => {
     saveToFile();
     closeMenubar();
@@ -18,13 +17,28 @@ const App = (): JSX.Element => {
     closeMenubar();
   };
 
+  const onLoad = (graph: Graph) => {
+    loadGraph(graph);
+    saveToLocalStorage();
+    closeMenubar();
+  };
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const loadFromFile = () => fileInputRef.current?.click();
+
+  useAppShortcuts(loadFromFile);
+
   return (
-    <MenuBar
-      onClose={closeMenubar}
-      onLoad={loadFromFile}
-      onNewGraph={onNewGraph}
-      onSave={onSave}
-    />
+    <>
+      <GraphInput onLoad={onLoad} ref={fileInputRef} />
+      <MenuBar
+        onClose={closeMenubar}
+        onLoad={loadFromFile}
+        onNewGraph={onNewGraph}
+        onSave={onSave}
+      />
+    </>
   );
 };
 

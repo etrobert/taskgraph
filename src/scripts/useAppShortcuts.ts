@@ -1,4 +1,3 @@
-import { loadFromFile } from ".";
 import { deleteSelected, selectAll } from "./graph";
 import { getElementById } from "./misc";
 import { saveToFile, saveToLocalStorage } from "./storage";
@@ -10,7 +9,7 @@ const insertMode = () => {
 };
 
 // TODO Conditionally activate or disable the shortcuts rather than having them test insert mode
-const useAppShortcuts = (): void => {
+const useAppShortcuts = (loadFromFile: () => void): void => {
   const selectAllShortcut: Shortcut = {
     keys: ["a"],
     callback: (event) => {
