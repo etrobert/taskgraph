@@ -1,8 +1,6 @@
 import React, { ChangeEventHandler, ForwardedRef } from "react";
 import { Graph } from "./graph";
 
-import "./FileInput.css";
-
 type Props = {
   onLoad: (graph: Graph) => void;
 };
@@ -28,7 +26,7 @@ const FileInput = (
   return (
     <input
       accept="text/json"
-      className="FileInput"
+      style={{ display: "none" }}
       onChange={onChange}
       ref={ref}
       type="file"
