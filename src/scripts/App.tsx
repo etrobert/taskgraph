@@ -7,37 +7,47 @@ import { saveToFile, saveToLocalStorage } from "./storage";
 import useAppShortcuts from "./useAppShortcuts";
 
 const App = (): JSX.Element => {
-  const onSave = () => {
-    saveToFile();
-    closeMenubar();
-  };
-
-  const onNewGraph = () => {
-    clearGraph();
-    closeMenubar();
-  };
-
-  const onLoad = (graph: Graph) => {
-    loadGraph(graph);
-    saveToLocalStorage();
-    closeMenubar();
-  };
-
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const renderGraphInput = () => {
+    const onLoad = (graph: Graph) => {
+      loadGraph(graph);
+      saveToLocalStorage();
+      closeMenubar();
+    };
+
+    return <GraphInput onLoad={onLoad} ref={fileInputRef} />;
+  };
 
   const loadFromFile = () => fileInputRef.current?.click();
 
-  useAppShortcuts(loadFromFile);
+  const renderMenuBar = () => {
+    const onSave = () => {
+      saveToFile();
+      closeMenubar();
+    };
 
-  return (
-    <>
-      <GraphInput onLoad={onLoad} ref={fileInputRef} />
+    const onNewGraph = () => {
+      clearGraph();
+      closeMenubar();
+    };
+
+    return (
       <MenuBar
         onClose={closeMenubar}
         onLoad={loadFromFile}
         onNewGraph={onNewGraph}
         onSave={onSave}
       />
+    );
+  };
+
+  useAppShortcuts(loadFromFile);
+
+  return (
+    <>
+      {renderGraphInput()}
+      {renderMenuBar()}
     </>
   );
 };
