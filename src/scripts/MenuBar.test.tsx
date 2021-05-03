@@ -1,4 +1,5 @@
 import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import React from "react";
 import noop from "lodash/noop";
 
@@ -10,7 +11,7 @@ describe("MenuBar", () => {
     render(
       <MenuBar onClose={noop} onLoad={onLoad} onNewGraph={noop} onSave={noop} />
     );
-    screen.getByText("Load").click();
+    userEvent.click(screen.getByText("Load"));
     expect(onLoad).toHaveBeenCalled();
   });
 
@@ -19,7 +20,7 @@ describe("MenuBar", () => {
     render(
       <MenuBar onClose={noop} onLoad={noop} onNewGraph={noop} onSave={onSave} />
     );
-    screen.getByText("Save").click();
+    userEvent.click(screen.getByText("Save"));
     expect(onSave).toHaveBeenCalled();
   });
 
@@ -33,7 +34,7 @@ describe("MenuBar", () => {
         onSave={noop}
       />
     );
-    screen.getByText("New Graph").click();
+    userEvent.click(screen.getByText("New Graph"));
     expect(onNewGraph).toHaveBeenCalled();
   });
 
@@ -47,7 +48,7 @@ describe("MenuBar", () => {
         onSave={noop}
       />
     );
-    screen.getByLabelText("Close Menu").click();
+    userEvent.click(screen.getByLabelText("Close Menu"));
     expect(onClose).toHaveBeenCalled();
   });
 });
