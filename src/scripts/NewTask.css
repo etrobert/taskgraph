@@ -1,0 +1,16 @@
+.NewTask {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1.5em;
+  top: calc(50% - (1.5em / 2));
+  margin: auto;
+
+  width: 80vw;
+  padding: 1em;
+
+  opacity: 80%;
+
+  font-family: "PermanentMarker";
+  font-size: 1.5em;
+}

@@ -1,19 +1,18 @@
 import { deleteSelected, selectAll } from "@/graph";
-import { getElementById } from "@/misc";
 import { saveToFile, saveToLocalStorage } from "@/storage";
 import useKeyboardShortcuts, { Shortcut } from "@/useKeyboardShortcuts";
+import { Dispatch, SetStateAction } from "react";
 
-const insertMode = () => {
-  const newTask = getElementById("newTask");
-  return newTask.style.display === "block";
+type Props = {
+  loadFromFile: () => void;
+  insertMode: boolean;
+  setInsertMode: Dispatch<SetStateAction<boolean>>;
 };
 
-// TODO Conditionally activate or disable the shortcuts rather than having them test insert mode
-const useAppShortcuts = (loadFromFile: () => void): void => {
+const getAppShortcuts = ({ loadFromFile, setInsertMode }: Props) => {
   const selectAllShortcut: Shortcut = {
     keys: ["a"],
     callback: (event) => {
-      if (insertMode()) return;
       if (event.ctrlKey) selectAll();
     },
   };
@@ -21,17 +20,13 @@ const useAppShortcuts = (loadFromFile: () => void): void => {
   const insert = {
     keys: ["i"],
     callback: () => {
-      if (insertMode()) return;
-      const newTask = getElementById("newTask");
-      newTask.style.display = "block";
-      newTask.focus();
+      setInsertMode(true);
     },
   };
 
   const deleteSelectedShortcut = {
     keys: ["d", "Delete"],
     callback: () => {
-      if (insertMode()) return;
       deleteSelected();
       saveToLocalStorage();
     },
@@ -40,7 +35,6 @@ const useAppShortcuts = (loadFromFile: () => void): void => {
   const openFile: Shortcut = {
     keys: ["o"],
     callback: (event) => {
-      if (insertMode()) return;
       if (event.ctrlKey) loadFromFile();
     },
   };
@@ -48,18 +42,23 @@ const useAppShortcuts = (loadFromFile: () => void): void => {
   const saveFile: Shortcut = {
     keys: ["s"],
     callback: (event) => {
-      if (insertMode()) return;
       if (event.ctrlKey) saveToFile();
     },
   };
 
-  useKeyboardShortcuts({
+  return {
     selectAll: selectAllShortcut,
     insert,
     delete: deleteSelectedShortcut,
     openFile,
     saveFile,
-  });
+  };
+};
+
+const useAppShortcuts = (props: Props): void => {
+  const { insertMode } = props;
+
+  useKeyboardShortcuts(insertMode ? {} : getAppShortcuts(props));
 };
 
 export default useAppShortcuts;

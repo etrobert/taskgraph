@@ -1,6 +1,8 @@
 import React, { useRef, useState } from "react";
 
 import {
+  addTask,
+  AddTask,
   clearGraph,
   completeSelected,
   deleteSelected,
@@ -15,6 +17,7 @@ import Toolbar from "./Toolbar/Toolbar";
 import GraphInput from "./GraphInput";
 import useTasksSelected from "./useTasksSelected";
 import GraphComponent from "./Graph/Graph";
+import NewTask from "@/NewTask";
 
 import "./App.css";
 
@@ -30,7 +33,23 @@ const App = (): JSX.Element => {
 
   const tasksSelected = useTasksSelected();
 
-  useAppShortcuts(loadFromFile);
+  const [insertMode, setInsertMode] = useState(false);
+
+  const renderNewTask = () => {
+    if (!insertMode) return null;
+
+    const onNewTask = (task: AddTask) => {
+      addTask(task);
+      saveToLocalStorage();
+      setInsertMode(false);
+    };
+
+    const onCancel = () => setInsertMode(false);
+
+    return <NewTask onNewTask={onNewTask} onCancel={onCancel} />;
+  };
+
+  useAppShortcuts({ loadFromFile, insertMode, setInsertMode });
 
   return (
     <>
@@ -81,6 +100,8 @@ const App = (): JSX.Element => {
       />
 
       <GraphComponent />
+
+      {renderNewTask()}
     </>
   );
 };
