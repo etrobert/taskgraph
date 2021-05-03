@@ -5,7 +5,6 @@ import ReactDOM from "react-dom";
 import App from "./App.js";
 import {
   initGraph,
-  loadGraph,
   addTask,
   deleteSelected,
   completeSelected,
