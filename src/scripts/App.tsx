@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import { closeMenubar } from ".";
-import FileInput from "./FileInput";
+import GraphInput from "./GraphInput";
 import { clearGraph, Graph, loadGraph } from "./graph";
 import MenuBar from "./MenuBar";
 import { saveToFile, saveToLocalStorage } from "./storage";
@@ -31,7 +31,7 @@ const App = (): JSX.Element => {
 
   return (
     <>
-      <FileInput onLoad={onLoad} ref={fileInputRef} />
+      <GraphInput onLoad={onLoad} ref={fileInputRef} />
       <MenuBar
         onClose={closeMenubar}
         onLoad={loadFromFile}

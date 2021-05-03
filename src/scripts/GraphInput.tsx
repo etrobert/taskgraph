@@ -5,7 +5,7 @@ type Props = {
   onLoad: (graph: Graph) => void;
 };
 
-const FileInput = (
+const GraphInput = (
   { onLoad }: Props,
   ref: ForwardedRef<HTMLInputElement>
 ): JSX.Element => {
@@ -33,4 +33,4 @@ const FileInput = (
     />
   );
 };
-export default React.forwardRef(FileInput);
+export default React.forwardRef(GraphInput);
