@@ -6,51 +6,13 @@ import App from "./App.js";
 import {
   initGraph,
   loadGraph,
-  getGraph,
   addTask,
   deleteSelected,
   completeSelected,
 } from "./graph.js";
 
 import { getElementById } from "./misc.js";
-
-function downloadFile(
-  filename: string,
-  text: string,
-  type = "data:text/plain;charset=utf-8"
-) {
-  const element = document.createElement("a");
-  element.setAttribute("href", `${type}, ${encodeURIComponent(text)}`);
-  element.setAttribute("download", filename);
-
-  element.style.display = "none";
-  document.body.appendChild(element);
-
-  element.click();
-
-  document.body.removeChild(element);
-}
-
-export function saveToLocalStorage(): void {
-  const graph = getGraph();
-  window.localStorage.setItem("graph", JSON.stringify(graph));
-}
-
-export function saveToFile(): void {
-  const graph = getGraph();
-  downloadFile(
-    "graph.json",
-    JSON.stringify(graph, null, 2),
-    "data:text/json;charset=utf-8"
-  );
-}
-
-function loadFromLocalStorage() {
-  const graphItem = window.localStorage.getItem("graph");
-  if (!graphItem) return;
-  const graph = JSON.parse(graphItem);
-  loadGraph(graph);
-}
+import { loadFromLocalStorage, saveToLocalStorage } from "./storage.js";
 
 export function loadFromFile(): void {
   const fileInput = getElementById("fileInput");

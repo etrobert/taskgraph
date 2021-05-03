@@ -1,7 +1,8 @@
 import React from "react";
-import { closeMenubar, loadFromFile, saveToFile } from ".";
+import { closeMenubar, loadFromFile } from ".";
 import { clearGraph } from "./graph";
 import MenuBar from "./MenuBar";
+import { saveToFile } from "./storage";
 import useAppShortcuts from "./useAppShortcuts";
 
 const App = (): JSX.Element => {

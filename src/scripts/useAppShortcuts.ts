@@ -1,6 +1,7 @@
-import { loadFromFile, saveToFile, saveToLocalStorage } from ".";
+import { loadFromFile } from ".";
 import { deleteSelected, selectAll } from "./graph";
 import { getElementById } from "./misc";
+import { saveToFile, saveToLocalStorage } from "./storage";
 import useKeyboardShortcuts, { Shortcut } from "./useKeyboardShortcuts";
 
 const insertMode = () => {
