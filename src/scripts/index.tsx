@@ -10,7 +10,6 @@ import {
   addTask,
   deleteSelected,
   completeSelected,
-  selectAll,
 } from "./graph.js";
 
 import { getElementById } from "./misc.js";
@@ -32,7 +31,7 @@ function downloadFile(
   document.body.removeChild(element);
 }
 
-function saveToLocalStorage() {
+export function saveToLocalStorage(): void {
   const graph = getGraph();
   window.localStorage.setItem("graph", JSON.stringify(graph));
 }
@@ -155,32 +154,6 @@ document.addEventListener("DOMContentLoaded", () => {
   graph.addEventListener("selectionchanged", function (event) {
     updateToolbar((event as CustomEvent<HTMLElement[]>).detail.length > 0);
   });
-
-  const newTask = getElementById("newTask");
-  document.onkeyup = (event) => {
-    // Do not register commands when adding new task
-    if (newTask.style.display === "block") return;
-    switch (event.key) {
-      case "a":
-        if (event.ctrlKey) selectAll();
-        break;
-      case "i":
-        newTask.style.display = "block";
-        newTask.focus();
-        break;
-      case "d":
-      case "Delete":
-        deleteSelected();
-        saveToLocalStorage();
-        break;
-      case "o":
-        if (event.ctrlKey) loadFromFile();
-        break;
-      case "s":
-        if (event.ctrlKey) saveToFile();
-        break;
-    }
-  };
 
   initGraph();
 
