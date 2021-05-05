@@ -2,7 +2,7 @@
 
 import React from "react";
 import ReactDOM from "react-dom";
-import App from "./App.js";
+import App from "./App/App";
 import { initGraph, addTask } from "./graph.js";
 
 import { getElementById } from "./misc.js";

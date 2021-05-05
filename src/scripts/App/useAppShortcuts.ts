@@ -1,7 +1,7 @@
-import { deleteSelected, selectAll } from "./graph";
-import { getElementById } from "./misc";
-import { saveToFile, saveToLocalStorage } from "./storage";
-import useKeyboardShortcuts, { Shortcut } from "./useKeyboardShortcuts";
+import { deleteSelected, selectAll } from "@/graph";
+import { getElementById } from "@/misc";
+import { saveToFile, saveToLocalStorage } from "@/storage";
+import useKeyboardShortcuts, { Shortcut } from "@/useKeyboardShortcuts";
 
 const insertMode = () => {
   const newTask = getElementById("newTask");

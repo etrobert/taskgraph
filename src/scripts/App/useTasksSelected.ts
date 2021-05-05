@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getElementById } from "./misc";
+import { getElementById } from "@/misc";
 
 /**
  * Update tasksSelected when the graph sends a selectionchanged event

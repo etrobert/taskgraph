@@ -1,5 +1,5 @@
 import React, { ChangeEventHandler, ForwardedRef } from "react";
-import { Graph } from "./graph";
+import { Graph } from "@/graph";
 
 type Props = {
   onLoad: (graph: Graph) => void;
