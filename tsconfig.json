@@ -12,6 +12,8 @@
 
     "allowSyntheticDefaultImports": true, /* Allows to import React from 'react' */
 
-    "jsx": "react" /* Allows to use React code */
-  }
+    "jsx": "react", /* Allows to use React code */
+
+    "esModuleInterop": true /* Allows jest to work */
+  },
 }
