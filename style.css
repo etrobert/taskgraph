@@ -182,7 +182,3 @@ button {
   z-index: 1;
   background-image: url("resources/feather/menu.svg");
 }
-
-#fileInput {
-  display: none;
-}

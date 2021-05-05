@@ -4,42 +4,12 @@ import ReactDOM from "../snowpack/pkg/react-dom.js";
 import App from "./App.js";
 import {
   initGraph,
-  loadGraph,
-  getGraph,
   addTask,
   deleteSelected,
-  completeSelected,
-  selectAll
+  completeSelected
 } from "./graph.js";
 import {getElementById} from "./misc.js";
-function downloadFile(filename, text, type = "data:text/plain;charset=utf-8") {
-  const element = document.createElement("a");
-  element.setAttribute("href", `${type}, ${encodeURIComponent(text)}`);
-  element.setAttribute("download", filename);
-  element.style.display = "none";
-  document.body.appendChild(element);
-  element.click();
-  document.body.removeChild(element);
-}
-function saveToLocalStorage() {
-  const graph = getGraph();
-  window.localStorage.setItem("graph", JSON.stringify(graph));
-}
-export function saveToFile() {
-  const graph = getGraph();
-  downloadFile("graph.json", JSON.stringify(graph, null, 2), "data:text/json;charset=utf-8");
-}
-function loadFromLocalStorage() {
-  const graphItem = window.localStorage.getItem("graph");
-  if (!graphItem)
-    return;
-  const graph = JSON.parse(graphItem);
-  loadGraph(graph);
-}
-export function loadFromFile() {
-  const fileInput = getElementById("fileInput");
-  fileInput.click();
-}
+import {loadFromLocalStorage, saveToLocalStorage} from "./storage.js";
 export const closeMenubar = () => {
   const menubar = getElementById("menubar");
   menubar.classList.remove("active");
@@ -94,64 +64,16 @@ function setupNewTask() {
     }
   };
 }
-function setupFileInput() {
-  const fileInput = getElementById("fileInput");
-  fileInput.onchange = () => {
-    const files = fileInput.files;
-    if (!files || files.length === 0)
-      return;
-    const file = files[0];
-    if (file.type !== "application/json")
-      return;
-    const reader = new FileReader();
-    reader.addEventListener("load", () => {
-      const result = reader.result;
-      loadGraph(JSON.parse(result));
-      saveToLocalStorage();
-    });
-    reader.readAsText(file);
-    closeMenubar();
-  };
-}
 document.addEventListener("DOMContentLoaded", () => {
   setupApp();
   setupToolbar();
   setupNewTask();
-  setupFileInput();
   const graph = getElementById("graph");
   graph.addEventListener("taskmoved", saveToLocalStorage);
   graph.addEventListener("newdependency", saveToLocalStorage);
   graph.addEventListener("selectionchanged", function(event) {
     updateToolbar(event.detail.length > 0);
   });
-  const newTask = getElementById("newTask");
-  document.onkeyup = (event) => {
-    if (newTask.style.display === "block")
-      return;
-    switch (event.key) {
-      case "a":
-        if (event.ctrlKey)
-          selectAll();
-        break;
-      case "i":
-        newTask.style.display = "block";
-        newTask.focus();
-        break;
-      case "d":
-      case "Delete":
-        deleteSelected();
-        saveToLocalStorage();
-        break;
-      case "o":
-        if (event.ctrlKey)
-          loadFromFile();
-        break;
-      case "s":
-        if (event.ctrlKey)
-          saveToFile();
-        break;
-    }
-  };
   initGraph();
   loadFromLocalStorage();
 });
