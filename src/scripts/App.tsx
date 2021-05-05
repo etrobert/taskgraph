@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { closeMenubar } from ".";
 import GraphInput from "./GraphInput";
 import {
@@ -13,6 +13,7 @@ import { saveToFile, saveToLocalStorage } from "./storage";
 import useAppShortcuts from "./useAppShortcuts";
 import Toolbar from "./Toolbar";
 import { getElementById } from "./misc";
+import useTasksSelected from "./useTasksSelected";
 
 const App = (): JSX.Element => {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -50,21 +51,9 @@ const App = (): JSX.Element => {
     );
   };
 
-  const [tasksSelected, setTasksSelected] = useState(false);
-
-  // Update tasksSelected when the graph sends a selectionchanged event
-  useEffect(() => {
-    const onSelectionChanged = (event: Event) => {
-      const customEvent = event as CustomEvent<HTMLElement[]>;
-      setTasksSelected(customEvent.detail.length > 0);
-    };
-    const graph = getElementById("graph");
-    graph.addEventListener("selectionchanged", onSelectionChanged);
-    return () =>
-      graph.removeEventListener("selectionchanged", onSelectionChanged);
-  });
-
   const [linkMode, setLinkMode] = useState(false);
+
+  const tasksSelected = useTasksSelected();
 
   const renderToolbar = () => {
     const onCreateTask = () => {
