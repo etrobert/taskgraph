@@ -22,12 +22,14 @@ const Toolbar = (props: Props): JSX.Element => {
       return (
         <>
           <button
+            aria-label="Change Link Mode"
             onClick={onChangeLinkMode}
             className={`Toolbar__button Toolbar__change-link-mode-button ${
               linkMode ? "Toolbar__change-link-mode-button--active" : ""
             } iconButton`}
           />
           <button
+            aria-label="Create Task"
             onClick={onCreateTask}
             className="Toolbar__button Toolbar__create-task-button iconButton"
           />
@@ -39,11 +41,13 @@ const Toolbar = (props: Props): JSX.Element => {
     return (
       <>
         <button
+          aria-label="Delete Selected"
           onClick={onDelete}
           // TODO Should it be delete-selected?
           className="Toolbar__button Toolbar__delete-selected-button iconButton"
         />
         <button
+          aria-label="Complete Selected"
           onClick={onComplete}
           className="Toolbar__button Toolbar__complete-selected-button iconButton"
         />
