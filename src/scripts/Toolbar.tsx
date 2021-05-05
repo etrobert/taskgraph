@@ -43,7 +43,6 @@ const Toolbar = (props: Props): JSX.Element => {
         <button
           aria-label="Delete Selected"
           onClick={onDelete}
-          // TODO Should it be delete-selected?
           className="Toolbar__button Toolbar__delete-selected-button iconButton"
         />
         <button
