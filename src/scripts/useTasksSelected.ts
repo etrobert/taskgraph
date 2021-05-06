@@ -16,7 +16,7 @@ const useTasksSelected = (): boolean => {
     graph.addEventListener("selectionchanged", onSelectionChanged);
     return () =>
       graph.removeEventListener("selectionchanged", onSelectionChanged);
-  });
+  }, []);
 
   return tasksSelected;
 };
