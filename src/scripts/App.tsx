@@ -62,7 +62,7 @@ const App = (): JSX.Element => {
       newTask.focus();
     };
 
-    const onChangeLinkMode = () => setLinkMode((linkMode) => !linkMode);
+    const onChangeLinkMode = () => setLinkMode((state) => !state);
 
     const onComplete = () => {
       completeSelected();
