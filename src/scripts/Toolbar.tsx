@@ -67,6 +67,7 @@ const Toolbar = (props: Props): JSX.Element => {
         type="checkbox"
         checked={!props.tasksSelected && props.linkMode}
         id="linkModeCheckbox"
+        readOnly
       />
     </div>
   );
