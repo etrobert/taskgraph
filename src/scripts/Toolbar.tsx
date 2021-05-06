@@ -24,9 +24,12 @@ const Toolbar = (props: Props): JSX.Element => {
           <button
             aria-label="Change Link Mode"
             onClick={onChangeLinkMode}
-            className={`Toolbar__button Toolbar__change-link-mode-button ${
-              linkMode ? "Toolbar__change-link-mode-button--active" : ""
-            } iconButton`}
+            className={`
+              Toolbar__button
+              Toolbar__change-link-mode-button
+              ${linkMode ? "Toolbar__change-link-mode-button--active" : ""}
+              iconButton
+            `}
           />
           <button
             aria-label="Create Task"
