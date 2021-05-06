@@ -121,21 +121,6 @@ body {
   font-size: 1.5em;
 }
 
-#toolbar {
-  padding: 2em;
-  position: fixed;
-  bottom: 0;
-  right: 0;
-  z-index: 1;
-  display: flex;
-  align-items: center;
-}
-
-#toolbar button {
-  width: 4em;
-  height: 4em;
-}
-
 .iconButton {
   background-size: contain;
   background-color: transparent;
@@ -144,31 +129,6 @@ body {
 
 button {
   cursor: pointer;
-}
-
-#linkModeCheckbox svg {
-  width: 4em;
-  height: 4em;
-}
-
-#linkModeCheckbox input:checked + svg {
-  border-bottom: 0.2rem solid;
-}
-
-#linkModeCheckbox input {
-  display: none;
-}
-
-#deleteTaskButton {
-  background-image: url("resources/feather/trash-2.svg");
-}
-
-#completeTaskButton {
-  background-image: url("resources/feather/check-circle.svg");
-}
-
-#createTaskButton {
-  background-image: url("resources/feather/plus-circle.svg");
 }
 
 #menubarOpenButton {

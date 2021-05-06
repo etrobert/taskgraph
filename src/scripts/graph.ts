@@ -334,8 +334,8 @@ export function initGraph(): void {
     const pointerId = event.pointerId;
     itemsContainer.setPointerCapture(pointerId);
     const initialPosition = { x: event.clientX, y: event.clientY };
-    const linkModeCheckbox = querySelector(
-      "#linkModeCheckbox input"
+    const linkModeCheckbox = getElementById(
+      "linkModeCheckbox"
     ) as HTMLInputElement;
     if (event.shiftKey || linkModeCheckbox.checked) {
       // Initiate link creation
