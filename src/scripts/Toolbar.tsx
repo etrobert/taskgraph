@@ -26,15 +26,15 @@ const Toolbar = (props: Props): JSX.Element => {
             onClick={onChangeLinkMode}
             className={`
               Toolbar__button
-              Toolbar__change-link-mode-button
-              ${linkMode ? "Toolbar__change-link-mode-button--active" : ""}
+              Toolbar__button-change-link-mode
+              ${linkMode ? "Toolbar__button-change-link-mode--active" : ""}
               iconButton
             `}
           />
           <button
             aria-label="Create Task"
             onClick={onCreateTask}
-            className="Toolbar__button Toolbar__create-task-button iconButton"
+            className="Toolbar__button Toolbar__button-create-task iconButton"
           />
         </>
       );
@@ -46,12 +46,12 @@ const Toolbar = (props: Props): JSX.Element => {
         <button
           aria-label="Delete Selected"
           onClick={onDelete}
-          className="Toolbar__button Toolbar__delete-selected-button iconButton"
+          className="Toolbar__button Toolbar__button-delete-selected iconButton"
         />
         <button
           aria-label="Complete Selected"
           onClick={onComplete}
-          className="Toolbar__button Toolbar__complete-selected-button iconButton"
+          className="Toolbar__button Toolbar__button-complete-selected iconButton"
         />
       </>
     );

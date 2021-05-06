@@ -10,19 +10,19 @@
   height: 5em;
 }
 
-.Toolbar__delete-selected-button {
+.Toolbar__button-delete-selected {
   background-image: url("resources/feather/trash-2.svg");
 }
 
-.Toolbar__complete-selected-button {
+.Toolbar__button-complete-selected {
   background-image: url("resources/feather/check-circle.svg");
 }
 
-.Toolbar__create-task-button {
+.Toolbar__button-create-task {
   background-image: url("resources/feather/plus-circle.svg");
 }
 
-.Toolbar__change-link-mode-button {
+.Toolbar__button-change-link-mode {
   background-image: url("resources/feather/link.svg");
 
   border-bottom: 0.2rem solid transparent;
@@ -32,6 +32,6 @@
   background-position: center;
 }
 
-.Toolbar__change-link-mode-button--active {
+.Toolbar__button-change-link-mode--active {
   border-bottom: 0.2rem solid;
 }
