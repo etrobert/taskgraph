@@ -3,3 +3,6 @@ build/
 
 # WebStorm Project Settings
 .idea
+
+# MacOS Finder files
+.DS_Store
