@@ -1,0 +1,37 @@
+.Toolbar {
+  position: fixed;
+  right: 2em;
+  bottom: 2em;
+  z-index: 1;
+}
+
+.Toolbar__button {
+  width: 5em;
+  height: 5em;
+}
+
+.Toolbar__button-delete-selected {
+  background-image: url("resources/feather/trash-2.svg");
+}
+
+.Toolbar__button-complete-selected {
+  background-image: url("resources/feather/check-circle.svg");
+}
+
+.Toolbar__button-create-task {
+  background-image: url("resources/feather/plus-circle.svg");
+}
+
+.Toolbar__button-change-link-mode {
+  background-image: url("resources/feather/link.svg");
+
+  border-bottom: 0.2rem solid transparent;
+
+  /* Display the button correctly even with the border */
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.Toolbar__button-change-link-mode--active {
+  border-bottom: 0.2rem solid;
+}

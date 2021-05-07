@@ -8,8 +8,7 @@ import {
 import {
   getElementById,
   removeFromArray,
-  snap,
-  querySelector
+  snap
 } from "./misc.js";
 const graphContainer = getElementById("graph");
 const itemsContainer = getElementById("itemsContainer");
@@ -227,7 +226,7 @@ export function initGraph() {
     const pointerId = event.pointerId;
     itemsContainer.setPointerCapture(pointerId);
     const initialPosition = {x: event.clientX, y: event.clientY};
-    const linkModeCheckbox = querySelector("#linkModeCheckbox input");
+    const linkModeCheckbox = getElementById("linkModeCheckbox");
     if (event.shiftKey || linkModeCheckbox.checked) {
       const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
       path.from = task;

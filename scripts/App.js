@@ -1,10 +1,18 @@
-import React, {useRef} from "../snowpack/pkg/react.js";
+import React, {useRef, useState} from "../snowpack/pkg/react.js";
 import {closeMenubar} from "./index.js";
 import GraphInput from "./GraphInput.js";
-import {clearGraph, loadGraph} from "./graph.js";
+import {
+  clearGraph,
+  completeSelected,
+  deleteSelected,
+  loadGraph
+} from "./graph.js";
 import MenuBar from "./MenuBar.js";
 import {saveToFile, saveToLocalStorage} from "./storage.js";
 import useAppShortcuts from "./useAppShortcuts.js";
+import Toolbar from "./Toolbar.js";
+import {getElementById} from "./misc.js";
+import useTasksSelected from "./useTasksSelected.js";
 const App = () => {
   const fileInputRef = useRef(null);
   const renderGraphInput = () => {
@@ -35,7 +43,35 @@ const App = () => {
       onSave
     });
   };
+  const [linkMode, setLinkMode] = useState(false);
+  const tasksSelected = useTasksSelected();
+  const renderToolbar = () => {
+    const onCreateTask = () => {
+      const newTask = getElementById("newTask");
+      newTask.style.display = "block";
+      newTask.focus();
+    };
+    const onChangeLinkMode = () => setLinkMode((state) => !state);
+    const onComplete = () => {
+      completeSelected();
+      saveToLocalStorage();
+    };
+    const onDelete = () => {
+      deleteSelected();
+      saveToLocalStorage();
+    };
+    return tasksSelected ? /* @__PURE__ */ React.createElement(Toolbar, {
+      tasksSelected: true,
+      onComplete,
+      onDelete
+    }) : /* @__PURE__ */ React.createElement(Toolbar, {
+      tasksSelected: false,
+      linkMode,
+      onCreateTask,
+      onChangeLinkMode
+    });
+  };
   useAppShortcuts(loadFromFile);
-  return /* @__PURE__ */ React.createElement(React.Fragment, null, renderGraphInput(), renderMenuBar());
+  return /* @__PURE__ */ React.createElement(React.Fragment, null, renderGraphInput(), renderMenuBar(), renderToolbar());
 };
 export default App;
