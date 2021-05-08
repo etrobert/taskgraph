@@ -9,7 +9,7 @@ type UseToolbar = (
   tasksSelected: boolean
 ) => { linkMode: boolean; toolbar: JSX.Element };
 
-const useToolbar: UseToolbar = (tasksSelected: boolean) => {
+const useToolbar: UseToolbar = (tasksSelected) => {
   const [linkMode, setLinkMode] = useState(false);
 
   const onCreateTask = () => {
