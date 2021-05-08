@@ -8,12 +8,6 @@ import { initGraph, addTask } from "./graph.js";
 import { getElementById } from "./misc.js";
 import { loadFromLocalStorage, saveToLocalStorage } from "./storage.js";
 
-export const closeMenubar = (): void => {
-  const menubar = getElementById("menubar");
-
-  menubar.classList.remove("active");
-};
-
 const setupApp = () => {
   ReactDOM.render(<App />, document.getElementById("root"));
 
