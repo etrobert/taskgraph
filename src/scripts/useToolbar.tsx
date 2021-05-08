@@ -5,7 +5,11 @@ import { getElementById } from "./misc";
 import { saveToLocalStorage } from "./storage";
 import Toolbar from "./Toolbar";
 
-const useToolbar = (tasksSelected: boolean): JSX.Element => {
+type UseToolbar = (
+  tasksSelected: boolean
+) => { linkMode: boolean; toolbar: JSX.Element };
+
+const useToolbar: UseToolbar = (tasksSelected: boolean) => {
   const [linkMode, setLinkMode] = useState(false);
 
   const onCreateTask = () => {
@@ -26,7 +30,7 @@ const useToolbar = (tasksSelected: boolean): JSX.Element => {
     saveToLocalStorage();
   };
 
-  return tasksSelected ? (
+  const toolbar = tasksSelected ? (
     <Toolbar tasksSelected={true} onComplete={onComplete} onDelete={onDelete} />
   ) : (
     <Toolbar
@@ -36,6 +40,8 @@ const useToolbar = (tasksSelected: boolean): JSX.Element => {
       onChangeLinkMode={onChangeLinkMode}
     />
   );
+
+  return { linkMode, toolbar };
 };
 
 export default useToolbar;

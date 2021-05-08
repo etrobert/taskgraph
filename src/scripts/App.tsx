@@ -52,7 +52,7 @@ const App = (): JSX.Element => {
 
   const tasksSelected = useTasksSelected();
 
-  const toolbar = useToolbar(tasksSelected);
+  const { toolbar } = useToolbar(tasksSelected);
 
   useAppShortcuts(loadFromFile);
 
