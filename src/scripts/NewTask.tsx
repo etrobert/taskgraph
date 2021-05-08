@@ -11,7 +11,7 @@ type Props = {
 const NewTask = ({ onNewTask, onCancel }: Props): JSX.Element => {
   const ref = useRef<HTMLInputElement>(null);
 
-  useEffect(() => ref.current?.focus());
+  useEffect(() => ref.current?.focus(), []);
 
   const onKeyPress: KeyboardEventHandler<HTMLInputElement> = (event) => {
     if (!ref.current) return;
