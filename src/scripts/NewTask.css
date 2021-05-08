@@ -6,6 +6,8 @@
   top: calc(50% - (1.5em / 2));
   margin: auto;
 
+  z-index: 1;
+
   width: 80vw;
   padding: 1em;
 
