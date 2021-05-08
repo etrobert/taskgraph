@@ -1,18 +1,12 @@
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import GraphInput from "./GraphInput";
-import {
-  clearGraph,
-  completeSelected,
-  deleteSelected,
-  Graph,
-  loadGraph,
-} from "./graph";
+import { clearGraph, Graph, loadGraph } from "./graph";
 import MenuBar from "./MenuBar";
 import { saveToFile, saveToLocalStorage } from "./storage";
 import useAppShortcuts from "./useAppShortcuts";
-import Toolbar from "./Toolbar";
 import { getElementById } from "./misc";
 import useTasksSelected from "./useTasksSelected";
+import useToolbar from "./useToolbar";
 
 export const closeMenubar = (): void => {
   const menubar = getElementById("menubar");
@@ -56,44 +50,9 @@ const App = (): JSX.Element => {
     );
   };
 
-  const [linkMode, setLinkMode] = useState(false);
-
   const tasksSelected = useTasksSelected();
 
-  const renderToolbar = () => {
-    const onCreateTask = () => {
-      const newTask = getElementById("newTask");
-      newTask.style.display = "block";
-      newTask.focus();
-    };
-
-    const onChangeLinkMode = () => setLinkMode((state) => !state);
-
-    const onComplete = () => {
-      completeSelected();
-      saveToLocalStorage();
-    };
-
-    const onDelete = () => {
-      deleteSelected();
-      saveToLocalStorage();
-    };
-
-    return tasksSelected ? (
-      <Toolbar
-        tasksSelected={true}
-        onComplete={onComplete}
-        onDelete={onDelete}
-      />
-    ) : (
-      <Toolbar
-        tasksSelected={false}
-        linkMode={linkMode}
-        onCreateTask={onCreateTask}
-        onChangeLinkMode={onChangeLinkMode}
-      />
-    );
-  };
+  const toolbar = useToolbar(tasksSelected);
 
   useAppShortcuts(loadFromFile);
 
@@ -101,7 +60,7 @@ const App = (): JSX.Element => {
     <>
       {renderGraphInput()}
       {renderMenuBar()}
-      {renderToolbar()}
+      {toolbar}
     </>
   );
 };
