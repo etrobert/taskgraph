@@ -13,6 +13,7 @@ import useAppShortcuts from "./useAppShortcuts";
 import Toolbar from "./Toolbar/Toolbar";
 import { getElementById } from "@/misc";
 import useTasksSelected from "./useTasksSelected";
+import GraphComponent from "./Graph/Graph";
 
 export const closeMenubar = (): void => {
   const menubar = getElementById("menubar");
@@ -102,6 +103,7 @@ const App = (): JSX.Element => {
       {renderGraphInput()}
       {renderMenuBar()}
       {renderToolbar()}
+      <GraphComponent />
     </>
   );
 };

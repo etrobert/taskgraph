@@ -3,7 +3,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App/App";
-import { initGraph, addTask } from "./graph.js";
+import { addTask } from "./graph.js";
 
 import { getElementById } from "./misc.js";
 import { loadFromLocalStorage, saveToLocalStorage } from "./storage.js";
@@ -46,8 +46,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const graph = getElementById("graph");
   graph.addEventListener("taskmoved", saveToLocalStorage);
   graph.addEventListener("newdependency", saveToLocalStorage);
-
-  initGraph();
 
   loadFromLocalStorage();
 });
