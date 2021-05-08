@@ -7,12 +7,7 @@ import {
   Point,
 } from "./geometry.js";
 
-import {
-  getElementById,
-  removeFromArray,
-  snap,
-  querySelector,
-} from "./misc.js";
+import { getElementById, removeFromArray, snap } from "./misc.js";
 
 interface HTMLTaskElement extends HTMLElement {
   textContent: string;
