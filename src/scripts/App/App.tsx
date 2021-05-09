@@ -17,7 +17,7 @@ import Toolbar from "./Toolbar/Toolbar";
 import GraphInput from "./GraphInput";
 import useTasksSelected from "./useTasksSelected";
 import GraphComponent from "./Graph/Graph";
-import NewTask from "@/NewTask";
+import NewTask from "./NewTask/NewTask";
 
 import "./App.css";
 

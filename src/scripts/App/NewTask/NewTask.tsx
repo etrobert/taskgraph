@@ -1,5 +1,5 @@
 import React, { KeyboardEventHandler, useEffect, useRef } from "react";
-import { AddTask } from "./graph";
+import { AddTask } from "@/graph";
 
 import "./NewTask.css";
 
