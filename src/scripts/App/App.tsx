@@ -6,12 +6,12 @@ import {
   deleteSelected,
   Graph,
   loadGraph,
-} from "./graph";
-import MenuBar from "./MenuBar";
-import { saveToFile, saveToLocalStorage } from "./storage";
+} from "@/graph";
+import MenuBar from "./MenuBar/MenuBar";
+import { saveToFile, saveToLocalStorage } from "@/storage";
 import useAppShortcuts from "./useAppShortcuts";
-import Toolbar from "./Toolbar";
-import { getElementById } from "./misc";
+import Toolbar from "./Toolbar/Toolbar";
+import { getElementById } from "@/misc";
 import useTasksSelected from "./useTasksSelected";
 
 export const closeMenubar = (): void => {

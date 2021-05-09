@@ -12,4 +12,7 @@ module.exports = {
     // Github Pages ignores _ prefixed folders
     metaUrlPath: "snowpack",
   },
+  alias: {
+    "@": "./src/scripts",
+  },
 };
