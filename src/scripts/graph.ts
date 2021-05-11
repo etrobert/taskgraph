@@ -300,16 +300,10 @@ function onGraphDragStart(event: PointerEvent) {
   itemsContainer.addEventListener("pointerup", onPointerEnd);
 }
 
-function updateZoomIndicator() {
-  const zoomIndicator = getElementById("zoomIndicator");
-  zoomIndicator.textContent =
-    panzoom.zoom === 1 ? "" : Math.floor(panzoom.zoom * 100) + "% zoom";
-}
-
-export const updateZoom = (factor: number): void => {
+export const updateZoom = (factor: number): number => {
   panzoom.zoom = snap(1)(0.1)(panzoom.zoom * factor);
   updatePanzoom();
-  updateZoomIndicator();
+  return panzoom.zoom;
 };
 
 function moveTask(task: HTMLTaskElement, pos: Point) {
@@ -421,5 +415,4 @@ export function initGraph(): void {
     }
   };
   sendSelectionChanged([]);
-  updateZoomIndicator();
 }
