@@ -1,14 +1,19 @@
 import React, { useEffect } from "react";
 
-import { initGraph } from "@/graph";
+import { initGraph, updateZoom } from "@/graph";
 
 import "./Graph.css";
 
 const Graph = (): JSX.Element => {
   useEffect(initGraph, []);
 
+  const onWheel: React.WheelEventHandler = (event) => {
+    const factor = event.deltaY < 0 ? 1.1 : 0.9;
+    updateZoom(factor);
+  };
+
   return (
-    <div id="graph">
+    <div onWheel={onWheel} id="graph">
       <p id="zoomIndicator"></p>
       <div id="itemsContainer">
         <svg id="arrows">

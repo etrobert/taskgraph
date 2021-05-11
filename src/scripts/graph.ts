@@ -306,15 +306,11 @@ function updateZoomIndicator() {
     panzoom.zoom === 1 ? "" : Math.floor(panzoom.zoom * 100) + "% zoom";
 }
 
-function setupZoom() {
-  const graphContainer = getElementById("graph");
-  graphContainer.onwheel = (event) => {
-    const factor = event.deltaY < 0 ? 1.1 : 0.9;
-    panzoom.zoom = snap(1)(0.1)(panzoom.zoom * factor);
-    updatePanzoom();
-    updateZoomIndicator();
-  };
-}
+export const updateZoom = (factor: number): void => {
+  panzoom.zoom = snap(1)(0.1)(panzoom.zoom * factor);
+  updatePanzoom();
+  updateZoomIndicator();
+};
 
 function moveTask(task: HTMLTaskElement, pos: Point) {
   task.style.left = pos.x + "px";
@@ -323,7 +319,6 @@ function moveTask(task: HTMLTaskElement, pos: Point) {
 }
 
 export function initGraph(): void {
-  setupZoom();
   const graphContainer = getElementById("graph");
   graphContainer.onpointerdown = (event) => {
     event.preventDefault();
