@@ -73,6 +73,7 @@ function getViewCenter(): Point {
   const graphContainer = getElementById("graph");
   const box = getOffsetBox(graphContainer);
   const viewCenter = getBoxCenter(box);
+  const panzoom = getPanzoom();
   return {
     x: viewCenter.x - panzoom.pan.x,
     y: viewCenter.y - panzoom.pan.y,
@@ -271,13 +272,31 @@ function updatePath(path: HTMLDependencyElement, dest?: Point) {
   }
 }
 
-const panzoom = {
-  pan: { x: 0, y: 0 },
-  zoom: 1,
+const getPanzoom = () => {
+  const graph = getElementById("graph");
+  const panzoomX = graph.dataset.panzoomX;
+  const panzoomY = graph.dataset.panzoomY;
+  const panzoomZoom = graph.dataset.panzoomZoom;
+
+  if (
+    panzoomX === undefined ||
+    panzoomY === undefined ||
+    panzoomZoom === undefined
+  )
+    throw new Error("panzoom values missing");
+
+  return {
+    pan: {
+      x: parseFloat(panzoomX),
+      y: parseFloat(panzoomY),
+    },
+    zoom: parseFloat(panzoomZoom),
+  };
 };
 
-function updatePanzoom() {
+export function updatePanzoom(): void {
   const itemsContainer = getElementById("itemsContainer");
+  const panzoom = getPanzoom();
   itemsContainer.style.transform = `translate(${panzoom.pan.x}px, ${panzoom.pan.y}px) scale(${panzoom.zoom})`;
 }
 
@@ -286,10 +305,15 @@ function onGraphDragStart(event: PointerEvent) {
   itemsContainer.setPointerCapture(event.pointerId);
   let previousPosition = { x: event.clientX, y: event.clientY };
   const onPointerMove = (event: PointerEvent) => {
-    panzoom.pan.x += event.clientX - previousPosition.x;
-    panzoom.pan.y += event.clientY - previousPosition.y;
+    const panzoom = getPanzoom();
+    const x = panzoom.pan.x + event.clientX - previousPosition.x;
+    const y = panzoom.pan.y + event.clientY - previousPosition.y;
     previousPosition = { x: event.clientX, y: event.clientY };
-    updatePanzoom();
+
+    const graphContainer = getElementById("graph");
+    graphContainer.dispatchEvent(
+      new CustomEvent("graphmoved", { detail: { pan: { x, y } } })
+    );
   };
   const onPointerEnd = () => {
     const itemsContainer = getElementById("itemsContainer");
@@ -299,12 +323,6 @@ function onGraphDragStart(event: PointerEvent) {
   itemsContainer.addEventListener("pointermove", onPointerMove);
   itemsContainer.addEventListener("pointerup", onPointerEnd);
 }
-
-export const updateZoom = (factor: number): number => {
-  panzoom.zoom = snap(1)(0.1)(panzoom.zoom * factor);
-  updatePanzoom();
-  return panzoom.zoom;
-};
 
 function moveTask(task: HTMLTaskElement, pos: Point) {
   task.style.left = pos.x + "px";
