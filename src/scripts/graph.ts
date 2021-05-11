@@ -6,7 +6,7 @@ import {
   intersectLineBox,
   Point,
 } from "./geometry.js";
-import { getElementById, removeFromArray, snap } from "./misc.js";
+import { getElementById, removeFromArray } from "./misc.js";
 
 interface HTMLTaskElement extends HTMLElement {
   textContent: string;
