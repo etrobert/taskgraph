@@ -95,9 +95,7 @@ interface AddTask extends Partial<Task> {
 }
 
 export function addTask(task: AddTask): HTMLTaskElement {
-  const htmlTask = (document.createElement(
-    "div"
-  ) as unknown) as HTMLTaskElement;
+  const htmlTask = document.createElement("div") as unknown as HTMLTaskElement;
   htmlTask.classList.add("task");
   htmlTask.textContent = task.name;
   htmlTask.from = [];
@@ -112,10 +110,10 @@ export function addTask(task: AddTask): HTMLTaskElement {
 }
 
 function addDependency(dependency: Dependency) {
-  const dependencyHtml = (document.createElementNS(
+  const dependencyHtml = document.createElementNS(
     "http://www.w3.org/2000/svg",
     "path"
-  ) as unknown) as HTMLDependencyElement;
+  ) as unknown as HTMLDependencyElement;
   const tasks = getTasks();
   const predecessor = tasks.find(
     (task) => task.textContent === dependency.predecessor
@@ -348,10 +346,10 @@ export function initGraph(): void {
     ) as HTMLInputElement;
     if (event.shiftKey || linkModeCheckbox.checked) {
       // Initiate link creation
-      const path = (document.createElementNS(
+      const path = document.createElementNS(
         "http://www.w3.org/2000/svg",
         "path"
-      ) as unknown) as HTMLDependencyElement;
+      ) as unknown as HTMLDependencyElement;
       path.from = task;
       const arrows = getElementById("arrows");
       arrows.appendChild(path);
