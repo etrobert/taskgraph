@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { initGraph, updatePanzoom } from "@/graph";
+import { initGraph } from "@/graph";
 
 import "./Graph.css";
 import { snap } from "@/misc";
@@ -15,10 +15,9 @@ const Graph = (): JSX.Element => {
     setPanzoom((state) => ({ ...state, zoom: newZoom }));
   };
 
-  useEffect(updatePanzoom, [panzoom]);
-
   const graphRef = useRef<HTMLDivElement>(null);
 
+  // Update panzoom when the graph sends a graphmoved event
   useEffect(() => {
     if (!graphRef.current) return;
     const element = graphRef.current;
@@ -29,12 +28,15 @@ const Graph = (): JSX.Element => {
         pan: { x: number; y: number };
       }>;
       setPanzoom((state) => ({ ...state, pan }));
-
-      updatePanzoom();
     };
     element.addEventListener("graphmoved", handler);
     return () => element.removeEventListener("graphmoved", handler);
   });
+
+  const itemsContainerTransform = `
+    translate(${panzoom.pan.x}px, ${panzoom.pan.y}px)
+    scale(${panzoom.zoom})
+  `;
 
   return (
     <div
@@ -48,7 +50,7 @@ const Graph = (): JSX.Element => {
       <p className="Graph__zoom-indicator">
         {panzoom.zoom !== 1 && Math.floor(panzoom.zoom * 100) + "% zoom"}
       </p>
-      <div id="itemsContainer">
+      <div id="itemsContainer" style={{ transform: itemsContainerTransform }}>
         <svg id="arrows">
           <defs>
             <marker

@@ -294,12 +294,6 @@ const getPanzoom = () => {
   };
 };
 
-export function updatePanzoom(): void {
-  const itemsContainer = getElementById("itemsContainer");
-  const panzoom = getPanzoom();
-  itemsContainer.style.transform = `translate(${panzoom.pan.x}px, ${panzoom.pan.y}px) scale(${panzoom.zoom})`;
-}
-
 function onGraphDragStart(event: PointerEvent) {
   const itemsContainer = getElementById("itemsContainer");
   itemsContainer.setPointerCapture(event.pointerId);
