@@ -16,11 +16,11 @@ const NotSelectedButtons = ({
       aria-label="Change Link Mode"
       onClick={onChangeLinkMode}
       className={`
-              Toolbar__button
-              Toolbar__button-change-link-mode
-              ${linkMode ? "Toolbar__button-change-link-mode--active" : ""}
-              iconButton
-            `}
+        Toolbar__button
+        Toolbar__button-change-link-mode
+        ${linkMode ? "Toolbar__button-change-link-mode--active" : ""}
+        iconButton
+      `}
     />
     <button
       aria-label="Create Task"
