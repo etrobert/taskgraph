@@ -30,41 +30,6 @@ const App = (): JSX.Element => {
 
   const tasksSelected = useTasksSelected();
 
-  const renderToolbar = () => {
-    const onCreateTask = () => {
-      const newTask = getElementById("newTask");
-      newTask.style.display = "block";
-      newTask.focus();
-    };
-
-    const onChangeLinkMode = () => setLinkMode((state) => !state);
-
-    const onComplete = () => {
-      completeSelected();
-      saveToLocalStorage();
-    };
-
-    const onDelete = () => {
-      deleteSelected();
-      saveToLocalStorage();
-    };
-
-    return tasksSelected ? (
-      <Toolbar
-        tasksSelected={true}
-        onComplete={onComplete}
-        onDelete={onDelete}
-      />
-    ) : (
-      <Toolbar
-        tasksSelected={false}
-        linkMode={linkMode}
-        onCreateTask={onCreateTask}
-        onChangeLinkMode={onChangeLinkMode}
-      />
-    );
-  };
-
   useAppShortcuts(loadFromFile);
 
   return (
@@ -90,7 +55,26 @@ const App = (): JSX.Element => {
           closeMenubar();
         }}
       />
-      {renderToolbar()}
+
+      <Toolbar
+        tasksSelected={tasksSelected}
+        linkMode={linkMode}
+        onChangeLinkMode={() => setLinkMode((mode) => !mode)}
+        onCreateTask={() => {
+          const newTask = getElementById("newTask");
+          newTask.style.display = "block";
+          newTask.focus();
+        }}
+        onComplete={() => {
+          completeSelected();
+          saveToLocalStorage();
+        }}
+        onDelete={() => {
+          deleteSelected();
+          saveToLocalStorage();
+        }}
+      />
+
       <GraphComponent />
     </>
   );
