@@ -24,38 +24,7 @@ export const closeMenubar = (): void => {
 const App = (): JSX.Element => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const renderGraphInput = () => {
-    const onLoad = (graph: Graph) => {
-      loadGraph(graph);
-      saveToLocalStorage();
-      closeMenubar();
-    };
-
-    return <GraphInput onLoad={onLoad} ref={fileInputRef} />;
-  };
-
   const loadFromFile = () => fileInputRef.current?.click();
-
-  const renderMenuBar = () => {
-    const onSave = () => {
-      saveToFile();
-      closeMenubar();
-    };
-
-    const onNewGraph = () => {
-      clearGraph();
-      closeMenubar();
-    };
-
-    return (
-      <MenuBar
-        onClose={closeMenubar}
-        onLoad={loadFromFile}
-        onNewGraph={onNewGraph}
-        onSave={onSave}
-      />
-    );
-  };
 
   const [linkMode, setLinkMode] = useState(false);
 
@@ -100,8 +69,27 @@ const App = (): JSX.Element => {
 
   return (
     <>
-      {renderGraphInput()}
-      {renderMenuBar()}
+      <GraphInput
+        onLoad={(graph) => {
+          loadGraph(graph);
+          saveToLocalStorage();
+          closeMenubar();
+        }}
+        ref={fileInputRef}
+      />
+
+      <MenuBar
+        onClose={closeMenubar}
+        onLoad={loadFromFile}
+        onNewGraph={() => {
+          clearGraph();
+          closeMenubar();
+        }}
+        onSave={() => {
+          saveToFile();
+          closeMenubar();
+        }}
+      />
       {renderToolbar()}
       <GraphComponent />
     </>
