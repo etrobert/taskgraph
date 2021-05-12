@@ -14,6 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const graph = getElementById("graph");
   graph.addEventListener("taskmoved", saveToLocalStorage);
+  graph.addEventListener("newdependency", saveToLocalStorage);
 
   loadFromLocalStorage();
 });
