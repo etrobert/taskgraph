@@ -274,9 +274,7 @@ function updatePath(path: HTMLDependencyElement, dest?: Point) {
 
 const getWindow = () => {
   const graph = getElementById("graph");
-  const windowPanX = graph.dataset.windowPanX;
-  const windowPanY = graph.dataset.windowPanY;
-  const windowZoom = graph.dataset.windowZoom;
+  const { windowPanX, windowPanY, windowZoom } = graph.dataset;
 
   if (
     windowPanX === undefined ||
