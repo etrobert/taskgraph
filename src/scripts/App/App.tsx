@@ -46,7 +46,7 @@ const App = (): JSX.Element => {
       <button
         className="App__menu-bar-open-button iconButton"
         onClick={() => setMenuBarOpen(true)}
-      ></button>
+      />
       <MenuBar
         open={menuBarOpen}
         onClose={closeMenuBar}
