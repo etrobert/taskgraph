@@ -11,7 +11,9 @@ const Graph = (): JSX.Element => {
 
   const onWheel: React.WheelEventHandler = (event) => {
     const factor = event.deltaY < 0 ? 1.1 : 0.9;
-    const newZoom = snap(1)(0.1)(panzoom.zoom * factor);
+    const target = 1;
+    const offset = 0.1;
+    const newZoom = snap(target)(offset)(panzoom.zoom * factor);
     setPanzoom((state) => ({ ...state, zoom: newZoom }));
   };
 
