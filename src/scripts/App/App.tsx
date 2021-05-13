@@ -16,6 +16,8 @@ import GraphInput from "./GraphInput";
 import useTasksSelected from "./useTasksSelected";
 import GraphComponent from "./Graph/Graph";
 
+import "./App.css";
+
 export const closeMenubar = (): void => {
   const menubar = getElementById("menubar");
 
@@ -44,6 +46,7 @@ const App = (): JSX.Element => {
         ref={fileInputRef}
       />
 
+      <button id="menubarOpenButton" className="iconButton"></button>
       <MenuBar
         onClose={closeMenubar}
         onLoad={loadFromFile}
@@ -75,7 +78,6 @@ const App = (): JSX.Element => {
           saveToLocalStorage();
         }}
       />
-
       <GraphComponent />
     </>
   );
