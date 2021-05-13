@@ -1,17 +1,18 @@
 import React, { useRef, useState } from "react";
-import GraphInput from "./GraphInput";
+
 import {
   clearGraph,
   completeSelected,
   deleteSelected,
-  Graph,
   loadGraph,
 } from "@/graph";
-import MenuBar from "./MenuBar/MenuBar";
+import { getElementById } from "@/misc";
 import { saveToFile, saveToLocalStorage } from "@/storage";
+
+import MenuBar from "./MenuBar/MenuBar";
 import useAppShortcuts from "./useAppShortcuts";
 import Toolbar from "./Toolbar/Toolbar";
-import { getElementById } from "@/misc";
+import GraphInput from "./GraphInput";
 import useTasksSelected from "./useTasksSelected";
 import GraphComponent from "./Graph/Graph";
 

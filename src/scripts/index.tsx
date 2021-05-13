@@ -2,9 +2,9 @@
 
 import React from "react";
 import ReactDOM from "react-dom";
+
 import App from "./App/App";
 import { addTask } from "./graph.js";
-
 import { getElementById } from "./misc.js";
 import { loadFromLocalStorage, saveToLocalStorage } from "./storage.js";
 

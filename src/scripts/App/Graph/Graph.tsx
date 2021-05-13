@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+
 import { initGraph } from "@/graph";
 
 import "./Graph.css";
