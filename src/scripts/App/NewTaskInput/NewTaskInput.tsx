@@ -1,7 +1,7 @@
 import React, { KeyboardEventHandler, useRef } from "react";
 import { AddTask } from "@/graph";
 
-import "./NewTask.css";
+import "./NewTaskInput.css";
 
 type Props = {
   onNewTask: (newTask: AddTask) => void;

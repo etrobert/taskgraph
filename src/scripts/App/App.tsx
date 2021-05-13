@@ -16,7 +16,7 @@ import Toolbar from "./Toolbar/Toolbar";
 import GraphInput from "./GraphInput";
 import useTasksSelected from "./useTasksSelected";
 import GraphComponent from "./Graph/Graph";
-import NewTask from "./NewTask/NewTask";
+import NewTaskInput from "./NewTaskInput/NewTaskInput";
 
 import "./App.css";
 
@@ -84,7 +84,7 @@ const App = (): JSX.Element => {
       <GraphComponent />
 
       {insertMode && (
-        <NewTask
+        <NewTaskInput
           onNewTask={(task) => {
             addTask(task);
             saveToLocalStorage();
