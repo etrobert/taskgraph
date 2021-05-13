@@ -8,13 +8,6 @@ import { loadFromLocalStorage, saveToLocalStorage } from "./storage.js";
 
 const setupApp = () => {
   ReactDOM.render(<App />, document.getElementById("root"));
-
-  const menubarButton = getElementById("menubarOpenButton");
-  menubarButton.addEventListener("click", () => {
-    const menubar = getElementById("menubar");
-
-    menubar.classList.add("active");
-  });
 };
 
 function setupNewTask() {

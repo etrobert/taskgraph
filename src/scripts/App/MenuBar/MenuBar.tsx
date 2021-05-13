@@ -3,6 +3,7 @@ import React from "react";
 import "./MenuBar.css";
 
 type Props = {
+  open: boolean;
   onClose: () => void;
   onSave: () => void;
   onLoad: () => void;
@@ -10,13 +11,14 @@ type Props = {
 };
 
 const MenuBar = ({
+  open,
   onClose,
   onLoad,
   onSave,
   onNewGraph,
 }: Props): JSX.Element => {
   return (
-    <div id="menubar" className="MenuBar">
+    <div className={`MenuBar ${open ? "MenuBar--open" : ""}`}>
       <h1 className="MenuBar__title">TaskGraph</h1>
       <button
         aria-label="Close Menu"
