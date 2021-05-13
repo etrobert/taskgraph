@@ -24,85 +24,57 @@ export const closeMenubar = (): void => {
 const App = (): JSX.Element => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const renderGraphInput = () => {
-    const onLoad = (graph: Graph) => {
-      loadGraph(graph);
-      saveToLocalStorage();
-      closeMenubar();
-    };
-
-    return <GraphInput onLoad={onLoad} ref={fileInputRef} />;
-  };
-
   const loadFromFile = () => fileInputRef.current?.click();
-
-  const renderMenuBar = () => {
-    const onSave = () => {
-      saveToFile();
-      closeMenubar();
-    };
-
-    const onNewGraph = () => {
-      clearGraph();
-      closeMenubar();
-    };
-
-    return (
-      <MenuBar
-        onClose={closeMenubar}
-        onLoad={loadFromFile}
-        onNewGraph={onNewGraph}
-        onSave={onSave}
-      />
-    );
-  };
 
   const [linkMode, setLinkMode] = useState(false);
 
   const tasksSelected = useTasksSelected();
 
-  const renderToolbar = () => {
-    const onCreateTask = () => {
-      const newTask = getElementById("newTask");
-      newTask.style.display = "block";
-      newTask.focus();
-    };
-
-    const onChangeLinkMode = () => setLinkMode((state) => !state);
-
-    const onComplete = () => {
-      completeSelected();
-      saveToLocalStorage();
-    };
-
-    const onDelete = () => {
-      deleteSelected();
-      saveToLocalStorage();
-    };
-
-    return tasksSelected ? (
-      <Toolbar
-        tasksSelected={true}
-        onComplete={onComplete}
-        onDelete={onDelete}
-      />
-    ) : (
-      <Toolbar
-        tasksSelected={false}
-        linkMode={linkMode}
-        onCreateTask={onCreateTask}
-        onChangeLinkMode={onChangeLinkMode}
-      />
-    );
-  };
-
   useAppShortcuts(loadFromFile);
 
   return (
     <>
-      {renderGraphInput()}
-      {renderMenuBar()}
-      {renderToolbar()}
+      <GraphInput
+        onLoad={(graph) => {
+          loadGraph(graph);
+          saveToLocalStorage();
+          closeMenubar();
+        }}
+        ref={fileInputRef}
+      />
+
+      <MenuBar
+        onClose={closeMenubar}
+        onLoad={loadFromFile}
+        onNewGraph={() => {
+          clearGraph();
+          closeMenubar();
+        }}
+        onSave={() => {
+          saveToFile();
+          closeMenubar();
+        }}
+      />
+
+      <Toolbar
+        tasksSelected={tasksSelected}
+        linkMode={linkMode}
+        onChangeLinkMode={() => setLinkMode((mode) => !mode)}
+        onCreateTask={() => {
+          const newTask = getElementById("newTask");
+          newTask.style.display = "block";
+          newTask.focus();
+        }}
+        onComplete={() => {
+          completeSelected();
+          saveToLocalStorage();
+        }}
+        onDelete={() => {
+          deleteSelected();
+          saveToLocalStorage();
+        }}
+      />
+
       <GraphComponent />
     </>
   );
