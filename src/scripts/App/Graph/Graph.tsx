@@ -45,8 +45,8 @@ const Graph = (): JSX.Element => {
       onWheel={onWheel}
       id="graph"
       ref={graphRef}
-      data-window-x={window.pan.x}
-      data-window-y={window.pan.y}
+      data-window-pan-x={window.pan.x}
+      data-window-pan-y={window.pan.y}
       data-window-zoom={window.zoom}
     >
       <p className="Graph__zoom-indicator">

@@ -274,21 +274,21 @@ function updatePath(path: HTMLDependencyElement, dest?: Point) {
 
 const getWindow = () => {
   const graph = getElementById("graph");
-  const windowX = graph.dataset.windowX;
-  const windowY = graph.dataset.windowY;
+  const windowPanX = graph.dataset.windowPanX;
+  const windowPanY = graph.dataset.windowPanY;
   const windowZoom = graph.dataset.windowZoom;
 
   if (
-    windowX === undefined ||
-    windowY === undefined ||
+    windowPanX === undefined ||
+    windowPanY === undefined ||
     windowZoom === undefined
   )
     throw new Error("window values missing");
 
   return {
     pan: {
-      x: parseFloat(windowX),
-      y: parseFloat(windowY),
+      x: parseFloat(windowPanX),
+      y: parseFloat(windowPanY),
     },
     zoom: parseFloat(windowZoom),
   };
