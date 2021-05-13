@@ -73,10 +73,10 @@ function getViewCenter(): Point {
   const graphContainer = getElementById("graph");
   const box = getOffsetBox(graphContainer);
   const viewCenter = getBoxCenter(box);
-  const panzoom = getPanzoom();
+  const window = getWindow();
   return {
-    x: viewCenter.x - panzoom.pan.x,
-    y: viewCenter.y - panzoom.pan.y,
+    x: viewCenter.x - window.pan.x,
+    y: viewCenter.y - window.pan.y,
   };
 }
 
@@ -272,25 +272,25 @@ function updatePath(path: HTMLDependencyElement, dest?: Point) {
   }
 }
 
-const getPanzoom = () => {
+const getWindow = () => {
   const graph = getElementById("graph");
-  const panzoomX = graph.dataset.panzoomX;
-  const panzoomY = graph.dataset.panzoomY;
-  const panzoomZoom = graph.dataset.panzoomZoom;
+  const windowX = graph.dataset.windowX;
+  const windowY = graph.dataset.windowY;
+  const windowZoom = graph.dataset.windowZoom;
 
   if (
-    panzoomX === undefined ||
-    panzoomY === undefined ||
-    panzoomZoom === undefined
+    windowX === undefined ||
+    windowY === undefined ||
+    windowZoom === undefined
   )
-    throw new Error("panzoom values missing");
+    throw new Error("window values missing");
 
   return {
     pan: {
-      x: parseFloat(panzoomX),
-      y: parseFloat(panzoomY),
+      x: parseFloat(windowX),
+      y: parseFloat(windowY),
     },
-    zoom: parseFloat(panzoomZoom),
+    zoom: parseFloat(windowZoom),
   };
 };
 
@@ -299,9 +299,9 @@ function onGraphDragStart(event: PointerEvent) {
   itemsContainer.setPointerCapture(event.pointerId);
   let previousPosition = { x: event.clientX, y: event.clientY };
   const onPointerMove = (event: PointerEvent) => {
-    const panzoom = getPanzoom();
-    const x = panzoom.pan.x + event.clientX - previousPosition.x;
-    const y = panzoom.pan.y + event.clientY - previousPosition.y;
+    const window = getWindow();
+    const x = window.pan.x + event.clientX - previousPosition.x;
+    const y = window.pan.y + event.clientY - previousPosition.y;
     previousPosition = { x: event.clientX, y: event.clientY };
 
     const graphContainer = getElementById("graph");
