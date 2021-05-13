@@ -7,19 +7,19 @@ import { snap } from "@/misc";
 const Graph = (): JSX.Element => {
   useEffect(initGraph, []);
 
-  const [window, setWindow] = useState({ pan: { x: 0, y: 0 }, zoom: 1 });
+  const [pan, setPan] = useState({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState(1);
 
   const onWheel: React.WheelEventHandler = (event) => {
     const factor = event.deltaY < 0 ? 1.1 : 0.9;
     const target = 1;
     const offset = 0.1;
-    const newZoom = snap(target)(offset)(window.zoom * factor);
-    setWindow((state) => ({ ...state, zoom: newZoom }));
+    setZoom(snap(target)(offset)(zoom * factor));
   };
 
   const graphRef = useRef<HTMLDivElement>(null);
 
-  // Update window when the graph sends a graphmoved event
+  // Update pan when the graph sends a graphmoved event
   useEffect(() => {
     if (!graphRef.current) return;
     const element = graphRef.current;
@@ -29,28 +29,25 @@ const Graph = (): JSX.Element => {
       } = event as CustomEvent<{
         pan: { x: number; y: number };
       }>;
-      setWindow((state) => ({ ...state, pan }));
+      setPan(pan);
     };
     element.addEventListener("graphmoved", handler);
     return () => element.removeEventListener("graphmoved", handler);
   });
 
-  const itemsContainerTransform = `
-    translate(${window.pan.x}px, ${window.pan.y}px)
-    scale(${window.zoom})
-  `;
+  const itemsContainerTransform = `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`;
 
   return (
     <div
       onWheel={onWheel}
       id="graph"
       ref={graphRef}
-      data-window-pan-x={window.pan.x}
-      data-window-pan-y={window.pan.y}
-      data-window-zoom={window.zoom}
+      data-pan-x={pan.x}
+      data-pan-y={pan.y}
+      data-zoom={zoom}
     >
       <p className="Graph__zoom-indicator">
-        {window.zoom !== 1 && Math.floor(window.zoom * 100) + "% zoom"}
+        {zoom !== 1 && Math.floor(zoom * 100) + "% zoom"}
       </p>
       <div id="itemsContainer" style={{ transform: itemsContainerTransform }}>
         <svg id="arrows">

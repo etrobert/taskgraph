@@ -73,10 +73,10 @@ function getViewCenter(): Point {
   const graphContainer = getElementById("graph");
   const box = getOffsetBox(graphContainer);
   const viewCenter = getBoxCenter(box);
-  const window = getWindow();
+  const { pan } = getPanZoom();
   return {
-    x: viewCenter.x - window.pan.x,
-    y: viewCenter.y - window.pan.y,
+    x: viewCenter.x - pan.x,
+    y: viewCenter.y - pan.y,
   };
 }
 
@@ -272,23 +272,19 @@ function updatePath(path: HTMLDependencyElement, dest?: Point) {
   }
 }
 
-const getWindow = () => {
+const getPanZoom = () => {
   const graph = getElementById("graph");
-  const { windowPanX, windowPanY, windowZoom } = graph.dataset;
+  const { panX, panY, zoom } = graph.dataset;
 
-  if (
-    windowPanX === undefined ||
-    windowPanY === undefined ||
-    windowZoom === undefined
-  )
-    throw new Error("window values missing");
+  if (panX === undefined || panY === undefined || zoom === undefined)
+    throw new Error("pan or zoom values missing");
 
   return {
     pan: {
-      x: parseFloat(windowPanX),
-      y: parseFloat(windowPanY),
+      x: parseFloat(panX),
+      y: parseFloat(panY),
     },
-    zoom: parseFloat(windowZoom),
+    zoom: parseFloat(zoom),
   };
 };
 
@@ -297,9 +293,9 @@ function onGraphDragStart(event: PointerEvent) {
   itemsContainer.setPointerCapture(event.pointerId);
   let previousPosition = { x: event.clientX, y: event.clientY };
   const onPointerMove = (event: PointerEvent) => {
-    const window = getWindow();
-    const x = window.pan.x + event.clientX - previousPosition.x;
-    const y = window.pan.y + event.clientY - previousPosition.y;
+    const { pan } = getPanZoom();
+    const x = pan.x + event.clientX - previousPosition.x;
+    const y = pan.y + event.clientY - previousPosition.y;
     previousPosition = { x: event.clientX, y: event.clientY };
 
     const graphContainer = getElementById("graph");
