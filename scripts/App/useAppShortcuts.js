@@ -1,7 +1,7 @@
-import {deleteSelected, selectAll} from "./graph.js";
-import {getElementById} from "./misc.js";
-import {saveToFile, saveToLocalStorage} from "./storage.js";
-import useKeyboardShortcuts from "./useKeyboardShortcuts.js";
+import {deleteSelected, selectAll} from "../graph.js";
+import {getElementById} from "../misc.js";
+import {saveToFile, saveToLocalStorage} from "../storage.js";
+import useKeyboardShortcuts from "../useKeyboardShortcuts.js";
 const insertMode = () => {
   const newTask = getElementById("newTask");
   return newTask.style.display === "block";

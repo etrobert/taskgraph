@@ -1,4 +1,4 @@
-import React from "../snowpack/pkg/react.js";
+import React from "../../snowpack/pkg/react.js";
 const GraphInput = ({onLoad}, ref) => {
   const onChange = (event) => {
     const files = event.target.files;

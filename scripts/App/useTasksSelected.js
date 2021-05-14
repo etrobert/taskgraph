@@ -1,5 +1,5 @@
-import {useEffect, useState} from "../snowpack/pkg/react.js";
-import {getElementById} from "./misc.js";
+import {useEffect, useState} from "../../snowpack/pkg/react.js";
+import {getElementById} from "../misc.js";
 const useTasksSelected = () => {
   const [tasksSelected, setTasksSelected] = useState(false);
   useEffect(() => {
