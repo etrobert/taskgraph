@@ -3,6 +3,7 @@ import { initGraph } from "@/graph";
 
 import "./Graph.css";
 import { snap } from "@/misc";
+import useKeyboardShortcuts from "@/useKeyboardShortcuts";
 
 const Graph = (): JSX.Element => {
   useEffect(initGraph, []);
@@ -18,6 +19,18 @@ const Graph = (): JSX.Element => {
   };
 
   const graphRef = useRef<HTMLDivElement>(null);
+
+  useKeyboardShortcuts({
+    center: {
+      keys: ["0"],
+      callback: (event) => {
+        if (event.ctrlKey) {
+          setPan({ x: 0, y: 0 });
+          setZoom(1);
+        }
+      },
+    },
+  });
 
   // Update pan when the graph sends a graphmoved event
   useEffect(() => {
