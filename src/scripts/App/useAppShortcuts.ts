@@ -5,10 +5,10 @@ import useKeyboardShortcuts, { Shortcut } from "@/useKeyboardShortcuts";
 type Props = {
   loadFromFile: () => void;
   insertMode: boolean;
-  openNewTask: () => void;
+  onCreateTask: () => void;
 };
 
-const getAppShortcuts = ({ loadFromFile, openNewTask }: Props) => {
+const getAppShortcuts = ({ loadFromFile, onCreateTask }: Props) => {
   const selectAllShortcut: Shortcut = {
     keys: ["a"],
     callback: (event) => {
@@ -18,7 +18,7 @@ const getAppShortcuts = ({ loadFromFile, openNewTask }: Props) => {
 
   const insert = {
     keys: ["i"],
-    callback: openNewTask,
+    callback: onCreateTask,
   };
 
   const deleteSelectedShortcut = {

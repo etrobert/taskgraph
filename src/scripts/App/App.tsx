@@ -31,11 +31,11 @@ const App = (): JSX.Element => {
   const [linkMode, setLinkMode] = useState(false);
 
   const [insertMode, setInsertMode] = useState(false);
-  const openNewTask = () => setInsertMode(true);
+  const onCreateTask = () => setInsertMode(true);
 
   const tasksSelected = useTasksSelected();
 
-  useAppShortcuts({ loadFromFile, insertMode, openNewTask });
+  useAppShortcuts({ loadFromFile, insertMode, onCreateTask });
 
   return (
     <>
@@ -70,7 +70,7 @@ const App = (): JSX.Element => {
         tasksSelected={tasksSelected}
         linkMode={linkMode}
         onChangeLinkMode={() => setLinkMode((mode) => !mode)}
-        onCreateTask={openNewTask}
+        onCreateTask={onCreateTask}
         onComplete={() => {
           completeSelected();
           saveToLocalStorage();
