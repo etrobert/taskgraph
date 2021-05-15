@@ -79,6 +79,7 @@ const App = (): JSX.Element => {
           saveToLocalStorage();
         }}
       />
+
       <GraphComponent />
     </>
   );
