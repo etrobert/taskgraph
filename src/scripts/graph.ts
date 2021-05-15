@@ -6,7 +6,7 @@ import {
   intersectLineBox,
   Point,
 } from "./geometry.js";
-import { getElementById, removeFromArray, snap } from "./misc.js";
+import { getElementById, removeFromArray } from "./misc.js";
 
 interface HTMLTaskElement extends HTMLElement {
   textContent: string;
@@ -73,9 +73,10 @@ function getViewCenter(): Point {
   const graphContainer = getElementById("graph");
   const box = getOffsetBox(graphContainer);
   const viewCenter = getBoxCenter(box);
+  const { pan } = getPanZoom();
   return {
-    x: viewCenter.x - panzoom.pan.x,
-    y: viewCenter.y - panzoom.pan.y,
+    x: viewCenter.x - pan.x,
+    y: viewCenter.y - pan.y,
   };
 }
 
@@ -271,25 +272,36 @@ function updatePath(path: HTMLDependencyElement, dest?: Point) {
   }
 }
 
-const panzoom = {
-  pan: { x: 0, y: 0 },
-  zoom: 1,
-};
+const getPanZoom = () => {
+  const graph = getElementById("graph");
+  const { panX, panY, zoom } = graph.dataset;
 
-function updatePanzoom() {
-  const itemsContainer = getElementById("itemsContainer");
-  itemsContainer.style.transform = `translate(${panzoom.pan.x}px, ${panzoom.pan.y}px) scale(${panzoom.zoom})`;
-}
+  if (panX === undefined || panY === undefined || zoom === undefined)
+    throw new Error("pan or zoom values missing");
+
+  return {
+    pan: {
+      x: parseFloat(panX),
+      y: parseFloat(panY),
+    },
+    zoom: parseFloat(zoom),
+  };
+};
 
 function onGraphDragStart(event: PointerEvent) {
   const itemsContainer = getElementById("itemsContainer");
   itemsContainer.setPointerCapture(event.pointerId);
   let previousPosition = { x: event.clientX, y: event.clientY };
   const onPointerMove = (event: PointerEvent) => {
-    panzoom.pan.x += event.clientX - previousPosition.x;
-    panzoom.pan.y += event.clientY - previousPosition.y;
+    const { pan } = getPanZoom();
+    const x = pan.x + event.clientX - previousPosition.x;
+    const y = pan.y + event.clientY - previousPosition.y;
     previousPosition = { x: event.clientX, y: event.clientY };
-    updatePanzoom();
+
+    const graphContainer = getElementById("graph");
+    graphContainer.dispatchEvent(
+      new CustomEvent("graphmoved", { detail: { pan: { x, y } } })
+    );
   };
   const onPointerEnd = () => {
     const itemsContainer = getElementById("itemsContainer");
@@ -300,22 +312,6 @@ function onGraphDragStart(event: PointerEvent) {
   itemsContainer.addEventListener("pointerup", onPointerEnd);
 }
 
-function updateZoomIndicator() {
-  const zoomIndicator = getElementById("zoomIndicator");
-  zoomIndicator.textContent =
-    panzoom.zoom === 1 ? "" : Math.floor(panzoom.zoom * 100) + "% zoom";
-}
-
-function setupZoom() {
-  const graphContainer = getElementById("graph");
-  graphContainer.onwheel = (event) => {
-    const factor = event.deltaY < 0 ? 1.1 : 0.9;
-    panzoom.zoom = snap(1)(0.1)(panzoom.zoom * factor);
-    updatePanzoom();
-    updateZoomIndicator();
-  };
-}
-
 function moveTask(task: HTMLTaskElement, pos: Point) {
   task.style.left = pos.x + "px";
   task.style.top = pos.y + "px";
@@ -323,7 +319,6 @@ function moveTask(task: HTMLTaskElement, pos: Point) {
 }
 
 export function initGraph(): void {
-  setupZoom();
   const graphContainer = getElementById("graph");
   graphContainer.onpointerdown = (event) => {
     event.preventDefault();
@@ -426,5 +421,4 @@ export function initGraph(): void {
     }
   };
   sendSelectionChanged([]);
-  updateZoomIndicator();
 }

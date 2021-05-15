@@ -4,7 +4,7 @@
   overflow: hidden;
 }
 
-#zoomIndicator {
+.Graph__zoom-indicator {
   position: absolute;
   top: 0;
   right: 0;
