@@ -26,7 +26,9 @@
 
       gtag("js", new Date());
 
-      gtag("config", "G-1WBNT9GR3R");
+      gtag("config", "G-1WBNT9GR3R", {
+        debug_mode: "%MODE%" === "development",
+      });
     </script>
   </head>
   <body>
