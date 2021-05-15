@@ -1,6 +1,7 @@
 import React, { useRef, useState } from "react";
 
 import {
+  addTask,
   clearGraph,
   completeSelected,
   deleteSelected,
@@ -15,6 +16,7 @@ import Toolbar from "./Toolbar/Toolbar";
 import GraphInput from "./GraphInput";
 import useTasksSelected from "./useTasksSelected";
 import GraphComponent from "./Graph/Graph";
+import NewTaskInput from "./NewTaskInput/NewTaskInput";
 
 import "./App.css";
 
@@ -28,9 +30,12 @@ const App = (): JSX.Element => {
 
   const [linkMode, setLinkMode] = useState(false);
 
+  const [insertMode, setInsertMode] = useState(false);
+  const onCreateTask = () => setInsertMode(true);
+
   const tasksSelected = useTasksSelected();
 
-  useAppShortcuts(loadFromFile);
+  useAppShortcuts({ loadFromFile, insertMode, onCreateTask });
 
   return (
     <>
@@ -65,11 +70,7 @@ const App = (): JSX.Element => {
         tasksSelected={tasksSelected}
         linkMode={linkMode}
         onChangeLinkMode={() => setLinkMode((mode) => !mode)}
-        onCreateTask={() => {
-          const newTask = getElementById("newTask");
-          newTask.style.display = "block";
-          newTask.focus();
-        }}
+        onCreateTask={onCreateTask}
         onComplete={() => {
           completeSelected();
           saveToLocalStorage();
@@ -81,6 +82,17 @@ const App = (): JSX.Element => {
       />
 
       <GraphComponent />
+
+      {insertMode && (
+        <NewTaskInput
+          onNewTask={(task) => {
+            addTask(task);
+            saveToLocalStorage();
+            setInsertMode(false);
+          }}
+          onCancel={() => setInsertMode(false)}
+        />
+      )}
     </>
   );
 };

@@ -90,7 +90,7 @@ function computeCenteredPos(element: HTMLElement): Point {
   };
 }
 
-interface AddTask extends Partial<Task> {
+export interface AddTask extends Partial<Task> {
   name: string;
 }
 
