@@ -7,7 +7,6 @@ import {
   deleteSelected,
   loadGraph,
 } from "@/graph";
-import { getElementById } from "@/misc";
 import { saveToFile, saveToLocalStorage } from "@/storage";
 
 import MenuBar from "./MenuBar/MenuBar";
