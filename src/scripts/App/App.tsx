@@ -16,16 +16,15 @@ import GraphInput from "./GraphInput";
 import useTasksSelected from "./useTasksSelected";
 import GraphComponent from "./Graph/Graph";
 
-export const closeMenubar = (): void => {
-  const menubar = getElementById("menubar");
-
-  menubar.classList.remove("active");
-};
+import "./App.css";
 
 const App = (): JSX.Element => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const loadFromFile = () => fileInputRef.current?.click();
+
+  const [menuBarOpen, setMenuBarOpen] = useState(false);
+  const closeMenuBar = () => setMenuBarOpen(false);
 
   const [linkMode, setLinkMode] = useState(false);
 
@@ -39,21 +38,26 @@ const App = (): JSX.Element => {
         onLoad={(graph) => {
           loadGraph(graph);
           saveToLocalStorage();
-          closeMenubar();
+          closeMenuBar();
         }}
         ref={fileInputRef}
       />
 
+      <button
+        className="App__menu-bar-open-button iconButton"
+        onClick={() => setMenuBarOpen(true)}
+      />
       <MenuBar
-        onClose={closeMenubar}
+        open={menuBarOpen}
+        onClose={closeMenuBar}
         onLoad={loadFromFile}
         onNewGraph={() => {
           clearGraph();
-          closeMenubar();
+          closeMenuBar();
         }}
         onSave={() => {
           saveToFile();
-          closeMenubar();
+          closeMenuBar();
         }}
       />
 
