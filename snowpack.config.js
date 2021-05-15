@@ -4,8 +4,8 @@
 /** @type {import("snowpack").SnowpackUserConfig } */
 module.exports = {
   mount: {
-    "src/scripts": "/scripts",
-    "src/static": { url: "/", static: true, resolve: false },
+    src: "/dist",
+    public: "/",
   },
   plugins: ["@snowpack/plugin-typescript"],
   buildOptions: {
@@ -13,6 +13,6 @@ module.exports = {
     metaUrlPath: "snowpack",
   },
   alias: {
-    "@": "./src/scripts",
+    "@": "./src",
   },
 };

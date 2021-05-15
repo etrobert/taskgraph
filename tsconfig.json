@@ -16,7 +16,7 @@
 
     "esModuleInterop": true, /* Allows jest to work */
 
-    "baseUrl": "./src/scripts", /* Allows for absolute imports */
+    "baseUrl": "./src", /* Allows for absolute imports */
     "paths": {
       "@/*": ["*"]
     }
