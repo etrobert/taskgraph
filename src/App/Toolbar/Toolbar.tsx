@@ -1,7 +1,7 @@
 import React from "react";
 
-import NoneSelectedButtons from "./NoneSelectedButtons";
-import SomeSelectedButtons from "./SomeSelectedButtons";
+import NoneSelectedButtons from "./NoneSelectedButtons/NoneSelectedButtons";
+import SomeSelectedButtons from "./SomeSelectedButtons/SomeSelectedButtons";
 
 import "./Toolbar.css";
 
