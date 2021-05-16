@@ -4,6 +4,7 @@ import { initGraph } from "@/graph";
 import "./Graph.css";
 import { snap } from "@/misc";
 import useKeyboardShortcuts from "@/useKeyboardShortcuts";
+import { loadFromLocalStorage, saveToLocalStorage } from "@/storage";
 
 const Graph = (): JSX.Element => {
   useEffect(initGraph, []);
@@ -47,6 +48,20 @@ const Graph = (): JSX.Element => {
     element.addEventListener("graphmoved", handler);
     return () => element.removeEventListener("graphmoved", handler);
   });
+
+  // Update localstorage when graph is updated
+  useEffect(() => {
+    if (!graphRef.current) return;
+    const graph = graphRef.current;
+    graph.addEventListener("taskmoved", saveToLocalStorage);
+    graph.addEventListener("newdependency", saveToLocalStorage);
+    return () => {
+      graph.removeEventListener("taskmoved", saveToLocalStorage);
+      graph.removeEventListener("newdependency", saveToLocalStorage);
+    };
+  }, []);
+
+  useEffect(loadFromLocalStorage, []);
 
   const itemsContainerTransform = `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`;
 
