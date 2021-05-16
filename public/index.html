@@ -24,11 +24,19 @@
         analytics_storage: "denied",
       });
 
+      const dev = "%MODE%" === "development";
+
+      // Cookies are necessary for Google Analytics Debug Mode
+      if (dev)
+        gtag("consent", "update", {
+          ad_storage: "granted",
+          analytics_storage: "granted",
+        });
+
       gtag("js", new Date());
 
-      gtag("config", "G-1WBNT9GR3R", {
-        debug_mode: "%MODE%" === "development",
-      });
+      const options = dev ? { debug_mode: true } : undefined;
+      gtag("config", "G-1WBNT9GR3R", options);
     </script>
   </head>
   <body>
