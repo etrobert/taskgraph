@@ -1,36 +1,21 @@
 import {deleteSelected, selectAll} from "../graph.js";
-import {getElementById} from "../misc.js";
 import {saveToFile, saveToLocalStorage} from "../storage.js";
 import useKeyboardShortcuts from "../useKeyboardShortcuts.js";
-const insertMode = () => {
-  const newTask = getElementById("newTask");
-  return newTask.style.display === "block";
-};
-const useAppShortcuts = (loadFromFile) => {
+const getAppShortcuts = ({loadFromFile, onCreateTask}) => {
   const selectAllShortcut = {
     keys: ["a"],
     callback: (event) => {
-      if (insertMode())
-        return;
       if (event.ctrlKey)
         selectAll();
     }
   };
   const insert = {
     keys: ["i"],
-    callback: () => {
-      if (insertMode())
-        return;
-      const newTask = getElementById("newTask");
-      newTask.style.display = "block";
-      newTask.focus();
-    }
+    callback: onCreateTask
   };
   const deleteSelectedShortcut = {
     keys: ["d", "Delete"],
     callback: () => {
-      if (insertMode())
-        return;
       deleteSelected();
       saveToLocalStorage();
     }
@@ -38,8 +23,6 @@ const useAppShortcuts = (loadFromFile) => {
   const openFile = {
     keys: ["o"],
     callback: (event) => {
-      if (insertMode())
-        return;
       if (event.ctrlKey)
         loadFromFile();
     }
@@ -47,18 +30,20 @@ const useAppShortcuts = (loadFromFile) => {
   const saveFile = {
     keys: ["s"],
     callback: (event) => {
-      if (insertMode())
-        return;
       if (event.ctrlKey)
         saveToFile();
     }
   };
-  useKeyboardShortcuts({
+  return {
     selectAll: selectAllShortcut,
     insert,
     delete: deleteSelectedShortcut,
     openFile,
     saveFile
-  });
+  };
+};
+const useAppShortcuts = (props) => {
+  const {insertMode} = props;
+  useKeyboardShortcuts(insertMode ? {} : getAppShortcuts(props));
 };
 export default useAppShortcuts;

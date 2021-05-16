@@ -22,25 +22,6 @@ body {
   height: 100%;
 }
 
-#newTask {
-  display: none;
-
-  position: absolute;
-  left: 0;
-  right: 0;
-  height: 1.5em;
-  top: calc(50% - (1.5em / 2));
-  margin: auto;
-
-  width: 80vw;
-  padding: 1em;
-
-  opacity: 80%;
-
-  font-family: "PermanentMarker";
-  font-size: 1.5em;
-}
-
 .iconButton {
   background-size: contain;
   background-color: transparent;
@@ -49,16 +30,4 @@ body {
 
 button {
   cursor: pointer;
-}
-
-#menubarOpenButton {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 2.1rem;
-  height: 2.1rem;
-  margin-left: 1rem;
-  margin-top: 0.8rem;
-  z-index: 1;
-  background-image: url("resources/feather/menu.svg");
 }

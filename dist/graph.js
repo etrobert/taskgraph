@@ -5,7 +5,7 @@ import {
   getOffsetBox,
   intersectLineBox
 } from "./geometry.js";
-import {getElementById, removeFromArray, snap} from "./misc.js";
+import {getElementById, removeFromArray} from "./misc.js";
 function getTasks() {
   const isTask = (e) => e.classList.contains("task");
   const itemsContainer = getElementById("itemsContainer");
@@ -32,9 +32,10 @@ function getViewCenter() {
   const graphContainer = getElementById("graph");
   const box = getOffsetBox(graphContainer);
   const viewCenter = getBoxCenter(box);
+  const {pan} = getPanZoom();
   return {
-    x: viewCenter.x - panzoom.pan.x,
-    y: viewCenter.y - panzoom.pan.y
+    x: viewCenter.x - pan.x,
+    y: viewCenter.y - pan.y
   };
 }
 function computeCenteredPos(element) {
@@ -170,23 +171,30 @@ function updatePath(path, dest) {
     path.setAttributeNS(null, "d", "");
   }
 }
-const panzoom = {
-  pan: {x: 0, y: 0},
-  zoom: 1
+const getPanZoom = () => {
+  const graph = getElementById("graph");
+  const {panX, panY, zoom} = graph.dataset;
+  if (panX === void 0 || panY === void 0 || zoom === void 0)
+    throw new Error("pan or zoom values missing");
+  return {
+    pan: {
+      x: parseFloat(panX),
+      y: parseFloat(panY)
+    },
+    zoom: parseFloat(zoom)
+  };
 };
-function updatePanzoom() {
-  const itemsContainer = getElementById("itemsContainer");
-  itemsContainer.style.transform = `translate(${panzoom.pan.x}px, ${panzoom.pan.y}px) scale(${panzoom.zoom})`;
-}
 function onGraphDragStart(event) {
   const itemsContainer = getElementById("itemsContainer");
   itemsContainer.setPointerCapture(event.pointerId);
   let previousPosition = {x: event.clientX, y: event.clientY};
   const onPointerMove = (event2) => {
-    panzoom.pan.x += event2.clientX - previousPosition.x;
-    panzoom.pan.y += event2.clientY - previousPosition.y;
+    const {pan} = getPanZoom();
+    const x = pan.x + event2.clientX - previousPosition.x;
+    const y = pan.y + event2.clientY - previousPosition.y;
     previousPosition = {x: event2.clientX, y: event2.clientY};
-    updatePanzoom();
+    const graphContainer = getElementById("graph");
+    graphContainer.dispatchEvent(new CustomEvent("graphmoved", {detail: {pan: {x, y}}}));
   };
   const onPointerEnd = () => {
     const itemsContainer2 = getElementById("itemsContainer");
@@ -196,19 +204,6 @@ function onGraphDragStart(event) {
   itemsContainer.addEventListener("pointermove", onPointerMove);
   itemsContainer.addEventListener("pointerup", onPointerEnd);
 }
-function updateZoomIndicator() {
-  const zoomIndicator = getElementById("zoomIndicator");
-  zoomIndicator.textContent = panzoom.zoom === 1 ? "" : Math.floor(panzoom.zoom * 100) + "% zoom";
-}
-function setupZoom() {
-  const graphContainer = getElementById("graph");
-  graphContainer.onwheel = (event) => {
-    const factor = event.deltaY < 0 ? 1.1 : 0.9;
-    panzoom.zoom = snap(1)(0.1)(panzoom.zoom * factor);
-    updatePanzoom();
-    updateZoomIndicator();
-  };
-}
 function moveTask(task, pos) {
   task.style.left = pos.x + "px";
   task.style.top = pos.y + "px";
@@ -216,7 +211,6 @@ function moveTask(task, pos) {
     updatePath(path);
 }
 export function initGraph() {
-  setupZoom();
   const graphContainer = getElementById("graph");
   graphContainer.onpointerdown = (event) => {
     event.preventDefault();
@@ -310,5 +304,4 @@ export function initGraph() {
     }
   };
   sendSelectionChanged([]);
-  updateZoomIndicator();
 }

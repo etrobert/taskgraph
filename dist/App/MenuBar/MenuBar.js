@@ -1,14 +1,14 @@
 import React from "../../../snowpack/pkg/react.js";
 import "./MenuBar.css.proxy.js";
 const MenuBar = ({
+  open,
   onClose,
   onLoad,
   onSave,
   onNewGraph
 }) => {
   return /* @__PURE__ */ React.createElement("div", {
-    id: "menubar",
-    className: "MenuBar"
+    className: `MenuBar ${open ? "MenuBar--open" : ""}`
   }, /* @__PURE__ */ React.createElement("h1", {
     className: "MenuBar__title"
   }, "TaskGraph"), /* @__PURE__ */ React.createElement("button", {

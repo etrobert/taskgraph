@@ -16,6 +16,11 @@
   transform: translateX(-100%);
 }
 
+.MenuBar--open {
+  transform: translate(0);
+  box-shadow: 0.2rem 0 1rem rgba(0, 0, 0, 0.5);
+}
+
 .MenuBar__close-button {
   position: absolute;
   top: 0;
@@ -33,11 +38,6 @@
 .MenuBar__title {
   font-family: "PermanentMarker";
   font-size: 3rem;
-}
-
-.MenuBar.active {
-  transform: translate(0);
-  box-shadow: 0.2rem 0 1rem rgba(0, 0, 0, 0.5);
 }
 
 .MenuBar button {
