@@ -6,6 +6,38 @@
     <title>TaskGraph</title>
     <script src="dist/index.js" type="module"></script>
     <link rel="stylesheet" type="text/css" href="style.css" />
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-1WBNT9GR3R"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+
+      // Disable cookies by default
+      gtag("consent", "default", {
+        ad_storage: "denied",
+        analytics_storage: "denied",
+      });
+
+      const dev = "production" === "development";
+
+      // Cookies are necessary for Google Analytics Debug Mode
+      if (dev)
+        gtag("consent", "update", {
+          ad_storage: "granted",
+          analytics_storage: "granted",
+        });
+
+      gtag("js", new Date());
+
+      const options = dev ? { debug_mode: true } : undefined;
+      gtag("config", "G-1WBNT9GR3R", options);
+    </script>
   </head>
   <body>
     <div id="root"></div>
