@@ -7,7 +7,7 @@
     "start": "snowpack dev",
     "clean": "rm -rf build/",
     "build": "snowpack build",
-    "lint": "eslint src/scripts",
+    "lint": "eslint src/",
     "deploy": "echo 'taskgraph.net' > build/CNAME && gh-pages -d build/",
     "test": "jest"
   },
