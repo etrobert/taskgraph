@@ -22,6 +22,7 @@ const Task = ({ task }: Props): JSX.Element => {
       ref={ref}
       className="Task"
       onPointerDown={(event) => {
+        event.preventDefault();
         setDragging(true);
         setLastPos({ x: event.clientX, y: event.clientY });
         ref.current?.setPointerCapture(event.pointerId);

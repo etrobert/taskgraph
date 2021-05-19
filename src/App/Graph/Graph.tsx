@@ -6,6 +6,7 @@ import { snap } from "@/misc";
 import useKeyboardShortcuts from "@/useKeyboardShortcuts";
 import { saveToLocalStorage } from "@/storage";
 import Task from "./Task/Task";
+import { addPoints, subPoints } from "@/geometry";
 
 const Graph = (): JSX.Element => {
   const [graph, setGraph] = useState<GraphData>({
@@ -79,10 +80,30 @@ const Graph = (): JSX.Element => {
 
   const itemsContainerTransform = `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`;
 
+  const [grabbing, setGrabbing] = useState(false);
+  const [lastPos, setLastPos] = useState({ x: 0, y: 0 });
+
   return (
     <div
+      onPointerDown={(event) => {
+        if (event.defaultPrevented) return;
+        setGrabbing(true);
+        setLastPos({ x: event.clientX, y: event.clientY });
+      }}
+      onPointerUp={() => setGrabbing(false)}
       onPointerMove={(event) => {
-        if (event.defaultPrevented) console.log("pointer move");
+        // TODO Remove code duplication
+        if (!grabbing) return;
+
+        const currentPos = {
+          x: event.clientX,
+          y: event.clientY,
+        };
+
+        const offset = subPoints(currentPos, lastPos);
+
+        setPan((pan) => addPoints(pan, offset));
+        setLastPos(currentPos);
       }}
       onWheel={onWheel}
       id="graph"
