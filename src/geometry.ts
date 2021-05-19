@@ -12,6 +12,16 @@ export interface Box {
   height: number;
 }
 
+export const addPoints = (p1: Point, p2: Point): Point => ({
+  x: p1.x + p2.x,
+  y: p1.y + p2.y,
+});
+
+export const subPoints = (p1: Point, p2: Point): Point => ({
+  x: p1.x - p2.x,
+  y: p1.y - p2.y,
+});
+
 export function squaredDistance(p1: Point, p2: Point): number {
   return (p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y);
 }

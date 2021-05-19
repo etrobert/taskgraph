@@ -19,7 +19,7 @@ interface HTMLDependencyElement extends HTMLElement {
   to: HTMLTaskElement;
 }
 
-interface Task {
+export interface Task {
   name: string;
   status: "todo" | "completed";
   pos: Point;

@@ -1,13 +1,29 @@
 import React, { useEffect, useRef, useState } from "react";
-import { initGraph } from "@/graph";
+import { Graph as GraphData } from "@/graph";
 
 import "./Graph.css";
 import { snap } from "@/misc";
 import useKeyboardShortcuts from "@/useKeyboardShortcuts";
-import { loadFromLocalStorage, saveToLocalStorage } from "@/storage";
+import { saveToLocalStorage } from "@/storage";
+import Task from "./Task/Task";
 
 const Graph = (): JSX.Element => {
-  useEffect(initGraph, []);
+  const [graph, setGraph] = useState<GraphData>({
+    tasks: [
+      {
+        name: "Water the Plants",
+        status: "todo",
+        pos: { x: 0, y: 0 },
+      },
+    ],
+    dependencies: [],
+  });
+
+  useEffect(() => {
+    const graphItem = window.localStorage.getItem("graph");
+    if (!graphItem) return;
+    setGraph(JSON.parse(graphItem));
+  }, []);
 
   const [pan, setPan] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
@@ -61,12 +77,13 @@ const Graph = (): JSX.Element => {
     };
   }, []);
 
-  useEffect(loadFromLocalStorage, []);
-
   const itemsContainerTransform = `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`;
 
   return (
     <div
+      onPointerMove={(event) => {
+        if (event.defaultPrevented) console.log("pointer move");
+      }}
       onWheel={onWheel}
       id="graph"
       ref={graphRef}
@@ -78,6 +95,9 @@ const Graph = (): JSX.Element => {
         {zoom !== 1 && Math.floor(zoom * 100) + "% zoom"}
       </p>
       <div id="itemsContainer" style={{ transform: itemsContainerTransform }}>
+        {graph.tasks.map((task) => (
+          <Task key={task.name} task={task} />
+        ))}
         <svg id="arrows">
           <defs>
             <marker
