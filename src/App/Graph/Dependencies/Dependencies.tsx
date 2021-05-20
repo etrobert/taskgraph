@@ -1,11 +1,14 @@
-import { Graph } from "@/graph";
 import React from "react";
+
+import { Graph } from "@/graph";
+import { Size } from "@/useResizeObserver";
 
 type Props = {
   graph: Graph;
+  taskSizes: Partial<Record<string, Size>>;
 };
 
-const Dependencies = ({ graph }: Props): JSX.Element => {
+const Dependencies = ({ graph, taskSizes }: Props): JSX.Element => {
   return (
     <svg id="arrows">
       <defs>

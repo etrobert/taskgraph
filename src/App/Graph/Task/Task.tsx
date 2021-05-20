@@ -1,22 +1,34 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import "./Task.css";
 
 import { Task as TaskData } from "@/graph";
 import { addPoints, Point, subPoints } from "@/geometry";
+import useResizeObserver, { Size } from "@/useResizeObserver";
 
 type Props = {
   task: TaskData;
   onMove: (pos: Point) => void;
   zoom: number;
+  onResize: (size: Size) => void;
 };
 
-const Task = ({ task: { pos, name }, onMove, zoom }: Props): JSX.Element => {
+const Task = ({
+  task: { pos, name },
+  onMove,
+  onResize,
+  zoom,
+}: Props): JSX.Element => {
   const [dragging, setDragging] = useState(false);
   // TODO Transform into discriminated union
   const [lastPos, setLastPos] = useState({ x: 0, y: 0 });
 
   const ref = useRef<HTMLDivElement>(null);
+
+  const size = useResizeObserver(ref);
+
+  // We don't do anything at first when size is undefined
+  useEffect(() => size && onResize(size), [onResize, size]);
 
   return (
     <div

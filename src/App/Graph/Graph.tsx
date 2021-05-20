@@ -7,6 +7,7 @@ import useKeyboardShortcuts from "@/useKeyboardShortcuts";
 import Task from "./Task/Task";
 import { addPoints, subPoints } from "@/geometry";
 import Dependencies from "./Dependencies/Dependencies";
+import useTaskSizes from "./useTaskSizes";
 
 const Graph = (): JSX.Element => {
   const [graph, setGraph] = useState<GraphData>({
@@ -48,6 +49,8 @@ const Graph = (): JSX.Element => {
 
   const [grabbing, setGrabbing] = useState(false);
   const [lastPos, setLastPos] = useState({ x: 0, y: 0 });
+
+  const { taskSizes, setTaskSize } = useTaskSizes();
 
   return (
     <div
@@ -93,10 +96,11 @@ const Graph = (): JSX.Element => {
                 return { tasks, ...rest };
               })
             }
+            onResize={(size) => setTaskSize(task.name, size)}
             zoom={zoom}
           />
         ))}
-        <Dependencies graph={graph} />
+        <Dependencies graph={graph} taskSizes={taskSizes} />
       </div>
     </div>
   );
