@@ -21,3 +21,4 @@ const useTaskSizes: UseTaskSizes = () => {
 };
 
 export default useTaskSizes;
+export type { TaskSizes };

@@ -34,6 +34,7 @@ const Dependencies = ({ graph, taskSizes }: Props): JSX.Element => {
           key={`${dep.predecessor}-${dep.successor}`}
           data={dep}
           tasks={graph.tasks}
+          taskSizes={taskSizes}
         />
       ))}
     </svg>
