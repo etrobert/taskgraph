@@ -8,12 +8,15 @@ import {
   intersectLineBox,
 } from "@/geometry";
 import { TaskSizes } from "../useTaskSizes";
+import Line from "./Line";
 
 type Props = {
   data: Dependency;
   tasks: Task[];
   taskSizes: TaskSizes;
 };
+
+const offset = 12;
 
 const Dependency = ({ data, tasks, taskSizes }: Props): JSX.Element | null => {
   const predecessor = tasks.find((task) => task.name === data.predecessor);
@@ -33,7 +36,6 @@ const Dependency = ({ data, tasks, taskSizes }: Props): JSX.Element | null => {
   const predecessorCenter = getBoxCenter(predecessorBox);
   const successorCenter = getBoxCenter(successorBox);
 
-  const offset = 12;
   const pointA = intersectLineBox(
     predecessorCenter,
     successorCenter,
@@ -48,7 +50,8 @@ const Dependency = ({ data, tasks, taskSizes }: Props): JSX.Element | null => {
 
   if (!pointA || !pointB) return null;
 
-  return <path d={`M${pointA.x},${pointA.y} L${pointB.x},${pointB.y}`} />;
+  return <Line from={pointA} to={pointB} />;
 };
 
 export default Dependency;
+export { offset };
