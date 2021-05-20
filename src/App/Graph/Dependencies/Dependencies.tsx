@@ -3,6 +3,8 @@ import React from "react";
 import { Graph } from "@/graph";
 import { Size } from "@/useResizeObserver";
 
+import Dependency from "./Dependency";
+
 type Props = {
   graph: Graph;
   taskSizes: Partial<Record<string, Size>>;
@@ -27,22 +29,13 @@ const Dependencies = ({ graph, taskSizes }: Props): JSX.Element => {
           />
         </marker>
       </defs>
-      {graph.dependencies.map((dep) => {
-        const predecessor = graph.tasks.find(
-          (task) => task.name === dep.predecessor
-        );
-        const successor = graph.tasks.find(
-          (task) => task.name === dep.successor
-        );
-        if (!predecessor || !successor)
-          throw Error("Missing predecessor or successor");
-        return (
-          <path
-            key={`${dep.predecessor}-${dep.successor}`}
-            d={`M${predecessor.pos.x},${predecessor.pos.y} L${successor.pos.x},${successor.pos.y}`}
-          />
-        );
-      })}
+      {graph.dependencies.map((dep) => (
+        <Dependency
+          key={`${dep.predecessor}-${dep.successor}`}
+          data={dep}
+          tasks={graph.tasks}
+        />
+      ))}
     </svg>
   );
 };
