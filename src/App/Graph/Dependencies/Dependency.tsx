@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Dependency, Task } from "@/graph";
-import { Box, getBoxCenter, Point, Size } from "@/geometry";
+import { createBox, getBoxCenter } from "@/geometry";
 import { TaskSizes } from "../useTaskSizes";
 
 type Props = {
@@ -9,15 +9,6 @@ type Props = {
   tasks: Task[];
   taskSizes: TaskSizes;
 };
-
-const createBox = ({ x, y }: Point, { width, height }: Size): Box => ({
-  left: x,
-  top: y,
-  right: x + width - 1,
-  width,
-  height,
-  bottom: y + height - 1,
-});
 
 const Dependency = ({ data, tasks, taskSizes }: Props): JSX.Element | null => {
   const predecessor = tasks.find((task) => task.name === data.predecessor);

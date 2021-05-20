@@ -57,6 +57,15 @@ export function getOffsetBox(element: HTMLElement): Box {
   };
 }
 
+export const createBox = ({ x, y }: Point, { width, height }: Size): Box => ({
+  left: x,
+  top: y,
+  right: x + width - 1,
+  width,
+  height,
+  bottom: y + height - 1,
+});
+
 // Finds the intersection point between the line segment p1->p2 and the given bounding box.
 // If the line segment and the box don't intersect, null is returned.
 export function intersectLineBox(p1: Point, p2: Point, box: Box): Point | null {
