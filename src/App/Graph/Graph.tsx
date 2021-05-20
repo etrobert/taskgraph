@@ -10,13 +10,7 @@ import Dependencies from "./Dependencies/Dependencies";
 
 const Graph = (): JSX.Element => {
   const [graph, setGraph] = useState<GraphData>({
-    tasks: [
-      {
-        name: "Water the Plants",
-        status: "todo",
-        pos: { x: 0, y: 0 },
-      },
-    ],
+    tasks: [],
     dependencies: [],
   });
 
