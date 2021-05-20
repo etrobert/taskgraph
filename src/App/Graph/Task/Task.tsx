@@ -3,8 +3,8 @@ import React, { useEffect, useRef, useState } from "react";
 import "./Task.css";
 
 import { Task as TaskData } from "@/graph";
-import { addPoints, Point, subPoints } from "@/geometry";
-import useResizeObserver, { Size } from "@/useResizeObserver";
+import { addPoints, Point, Size, subPoints } from "@/geometry";
+import useResizeObserver from "@/useResizeObserver";
 
 type Props = {
   task: TaskData;

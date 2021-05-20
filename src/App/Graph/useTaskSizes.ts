@@ -1,5 +1,6 @@
-import { Size } from "@/useResizeObserver";
 import { useState } from "react";
+
+import { Size } from "@/geometry";
 
 type TaskSizes = Partial<Record<string, Size>>;
 

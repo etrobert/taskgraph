@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Graph } from "@/graph";
-import { Size } from "@/useResizeObserver";
+import { Size } from "@/geometry";
 
 import Dependency from "./Dependency";
 

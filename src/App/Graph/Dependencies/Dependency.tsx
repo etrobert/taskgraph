@@ -1,8 +1,7 @@
 import React from "react";
 
 import { Dependency, Task } from "@/graph";
-import { Box, getBoxCenter, Point } from "@/geometry";
-import { Size } from "@/useResizeObserver";
+import { Box, getBoxCenter, Point, Size } from "@/geometry";
 import { TaskSizes } from "../useTaskSizes";
 
 type Props = {

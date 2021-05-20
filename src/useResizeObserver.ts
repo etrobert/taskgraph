@@ -1,6 +1,6 @@
 import { RefObject, useEffect, useState } from "react";
 
-type Size = { width: number; height: number };
+import { Size } from "./geometry";
 
 /**
  * Uses the ResizeObserver API to watch for size changes in an HTML Element
@@ -34,4 +34,3 @@ const useResizeObserver = (ref: RefObject<HTMLElement>): Size | undefined => {
 };
 
 export default useResizeObserver;
-export type { Size };

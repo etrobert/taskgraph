@@ -3,6 +3,8 @@ export interface Point {
   y: number;
 }
 
+export type Size = { width: number; height: number };
+
 export interface Box {
   left: number;
   top: number;
