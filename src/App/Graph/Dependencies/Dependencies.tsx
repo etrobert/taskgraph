@@ -1,13 +1,13 @@
 import React from "react";
 
 import { Graph } from "@/graph";
-import { Size } from "@/geometry";
 
 import Dependency from "./Dependency";
+import { TaskSizes } from "../useTaskSizes";
 
 type Props = {
   graph: Graph;
-  taskSizes: Partial<Record<string, Size>>;
+  taskSizes: TaskSizes;
 };
 
 const Dependencies = ({ graph, taskSizes }: Props): JSX.Element => {
