@@ -25,7 +25,7 @@ export interface Task {
   pos: Point;
 }
 
-interface Dependency {
+export interface Dependency {
   predecessor: string;
   successor: string;
 }

@@ -7,6 +7,7 @@ import useKeyboardShortcuts from "@/useKeyboardShortcuts";
 import { saveToLocalStorage } from "@/storage";
 import Task from "./Task/Task";
 import { addPoints, subPoints } from "@/geometry";
+import Dependencies from "./Dependencies/Dependencies";
 
 const Graph = (): JSX.Element => {
   const [graph, setGraph] = useState<GraphData>({
@@ -119,24 +120,7 @@ const Graph = (): JSX.Element => {
         {graph.tasks.map((task) => (
           <Task key={task.name} task={task} />
         ))}
-        <svg id="arrows">
-          <defs>
-            <marker
-              id="Triangle"
-              viewBox="0 0 5 5"
-              refX="2"
-              refY="2.5"
-              markerWidth="2"
-              markerHeight="2"
-              orient="auto"
-            >
-              <path
-                d="M 0 0 L 5 2.5 L 0 5 z"
-                className="link-arrow-triangle-path"
-              />
-            </marker>
-          </defs>
-        </svg>
+        <Dependencies graph={graph} />
       </div>
     </div>
   );
