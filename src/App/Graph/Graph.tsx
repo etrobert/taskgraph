@@ -117,8 +117,18 @@ const Graph = (): JSX.Element => {
         {zoom !== 1 && Math.floor(zoom * 100) + "% zoom"}
       </p>
       <div id="itemsContainer" style={{ transform: itemsContainerTransform }}>
-        {graph.tasks.map((task) => (
-          <Task key={task.name} task={task} />
+        {graph.tasks.map((task, index) => (
+          <Task
+            key={task.name}
+            task={task}
+            onMove={(pos) =>
+              setGraph((graph) => {
+                const { tasks, ...rest } = graph;
+                tasks[index] = { ...tasks[index], pos };
+                return { tasks, ...rest };
+              })
+            }
+          />
         ))}
         <Dependencies graph={graph} />
       </div>

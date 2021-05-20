@@ -7,11 +7,10 @@ import { addPoints, Point, subPoints } from "@/geometry";
 
 type Props = {
   task: TaskData;
+  onMove: (pos: Point) => void;
 };
 
-const Task = ({ task }: Props): JSX.Element => {
-  const [pos, setPos] = useState<Point>(task.pos);
-
+const Task = ({ task: { pos, name }, onMove }: Props): JSX.Element => {
   const [dragging, setDragging] = useState(false);
   const [lastPos, setLastPos] = useState({ x: 0, y: 0 });
 
@@ -37,14 +36,14 @@ const Task = ({ task }: Props): JSX.Element => {
 
         const offset = subPoints(currentPos, lastPos);
 
-        setPos((pos) => addPoints(pos, offset));
+        onMove(addPoints(pos, offset));
 
         setLastPos(currentPos);
       }}
       onPointerUp={() => setDragging(false)}
       style={{ left: pos.x, top: pos.y }}
     >
-      {task.name}
+      {name}
     </div>
   );
 };
