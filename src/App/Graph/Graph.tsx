@@ -4,7 +4,6 @@ import { Graph as GraphData } from "@/graph";
 import "./Graph.css";
 import { snap } from "@/misc";
 import useKeyboardShortcuts from "@/useKeyboardShortcuts";
-import { saveToLocalStorage } from "@/storage";
 import Task from "./Task/Task";
 import { addPoints, subPoints } from "@/geometry";
 import Dependencies from "./Dependencies/Dependencies";
@@ -50,34 +49,6 @@ const Graph = (): JSX.Element => {
       },
     },
   });
-
-  // Update pan when the graph sends a graphmoved event
-  useEffect(() => {
-    if (!graphRef.current) return;
-    const element = graphRef.current;
-    const handler = (event: Event) => {
-      const {
-        detail: { pan },
-      } = event as CustomEvent<{
-        pan: { x: number; y: number };
-      }>;
-      setPan(pan);
-    };
-    element.addEventListener("graphmoved", handler);
-    return () => element.removeEventListener("graphmoved", handler);
-  });
-
-  // Update localstorage when graph is updated
-  useEffect(() => {
-    if (!graphRef.current) return;
-    const graph = graphRef.current;
-    graph.addEventListener("taskmoved", saveToLocalStorage);
-    graph.addEventListener("newdependency", saveToLocalStorage);
-    return () => {
-      graph.removeEventListener("taskmoved", saveToLocalStorage);
-      graph.removeEventListener("newdependency", saveToLocalStorage);
-    };
-  }, []);
 
   const itemsContainerTransform = `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`;
 
