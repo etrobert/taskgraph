@@ -93,6 +93,7 @@ const Graph = (): JSX.Element => {
                 return { tasks, ...rest };
               })
             }
+            zoom={zoom}
           />
         ))}
         <Dependencies graph={graph} />
