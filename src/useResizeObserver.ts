@@ -15,13 +15,13 @@ const useResizeObserver = (ref: RefObject<HTMLElement>): Size | undefined => {
     const element = ref.current;
     const resizeObserver = new ResizeObserver((entries) => {
       entries.forEach((entry) => {
-        if (!entry.contentBoxSize) return;
+        if (!entry.borderBoxSize) return;
         // Sometimes it's an array sometimes not
         // See https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver/ResizeObserver
-        const contentBoxSize = entry.contentBoxSize[0]
-          ? entry.contentBoxSize[0]
-          : (entry.contentBoxSize as unknown as ResizeObserverSize);
-        const { blockSize, inlineSize } = contentBoxSize;
+        const borderBoxSize = entry.borderBoxSize[0]
+          ? entry.borderBoxSize[0]
+          : (entry.borderBoxSize as unknown as ResizeObserverSize);
+        const { blockSize, inlineSize } = borderBoxSize;
         setSize({ width: inlineSize, height: blockSize });
       });
     });

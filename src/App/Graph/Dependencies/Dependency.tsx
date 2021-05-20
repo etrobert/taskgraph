@@ -1,7 +1,12 @@
 import React from "react";
 
 import { Dependency, Task } from "@/graph";
-import { createBox, getBoxCenter } from "@/geometry";
+import {
+  createBox,
+  getBoxCenter,
+  getExpandedBox,
+  intersectLineBox,
+} from "@/geometry";
 import { TaskSizes } from "../useTaskSizes";
 
 type Props = {
@@ -28,12 +33,22 @@ const Dependency = ({ data, tasks, taskSizes }: Props): JSX.Element | null => {
   const predecessorCenter = getBoxCenter(predecessorBox);
   const successorCenter = getBoxCenter(successorBox);
 
-  return (
-    <path
-      d={`M${predecessorCenter.x},${predecessorCenter.y}
-          L${successorCenter.x},${successorCenter.y}`}
-    />
+  const offset = 12;
+  const pointA = intersectLineBox(
+    predecessorCenter,
+    successorCenter,
+    getExpandedBox(predecessorBox, offset)
   );
+
+  const pointB = intersectLineBox(
+    predecessorCenter,
+    successorCenter,
+    getExpandedBox(successorBox, offset)
+  );
+
+  if (!pointA || !pointB) return null;
+
+  return <path d={`M${pointA.x},${pointA.y} L${pointB.x},${pointB.y}`} />;
 };
 
 export default Dependency;
