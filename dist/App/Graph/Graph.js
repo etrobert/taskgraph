@@ -3,6 +3,7 @@ import {initGraph} from "../../graph.js";
 import "./Graph.css.proxy.js";
 import {snap} from "../../misc.js";
 import useKeyboardShortcuts from "../../useKeyboardShortcuts.js";
+import {loadFromLocalStorage, saveToLocalStorage} from "../../storage.js";
 const Graph = () => {
   useEffect(initGraph, []);
   const [pan, setPan] = useState({x: 0, y: 0});
@@ -38,6 +39,18 @@ const Graph = () => {
     element.addEventListener("graphmoved", handler);
     return () => element.removeEventListener("graphmoved", handler);
   });
+  useEffect(() => {
+    if (!graphRef.current)
+      return;
+    const graph = graphRef.current;
+    graph.addEventListener("taskmoved", saveToLocalStorage);
+    graph.addEventListener("newdependency", saveToLocalStorage);
+    return () => {
+      graph.removeEventListener("taskmoved", saveToLocalStorage);
+      graph.removeEventListener("newdependency", saveToLocalStorage);
+    };
+  }, []);
+  useEffect(loadFromLocalStorage, []);
   const itemsContainerTransform = `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`;
   return /* @__PURE__ */ React.createElement("div", {
     onWheel,

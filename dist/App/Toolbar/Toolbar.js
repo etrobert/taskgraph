@@ -1,6 +1,6 @@
 import React from "../../../snowpack/pkg/react.js";
-import NoneSelectedButtons from "./NoneSelectedButtons.js";
-import SomeSelectedButtons from "./SomeSelectedButtons.js";
+import NoneSelectedButtons from "./NoneSelectedButtons/NoneSelectedButtons.js";
+import SomeSelectedButtons from "./SomeSelectedButtons/SomeSelectedButtons.js";
 import "./Toolbar.css.proxy.js";
 const Toolbar = ({
   tasksSelected,

@@ -1,4 +1,4 @@
-import React from "../../../snowpack/pkg/react.js";
+import React from "../../../../snowpack/pkg/react.js";
 const NotSelectedButtons = ({
   linkMode,
   onChangeLinkMode,
