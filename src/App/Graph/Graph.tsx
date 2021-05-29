@@ -1,12 +1,16 @@
 import React, { useEffect, useRef, useState } from "react";
-import { initGraph } from "@/graph";
+import { initGraph, loadGraph } from "@/graph";
 
 import "./Graph.css";
 import { snap } from "@/misc";
 import useKeyboardShortcuts from "@/useKeyboardShortcuts";
-import { loadFromLocalStorage, saveToLocalStorage } from "@/storage";
+import { loadFromLocalStorage } from "@/storage";
 
-const Graph = (): JSX.Element => {
+type Props = {
+  updateGraph: () => void;
+};
+
+const Graph = ({ updateGraph }: Props): JSX.Element => {
   useEffect(initGraph, []);
 
   const [pan, setPan] = useState({ x: 0, y: 0 });
@@ -49,19 +53,24 @@ const Graph = (): JSX.Element => {
     return () => element.removeEventListener("graphmoved", handler);
   });
 
-  // Update localstorage when graph is updated
+  // Update react state when graph is updated
   useEffect(() => {
     if (!graphRef.current) return;
     const graph = graphRef.current;
-    graph.addEventListener("taskmoved", saveToLocalStorage);
-    graph.addEventListener("newdependency", saveToLocalStorage);
-    return () => {
-      graph.removeEventListener("taskmoved", saveToLocalStorage);
-      graph.removeEventListener("newdependency", saveToLocalStorage);
-    };
-  }, []);
 
-  useEffect(loadFromLocalStorage, []);
+    graph.addEventListener("taskmoved", updateGraph);
+    graph.addEventListener("newdependency", updateGraph);
+    return () => {
+      graph.removeEventListener("taskmoved", updateGraph);
+      graph.removeEventListener("newdependency", updateGraph);
+    };
+  }, [updateGraph]);
+
+  useEffect(() => {
+    const graph = loadFromLocalStorage();
+    if (graph) loadGraph(graph);
+    updateGraph();
+  }, [updateGraph]);
 
   const itemsContainerTransform = `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`;
 

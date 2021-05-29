@@ -1,14 +1,19 @@
 import { deleteSelected, selectAll } from "@/graph";
-import { saveToFile, saveToLocalStorage } from "@/storage";
+import { saveToFile } from "@/storage";
 import useKeyboardShortcuts, { Shortcut } from "@/useKeyboardShortcuts";
 
 type Props = {
   loadFromFile: () => void;
   insertMode: boolean;
   onCreateTask: () => void;
+  updateGraph: () => void;
 };
 
-const getAppShortcuts = ({ loadFromFile, onCreateTask }: Props) => {
+const getAppShortcuts = ({
+  loadFromFile,
+  onCreateTask,
+  updateGraph,
+}: Props) => {
   const selectAllShortcut: Shortcut = {
     keys: ["a"],
     callback: (event) => {
@@ -25,7 +30,7 @@ const getAppShortcuts = ({ loadFromFile, onCreateTask }: Props) => {
     keys: ["d", "Delete"],
     callback: () => {
       deleteSelected();
-      saveToLocalStorage();
+      updateGraph();
     },
   };
 
