@@ -42,7 +42,12 @@ const App = (): JSX.Element => {
   // Update localstorage when graph is updated
   useEffect(() => graph && saveToLocalStorage(graph), [graph]);
 
-  useAppShortcuts({ loadFromFile, insertMode, updateGraph, onCreateTask });
+  const onDelete = () => {
+    deleteSelected();
+    updateGraph();
+  };
+
+  useAppShortcuts({ loadFromFile, insertMode, onDelete, onCreateTask });
 
   return (
     <>
@@ -83,10 +88,7 @@ const App = (): JSX.Element => {
           completeSelected();
           updateGraph();
         }}
-        onDelete={() => {
-          deleteSelected();
-          updateGraph();
-        }}
+        onDelete={onDelete}
       />
 
       <GraphComponent updateGraph={updateGraph} />
