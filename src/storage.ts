@@ -1,4 +1,4 @@
-import { getGraph, loadGraph } from "./graph";
+import { getGraph, Graph } from "./graph";
 
 function downloadFile(
   filename: string,
@@ -26,16 +26,15 @@ function saveToFile(): void {
   );
 }
 
-function saveToLocalStorage(): void {
-  const graph = getGraph();
+function saveToLocalStorage(graph: Graph): void {
   window.localStorage.setItem("graph", JSON.stringify(graph));
 }
 
-function loadFromLocalStorage(): void {
+function loadFromLocalStorage(): Graph | null {
   const graphItem = window.localStorage.getItem("graph");
-  if (!graphItem) return;
+  if (!graphItem) return null;
   const graph = JSON.parse(graphItem);
-  loadGraph(graph);
+  return graph as Graph;
 }
 
 export { saveToFile, saveToLocalStorage, loadFromLocalStorage };

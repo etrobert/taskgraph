@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
 import {
   addTask,
@@ -6,6 +6,8 @@ import {
   completeSelected,
   deleteSelected,
   loadGraph,
+  getGraph,
+  Graph as GraphData,
 } from "@/graph";
 import { saveToFile, saveToLocalStorage } from "@/storage";
 
@@ -34,14 +36,25 @@ const App = (): JSX.Element => {
 
   const tasksSelected = useTasksSelected();
 
-  useAppShortcuts({ loadFromFile, insertMode, onCreateTask });
+  const [graph, setGraph] = useState<GraphData>();
+  const updateGraph = useCallback(() => setGraph(getGraph()), []);
+
+  // Update localstorage when graph is updated
+  useEffect(() => graph && saveToLocalStorage(graph), [graph]);
+
+  const onDelete = () => {
+    deleteSelected();
+    updateGraph();
+  };
+
+  useAppShortcuts({ loadFromFile, insertMode, onDelete, onCreateTask });
 
   return (
     <>
       <GraphInput
         onLoad={(graph) => {
           loadGraph(graph);
-          saveToLocalStorage();
+          updateGraph();
           closeMenuBar();
         }}
         ref={fileInputRef}
@@ -57,6 +70,7 @@ const App = (): JSX.Element => {
         onLoad={loadFromFile}
         onNewGraph={() => {
           clearGraph();
+          updateGraph();
           closeMenuBar();
         }}
         onSave={() => {
@@ -72,21 +86,18 @@ const App = (): JSX.Element => {
         onCreateTask={onCreateTask}
         onComplete={() => {
           completeSelected();
-          saveToLocalStorage();
+          updateGraph();
         }}
-        onDelete={() => {
-          deleteSelected();
-          saveToLocalStorage();
-        }}
+        onDelete={onDelete}
       />
 
-      <GraphComponent />
+      <GraphComponent updateGraph={updateGraph} />
 
       {insertMode && (
         <NewTaskInput
           onNewTask={(task) => {
             addTask(task);
-            saveToLocalStorage();
+            updateGraph();
             setInsertMode(false);
           }}
           onCancel={() => setInsertMode(false)}
