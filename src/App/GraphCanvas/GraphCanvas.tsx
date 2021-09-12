@@ -4,6 +4,8 @@ import { initGraph } from "@/graph";
 import "./GraphCanvas.css";
 import { snap } from "@/misc";
 import useKeyboardShortcuts from "@/useKeyboardShortcuts";
+import { useRecoilValue } from "recoil";
+import { graphState } from "../atoms";
 
 const GraphCanvas = (): JSX.Element => {
   useEffect(initGraph, []);
@@ -49,6 +51,10 @@ const GraphCanvas = (): JSX.Element => {
   });
 
   const itemsContainerTransform = `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`;
+
+  const graph = useRecoilValue(graphState);
+
+  useEffect(() => console.log(graph), [graph]);
 
   return (
     <div
