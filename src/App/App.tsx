@@ -27,7 +27,7 @@ const task1Mock = {
 const task2Mock = {
   id: "task-2",
   name: "task-2",
-  position: { x: 0, y: 0 },
+  position: { x: 100, y: 100 },
 };
 
 const dependencyMock = {
