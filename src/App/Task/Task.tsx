@@ -7,8 +7,6 @@ type Props = {
   id: TaskId;
 };
 
-// TODO Use BEM notation for completed
-// TODO Use Task instead of task for class name
 const Task = ({ id }: Props): JSX.Element => {
   const {
     position: { x, y },
