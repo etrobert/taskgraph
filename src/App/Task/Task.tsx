@@ -11,11 +11,11 @@ const Task = ({ id }: Props): JSX.Element => {
   const {
     position: { x, y },
     name,
+    status,
   } = useRecoilValue(taskStateFamily(id));
-  const completed = "completed"; // TODO Add completion state to Task
   return (
     <div
-      className={`Task ${completed ? "Task--completed" : ""}`}
+      className={`Task ${status === "completed" ? "Task--completed" : ""}`}
       style={{ left: x, top: y }}
       id={id}
     >
