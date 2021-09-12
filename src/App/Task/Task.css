@@ -24,11 +24,11 @@
   z-index: 1;
 }
 
-.Task.completed {
+.Task--completed {
   opacity: 25%;
 }
 
-.Task.completed::before {
+.Task--completed::before {
   content: "";
   position: absolute;
   --thickness: 0.2em;
