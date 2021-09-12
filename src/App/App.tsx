@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { addTask, clearGraph, completeSelected, deleteSelected } from "@/graph";
+import { completeSelected, deleteSelected } from "@/graph";
 
 import MenuBar from "./MenuBar/MenuBar";
 import useAppShortcuts from "./useAppShortcuts";
@@ -10,6 +10,7 @@ import GraphCanvas from "./GraphCanvas/GraphCanvas";
 import NewTaskInput from "./NewTaskInput/NewTaskInput";
 
 import "./App.css";
+import useGraphState from "./useGraphState";
 
 const App = (): JSX.Element => {
   const [menuBarOpen, setMenuBarOpen] = useState(false);
@@ -21,6 +22,8 @@ const App = (): JSX.Element => {
   const onCreateTask = () => setInsertMode(true);
 
   const tasksSelected = useTasksSelected();
+
+  const { addTask, clearGraph } = useGraphState();
 
   useAppShortcuts({
     insertMode,
@@ -59,7 +62,7 @@ const App = (): JSX.Element => {
       {insertMode && (
         <NewTaskInput
           onNewTask={(task) => {
-            addTask(task);
+            addTask(task.name);
             setInsertMode(false);
           }}
           onCancel={() => setInsertMode(false)}
