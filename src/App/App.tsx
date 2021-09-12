@@ -10,6 +10,13 @@ import GraphCanvas from "./GraphCanvas/GraphCanvas";
 import NewTaskInput from "./NewTaskInput/NewTaskInput";
 
 import "./App.css";
+import { RecoilRoot } from "recoil";
+import { graphState } from "./atoms";
+
+const graphMockState = {
+  tasks: ["task-1"],
+  dependencies: [],
+};
 
 const App = (): JSX.Element => {
   const [menuBarOpen, setMenuBarOpen] = useState(false);
@@ -29,7 +36,7 @@ const App = (): JSX.Element => {
   });
 
   return (
-    <>
+    <RecoilRoot initializeState={({ set }) => set(graphState, graphMockState)}>
       <button
         className="App__menu-bar-open-button iconButton"
         onClick={() => setMenuBarOpen(true)}
@@ -65,7 +72,7 @@ const App = (): JSX.Element => {
           onCancel={() => setInsertMode(false)}
         />
       )}
-    </>
+    </RecoilRoot>
   );
 };
 
