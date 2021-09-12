@@ -20,6 +20,13 @@ import GraphCanvas from "./GraphCanvas/GraphCanvas";
 import NewTaskInput from "./NewTaskInput/NewTaskInput";
 
 import "./App.css";
+import { RecoilRoot } from "recoil";
+import { graphState } from "./atoms";
+
+const graphMockState = {
+  tasks: ["task-1"],
+  dependencies: [],
+};
 
 const App = (): JSX.Element => {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -50,7 +57,7 @@ const App = (): JSX.Element => {
   useAppShortcuts({ loadFromFile, insertMode, onDelete, onCreateTask });
 
   return (
-    <>
+    <RecoilRoot initializeState={({ set }) => set(graphState, graphMockState)}>
       <GraphInput
         onLoad={(graph) => {
           loadGraph(graph);
@@ -103,7 +110,7 @@ const App = (): JSX.Element => {
           onCancel={() => setInsertMode(false)}
         />
       )}
-    </>
+    </RecoilRoot>
   );
 };
 
