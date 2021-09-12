@@ -148,7 +148,7 @@ const dependenciesSelector = selector({
   key: "Dependencies",
   get: ({ get }) => {
     const { dependencies } = get(graphState);
-    return dependencies.map((id) => get(taskStateFamily(id)));
+    return dependencies.map((id) => get(dependencyStateFamily(id)));
   },
 });
 
