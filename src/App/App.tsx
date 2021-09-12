@@ -20,31 +20,6 @@ import GraphCanvas from "./GraphCanvas/GraphCanvas";
 import NewTaskInput from "./NewTaskInput/NewTaskInput";
 
 import "./App.css";
-import { RecoilRoot } from "recoil";
-import { dependencyStateFamily, graphState, taskStateFamily } from "./atoms";
-
-const graphMockState = {
-  tasks: ["task-1", "task-2"],
-  dependencies: ["dependency-1"],
-};
-
-const task1Mock = {
-  id: "task-1",
-  name: "task-1",
-  position: { x: 0, y: 0 },
-};
-
-const task2Mock = {
-  id: "task-2",
-  name: "task-2",
-  position: { x: 100, y: 100 },
-};
-
-const dependencyMock = {
-  id: "dependency-1",
-  predecessor: "task-1",
-  successor: "task-2",
-};
 
 const App = (): JSX.Element => {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -75,14 +50,7 @@ const App = (): JSX.Element => {
   useAppShortcuts({ loadFromFile, insertMode, onDelete, onCreateTask });
 
   return (
-    <RecoilRoot
-      initializeState={({ set }) => {
-        set(graphState, graphMockState);
-        set(taskStateFamily("task-1"), task1Mock);
-        set(taskStateFamily("task-2"), task2Mock);
-        set(dependencyStateFamily("dependency-1"), dependencyMock);
-      }}
-    >
+    <>
       <GraphInput
         onLoad={(graph) => {
           loadGraph(graph);
@@ -135,7 +103,7 @@ const App = (): JSX.Element => {
           onCancel={() => setInsertMode(false)}
         />
       )}
-    </RecoilRoot>
+    </>
   );
 };
 
