@@ -8,13 +8,13 @@ import {
 } from "./geometry.js";
 import { getElementById, removeFromArray } from "./misc.js";
 
-interface HTMLTaskElement extends HTMLElement {
+interface HTMLTaskElement extends HTMLDivElement {
   textContent: string;
   from: HTMLDependencyElement[];
   to: HTMLDependencyElement[];
 }
 
-interface HTMLDependencyElement extends HTMLElement {
+interface HTMLDependencyElement extends SVGPathElement {
   from: HTMLTaskElement;
   to: HTMLTaskElement;
 }
@@ -53,14 +53,14 @@ function getTasks(): HTMLTaskElement[] {
 }
 
 function getDependencies(): HTMLDependencyElement[] {
-  const isDependency = (e: HTMLElement) => e.tagName === "path";
+  const isDependency = (e: Element) => e.tagName === "path";
   const arrows = getElementById("arrows");
-  const elements = Array.from(arrows.children) as HTMLElement[];
+  const elements = Array.from(arrows.children);
   return elements.filter(isDependency) as HTMLDependencyElement[];
 }
 
 export function clearGraph(): void {
-  const removeElement = (e: HTMLElement) => {
+  const removeElement = (e: Element) => {
     if (e.parentNode) e.parentNode.removeChild(e);
   };
   const tasks = getTasks();
@@ -95,7 +95,7 @@ export interface AddTask extends Partial<Task> {
 }
 
 export function addTask(task: AddTask): HTMLTaskElement {
-  const htmlTask = document.createElement("div") as unknown as HTMLTaskElement;
+  const htmlTask = document.createElement("div") as HTMLTaskElement;
   htmlTask.classList.add("task");
   htmlTask.textContent = task.name;
   htmlTask.from = [];
@@ -343,7 +343,7 @@ export function initGraph(): void {
       const path = document.createElementNS(
         "http://www.w3.org/2000/svg",
         "path"
-      ) as unknown as HTMLDependencyElement;
+      ) as HTMLDependencyElement;
       path.from = task;
       const arrows = getElementById("arrows");
       arrows.appendChild(path);
