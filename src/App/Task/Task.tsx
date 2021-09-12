@@ -1,22 +1,29 @@
 import React from "react";
+import { useRecoilValue } from "recoil";
+import { taskStateFamily } from "../atoms";
 import "./Task.css";
 
 type Props = {
-  x: number;
-  y: number;
-  completed?: boolean;
-  name: string;
-  id: string;
+  id: string; // TODO Replace with TaskId
 };
 
-const Task = ({ x, y, completed, name, id }: Props): JSX.Element => (
-  <div
-    className={`task ${completed ? "completed" : ""}`}
-    style={{ left: x, top: y }}
-    id={id}
-  >
-    {name}
-  </div>
-);
+// TODO Use BEM notation for completed
+// TODO Use Task instead of task for class name
+const Task = ({ id }: Props): JSX.Element => {
+  const {
+    position: { x, y },
+    name,
+  } = useRecoilValue(taskStateFamily(id));
+  const completed = "completed"; // TODO Add completion state to Task
+  return (
+    <div
+      className={`task ${completed ? "completed" : ""}`}
+      style={{ left: x, top: y }}
+      id={id}
+    >
+      {name}
+    </div>
+  );
+};
 
 export default Task;

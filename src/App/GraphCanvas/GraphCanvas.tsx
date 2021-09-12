@@ -5,7 +5,7 @@ import "./GraphCanvas.css";
 import { snap } from "@/misc";
 import useKeyboardShortcuts from "@/useKeyboardShortcuts";
 import { useRecoilValue } from "recoil";
-import { graphState, graphTasksSelector } from "../atoms";
+import { graphState } from "../atoms";
 import Task from "../Task/Task";
 
 type Props = {
@@ -72,10 +72,7 @@ const GraphCanvas = ({ updateGraph }: Props): JSX.Element => {
 
   const itemsContainerTransform = `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`;
 
-  const graph = useRecoilValue(graphState);
-  const tasks = useRecoilValue(graphTasksSelector);
-
-  useEffect(() => console.log(graph), [graph]);
+  const { tasks } = useRecoilValue(graphState);
 
   return (
     <div
@@ -108,15 +105,8 @@ const GraphCanvas = ({ updateGraph }: Props): JSX.Element => {
             </marker>
           </defs>
         </svg>
-        {tasks.map((task) => (
-          <MemoisedTask
-            key={task.id}
-            id={task.id}
-            name={task.name}
-            x={task.position.x}
-            y={task.position.y}
-            completed={false}
-          />
+        {tasks.map((id) => (
+          <MemoisedTask key={id} id={id} />
         ))}
       </div>
     </div>
