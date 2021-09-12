@@ -1,5 +1,5 @@
-import { Point } from "@/geometry";
-import { atom, atomFamily } from "recoil";
+import { Box, Point } from "@/geometry";
+import { atom, atomFamily, selectorFamily } from "recoil";
 
 type TaskId = string;
 
@@ -48,4 +48,43 @@ const graphState = atom<Graph>({
   },
 });
 
-export { graphState, dependencyStateFamily, taskStateFamily };
+type BoxSize = {
+  width: number;
+  height: number;
+};
+
+const taskBoxSizeStateFamily = atomFamily<BoxSize, TaskId>({
+  key: "TaskBoxSize",
+  default: {
+    width: 0,
+    height: 0,
+  },
+});
+
+const taskBoxSelector = selectorFamily<Box, TaskId>({
+  key: "TaskExtendedBoudingBox",
+  get:
+    (id) =>
+    ({ get }) => {
+      const { width, height } = get(taskBoxSizeStateFamily(id));
+      const {
+        position: { x, y },
+      } = get(taskStateFamily(id));
+      return {
+        left: x,
+        right: x + width,
+        top: y,
+        bottom: y + height,
+        width,
+        height,
+      };
+    },
+});
+
+export {
+  graphState,
+  dependencyStateFamily,
+  taskStateFamily,
+  taskBoxSizeStateFamily,
+  taskBoxSelector,
+};
