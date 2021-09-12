@@ -1,16 +1,18 @@
-import React, { useEffect, useRef, useState } from "react";
-import { initGraph, loadGraph } from "@/graph";
+import React, { memo, useEffect, useRef, useState } from "react";
+import { initGraph } from "@/graph";
 
 import "./GraphCanvas.css";
 import { snap } from "@/misc";
 import useKeyboardShortcuts from "@/useKeyboardShortcuts";
-import { loadFromLocalStorage } from "@/storage";
 import { useRecoilValue } from "recoil";
-import { graphState } from "../atoms";
+import { graphState, graphTasksSelector } from "../atoms";
+import Task from "../Task/Task";
 
 type Props = {
   updateGraph: () => void;
 };
+
+const MemoisedTask = memo(Task);
 
 const GraphCanvas = ({ updateGraph }: Props): JSX.Element => {
   useEffect(initGraph, []);
@@ -68,15 +70,10 @@ const GraphCanvas = ({ updateGraph }: Props): JSX.Element => {
     };
   }, [updateGraph]);
 
-  useEffect(() => {
-    const graph = loadFromLocalStorage();
-    if (graph) loadGraph(graph);
-    updateGraph();
-  }, [updateGraph]);
-
   const itemsContainerTransform = `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`;
 
   const graph = useRecoilValue(graphState);
+  const tasks = useRecoilValue(graphTasksSelector);
 
   useEffect(() => console.log(graph), [graph]);
 
@@ -111,6 +108,16 @@ const GraphCanvas = ({ updateGraph }: Props): JSX.Element => {
             </marker>
           </defs>
         </svg>
+        {tasks.map((task) => (
+          <MemoisedTask
+            key={task.id}
+            id={task.id}
+            name={task.name}
+            x={task.position.x}
+            y={task.position.y}
+            completed={false}
+          />
+        ))}
       </div>
     </div>
   );
