@@ -162,3 +162,5 @@ export {
   graphTasksSelector,
   graphDependenciesSelector,
 };
+
+export type { TaskId };

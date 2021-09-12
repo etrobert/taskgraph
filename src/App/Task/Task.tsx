@@ -1,10 +1,10 @@
 import React from "react";
 import { useRecoilValue } from "recoil";
-import { taskStateFamily } from "../atoms";
+import { TaskId, taskStateFamily } from "../atoms";
 import "./Task.css";
 
 type Props = {
-  id: string; // TODO Replace with TaskId
+  id: TaskId;
 };
 
 // TODO Use BEM notation for completed
