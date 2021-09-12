@@ -136,7 +136,7 @@ const dependencyPathSelectorFamily = selectorFamily<string, DependencyId>({
     },
 });
 
-const tasksSelector = selector({
+const graphTasksSelector = selector({
   key: "Tasks",
   get: ({ get }) => {
     const { tasks } = get(graphState);
@@ -144,7 +144,7 @@ const tasksSelector = selector({
   },
 });
 
-const dependenciesSelector = selector({
+const graphDependenciesSelector = selector({
   key: "Dependencies",
   get: ({ get }) => {
     const { dependencies } = get(graphState);
@@ -159,6 +159,6 @@ export {
   taskBoxSizeStateFamily,
   taskBoxSelectorFamily,
   dependencyPathSelectorFamily,
-  tasksSelector,
-  dependenciesSelector,
+  graphTasksSelector,
+  graphDependenciesSelector,
 };
