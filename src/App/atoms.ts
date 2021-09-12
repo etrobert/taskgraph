@@ -1,4 +1,10 @@
-import { Box, Point } from "@/geometry";
+import {
+  Box,
+  getBoxCenter,
+  getExpandedBox,
+  intersectLineBox,
+  Point,
+} from "@/geometry";
 import { atom, atomFamily, selectorFamily } from "recoil";
 
 type TaskId = string;
@@ -81,10 +87,60 @@ const taskBoxSelectorFamily = selectorFamily<Box, TaskId>({
     },
 });
 
+const taskCenterSelectorFamily = selectorFamily<Point, TaskId>({
+  key: "TaskCenter",
+  get:
+    (id) =>
+    ({ get }) => {
+      const box = get(taskBoxSelectorFamily(id));
+
+      return getBoxCenter(box);
+    },
+});
+
+const dependencyPathSelectorFamily = selectorFamily<string, DependencyId>({
+  key: "DependencyPath",
+  get:
+    (id) =>
+    ({ get }) => {
+      const { predecessor, successor } = get(dependencyStateFamily(id));
+      const predecessorCenter = get(taskCenterSelectorFamily(predecessor));
+      const successorCenter = get(taskCenterSelectorFamily(successor));
+
+      const offset = 8;
+
+      const predecessorBox = get(taskBoxSelectorFamily(predecessor));
+      const expandedPredecessorBox = getExpandedBox(predecessorBox, offset);
+
+      const pathPointPredecessor = intersectLineBox(
+        predecessorCenter,
+        successorCenter,
+        expandedPredecessorBox
+      );
+
+      const successorBox = get(taskBoxSelectorFamily(successor));
+      const expandedSuccessorBox = getExpandedBox(successorBox, offset);
+
+      const pathPointSuccessor = intersectLineBox(
+        predecessorCenter,
+        successorCenter,
+        expandedSuccessorBox
+      );
+
+      // TODO handle this error properly
+      if (pathPointPredecessor === null || pathPointSuccessor === null)
+        return "";
+
+      return `M${pathPointPredecessor.x},${pathPointPredecessor.y}
+              L${pathPointSuccessor.x},${pathPointSuccessor.y}`;
+    },
+});
+
 export {
   graphState,
   dependencyStateFamily,
   taskStateFamily,
   taskBoxSizeStateFamily,
   taskBoxSelectorFamily,
+  dependencyPathSelectorFamily,
 };
