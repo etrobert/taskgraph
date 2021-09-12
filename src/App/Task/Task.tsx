@@ -17,7 +17,7 @@ const Task = ({ id }: Props): JSX.Element => {
   const completed = "completed"; // TODO Add completion state to Task
   return (
     <div
-      className={`task ${completed ? "completed" : ""}`}
+      className={`Task ${completed ? "completed" : ""}`}
       style={{ left: x, top: y }}
       id={id}
     >

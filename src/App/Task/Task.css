@@ -1,4 +1,4 @@
-.task {
+.Task {
   -webkit-tap-highlight-color: transparent;
   user-select: none;
   border-radius: 3px;
@@ -15,20 +15,20 @@
   white-space: nowrap;
 }
 
-.task:hover {
+.Task:hover {
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
 }
 
-.task.dragged {
+.Task.dragged {
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
   z-index: 1;
 }
 
-.task.completed {
+.Task.completed {
   opacity: 25%;
 }
 
-.task.completed::before {
+.Task.completed::before {
   content: "";
   position: absolute;
   --thickness: 0.2em;
