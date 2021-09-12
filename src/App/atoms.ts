@@ -139,14 +139,16 @@ const dependencyPathSelectorFamily = selectorFamily<string, DependencyId>({
 const tasksSelector = selector({
   key: "Tasks",
   get: ({ get }) => {
-    return get(graphState).tasks.map((id) => get(taskStateFamily(id)));
+    const { tasks } = get(graphState);
+    return tasks.map((id) => get(taskStateFamily(id)));
   },
 });
 
 const dependenciesSelector = selector({
   key: "Dependencies",
   get: ({ get }) => {
-    return get(graphState).dependencies.map((id) => get(taskStateFamily(id)));
+    const { dependencies } = get(graphState);
+    return dependencies.map((id) => get(taskStateFamily(id)));
   },
 });
 
