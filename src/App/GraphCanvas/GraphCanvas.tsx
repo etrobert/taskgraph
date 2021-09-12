@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { initGraph, loadGraph } from "@/graph";
 
-import "./Graph.css";
+import "./GraphCanvas.css";
 import { snap } from "@/misc";
 import useKeyboardShortcuts from "@/useKeyboardShortcuts";
 import { loadFromLocalStorage } from "@/storage";
@@ -10,7 +10,7 @@ type Props = {
   updateGraph: () => void;
 };
 
-const Graph = ({ updateGraph }: Props): JSX.Element => {
+const GraphCanvas = ({ updateGraph }: Props): JSX.Element => {
   useEffect(initGraph, []);
 
   const [pan, setPan] = useState({ x: 0, y: 0 });
@@ -110,4 +110,4 @@ const Graph = ({ updateGraph }: Props): JSX.Element => {
   );
 };
 
-export default Graph;
+export default GraphCanvas;

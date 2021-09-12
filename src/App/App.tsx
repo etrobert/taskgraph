@@ -16,7 +16,7 @@ import useAppShortcuts from "./useAppShortcuts";
 import Toolbar from "./Toolbar/Toolbar";
 import GraphInput from "./GraphInput";
 import useTasksSelected from "./useTasksSelected";
-import GraphComponent from "./Graph/Graph";
+import GraphCanvas from "./GraphCanvas/GraphCanvas";
 import NewTaskInput from "./NewTaskInput/NewTaskInput";
 
 import "./App.css";
@@ -91,7 +91,7 @@ const App = (): JSX.Element => {
         onDelete={onDelete}
       />
 
-      <GraphComponent updateGraph={updateGraph} />
+      <GraphCanvas updateGraph={updateGraph} />
 
       {insertMode && (
         <NewTaskInput
