@@ -7,7 +7,6 @@ import useKeyboardShortcuts from "@/useKeyboardShortcuts";
 import { loadFromLocalStorage } from "@/storage";
 import { useRecoilValue } from "recoil";
 import { graphState } from "../atoms";
-import useGraphState from "../useGraphState";
 
 type Props = {
   updateGraph: () => void;
@@ -81,8 +80,6 @@ const GraphCanvas = ({ updateGraph }: Props): JSX.Element => {
 
   useEffect(() => console.log(graph), [graph]);
 
-  const { clearGraph } = useGraphState();
-
   return (
     <div
       onWheel={onWheel}
@@ -92,7 +89,7 @@ const GraphCanvas = ({ updateGraph }: Props): JSX.Element => {
       data-pan-y={pan.y}
       data-zoom={zoom}
     >
-      <p className="Graph__zoom-indicator" onClick={clearGraph}>
+      <p className="Graph__zoom-indicator">
         {zoom !== 1 && Math.floor(zoom * 100) + "% zoom"}
       </p>
       <div id="itemsContainer" style={{ transform: itemsContainerTransform }}>

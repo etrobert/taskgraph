@@ -1,8 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 
 import {
-  addTask,
-  clearGraph,
   completeSelected,
   deleteSelected,
   loadGraph,
@@ -20,6 +18,7 @@ import GraphCanvas from "./GraphCanvas/GraphCanvas";
 import NewTaskInput from "./NewTaskInput/NewTaskInput";
 
 import "./App.css";
+import useGraphState from "./useGraphState";
 
 const App = (): JSX.Element => {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -38,6 +37,8 @@ const App = (): JSX.Element => {
 
   const [graph, setGraph] = useState<GraphData>();
   const updateGraph = useCallback(() => setGraph(getGraph()), []);
+
+  const { addTask, clearGraph } = useGraphState();
 
   // Update localstorage when graph is updated
   useEffect(() => graph && saveToLocalStorage(graph), [graph]);
@@ -96,7 +97,7 @@ const App = (): JSX.Element => {
       {insertMode && (
         <NewTaskInput
           onNewTask={(task) => {
-            addTask(task);
+            addTask(task.name);
             updateGraph();
             setInsertMode(false);
           }}
