@@ -61,7 +61,7 @@ const taskBoxSizeStateFamily = atomFamily<BoxSize, TaskId>({
   },
 });
 
-const taskBoxSelector = selectorFamily<Box, TaskId>({
+const taskBoxSelectorFamily = selectorFamily<Box, TaskId>({
   key: "TaskExtendedBoudingBox",
   get:
     (id) =>
@@ -86,5 +86,5 @@ export {
   dependencyStateFamily,
   taskStateFamily,
   taskBoxSizeStateFamily,
-  taskBoxSelector,
+  taskBoxSelectorFamily,
 };
