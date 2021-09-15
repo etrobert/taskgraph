@@ -7,6 +7,8 @@ import { useRecoilValue } from "recoil";
 import { graphState } from "../atoms";
 import Task from "../Task/Task";
 import Dependency from "../Dependency/Dependency";
+import { DraggableCore } from "react-draggable";
+import { addPoints } from "@/geometry";
 
 type Props = {
   updateGraph: () => void;
@@ -71,44 +73,50 @@ const GraphCanvas = ({ updateGraph }: Props): JSX.Element => {
   const { tasks, dependencies } = useRecoilValue(graphState);
 
   return (
-    <div
-      onWheel={onWheel}
-      id="graph"
-      ref={graphRef}
-      data-pan-x={pan.x}
-      data-pan-y={pan.y}
-      data-zoom={zoom}
+    <DraggableCore
+      onDrag={(e, data) =>
+        setPan((pan) => addPoints(pan, { x: data.deltaX, y: data.deltaY }))
+      }
     >
-      <p className="Graph__zoom-indicator">
-        {zoom !== 1 && Math.floor(zoom * 100) + "% zoom"}
-      </p>
-      <div id="itemsContainer" style={{ transform: itemsContainerTransform }}>
-        <svg id="arrows">
-          <defs>
-            <marker
-              id="Triangle"
-              viewBox="0 0 5 5"
-              refX="2"
-              refY="2.5"
-              markerWidth="2"
-              markerHeight="2"
-              orient="auto"
-            >
-              <path
-                d="M 0 0 L 5 2.5 L 0 5 z"
-                className="link-arrow-triangle-path"
-              />
-            </marker>
-          </defs>
-          {dependencies.map((id) => (
-            <Dependency key={id} id={id} />
+      <div
+        onWheel={onWheel}
+        id="graph"
+        ref={graphRef}
+        data-pan-x={pan.x}
+        data-pan-y={pan.y}
+        data-zoom={zoom}
+      >
+        <p className="Graph__zoom-indicator">
+          {zoom !== 1 && Math.floor(zoom * 100) + "% zoom"}
+        </p>
+        <div id="itemsContainer" style={{ transform: itemsContainerTransform }}>
+          <svg id="arrows">
+            <defs>
+              <marker
+                id="Triangle"
+                viewBox="0 0 5 5"
+                refX="2"
+                refY="2.5"
+                markerWidth="2"
+                markerHeight="2"
+                orient="auto"
+              >
+                <path
+                  d="M 0 0 L 5 2.5 L 0 5 z"
+                  className="link-arrow-triangle-path"
+                />
+              </marker>
+            </defs>
+            {dependencies.map((id) => (
+              <Dependency key={id} id={id} />
+            ))}
+          </svg>
+          {tasks.map((id) => (
+            <Task key={id} id={id} />
           ))}
-        </svg>
-        {tasks.map((id) => (
-          <Task key={id} id={id} />
-        ))}
+        </div>
       </div>
-    </div>
+    </DraggableCore>
   );
 };
 
