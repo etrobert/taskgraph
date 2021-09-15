@@ -10,9 +10,11 @@ import Draggable from "react-draggable";
 
 type Props = {
   id: TaskId;
+  onDragStart: () => void;
+  onDragStop: () => void;
 };
 
-const Task = ({ id }: Props): JSX.Element => {
+const Task = ({ id, onDragStart, onDragStop }: Props): JSX.Element => {
   const {
     position: { x, y },
     name,
@@ -28,7 +30,7 @@ const Task = ({ id }: Props): JSX.Element => {
   });
 
   return (
-    <Draggable>
+    <Draggable onStart={onDragStart} onStop={onDragStop}>
       <div
         ref={ref}
         className={`Task ${status === "completed" ? "Task--completed" : ""}`}

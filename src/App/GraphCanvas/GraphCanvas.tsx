@@ -18,6 +18,9 @@ const GraphCanvas = ({ updateGraph }: Props): JSX.Element => {
   const [pan, setPan] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
 
+  // Used to not drag the background when a task is being dragged
+  const [draggedTasksCount, setDraggedTasksCount] = useState(0);
+
   const onWheel: React.WheelEventHandler = (event) => {
     const factor = event.deltaY < 0 ? 1.1 : 0.9;
     const target = 1;
@@ -74,9 +77,10 @@ const GraphCanvas = ({ updateGraph }: Props): JSX.Element => {
 
   return (
     <DraggableCore
-      onDrag={(e, data) =>
-        setPan((pan) => addPoints(pan, { x: data.deltaX, y: data.deltaY }))
-      }
+      onDrag={(e, data) => {
+        if (draggedTasksCount === 0)
+          setPan((pan) => addPoints(pan, { x: data.deltaX, y: data.deltaY }));
+      }}
     >
       <div
         onWheel={onWheel}
@@ -112,7 +116,12 @@ const GraphCanvas = ({ updateGraph }: Props): JSX.Element => {
             ))}
           </svg>
           {tasks.map((id) => (
-            <Task key={id} id={id} />
+            <Task
+              key={id}
+              id={id}
+              onDragStart={() => setDraggedTasksCount((count) => count + 1)}
+              onDragStop={() => setDraggedTasksCount((count) => count - 1)}
+            />
           ))}
         </div>
       </div>
