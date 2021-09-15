@@ -12,10 +12,6 @@ import { addPoints } from "@/geometry";
 
 /**
  * Interactive canvas displaying a Task Graph
- *
- * The outer div stays in place, receives the dragging events
- *
- * The inner div contains the tasks and dependencies and gets translated around
  */
 const GraphCanvas = (): JSX.Element => {
   const [pan, setPan] = useState({ x: 0, y: 0 });
@@ -54,10 +50,12 @@ const GraphCanvas = (): JSX.Element => {
           setPan((pan) => addPoints(pan, { x: data.deltaX, y: data.deltaY }));
       }}
     >
+      {/* The outer div stays in place, receives the dragging events */}
       <div onWheel={onWheel} id="graph">
         <p className="Graph__zoom-indicator">
           {zoom !== 1 && Math.floor(zoom * 100) + "% zoom"}
         </p>
+        {/* The inner div contains the tasks and dependencies and gets translated around */}
         <div style={{ transform: itemsContainerTransform }}>
           <svg id="arrows">
             <defs>
