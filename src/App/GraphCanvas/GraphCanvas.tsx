@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import { initGraph } from "@/graph";
 
 import "./GraphCanvas.css";
 import { snap } from "@/misc";
@@ -14,8 +13,6 @@ type Props = {
 };
 
 const GraphCanvas = ({ updateGraph }: Props): JSX.Element => {
-  useEffect(initGraph, []);
-
   const [pan, setPan] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
 

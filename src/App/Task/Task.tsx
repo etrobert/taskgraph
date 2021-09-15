@@ -6,6 +6,7 @@ import useBoxSizeObserver from "@/useBoxSizeObserver";
 import { taskBoxSizeStateFamily, TaskId, taskStateFamily } from "../atoms";
 
 import "./Task.css";
+import Draggable from "react-draggable";
 
 type Props = {
   id: TaskId;
@@ -27,14 +28,16 @@ const Task = ({ id }: Props): JSX.Element => {
   });
 
   return (
-    <div
-      ref={ref}
-      className={`Task ${status === "completed" ? "Task--completed" : ""}`}
-      style={{ left: x, top: y }}
-      id={id}
-    >
-      {name}
-    </div>
+    <Draggable>
+      <div
+        ref={ref}
+        className={`Task ${status === "completed" ? "Task--completed" : ""}`}
+        style={{ left: x, top: y }}
+        id={id}
+      >
+        {name}
+      </div>
+    </Draggable>
   );
 };
 
