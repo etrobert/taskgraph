@@ -121,6 +121,7 @@ const GraphCanvas = ({ updateGraph }: Props): JSX.Element => {
               id={id}
               onDragStart={() => setDraggedTasksCount((count) => count + 1)}
               onDragStop={() => setDraggedTasksCount((count) => count - 1)}
+              zoom={zoom}
             />
           ))}
         </div>

@@ -12,9 +12,10 @@ type Props = {
   id: TaskId;
   onDragStart: () => void;
   onDragStop: () => void;
+  zoom: number;
 };
 
-const Task = ({ id, onDragStart, onDragStop }: Props): JSX.Element => {
+const Task = ({ id, onDragStart, onDragStop, zoom }: Props): JSX.Element => {
   const {
     position: { x, y },
     name,
@@ -30,7 +31,7 @@ const Task = ({ id, onDragStart, onDragStop }: Props): JSX.Element => {
   });
 
   return (
-    <Draggable onStart={onDragStart} onStop={onDragStop}>
+    <Draggable onStart={onDragStart} onStop={onDragStop} scale={zoom}>
       <div
         ref={ref}
         className={`Task ${status === "completed" ? "Task--completed" : ""}`}
