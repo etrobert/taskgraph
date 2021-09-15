@@ -9,10 +9,14 @@ import { atom, atomFamily, selector, selectorFamily } from "recoil";
 
 type TaskId = string;
 
+// See https://en.wikipedia.org/wiki/Task_management
+type TaskStatus = "ready" | "completed";
+
 type Task = {
   id: TaskId;
   name: string;
   position: Point;
+  status: TaskStatus;
 };
 
 type DependencyId = string;
@@ -34,6 +38,7 @@ const taskStateFamily = atomFamily<Task, TaskId>({
     id: "DEFAULT-TASK-ID",
     name: "DEFAULT-TASK-NAME",
     position: { x: 0, y: 0 },
+    status: "ready",
   },
 });
 
@@ -162,3 +167,5 @@ export {
   graphTasksSelector,
   graphDependenciesSelector,
 };
+
+export type { TaskId };

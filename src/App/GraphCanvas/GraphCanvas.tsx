@@ -6,6 +6,7 @@ import { snap } from "@/misc";
 import useKeyboardShortcuts from "@/useKeyboardShortcuts";
 import { useRecoilValue } from "recoil";
 import { graphState } from "../atoms";
+import Task from "../Task/Task";
 
 const GraphCanvas = (): JSX.Element => {
   useEffect(initGraph, []);
@@ -52,9 +53,7 @@ const GraphCanvas = (): JSX.Element => {
 
   const itemsContainerTransform = `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`;
 
-  const graph = useRecoilValue(graphState);
-
-  useEffect(() => console.log(graph), [graph]);
+  const { tasks } = useRecoilValue(graphState);
 
   return (
     <div
@@ -87,6 +86,9 @@ const GraphCanvas = (): JSX.Element => {
             </marker>
           </defs>
         </svg>
+        {tasks.map((id) => (
+          <Task key={id} id={id} />
+        ))}
       </div>
     </div>
   );
