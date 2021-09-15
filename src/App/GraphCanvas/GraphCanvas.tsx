@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 
 import "./GraphCanvas.css";
 import { snap } from "@/misc";
@@ -10,11 +10,7 @@ import Dependency from "../Dependency/Dependency";
 import { DraggableCore } from "react-draggable";
 import { addPoints } from "@/geometry";
 
-type Props = {
-  updateGraph: () => void;
-};
-
-const GraphCanvas = ({ updateGraph }: Props): JSX.Element => {
+const GraphCanvas = (): JSX.Element => {
   const [pan, setPan] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
 
@@ -28,8 +24,6 @@ const GraphCanvas = ({ updateGraph }: Props): JSX.Element => {
     setZoom(snap(target)(offset)(zoom * factor));
   };
 
-  const graphRef = useRef<HTMLDivElement>(null);
-
   useKeyboardShortcuts({
     center: {
       keys: ["0"],
@@ -42,35 +36,6 @@ const GraphCanvas = ({ updateGraph }: Props): JSX.Element => {
     },
   });
 
-  // Update pan when the graph sends a graphmoved event
-  useEffect(() => {
-    if (!graphRef.current) return;
-    const element = graphRef.current;
-    const handler = (event: Event) => {
-      const {
-        detail: { pan },
-      } = event as CustomEvent<{
-        pan: { x: number; y: number };
-      }>;
-      setPan(pan);
-    };
-    element.addEventListener("graphmoved", handler);
-    return () => element.removeEventListener("graphmoved", handler);
-  });
-
-  // Update react state when graph is updated
-  useEffect(() => {
-    if (!graphRef.current) return;
-    const graph = graphRef.current;
-
-    graph.addEventListener("taskmoved", updateGraph);
-    graph.addEventListener("newdependency", updateGraph);
-    return () => {
-      graph.removeEventListener("taskmoved", updateGraph);
-      graph.removeEventListener("newdependency", updateGraph);
-    };
-  }, [updateGraph]);
-
   const itemsContainerTransform = `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`;
 
   const { tasks, dependencies } = useRecoilValue(graphState);
@@ -82,18 +47,11 @@ const GraphCanvas = ({ updateGraph }: Props): JSX.Element => {
           setPan((pan) => addPoints(pan, { x: data.deltaX, y: data.deltaY }));
       }}
     >
-      <div
-        onWheel={onWheel}
-        id="graph"
-        ref={graphRef}
-        data-pan-x={pan.x}
-        data-pan-y={pan.y}
-        data-zoom={zoom}
-      >
+      <div onWheel={onWheel} id="graph">
         <p className="Graph__zoom-indicator">
           {zoom !== 1 && Math.floor(zoom * 100) + "% zoom"}
         </p>
-        <div id="itemsContainer" style={{ transform: itemsContainerTransform }}>
+        <div style={{ transform: itemsContainerTransform }}>
           <svg id="arrows">
             <defs>
               <marker

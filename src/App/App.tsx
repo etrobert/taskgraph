@@ -92,7 +92,7 @@ const App = (): JSX.Element => {
         onDelete={onDelete}
       />
 
-      <GraphCanvas updateGraph={updateGraph} />
+      <GraphCanvas />
 
       {insertMode && (
         <NewTaskInput
