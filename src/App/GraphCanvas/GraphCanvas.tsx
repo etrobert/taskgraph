@@ -10,6 +10,13 @@ import Dependency from "../Dependency/Dependency";
 import { DraggableCore } from "react-draggable";
 import { addPoints } from "@/geometry";
 
+/**
+ * Interactive canvas displaying a Task Graph
+ *
+ * The outer div stays in place, receives the dragging events
+ *
+ * The inner div contains the tasks and dependencies and gets translated around
+ */
 const GraphCanvas = (): JSX.Element => {
   const [pan, setPan] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
