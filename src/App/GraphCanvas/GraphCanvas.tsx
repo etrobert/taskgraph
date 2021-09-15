@@ -1,12 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
-import { initGraph, loadGraph } from "@/graph";
+import { initGraph } from "@/graph";
 
 import "./GraphCanvas.css";
 import { snap } from "@/misc";
 import useKeyboardShortcuts from "@/useKeyboardShortcuts";
-import { loadFromLocalStorage } from "@/storage";
 import { useRecoilValue } from "recoil";
 import { graphState } from "../atoms";
+import Task from "../Task/Task";
 
 type Props = {
   updateGraph: () => void;
@@ -68,17 +68,9 @@ const GraphCanvas = ({ updateGraph }: Props): JSX.Element => {
     };
   }, [updateGraph]);
 
-  useEffect(() => {
-    const graph = loadFromLocalStorage();
-    if (graph) loadGraph(graph);
-    updateGraph();
-  }, [updateGraph]);
-
   const itemsContainerTransform = `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`;
 
-  const graph = useRecoilValue(graphState);
-
-  useEffect(() => console.log(graph), [graph]);
+  const { tasks } = useRecoilValue(graphState);
 
   return (
     <div
@@ -111,6 +103,9 @@ const GraphCanvas = ({ updateGraph }: Props): JSX.Element => {
             </marker>
           </defs>
         </svg>
+        {tasks.map((id) => (
+          <Task key={id} id={id} />
+        ))}
       </div>
     </div>
   );
