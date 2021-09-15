@@ -18,7 +18,8 @@ const useGraphState: UseGraphState = () => {
         id,
         name,
         position: { x: 0, y: 0 },
-      });
+        status: "ready",
+      } as const);
       set(graphState, (graph) => ({ ...graph, tasks: [...graph.tasks, id] }));
     }
   );
