@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { initGraph } from "@/graph";
 
 import "./GraphCanvas.css";
@@ -11,8 +11,6 @@ import Task from "../Task/Task";
 type Props = {
   updateGraph: () => void;
 };
-
-const MemoisedTask = memo(Task);
 
 const GraphCanvas = ({ updateGraph }: Props): JSX.Element => {
   useEffect(initGraph, []);
@@ -106,7 +104,7 @@ const GraphCanvas = ({ updateGraph }: Props): JSX.Element => {
           </defs>
         </svg>
         {tasks.map((id) => (
-          <MemoisedTask key={id} id={id} />
+          <Task key={id} id={id} />
         ))}
       </div>
     </div>
