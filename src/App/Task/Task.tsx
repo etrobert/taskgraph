@@ -1,7 +1,8 @@
 import React, { useEffect, useRef } from "react";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import Draggable from "react-draggable";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import { DraggableCore } from "react-draggable";
 
+import { addPoints } from "@/geometry";
 import useBoxSizeObserver from "@/useBoxSizeObserver";
 import { taskBoxSizeStateFamily, TaskId, taskStateFamily } from "@/atoms";
 
@@ -15,11 +16,14 @@ type Props = {
 };
 
 const Task = ({ id, onDragStart, onDragStop, zoom }: Props): JSX.Element => {
-  const {
-    position: { x, y },
-    name,
-    status,
-  } = useRecoilValue(taskStateFamily(id));
+  const [
+    {
+      position: { x, y },
+      name,
+      status,
+    },
+    setTask,
+  ] = useRecoilState(taskStateFamily(id));
 
   const setBoxSize = useSetRecoilState(taskBoxSizeStateFamily(id));
 
@@ -30,7 +34,20 @@ const Task = ({ id, onDragStart, onDragStop, zoom }: Props): JSX.Element => {
   });
 
   return (
-    <Draggable onStart={onDragStart} onStop={onDragStop} scale={zoom}>
+    <DraggableCore
+      onDrag={(e, data) =>
+        setTask((task) => ({
+          ...task,
+          position: addPoints(task.position, {
+            x: data.deltaX,
+            y: data.deltaY,
+          }),
+        }))
+      }
+      onStart={onDragStart}
+      onStop={onDragStop}
+      scale={zoom}
+    >
       <div
         ref={ref}
         className={`Task ${status === "completed" ? "Task--completed" : ""}`}
@@ -39,7 +56,7 @@ const Task = ({ id, onDragStart, onDragStop, zoom }: Props): JSX.Element => {
       >
         {name}
       </div>
-    </Draggable>
+    </DraggableCore>
   );
 };
 
