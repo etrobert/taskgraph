@@ -1,6 +1,10 @@
-import React from "react";
-import { useRecoilValue } from "recoil";
-import { TaskId, taskStateFamily } from "../atoms";
+import React, { useEffect, useRef } from "react";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+
+import useBoxSizeObserver from "@/useBoxSizeObserver";
+
+import { taskBoxSizeStateFamily, TaskId, taskStateFamily } from "../atoms";
+
 import "./Task.css";
 
 type Props = {
@@ -13,8 +17,16 @@ const Task = ({ id }: Props): JSX.Element => {
     name,
     status,
   } = useRecoilValue(taskStateFamily(id));
+
+  const setBoxSize = useSetRecoilState(taskBoxSizeStateFamily(id));
+
+  const ref = useRef<HTMLDivElement>(null);
+  const boxSize = useBoxSizeObserver(ref);
+  useEffect(() => boxSize && setBoxSize(boxSize), [boxSize, setBoxSize]);
+
   return (
     <div
+      ref={ref}
       className={`Task ${status === "completed" ? "Task--completed" : ""}`}
       style={{ left: x, top: y }}
       id={id}

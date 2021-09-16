@@ -168,4 +168,4 @@ export {
   graphDependenciesSelector,
 };
 
-export type { DependencyId, TaskId };
+export type { BoxSize, DependencyId, TaskId };
