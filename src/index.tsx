@@ -3,11 +3,7 @@ import ReactDOM from "react-dom";
 import { RecoilRoot } from "recoil";
 
 import App from "./App/App";
-import {
-  dependencyStateFamily,
-  graphState,
-  taskStateFamily,
-} from "./App/atoms";
+import { dependencyStateFamily, graphState, taskStateFamily } from "./atoms";
 
 const graphMockState = {
   tasks: ["task-1", "task-2"],

@@ -1,6 +1,7 @@
 import React from "react";
 import { useRecoilValue } from "recoil";
-import { DependencyId, dependencyPathSelectorFamily } from "../atoms";
+
+import { DependencyId, dependencyPathSelectorFamily } from "@/atoms";
 
 type Props = {
   id: DependencyId;

@@ -1,5 +1,6 @@
 import { RefObject, useEffect, useMemo, useState } from "react";
-import { BoxSize } from "./App/atoms";
+
+import { BoxSize } from "./atoms";
 
 const useBoxSizeObserver = <T extends HTMLElement>(
   ref: RefObject<T>

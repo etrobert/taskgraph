@@ -1,14 +1,16 @@
 import React, { useState } from "react";
-
-import "./GraphCanvas.css";
-import { snap } from "@/misc";
-import useKeyboardShortcuts from "@/useKeyboardShortcuts";
 import { useRecoilValue } from "recoil";
-import { graphState } from "../atoms";
+import { DraggableCore } from "react-draggable";
+
+import { snap } from "@/misc";
+import { addPoints } from "@/geometry";
+import useKeyboardShortcuts from "@/useKeyboardShortcuts";
+import { graphState } from "@/atoms";
+
 import Task from "../Task/Task";
 import Dependency from "../Dependency/Dependency";
-import { DraggableCore } from "react-draggable";
-import { addPoints } from "@/geometry";
+
+import "./GraphCanvas.css";
 
 /**
  * Interactive canvas displaying a Task Graph
