@@ -17,7 +17,8 @@ export function removeFromArray<T>(array: T[], element: T): void {
 /**
  * Snaps *value* to *target* if close to *target* by less than *offset*
  */
-export const snap = (target: number) => (offset: number) => (
-  value: number
-): number =>
-  value > target - offset && value < target + offset ? target : value;
+export const snap =
+  (target: number) =>
+  (offset: number) =>
+  (value: number): number =>
+    value > target - offset && value < target + offset ? target : value;
