@@ -26,6 +26,13 @@ export function squaredDistance(p1: Point, p2: Point): number {
   return (p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y);
 }
 
+export function addPoints(p1: Point, p2: Point): Point {
+  return {
+    x: p1.x + p2.x,
+    y: p1.y + p2.y,
+  };
+}
+
 export function getBoxCenter(box: Box): Point {
   return {
     x: box.left + box.width / 2,
