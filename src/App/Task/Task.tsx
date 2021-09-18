@@ -1,12 +1,11 @@
 import React, { useEffect, useRef } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
+import Draggable from "react-draggable";
 
 import useBoxSizeObserver from "@/useBoxSizeObserver";
-
-import { taskBoxSizeStateFamily, TaskId, taskStateFamily } from "../atoms";
+import { taskBoxSizeStateFamily, TaskId, taskStateFamily } from "@/atoms";
 
 import "./Task.css";
-import Draggable from "react-draggable";
 
 type Props = {
   id: TaskId;
