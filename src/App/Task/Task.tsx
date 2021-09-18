@@ -22,7 +22,9 @@ const Task = ({ id }: Props): JSX.Element => {
 
   const ref = useRef<HTMLDivElement>(null);
   const boxSize = useBoxSizeObserver(ref);
-  useEffect(() => boxSize && setBoxSize(boxSize), [boxSize, setBoxSize]);
+  useEffect(() => {
+    if (boxSize !== undefined) setBoxSize(boxSize), [boxSize, setBoxSize];
+  });
 
   return (
     <div
