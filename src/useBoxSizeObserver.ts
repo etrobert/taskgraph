@@ -6,7 +6,7 @@ const useBoxSizeObserver = <T extends HTMLElement>(
 ): BoxSize | undefined => {
   const [boxSize, setBoxSize] = useState<BoxSize>();
 
-  const ro = useMemo(
+  const observer = useMemo(
     () =>
       // TODO According to the Source, it is way more performant to have only one ResizeObserver
       // Source: https://www.npmjs.com/package/@react-hook/resize-observer
@@ -25,9 +25,9 @@ const useBoxSizeObserver = <T extends HTMLElement>(
   useEffect(() => {
     if (ref.current === null) return;
     const element = ref.current;
-    ro.observe(element);
-    return () => ro.unobserve(element);
-  }, [ref, ro]);
+    observer.observe(element);
+    return () => observer.unobserve(element);
+  }, [ref, observer]);
 
   return boxSize;
 };
