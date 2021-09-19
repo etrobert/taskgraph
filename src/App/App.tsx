@@ -14,7 +14,7 @@ import useGraphState from "./useGraphState";
 
 import "./App.css";
 
-const useFirebaseCallbacks = (id: string) => {
+const useFirebaseState = (id: string) => {
   const addTask = (name: string) => {
     const ref = collection(firestore, `projects/${id}/tasks`);
     const task = {
@@ -44,7 +44,7 @@ const App = (): JSX.Element => {
 
   const projectId = "spXxYVulTgfKcj0n1sWb";
 
-  const { addTask } = useFirebaseCallbacks(projectId);
+  const { addTask } = useFirebaseState(projectId);
 
   useSyncFirestore(projectId);
 
