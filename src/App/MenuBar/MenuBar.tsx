@@ -5,18 +5,10 @@ import "./MenuBar.css";
 type Props = {
   open: boolean;
   onClose: () => void;
-  onSave: () => void;
-  onLoad: () => void;
   onNewGraph: () => void;
 };
 
-const MenuBar = ({
-  open,
-  onClose,
-  onLoad,
-  onSave,
-  onNewGraph,
-}: Props): JSX.Element => {
+const MenuBar = ({ open, onClose, onNewGraph }: Props): JSX.Element => {
   return (
     <div className={`MenuBar ${open ? "MenuBar--open" : ""}`}>
       <h1 className="MenuBar__title">TaskGraph</h1>
@@ -27,12 +19,6 @@ const MenuBar = ({
       />
       <ul>
         <li>
-          <button onClick={onSave}>Save</button>
-        </li>
-        <li>
-          <button onClick={onLoad}>Load</button>
-        </li>
-        <li>
           <button onClick={onNewGraph}>New Graph</button>
         </li>
       </ul>
@@ -42,8 +28,6 @@ const MenuBar = ({
           <li>[I]: [I]nsert a new task</li>
           <li>[D]/[Delete]: [D]elete selected tasks</li>
           <li>[Ctrl+a]: Select [a]ll tasks</li>
-          <li>[Ctrl+s]: [S]ave to file</li>
-          <li>[Ctrl+o]: Load from file</li>
         </ul>
       </section>
       <a

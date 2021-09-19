@@ -13,20 +13,6 @@ const noopProps = {
 };
 
 describe("MenuBar", () => {
-  test("calls onLoad", () => {
-    const onLoad = jest.fn();
-    render(<MenuBar open {...noopProps} onLoad={onLoad} />);
-    userEvent.click(screen.getByText("Load"));
-    expect(onLoad).toHaveBeenCalled();
-  });
-
-  test("calls onSave", () => {
-    const onSave = jest.fn();
-    render(<MenuBar open {...noopProps} onSave={onSave} />);
-    userEvent.click(screen.getByText("Save"));
-    expect(onSave).toHaveBeenCalled();
-  });
-
   test("calls onNewGraph", () => {
     const onNewGraph = jest.fn();
     render(<MenuBar open {...noopProps} onNewGraph={onNewGraph} />);
