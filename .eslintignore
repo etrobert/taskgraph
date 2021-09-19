@@ -1,0 +1,3 @@
+# Configuration files - require module.exports
+.eslintrc.js
+*.config.js
