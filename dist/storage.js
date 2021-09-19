@@ -1,4 +1,4 @@
-import {getGraph, loadGraph} from "./graph.js";
+import {getGraph} from "./graph.js";
 function downloadFile(filename, text, type = "data:text/plain;charset=utf-8") {
   const element = document.createElement("a");
   element.setAttribute("href", `${type}, ${encodeURIComponent(text)}`);
@@ -12,15 +12,14 @@ function saveToFile() {
   const graph = getGraph();
   downloadFile("graph.json", JSON.stringify(graph, null, 2), "data:text/json;charset=utf-8");
 }
-function saveToLocalStorage() {
-  const graph = getGraph();
+function saveToLocalStorage(graph) {
   window.localStorage.setItem("graph", JSON.stringify(graph));
 }
 function loadFromLocalStorage() {
   const graphItem = window.localStorage.getItem("graph");
   if (!graphItem)
-    return;
+    return null;
   const graph = JSON.parse(graphItem);
-  loadGraph(graph);
+  return graph;
 }
 export {saveToFile, saveToLocalStorage, loadFromLocalStorage};

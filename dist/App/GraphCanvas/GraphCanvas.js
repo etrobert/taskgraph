@@ -1,10 +1,9 @@
 import React, {useEffect, useRef, useState} from "../../../snowpack/pkg/react.js";
 import {initGraph} from "../../graph.js";
-import "./Graph.css.proxy.js";
+import "./GraphCanvas.css.proxy.js";
 import {snap} from "../../misc.js";
 import useKeyboardShortcuts from "../../useKeyboardShortcuts.js";
-import {loadFromLocalStorage, saveToLocalStorage} from "../../storage.js";
-const Graph = () => {
+const GraphCanvas = () => {
   useEffect(initGraph, []);
   const [pan, setPan] = useState({x: 0, y: 0});
   const [zoom, setZoom] = useState(1);
@@ -39,18 +38,6 @@ const Graph = () => {
     element.addEventListener("graphmoved", handler);
     return () => element.removeEventListener("graphmoved", handler);
   });
-  useEffect(() => {
-    if (!graphRef.current)
-      return;
-    const graph = graphRef.current;
-    graph.addEventListener("taskmoved", saveToLocalStorage);
-    graph.addEventListener("newdependency", saveToLocalStorage);
-    return () => {
-      graph.removeEventListener("taskmoved", saveToLocalStorage);
-      graph.removeEventListener("newdependency", saveToLocalStorage);
-    };
-  }, []);
-  useEffect(loadFromLocalStorage, []);
   const itemsContainerTransform = `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`;
   return /* @__PURE__ */ React.createElement("div", {
     onWheel,
@@ -79,4 +66,4 @@ const Graph = () => {
     className: "link-arrow-triangle-path"
   }))))));
 };
-export default Graph;
+export default GraphCanvas;

@@ -1,7 +1,6 @@
-import {deleteSelected, selectAll} from "../graph.js";
-import {saveToFile, saveToLocalStorage} from "../storage.js";
+import {selectAll} from "../graph.js";
 import useKeyboardShortcuts from "../useKeyboardShortcuts.js";
-const getAppShortcuts = ({loadFromFile, onCreateTask}) => {
+const getAppShortcuts = ({onCreateTask, onDelete}) => {
   const selectAllShortcut = {
     keys: ["a"],
     callback: (event) => {
@@ -15,31 +14,12 @@ const getAppShortcuts = ({loadFromFile, onCreateTask}) => {
   };
   const deleteSelectedShortcut = {
     keys: ["d", "Delete"],
-    callback: () => {
-      deleteSelected();
-      saveToLocalStorage();
-    }
-  };
-  const openFile = {
-    keys: ["o"],
-    callback: (event) => {
-      if (event.ctrlKey)
-        loadFromFile();
-    }
-  };
-  const saveFile = {
-    keys: ["s"],
-    callback: (event) => {
-      if (event.ctrlKey)
-        saveToFile();
-    }
+    callback: onDelete
   };
   return {
     selectAll: selectAllShortcut,
     insert,
-    delete: deleteSelectedShortcut,
-    openFile,
-    saveFile
+    delete: deleteSelectedShortcut
   };
 };
 const useAppShortcuts = (props) => {
