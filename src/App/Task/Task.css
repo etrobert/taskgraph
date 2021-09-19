@@ -44,3 +44,18 @@
 .Task--selected {
   background-color: lightblue;
 }
+
+.Task__new-dependency-handle {
+  --size: 1.5rem;
+  width: var(--size);
+  height: var(--size);
+  background-color: black;
+  border-radius: var(--size);
+
+  position: absolute;
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  right: 0;
+  bottom: calc(- var(--size) / 2);
+}

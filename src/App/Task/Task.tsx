@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { DraggableCore } from "react-draggable";
 
 import { addPoints } from "@/geometry";
 import useBoxSizeObserver from "@/useBoxSizeObserver";
@@ -46,15 +47,16 @@ const Task = ({ id, onDragStart, onDragStop, zoom }: Props): JSX.Element => {
 
   return (
     <ClickableDraggableCore
-      onDrag={(e, data) =>
+      onDrag={(e, data) => {
+        if (e.defaultPrevented) return;
         setTask((task) => ({
           ...task,
           position: addPoints(task.position, {
             x: data.deltaX,
             y: data.deltaY,
           }),
-        }))
-      }
+        }));
+      }}
       onStart={onDragStart}
       onStop={onDragStop}
       onClick={(event) =>
@@ -75,6 +77,14 @@ const Task = ({ id, onDragStart, onDragStop, zoom }: Props): JSX.Element => {
         id={id}
       >
         {name}
+        <DraggableCore
+          onDrag={(event) => {
+            event.preventDefault();
+            console.log("dragging the handle");
+          }}
+        >
+          <div className={`Task__new-dependency-handle`} />
+        </DraggableCore>
       </div>
     </ClickableDraggableCore>
   );
