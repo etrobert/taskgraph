@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 import useSyncFirestore from "@/useSyncFirestore";
-import useFirebaseState from "@/useFirebaseState";
+import useFirestoreState from "@/useFirestoreState";
 
 import MenuBar from "./MenuBar/MenuBar";
 import useAppShortcuts from "./useAppShortcuts";
@@ -28,7 +28,7 @@ const App = (): JSX.Element => {
 
   const projectId = "spXxYVulTgfKcj0n1sWb";
 
-  const { addTask } = useFirebaseState(projectId);
+  const { addTask } = useFirestoreState(projectId);
 
   useSyncFirestore(projectId);
 
