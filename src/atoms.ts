@@ -57,6 +57,11 @@ const graphState = atom<Graph>({
   },
 });
 
+const selectedTasksState = atom<TaskId[]>({
+  key: "SelectedTasks",
+  default: [],
+});
+
 type BoxSize = {
   width: number;
   height: number;
@@ -164,6 +169,7 @@ export {
   dependencyPathSelectorFamily,
   graphTasksSelector,
   graphDependenciesSelector,
+  selectedTasksState,
 };
 
 export type { BoxSize, DependencyId, TaskId };

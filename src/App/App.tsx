@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import MenuBar from "./MenuBar/MenuBar";
 import useAppShortcuts from "./useAppShortcuts";
@@ -9,6 +9,8 @@ import NewTaskInput from "./NewTaskInput/NewTaskInput";
 
 import "./App.css";
 import useGraphState from "./useGraphState";
+import { useRecoilValue } from "recoil";
+import { selectedTasksState } from "@/atoms";
 
 const App = (): JSX.Element => {
   const [menuBarOpen, setMenuBarOpen] = useState(false);
@@ -30,6 +32,10 @@ const App = (): JSX.Element => {
     onDelete: () => {},
     onCreateTask,
   });
+
+  const selected = useRecoilValue(selectedTasksState);
+
+  useEffect(() => console.log(selected), [selected]);
 
   return (
     <>
