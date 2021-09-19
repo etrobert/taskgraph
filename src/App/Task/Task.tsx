@@ -12,6 +12,7 @@ import {
 } from "@/atoms";
 import ClickableDraggableCore from "@/ClickableDraggableCore/ClickableDraggableCore";
 import classNames from "@/classNames";
+import useFirestoreState from "@/useFirestoreState";
 
 import "./Task.css";
 
@@ -23,18 +24,16 @@ type Props = {
 };
 
 const Task = ({ id, onDragStart, onDragStop, zoom }: Props): JSX.Element => {
-  const [
-    {
-      position: { x, y },
-      name,
-      status,
-    },
-    setTask,
-  ] = useRecoilState(taskStateFamily(id));
+  const [{ position, name, status }, setTask] = useRecoilState(
+    taskStateFamily(id)
+  );
+  const { x, y } = position;
 
   const selected = useRecoilValue(taskSelectedSelectorFamily(id));
 
   const setBoxSize = useSetRecoilState(taskBoxSizeStateFamily(id));
+
+  const { updateTask } = useFirestoreState("spXxYVulTgfKcj0n1sWb");
 
   const ref = useRef<HTMLDivElement>(null);
   const boxSize = useBoxSizeObserver(ref);
@@ -56,7 +55,10 @@ const Task = ({ id, onDragStart, onDragStop, zoom }: Props): JSX.Element => {
         }))
       }
       onStart={onDragStart}
-      onStop={onDragStop}
+      onStop={() => {
+        updateTask(id, { position });
+        onDragStop();
+      }}
       onClick={(event) =>
         // If shift is pressed we add the task to the selected tasks
         // Else the task becomes the only selected task

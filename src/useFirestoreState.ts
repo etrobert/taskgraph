@@ -1,12 +1,12 @@
 import { useCallback } from "react";
-import { addDoc, collection, doc, setDoc } from "firebase/firestore";
+import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
 import { ProjectId, Task, TaskId } from "./atoms";
 
 import firestore from "./firestore";
 
 type UseFirestoreState = (projectId: ProjectId) => {
   addTask: (name: string) => void;
-  updateTask: (id: TaskId, task: Task) => void;
+  updateTask: (id: TaskId, task: Partial<Task>) => void;
 };
 
 const useFirestoreState: UseFirestoreState = (projectId) => {
@@ -24,8 +24,8 @@ const useFirestoreState: UseFirestoreState = (projectId) => {
   );
 
   const updateTask = useCallback(
-    (id: TaskId, task: Task) =>
-      setDoc(doc(firestore, `projects/${projectId}/tasks`, id), task),
+    (id, task) =>
+      updateDoc(doc(firestore, `projects/${projectId}/tasks`, id), task),
     [projectId]
   );
 
