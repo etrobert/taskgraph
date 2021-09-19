@@ -1,8 +1,7 @@
 import React, { useState } from "react";
-import { collection, addDoc } from "firebase/firestore";
 
-import firestore from "@/firestore";
 import useSyncFirestore from "@/useSyncFirestore";
+import useFirebaseState from "@/useFirebaseState";
 
 import MenuBar from "./MenuBar/MenuBar";
 import useAppShortcuts from "./useAppShortcuts";
@@ -13,21 +12,6 @@ import NewTaskInput from "./NewTaskInput/NewTaskInput";
 import useGraphState from "./useGraphState";
 
 import "./App.css";
-
-const useFirebaseState = (id: string) => {
-  const addTask = (name: string) => {
-    const ref = collection(firestore, `projects/${id}/tasks`);
-    const task = {
-      name,
-      position: { x: 0, y: 0 },
-      status: "ready",
-    };
-    return addDoc(ref, task);
-  };
-  return { addTask };
-};
-
-// addProject();
 
 const App = (): JSX.Element => {
   const [menuBarOpen, setMenuBarOpen] = useState(false);
