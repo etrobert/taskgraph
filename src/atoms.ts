@@ -62,6 +62,14 @@ const selectedTasksState = atom<TaskId[]>({
   default: [],
 });
 
+const taskSelectedSelectorFamily = selectorFamily<boolean, TaskId>({
+  key: "TaskSelected",
+  get:
+    (id) =>
+    ({ get }) =>
+      get(selectedTasksState).includes(id),
+});
+
 type BoxSize = {
   width: number;
   height: number;
@@ -170,6 +178,7 @@ export {
   graphTasksSelector,
   graphDependenciesSelector,
   selectedTasksState,
+  taskSelectedSelectorFamily,
 };
 
 export type { BoxSize, DependencyId, TaskId };
