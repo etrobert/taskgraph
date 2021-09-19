@@ -13,7 +13,6 @@ type TaskId = string;
 type TaskStatus = "ready" | "completed";
 
 type Task = {
-  id: TaskId;
   name: string;
   position: Point;
   status: TaskStatus;
@@ -35,7 +34,6 @@ export interface Graph {
 const taskStateFamily = atomFamily<Task, TaskId>({
   key: "Task",
   default: {
-    id: "DEFAULT-TASK-ID",
     name: "DEFAULT-TASK-NAME",
     position: { x: 0, y: 0 },
     status: "ready",
