@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { collection, addDoc, onSnapshot } from "firebase/firestore";
 
 import MenuBar from "./MenuBar/MenuBar";
 import useAppShortcuts from "./useAppShortcuts";
@@ -6,14 +7,11 @@ import Toolbar from "./Toolbar/Toolbar";
 import useTasksSelected from "./useTasksSelected";
 import GraphCanvas from "./GraphCanvas/GraphCanvas";
 import NewTaskInput from "./NewTaskInput/NewTaskInput";
-
-import "./App.css";
 import useGraphState from "./useGraphState";
 
-import { collection, addDoc, onSnapshot } from "firebase/firestore";
-
+import "./App.css";
 import firestore from "@/firestore";
-import { Task } from "./atoms";
+import { Task } from "@/atoms";
 
 const useFirebaseCallbacks = (id: string) => {
   const addTask = (name: string) => {
