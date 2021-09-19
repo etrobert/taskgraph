@@ -19,20 +19,4 @@ const app = initializeApp(firebaseConfig);
 
 const firestore = getFirestore(app);
 
-// ARCHITECTURE DECISION:
-// Use a collection projects
-// Each document contains a Map of Arrays of Maps like so:
-// {
-//   tasks: [{
-//     id: '',
-//     name: '',
-//     position: {
-//       x: 0,
-//       y: 0,
-//     }
-//   }],
-//   dependencies: []
-// }
-// When the size of a project will grow above 1MB it will be time to change
-
 export default firestore;
