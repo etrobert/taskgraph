@@ -13,23 +13,20 @@ import useGraphState from "./useGraphState";
 import { collection, addDoc, onSnapshot } from "firebase/firestore";
 
 import firestore from "@/firestore";
+import { Task } from "./atoms";
 
-const mockTask = {
-  id: "id-123",
-  name: "hello",
-  status: "ready",
-  position: {
-    x: 2,
-    y: 2,
-  },
-};
-
-const addProject = async () => {
-  const ref = collection(firestore, "projects");
-  await addDoc(ref, {
-    tasks: [mockTask, mockTask],
-    dependencies: [],
-  });
+const useFirebaseCallbacks = (id: string) => {
+  const addTask = (name: string) => {
+    const ref = collection(firestore, `projects/${id}/tasks`);
+    const task: Task = {
+      id: "test",
+      name,
+      position: { x: 0, y: 0 },
+      status: "ready",
+    };
+    return addDoc(ref, task);
+  };
+  return { addTask };
 };
 
 const useSyncFirestore = (id: string) => {
@@ -73,7 +70,13 @@ const App = (): JSX.Element => {
 
   const tasksSelected = useTasksSelected();
 
-  const { addTask, clearGraph } = useGraphState();
+  const { clearGraph } = useGraphState();
+
+  const projectId = "spXxYVulTgfKcj0n1sWb";
+
+  const { addTask } = useFirebaseCallbacks(projectId);
+
+  useSyncFirestore(projectId);
 
   useAppShortcuts({
     insertMode,
@@ -82,8 +85,6 @@ const App = (): JSX.Element => {
     onDelete: () => {},
     onCreateTask,
   });
-
-  useSyncFirestore("spXxYVulTgfKcj0n1sWb");
 
   return (
     <>

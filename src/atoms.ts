@@ -161,4 +161,4 @@ export {
   taskSelectedSelectorFamily,
 };
 
-export type { BoxSize, DependencyId, TaskId };
+export type { BoxSize, DependencyId, TaskId, Task };
