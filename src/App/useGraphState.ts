@@ -4,6 +4,7 @@ import { projectState, Task, TaskId, taskStateFamily } from "@/atoms";
 
 type UseGraphState = () => {
   addTask: (task: Task) => void;
+  updateTask: (id: TaskId, task: Task) => void;
   removeTask: (id: TaskId) => void;
   clearGraph: () => void;
 };
@@ -19,6 +20,13 @@ const useGraphState: UseGraphState = () => {
           tasks: [...project.tasks, task.id],
         }));
       },
+    []
+  );
+
+  const updateTask = useRecoilCallback(
+    ({ set }) =>
+      (id: TaskId, task: Task) =>
+        set(taskStateFamily(id), task),
     []
   );
 
@@ -40,7 +48,7 @@ const useGraphState: UseGraphState = () => {
     []
   );
 
-  return { addTask, removeTask, clearGraph };
+  return { addTask, updateTask, removeTask, clearGraph };
 };
 
 export default useGraphState;

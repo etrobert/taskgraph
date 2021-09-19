@@ -27,34 +27,29 @@ const useFirebaseCallbacks = (id: string) => {
 };
 
 const useSyncFirestore = (id: string) => {
-  const { addTask, removeTask } = useGraphState();
+  const { addTask, updateTask, removeTask } = useGraphState();
 
   useEffect(() => {
     const ref = collection(firestore, `projects/${id}/tasks`);
     const unsubscribe = onSnapshot(ref, (snapshot) =>
       snapshot.docChanges().forEach((change) => {
+        const task = { ...change.doc.data(), id: change.doc.id } as Task;
         switch (change.type) {
           case "added":
-            {
-              // TODO Try to use custom type instead of DocumentData
-              const task = { ...change.doc.data(), id: change.doc.id } as Task;
-              addTask(task);
-            }
+            // TODO Try to use custom type instead of DocumentData
+            addTask(task);
             break;
           case "modified":
-            // Update task
+            updateTask(change.doc.id, task);
             break;
           case "removed":
-            {
-              const task = { ...change.doc.data(), id: change.doc.id } as Task;
-              removeTask(task.id);
-            }
+            removeTask(task.id);
             break;
         }
       })
     );
     return unsubscribe;
-  }, [id, addTask, removeTask]);
+  }, [id, addTask, updateTask, removeTask]);
 };
 
 // addProject();
