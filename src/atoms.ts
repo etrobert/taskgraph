@@ -101,6 +101,14 @@ const taskBoxSelectorFamily = selectorFamily<Box, TaskId>({
     },
 });
 
+const expandedTaskBoxSelectorFamily = selectorFamily<Box, TaskId>({
+  key: "ExpandedTaskBox",
+  get:
+    (id) =>
+    ({ get }) =>
+      getExpandedBox(get(taskBoxSelectorFamily(id)), 8),
+});
+
 const taskCenterSelectorFamily = selectorFamily<Point, TaskId>({
   key: "TaskCenter",
   get:
@@ -121,10 +129,9 @@ const dependencyPathSelectorFamily = selectorFamily<string, DependencyId>({
       const predecessorCenter = get(taskCenterSelectorFamily(predecessor));
       const successorCenter = get(taskCenterSelectorFamily(successor));
 
-      const offset = 8;
-
-      const predecessorBox = get(taskBoxSelectorFamily(predecessor));
-      const expandedPredecessorBox = getExpandedBox(predecessorBox, offset);
+      const expandedPredecessorBox = get(
+        expandedTaskBoxSelectorFamily(predecessor)
+      );
 
       const pathPointPredecessor = intersectLineBox(
         predecessorCenter,
@@ -132,8 +139,9 @@ const dependencyPathSelectorFamily = selectorFamily<string, DependencyId>({
         expandedPredecessorBox
       );
 
-      const successorBox = get(taskBoxSelectorFamily(successor));
-      const expandedSuccessorBox = getExpandedBox(successorBox, offset);
+      const expandedSuccessorBox = get(
+        expandedTaskBoxSelectorFamily(successor)
+      );
 
       const pathPointSuccessor = intersectLineBox(
         predecessorCenter,
@@ -164,7 +172,6 @@ const newDependencyState = atom<NewDependency | null>({
   default: null,
 });
 
-// TODO Alleviate code duplication
 const newDependencyPathSelector = selector<string | null>({
   key: "NewDependencyPath",
   get: ({ get }) => {
@@ -174,12 +181,9 @@ const newDependencyPathSelector = selector<string | null>({
 
     const predecessorCenter = get(taskCenterSelectorFamily(predecessor));
 
-    // TODO Extract the offset
-    const offset = 8;
-
-    const predecessorBox = get(taskBoxSelectorFamily(predecessor));
-    // TODO Make expandedTaskBox into a selector
-    const expandedPredecessorBox = getExpandedBox(predecessorBox, offset);
+    const expandedPredecessorBox = get(
+      expandedTaskBoxSelectorFamily(predecessor)
+    );
 
     const pathPointPredecessor = intersectLineBox(
       predecessorCenter,
