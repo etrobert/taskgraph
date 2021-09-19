@@ -33,10 +33,6 @@ const App = (): JSX.Element => {
     onCreateTask,
   });
 
-  const selected = useRecoilValue(selectedTasksState);
-
-  useEffect(() => console.log(selected), [selected]);
-
   return (
     <>
       <button

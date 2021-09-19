@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { DraggableCore } from "react-draggable";
 
 import { addPoints, Point, squaredDistance } from "@/geometry";
@@ -8,10 +8,12 @@ import {
   selectedTasksState,
   taskBoxSizeStateFamily,
   TaskId,
+  taskSelectedSelectorFamily,
   taskStateFamily,
 } from "@/atoms";
 
 import "./Task.css";
+import classNames from "@/classNames";
 
 type Props = {
   id: TaskId;
@@ -29,6 +31,8 @@ const Task = ({ id, onDragStart, onDragStop, zoom }: Props): JSX.Element => {
     },
     setTask,
   ] = useRecoilState(taskStateFamily(id));
+
+  const selected = useRecoilValue(taskSelectedSelectorFamily(id));
 
   const setBoxSize = useSetRecoilState(taskBoxSizeStateFamily(id));
 
@@ -71,7 +75,11 @@ const Task = ({ id, onDragStart, onDragStop, zoom }: Props): JSX.Element => {
     >
       <div
         ref={ref}
-        className={`Task ${status === "completed" ? "Task--completed" : ""}`}
+        className={classNames([
+          "Task",
+          status === "completed" && "Task--completed",
+          selected && "Task--selected",
+        ])}
         style={{ left: x, top: y }}
         id={id}
       >
