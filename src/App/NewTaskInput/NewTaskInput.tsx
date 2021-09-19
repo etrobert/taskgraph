@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-import { AddTask } from "@/graph";
 
 import "./NewTaskInput.css";
 
 type Props = {
-  onNewTask: (newTask: AddTask) => void;
+  onNewTask: (name: string) => void;
   onCancel: () => void;
 };
 
@@ -16,7 +15,7 @@ const NewTask = ({ onNewTask, onCancel }: Props): JSX.Element => {
       onSubmit={(event) => {
         // Prevent the page from reloading
         event.preventDefault();
-        if (name) onNewTask({ name });
+        if (name) onNewTask(name);
         else onCancel();
       }}
     >

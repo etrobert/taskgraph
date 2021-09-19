@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 
-import { completeSelected, deleteSelected } from "@/graph";
-
 import MenuBar from "./MenuBar/MenuBar";
 import useAppShortcuts from "./useAppShortcuts";
 import Toolbar from "./Toolbar/Toolbar";
@@ -27,7 +25,9 @@ const App = (): JSX.Element => {
 
   useAppShortcuts({
     insertMode,
-    onDelete: deleteSelected,
+    // TODO Replace when implemented
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    onDelete: () => {},
     onCreateTask,
   });
 
@@ -51,18 +51,20 @@ const App = (): JSX.Element => {
         linkMode={linkMode}
         onChangeLinkMode={() => setLinkMode((mode) => !mode)}
         onCreateTask={onCreateTask}
-        onComplete={() => {
-          completeSelected();
-        }}
-        onDelete={deleteSelected}
+        // TODO Replace when implemented
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        onComplete={() => {}}
+        // TODO Replace when implemented
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        onDelete={() => {}}
       />
 
       <GraphCanvas />
 
       {insertMode && (
         <NewTaskInput
-          onNewTask={(task) => {
-            addTask(task.name);
+          onNewTask={(name) => {
+            addTask(name);
             setInsertMode(false);
           }}
           onCancel={() => setInsertMode(false)}

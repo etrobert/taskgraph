@@ -1,5 +1,8 @@
-import { selectAll } from "@/graph";
 import useKeyboardShortcuts, { Shortcut } from "@/useKeyboardShortcuts";
+
+// TODO Replace when implemented
+// eslint-disable-next-line @typescript-eslint/no-empty-function
+const selectAll = () => {};
 
 type Props = {
   insertMode: boolean;
