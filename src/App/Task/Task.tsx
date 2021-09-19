@@ -1,11 +1,9 @@
 import React, { RefObject, useEffect, useRef } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { DraggableCore } from "react-draggable";
 
 import { addPoints } from "@/geometry";
 import useBoxSizeObserver from "@/useBoxSizeObserver";
 import {
-  newDependencyState,
   selectedTasksState,
   taskBoxSizeStateFamily,
   TaskId,
@@ -16,6 +14,7 @@ import ClickableDraggableCore from "@/ClickableDraggableCore/ClickableDraggableC
 import classNames from "@/classNames";
 
 import "./Task.css";
+import NewDependencyHandle from "./NewDependencyHandle/NewDependencyHandle";
 
 type Props = {
   id: TaskId;
@@ -53,8 +52,6 @@ const Task = ({
 
   const setSelectedTasks = useSetRecoilState(selectedTasksState);
 
-  const setNewDependency = useSetRecoilState(newDependencyState);
-
   return (
     <ClickableDraggableCore
       onDrag={(e, data) => {
@@ -87,20 +84,11 @@ const Task = ({
         id={id}
       >
         {name}
-        <DraggableCore
-          onStart={(_, data) =>
-            setNewDependency({ predecessor: id, cursor: data })
-          }
-          onDrag={(event, data) => {
-            event.preventDefault();
-            setNewDependency({ predecessor: id, cursor: data });
-          }}
-          onStop={() => setNewDependency(null)}
-          offsetParent={itemsContainerRef.current ?? undefined}
-          scale={zoom}
-        >
-          <div className={`Task__new-dependency-handle`} />
-        </DraggableCore>
+        <NewDependencyHandle
+          taskId={id}
+          itemsContainerRef={itemsContainerRef}
+          zoom={zoom}
+        />
       </div>
     </ClickableDraggableCore>
   );
