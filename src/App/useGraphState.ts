@@ -3,7 +3,7 @@ import { useRecoilCallback } from "recoil";
 import { projectState, Task, TaskId, taskStateFamily } from "@/atoms";
 
 type UseGraphState = () => {
-  addTask: (task: Task) => void;
+  addTask: (id: TaskId, task: Task) => void;
   updateTask: (id: TaskId, task: Task) => void;
   removeTask: (id: TaskId) => void;
   clearGraph: () => void;
@@ -12,11 +12,11 @@ type UseGraphState = () => {
 const useGraphState: UseGraphState = () => {
   const addTask = useRecoilCallback(
     ({ set }) =>
-      (task: Task) => {
-        set(taskStateFamily(task.id), task);
+      (id: TaskId, task: Task) => {
+        set(taskStateFamily(id), task);
         set(projectState, (project) => ({
           ...project,
-          tasks: [...project.tasks, task.id],
+          tasks: [...project.tasks, id],
         }));
       },
     []
