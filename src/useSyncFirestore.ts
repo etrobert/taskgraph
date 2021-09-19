@@ -8,7 +8,7 @@ import useGraphState from "./App/useGraphState";
 
 const useSyncFirestore = (): void => {
   const projectId = useRecoilValue(projectIdState);
-  const { addTask, updateTask, removeTask } = useGraphState();
+  const { addTask, setTask, removeTask } = useGraphState();
 
   useEffect(() => {
     const ref = collection(firestore, `projects/${projectId}/tasks`);
@@ -21,7 +21,7 @@ const useSyncFirestore = (): void => {
             addTask(id, task);
             break;
           case "modified":
-            updateTask(id, task);
+            setTask(id, task);
             break;
           case "removed":
             removeTask(id);
@@ -30,7 +30,7 @@ const useSyncFirestore = (): void => {
       })
     );
     return unsubscribe;
-  }, [projectId, addTask, updateTask, removeTask]);
+  }, [projectId, addTask, setTask, removeTask]);
 };
 
 export default useSyncFirestore;
