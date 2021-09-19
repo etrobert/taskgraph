@@ -10,7 +10,7 @@ import NewTaskInput from "./NewTaskInput/NewTaskInput";
 import "./App.css";
 import useGraphState from "./useGraphState";
 
-import { collection, addDoc, doc, onSnapshot } from "firebase/firestore";
+import { collection, addDoc, onSnapshot } from "firebase/firestore";
 
 import firestore from "@/firestore";
 
@@ -33,13 +33,31 @@ const addProject = async () => {
 };
 
 const useSyncFirestore = (id: string) => {
-  const ref = doc(firestore, "projects", id);
+  const { addTask } = useGraphState();
+
   useEffect(() => {
+    const ref = collection(firestore, `projects/${id}/tasks`);
     const unsubscribe = onSnapshot(ref, (snapshot) =>
-      console.log(snapshot.data())
+      snapshot.docChanges().forEach((change) => {
+        switch (change.type) {
+          case "added":
+            {
+              // TODO Try to use custom type instead of DocumentData
+              const task = change.doc.data();
+              addTask(task.name);
+            }
+            break;
+          case "modified":
+            // Update task
+            break;
+          case "removed":
+            // Remove task
+            break;
+        }
+      })
     );
     return unsubscribe;
-  });
+  }, [id, addTask]);
 };
 
 // addProject();
