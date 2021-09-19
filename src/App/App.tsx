@@ -1,5 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { collection, addDoc, onSnapshot } from "firebase/firestore";
+import React, { useState } from "react";
+import { collection, addDoc } from "firebase/firestore";
+
+import firestore from "@/firestore";
+import useSyncFirestore from "@/useSyncFirestore";
 
 import MenuBar from "./MenuBar/MenuBar";
 import useAppShortcuts from "./useAppShortcuts";
@@ -10,8 +13,6 @@ import NewTaskInput from "./NewTaskInput/NewTaskInput";
 import useGraphState from "./useGraphState";
 
 import "./App.css";
-import firestore from "@/firestore";
-import { Task } from "@/atoms";
 
 const useFirebaseCallbacks = (id: string) => {
   const addTask = (name: string) => {
@@ -24,32 +25,6 @@ const useFirebaseCallbacks = (id: string) => {
     return addDoc(ref, task);
   };
   return { addTask };
-};
-
-const useSyncFirestore = (id: string) => {
-  const { addTask, updateTask, removeTask } = useGraphState();
-
-  useEffect(() => {
-    const ref = collection(firestore, `projects/${id}/tasks`);
-    const unsubscribe = onSnapshot(ref, (snapshot) =>
-      snapshot.docChanges().forEach((change) => {
-        const task = { ...change.doc.data(), id: change.doc.id } as Task;
-        switch (change.type) {
-          case "added":
-            // TODO Try to use custom type instead of DocumentData
-            addTask(task);
-            break;
-          case "modified":
-            updateTask(change.doc.id, task);
-            break;
-          case "removed":
-            removeTask(task.id);
-            break;
-        }
-      })
-    );
-    return unsubscribe;
-  }, [id, addTask, updateTask, removeTask]);
 };
 
 // addProject();
