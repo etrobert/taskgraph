@@ -1,15 +1,15 @@
 import { useEffect } from "react";
 import { collection, onSnapshot } from "firebase/firestore";
 
-import { Task } from "./atoms";
+import { ProjectId, Task } from "./atoms";
 import firestore from "./firestore";
 import useGraphState from "./App/useGraphState";
 
-const useSyncFirestore = (id: string): void => {
+const useSyncFirestore = (projectId: ProjectId): void => {
   const { addTask, updateTask, removeTask } = useGraphState();
 
   useEffect(() => {
-    const ref = collection(firestore, `projects/${id}/tasks`);
+    const ref = collection(firestore, `projects/${projectId}/tasks`);
     const unsubscribe = onSnapshot(ref, (snapshot) =>
       snapshot.docChanges().forEach((change) => {
         const task = { ...change.doc.data(), id: change.doc.id } as Task;
@@ -28,7 +28,7 @@ const useSyncFirestore = (id: string): void => {
       })
     );
     return unsubscribe;
-  }, [id, addTask, updateTask, removeTask]);
+  }, [projectId, addTask, updateTask, removeTask]);
 };
 
 export default useSyncFirestore;

@@ -7,6 +7,8 @@ import {
 } from "@/geometry";
 import { atom, atomFamily, selectorFamily } from "recoil";
 
+type ProjectId = string;
+
 type TaskId = string;
 
 // See https://en.wikipedia.org/wiki/Task_management
@@ -161,4 +163,4 @@ export {
   taskSelectedSelectorFamily,
 };
 
-export type { BoxSize, DependencyId, TaskId, Task };
+export type { ProjectId, BoxSize, DependencyId, TaskId, Task };
