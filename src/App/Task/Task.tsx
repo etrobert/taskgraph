@@ -5,6 +5,7 @@ import { DraggableCore } from "react-draggable";
 import { addPoints } from "@/geometry";
 import useBoxSizeObserver from "@/useBoxSizeObserver";
 import {
+  newDependencyState,
   selectedTasksState,
   taskBoxSizeStateFamily,
   TaskId,
@@ -45,6 +46,8 @@ const Task = ({ id, onDragStart, onDragStop, zoom }: Props): JSX.Element => {
 
   const setSelectedTasks = useSetRecoilState(selectedTasksState);
 
+  const setNewDependency = useSetRecoilState(newDependencyState);
+
   return (
     <ClickableDraggableCore
       onDrag={(e, data) => {
@@ -78,10 +81,12 @@ const Task = ({ id, onDragStart, onDragStop, zoom }: Props): JSX.Element => {
       >
         {name}
         <DraggableCore
-          onDrag={(event) => {
+          onStart={(_, data) => setNewDependency({ origin: id, cursor: data })}
+          onDrag={(event, data) => {
             event.preventDefault();
-            console.log("dragging the handle");
+            setNewDependency({ origin: id, cursor: data });
           }}
+          onStop={() => setNewDependency(null)}
         >
           <div className={`Task__new-dependency-handle`} />
         </DraggableCore>

@@ -150,6 +150,20 @@ const dependencyPathSelectorFamily = selectorFamily<string, DependencyId>({
     },
 });
 
+type NewDependency = {
+  origin: TaskId;
+  cursor: Point;
+};
+
+/**
+ * Id of the task that we are creating a dependency from.
+ * null if we are not creating a new dependency at the moment.
+ */
+const newDependencyState = atom<NewDependency | null>({
+  key: "NewDependency",
+  default: null,
+});
+
 export {
   projectState,
   dependencyStateFamily,
@@ -159,6 +173,7 @@ export {
   dependencyPathSelectorFamily,
   selectedTasksState,
   taskSelectedSelectorFamily,
+  newDependencyState,
 };
 
 export type { BoxSize, DependencyId, TaskId };
