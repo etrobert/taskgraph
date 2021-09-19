@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { useRecoilValue } from "recoil";
-import { DraggableCore } from "react-draggable";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 
 import { snap } from "@/misc";
 import { addPoints } from "@/geometry";
 import useKeyboardShortcuts from "@/useKeyboardShortcuts";
-import { graphState } from "@/atoms";
+import { graphState, selectedTasksState } from "@/atoms";
+import ClickableDraggableCore from "@/ClickableDraggableCore/ClickableDraggableCore";
 
 import Task from "../Task/Task";
 import Dependency from "../Dependency/Dependency";
@@ -45,11 +45,17 @@ const GraphCanvas = (): JSX.Element => {
 
   const { tasks, dependencies } = useRecoilValue(graphState);
 
+  const setSelectedTasks = useSetRecoilState(selectedTasksState);
+
   return (
-    <DraggableCore
+    <ClickableDraggableCore
       onDrag={(e, data) => {
         if (draggedTasksCount === 0)
           setPan((pan) => addPoints(pan, { x: data.deltaX, y: data.deltaY }));
+      }}
+      onClick={(event) => {
+        // Task will call preventDefault when clicked
+        if (!event.defaultPrevented) setSelectedTasks([]);
       }}
     >
       {/* The outer div stays in place, receives the dragging events */}
@@ -91,7 +97,7 @@ const GraphCanvas = (): JSX.Element => {
           ))}
         </div>
       </div>
-    </DraggableCore>
+    </ClickableDraggableCore>
   );
 };
 
