@@ -16,7 +16,6 @@ const useGraphState: UseGraphState = () => {
     (name: string) => {
       const id = generateNewId();
       set(taskStateFamily(id), {
-        id,
         name,
         position: { x: 0, y: 0 },
         status: "ready",
