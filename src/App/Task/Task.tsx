@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { RefObject, useEffect, useRef } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { DraggableCore } from "react-draggable";
 
@@ -22,9 +22,16 @@ type Props = {
   onDragStart: () => void;
   onDragStop: () => void;
   zoom: number;
+  itemsContainerRef: RefObject<HTMLDivElement>;
 };
 
-const Task = ({ id, onDragStart, onDragStop, zoom }: Props): JSX.Element => {
+const Task = ({
+  id,
+  onDragStart,
+  onDragStop,
+  zoom,
+  itemsContainerRef,
+}: Props): JSX.Element => {
   const [
     {
       position: { x, y },
@@ -81,12 +88,16 @@ const Task = ({ id, onDragStart, onDragStop, zoom }: Props): JSX.Element => {
       >
         {name}
         <DraggableCore
-          onStart={(_, data) => setNewDependency({ origin: id, cursor: data })}
+          onStart={(_, data) =>
+            setNewDependency({ predecessor: id, cursor: data })
+          }
           onDrag={(event, data) => {
             event.preventDefault();
-            setNewDependency({ origin: id, cursor: data });
+            setNewDependency({ predecessor: id, cursor: data });
           }}
           onStop={() => setNewDependency(null)}
+          offsetParent={itemsContainerRef.current ?? undefined}
+          scale={zoom}
         >
           <div className={`Task__new-dependency-handle`} />
         </DraggableCore>

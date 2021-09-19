@@ -4,7 +4,11 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import { snap } from "@/misc";
 import { addPoints } from "@/geometry";
 import useKeyboardShortcuts from "@/useKeyboardShortcuts";
-import { projectState, selectedTasksState } from "@/atoms";
+import {
+  newDependencyPathSelector,
+  projectState,
+  selectedTasksState,
+} from "@/atoms";
 import ClickableDraggableCore from "@/ClickableDraggableCore/ClickableDraggableCore";
 
 import Task from "../Task/Task";
@@ -47,7 +51,11 @@ const GraphCanvas = (): JSX.Element => {
 
   const setSelectedTasks = useSetRecoilState(selectedTasksState);
 
-  const ref = useRef<HTMLDivElement>(null);
+  const graphRef = useRef<HTMLDivElement>(null);
+
+  const newDependencyPath = useRecoilValue(newDependencyPathSelector);
+
+  const itemsContainerRef = useRef<HTMLDivElement>(null);
 
   return (
     <ClickableDraggableCore
@@ -56,17 +64,20 @@ const GraphCanvas = (): JSX.Element => {
           setPan((pan) => addPoints(pan, { x: data.deltaX, y: data.deltaY }));
       }}
       onClick={(event) => {
-        if (ref.current === null) return;
-        if (event.target === ref.current) setSelectedTasks([]);
+        if (graphRef.current === null) return;
+        if (event.target === graphRef.current) setSelectedTasks([]);
       }}
     >
       {/* The outer div stays in place, receives the dragging events */}
-      <div onWheel={onWheel} id="graph" ref={ref}>
+      <div onWheel={onWheel} id="graph" ref={graphRef}>
         <p className="Graph__zoom-indicator">
           {zoom !== 1 && Math.floor(zoom * 100) + "% zoom"}
         </p>
         {/* The inner div contains the tasks and dependencies and gets translated around */}
-        <div style={{ transform: itemsContainerTransform }}>
+        <div
+          ref={itemsContainerRef}
+          style={{ transform: itemsContainerTransform }}
+        >
           <svg id="arrows">
             <defs>
               <marker
@@ -87,6 +98,7 @@ const GraphCanvas = (): JSX.Element => {
             {dependencies.map((id) => (
               <Dependency key={id} id={id} />
             ))}
+            {newDependencyPath !== null && <path d={newDependencyPath} />}
           </svg>
           {tasks.map((id) => (
             <Task
@@ -95,6 +107,7 @@ const GraphCanvas = (): JSX.Element => {
               onDragStart={() => setDraggedTasksCount((count) => count + 1)}
               onDragStop={() => setDraggedTasksCount((count) => count - 1)}
               zoom={zoom}
+              itemsContainerRef={itemsContainerRef}
             />
           ))}
         </div>

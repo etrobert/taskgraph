@@ -5,7 +5,7 @@ import {
   intersectLineBox,
   Point,
 } from "@/geometry";
-import { atom, atomFamily, selectorFamily } from "recoil";
+import { atom, atomFamily, selector, selectorFamily } from "recoil";
 
 type TaskId = string;
 
@@ -151,7 +151,7 @@ const dependencyPathSelectorFamily = selectorFamily<string, DependencyId>({
 });
 
 type NewDependency = {
-  origin: TaskId;
+  predecessor: TaskId;
   cursor: Point;
 };
 
@@ -164,6 +164,36 @@ const newDependencyState = atom<NewDependency | null>({
   default: null,
 });
 
+// TODO Alleviate code duplication
+const newDependencyPathSelector = selector<string | null>({
+  key: "NewDependencyPath",
+  get: ({ get }) => {
+    const newDependency = get(newDependencyState);
+    if (newDependency === null) return null;
+    const { predecessor, cursor } = newDependency;
+
+    const predecessorCenter = get(taskCenterSelectorFamily(predecessor));
+
+    // TODO Extract the offset
+    const offset = 8;
+
+    const predecessorBox = get(taskBoxSelectorFamily(predecessor));
+    // TODO Make expandedTaskBox into a selector
+    const expandedPredecessorBox = getExpandedBox(predecessorBox, offset);
+
+    const pathPointPredecessor = intersectLineBox(
+      predecessorCenter,
+      cursor,
+      expandedPredecessorBox
+    );
+
+    if (pathPointPredecessor === null) return null;
+
+    return `M${pathPointPredecessor.x},${pathPointPredecessor.y}
+              L${cursor.x},${cursor.y}`;
+  },
+});
+
 export {
   projectState,
   dependencyStateFamily,
@@ -174,6 +204,7 @@ export {
   selectedTasksState,
   taskSelectedSelectorFamily,
   newDependencyState,
+  newDependencyPathSelector,
 };
 
 export type { BoxSize, DependencyId, TaskId };
