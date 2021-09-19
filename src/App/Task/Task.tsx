@@ -11,9 +11,9 @@ import {
   taskStateFamily,
 } from "@/atoms";
 import ClickableDraggableCore from "@/ClickableDraggableCore/ClickableDraggableCore";
+import classNames from "@/classNames";
 
 import "./Task.css";
-import classNames from "@/classNames";
 
 type Props = {
   id: TaskId;
