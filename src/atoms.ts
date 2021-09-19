@@ -21,7 +21,6 @@ type Task = {
 type DependencyId = string;
 
 type Dependency = {
-  id: DependencyId;
   predecessor: TaskId;
   successor: TaskId;
 };
@@ -43,7 +42,6 @@ const taskStateFamily = atomFamily<Task, TaskId>({
 const dependencyStateFamily = atomFamily<Dependency, DependencyId>({
   key: "Dependency",
   default: {
-    id: "DEFAULT-DEPENDENCY-ID",
     predecessor: "DEFAULT-TASK-ID",
     successor: "DEFAULT-TASK-ID",
   },
