@@ -1,9 +1,11 @@
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, doc, setDoc } from "firebase/firestore";
+import { Task } from "./atoms";
 
 import firestore from "./firestore";
 
 type UseFirestoreState = (id: string) => {
   addTask: (name: string) => void;
+  updateTask: (task: Task) => void;
 };
 
 const useFirestoreState: UseFirestoreState = (id) => {
@@ -16,7 +18,12 @@ const useFirestoreState: UseFirestoreState = (id) => {
     };
     return addDoc(ref, task);
   };
-  return { addTask };
+
+  // TODO Cache
+  const updateTask = (task: Task) =>
+    setDoc(doc(firestore, `projects/${id}/tasks`, task.id), task);
+
+  return { addTask, updateTask };
 };
 
 export default useFirestoreState;
