@@ -18,7 +18,6 @@ const useSyncFirestore = (): void => {
         const task = change.doc.data() as Task;
         switch (change.type) {
           case "added":
-            // TODO Try to use custom type instead of DocumentData
             addTask(id, task);
             break;
           case "modified":
