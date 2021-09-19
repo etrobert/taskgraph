@@ -36,11 +36,8 @@ const useSyncFirestore = (id: string) => {
       snapshot.docChanges().forEach((change) => {
         switch (change.type) {
           case "added":
-            {
-              // TODO Try to use custom type instead of DocumentData
-              const task = change.doc.data();
-              addTask(task.name);
-            }
+            // TODO Try to use custom type instead of DocumentData
+            addTask(change.doc.data() as Task);
             break;
           case "modified":
             // Update task

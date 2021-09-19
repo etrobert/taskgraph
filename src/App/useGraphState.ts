@@ -1,9 +1,9 @@
 import { useRecoilCallback } from "recoil";
 
-import { projectState, taskStateFamily } from "@/atoms";
+import { projectState, Task, taskStateFamily } from "@/atoms";
 
 type UseGraphState = () => {
-  addTask: (name: string) => void;
+  addTask: (task: Task) => void;
   clearGraph: () => void;
 };
 
@@ -14,13 +14,9 @@ const useGraphState: UseGraphState = () => {
   const addTask = useRecoilCallback(
     ({ set }) =>
       // TODO Allow to give more data than just name (position, status)
-      (name: string) => {
+      (task: Task) => {
         const id = generateNewId();
-        set(taskStateFamily(id), {
-          name,
-          position: { x: 0, y: 0 },
-          status: "ready",
-        } as const);
+        set(taskStateFamily(id), task);
         set(projectState, (project) => ({
           ...project,
           tasks: [...project.tasks, id],
