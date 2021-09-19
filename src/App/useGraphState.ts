@@ -31,12 +31,11 @@ const useGraphState: UseGraphState = () => {
 
   const removeTask = useRecoilCallback(
     ({ set }) =>
-      (id: TaskId) => {
+      (id: TaskId) =>
         set(graphState, (graph) => ({
           ...graph,
           tasks: graph.tasks.filter((currentId) => currentId !== id),
-        }));
-      },
+        })),
     []
   );
 
