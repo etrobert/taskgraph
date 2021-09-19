@@ -16,8 +16,7 @@ import { Task } from "@/atoms";
 const useFirebaseCallbacks = (id: string) => {
   const addTask = (name: string) => {
     const ref = collection(firestore, `projects/${id}/tasks`);
-    const task: Task = {
-      id: "test",
+    const task = {
       name,
       position: { x: 0, y: 0 },
       status: "ready",
@@ -28,7 +27,7 @@ const useFirebaseCallbacks = (id: string) => {
 };
 
 const useSyncFirestore = (id: string) => {
-  const { addTask } = useGraphState();
+  const { addTask, removeTask } = useGraphState();
 
   useEffect(() => {
     const ref = collection(firestore, `projects/${id}/tasks`);
@@ -36,20 +35,26 @@ const useSyncFirestore = (id: string) => {
       snapshot.docChanges().forEach((change) => {
         switch (change.type) {
           case "added":
-            // TODO Try to use custom type instead of DocumentData
-            addTask(change.doc.data() as Task);
+            {
+              // TODO Try to use custom type instead of DocumentData
+              const task = { ...change.doc.data(), id: change.doc.id } as Task;
+              addTask(task);
+            }
             break;
           case "modified":
             // Update task
             break;
           case "removed":
-            // Remove task
+            {
+              const task = { ...change.doc.data(), id: change.doc.id } as Task;
+              removeTask(task.id);
+            }
             break;
         }
       })
     );
     return unsubscribe;
-  }, [id, addTask]);
+  }, [id, addTask, removeTask]);
 };
 
 // addProject();

@@ -1,9 +1,10 @@
 import { useRecoilCallback } from "recoil";
 
-import { projectState, Task, taskStateFamily } from "@/atoms";
+import { projectState, Task, TaskId, taskStateFamily } from "@/atoms";
 
 type UseGraphState = () => {
   addTask: (task: Task) => void;
+  removeTask: (id: TaskId) => void;
   clearGraph: () => void;
 };
 
@@ -21,6 +22,17 @@ const useGraphState: UseGraphState = () => {
     []
   );
 
+  const removeTask = useRecoilCallback(
+    ({ set }) =>
+      (id: TaskId) => {
+        set(graphState, (graph) => ({
+          ...graph,
+          tasks: graph.tasks.filter((currentId) => currentId !== id),
+        }));
+      },
+    []
+  );
+
   const clearGraph = useRecoilCallback(
     ({ set }) =>
       () =>
@@ -28,7 +40,7 @@ const useGraphState: UseGraphState = () => {
     []
   );
 
-  return { addTask, clearGraph };
+  return { addTask, removeTask, clearGraph };
 };
 
 export default useGraphState;
