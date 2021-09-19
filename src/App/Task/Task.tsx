@@ -33,7 +33,7 @@ const Task = ({ id, onDragStart, onDragStop, zoom }: Props): JSX.Element => {
 
   const setBoxSize = useSetRecoilState(taskBoxSizeStateFamily(id));
 
-  const { updateTask } = useFirestoreState("spXxYVulTgfKcj0n1sWb");
+  const { updateTask } = useFirestoreState();
 
   const ref = useRef<HTMLDivElement>(null);
   const boxSize = useBoxSizeObserver(ref);

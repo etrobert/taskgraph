@@ -26,11 +26,9 @@ const App = (): JSX.Element => {
 
   const { clearGraph } = useGraphState();
 
-  const projectId = "spXxYVulTgfKcj0n1sWb";
+  const { addTask } = useFirestoreState();
 
-  const { addTask } = useFirestoreState(projectId);
-
-  useSyncFirestore(projectId);
+  useSyncFirestore();
 
   useAppShortcuts({
     insertMode,

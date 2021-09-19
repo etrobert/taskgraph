@@ -1,15 +1,17 @@
 import { useCallback } from "react";
 import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
-import { ProjectId, Task, TaskId } from "./atoms";
+import { useRecoilValue } from "recoil";
 
 import firestore from "./firestore";
+import { projectIdState, Task, TaskId } from "./atoms";
 
-type UseFirestoreState = (projectId: ProjectId) => {
+type UseFirestoreState = () => {
   addTask: (name: string) => void;
   updateTask: (id: TaskId, task: Partial<Task>) => void;
 };
 
-const useFirestoreState: UseFirestoreState = (projectId) => {
+const useFirestoreState: UseFirestoreState = () => {
+  const projectId = useRecoilValue(projectIdState);
   const addTask = useCallback(
     (name: string) => {
       const ref = collection(firestore, `projects/${projectId}/tasks`);

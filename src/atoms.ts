@@ -49,6 +49,11 @@ const dependencyStateFamily = atomFamily<Dependency, DependencyId>({
   },
 });
 
+const projectIdState = atom<ProjectId>({
+  key: "ProjectId",
+  default: "spXxYVulTgfKcj0n1sWb",
+});
+
 const projectState = atom<Project>({
   key: "Project",
   default: {
@@ -153,6 +158,7 @@ const dependencyPathSelectorFamily = selectorFamily<string, DependencyId>({
 });
 
 export {
+  projectIdState,
   projectState,
   dependencyStateFamily,
   taskStateFamily,

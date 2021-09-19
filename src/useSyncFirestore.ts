@@ -1,11 +1,13 @@
 import { useEffect } from "react";
 import { collection, onSnapshot } from "firebase/firestore";
+import { useRecoilValue } from "recoil";
 
-import { ProjectId, Task } from "./atoms";
+import { projectIdState, Task } from "./atoms";
 import firestore from "./firestore";
 import useGraphState from "./App/useGraphState";
 
-const useSyncFirestore = (projectId: ProjectId): void => {
+const useSyncFirestore = (): void => {
+  const projectId = useRecoilValue(projectIdState);
   const { addTask, updateTask, removeTask } = useGraphState();
 
   useEffect(() => {
