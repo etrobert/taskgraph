@@ -1,0 +1,9 @@
+a,
+button {
+  color: var(--task-color);
+}
+
+button {
+  border: none;
+  background-color: unset;
+}
