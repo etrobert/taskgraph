@@ -12,6 +12,16 @@ export interface Box {
   height: number;
 }
 
+/**
+ * Returns the squared distance between two points.
+ *
+ * `distance(p1, p2) === sqrt((p1.x - p2.x)^2 + (p1.y - p2.y)^2)`
+ *
+ * Because the square root is an expensive operation,
+ * it is faster to compare the squared distance between two points.
+ *
+ * `distance(p1, p2) > c === squaredDistance(p1, p2) > c^2`
+ */
 export function squaredDistance(p1: Point, p2: Point): number {
   return (p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y);
 }
