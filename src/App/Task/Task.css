@@ -40,3 +40,7 @@
   animation: 1s ease-in-out strikethrough;
   border-radius: calc(var(--thickness) / 2);
 }
+
+.Task--selected {
+  background-color: lightblue;
+}

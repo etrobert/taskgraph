@@ -1,10 +1,17 @@
 import React, { useEffect, useRef } from "react";
-import { useRecoilState, useSetRecoilState } from "recoil";
-import { DraggableCore } from "react-draggable";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
 import { addPoints } from "@/geometry";
 import useBoxSizeObserver from "@/useBoxSizeObserver";
-import { taskBoxSizeStateFamily, TaskId, taskStateFamily } from "@/atoms";
+import {
+  selectedTasksState,
+  taskBoxSizeStateFamily,
+  TaskId,
+  taskSelectedSelectorFamily,
+  taskStateFamily,
+} from "@/atoms";
+import ClickableDraggableCore from "@/ClickableDraggableCore/ClickableDraggableCore";
+import classNames from "@/classNames";
 
 import "./Task.css";
 
@@ -25,6 +32,8 @@ const Task = ({ id, onDragStart, onDragStop, zoom }: Props): JSX.Element => {
     setTask,
   ] = useRecoilState(taskStateFamily(id));
 
+  const selected = useRecoilValue(taskSelectedSelectorFamily(id));
+
   const setBoxSize = useSetRecoilState(taskBoxSizeStateFamily(id));
 
   const ref = useRef<HTMLDivElement>(null);
@@ -33,8 +42,10 @@ const Task = ({ id, onDragStart, onDragStop, zoom }: Props): JSX.Element => {
     if (boxSize !== undefined) setBoxSize(boxSize), [boxSize, setBoxSize];
   });
 
+  const setSelectedTasks = useSetRecoilState(selectedTasksState);
+
   return (
-    <DraggableCore
+    <ClickableDraggableCore
       onDrag={(e, data) =>
         setTask((task) => ({
           ...task,
@@ -46,17 +57,26 @@ const Task = ({ id, onDragStart, onDragStop, zoom }: Props): JSX.Element => {
       }
       onStart={onDragStart}
       onStop={onDragStop}
+      onClick={(event) =>
+        // If shift is pressed we add the task to the selected tasks
+        // Else the task becomes the only selected task
+        setSelectedTasks(event.shiftKey ? (tasks) => [...tasks, id] : [id])
+      }
       scale={zoom}
     >
       <div
         ref={ref}
-        className={`Task ${status === "completed" ? "Task--completed" : ""}`}
+        className={classNames([
+          "Task",
+          status === "completed" && "Task--completed",
+          selected && "Task--selected",
+        ])}
         style={{ left: x, top: y }}
         id={id}
       >
         {name}
       </div>
-    </DraggableCore>
+    </ClickableDraggableCore>
   );
 };
 
