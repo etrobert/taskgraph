@@ -57,13 +57,11 @@ const Task = ({ id, onDragStart, onDragStop, zoom }: Props): JSX.Element => {
       }
       onStart={onDragStart}
       onStop={onDragStop}
-      onClick={(event) => {
-        // We call preventDefault to detect in GraphCanvas that a Task has been clicked
-        event.preventDefault();
+      onClick={(event) =>
         // If shift is pressed we add the task to the selected tasks
         // Else the task becomes the only selected task
-        setSelectedTasks(event.shiftKey ? (tasks) => [...tasks, id] : [id]);
-      }}
+        setSelectedTasks(event.shiftKey ? (tasks) => [...tasks, id] : [id])
+      }
       scale={zoom}
     >
       <div

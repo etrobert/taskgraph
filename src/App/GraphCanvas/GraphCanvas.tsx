@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 
 import { snap } from "@/misc";
@@ -47,6 +47,8 @@ const GraphCanvas = (): JSX.Element => {
 
   const setSelectedTasks = useSetRecoilState(selectedTasksState);
 
+  const ref = useRef<HTMLDivElement>(null);
+
   return (
     <ClickableDraggableCore
       onDrag={(e, data) => {
@@ -54,12 +56,12 @@ const GraphCanvas = (): JSX.Element => {
           setPan((pan) => addPoints(pan, { x: data.deltaX, y: data.deltaY }));
       }}
       onClick={(event) => {
-        // Task will call preventDefault when clicked
-        if (!event.defaultPrevented) setSelectedTasks([]);
+        if (ref.current === null) return;
+        if (event.target === ref.current) setSelectedTasks([]);
       }}
     >
       {/* The outer div stays in place, receives the dragging events */}
-      <div onWheel={onWheel} id="graph">
+      <div onWheel={onWheel} id="graph" ref={ref}>
         <p className="Graph__zoom-indicator">
           {zoom !== 1 && Math.floor(zoom * 100) + "% zoom"}
         </p>
