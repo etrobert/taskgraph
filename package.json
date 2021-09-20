@@ -11,7 +11,8 @@
     "deploy": "echo 'taskgraph.net' > build/CNAME && gh-pages -d build/",
     "test": "jest",
     "format": "prettier -w .",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "check-staged": "lint-staged"
   },
   "author": {
     "name": "Étienne Robert",
