@@ -6,3 +6,5 @@ build/
 
 # MacOS Finder files
 .DS_Store
+
+.eslintcache
