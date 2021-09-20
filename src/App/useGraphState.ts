@@ -1,6 +1,6 @@
 import { useRecoilCallback } from "recoil";
 
-import { graphState, taskStateFamily } from "@/atoms";
+import { projectState, taskStateFamily } from "@/atoms";
 
 type UseGraphState = () => {
   addTask: (name: string) => void;
@@ -20,14 +20,17 @@ const useGraphState: UseGraphState = () => {
         position: { x: 0, y: 0 },
         status: "ready",
       } as const);
-      set(graphState, (graph) => ({ ...graph, tasks: [...graph.tasks, id] }));
+      set(projectState, (project) => ({
+        ...project,
+        tasks: [...project.tasks, id],
+      }));
     }
   );
 
   const clearGraph = useRecoilCallback(
     ({ set }) =>
       () =>
-        set(graphState, { tasks: [], dependencies: [] }),
+        set(projectState, { tasks: [], dependencies: [] }),
     []
   );
   return { addTask, clearGraph };

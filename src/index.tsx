@@ -3,9 +3,9 @@ import ReactDOM from "react-dom";
 import { RecoilRoot } from "recoil";
 
 import App from "./App/App";
-import { dependencyStateFamily, graphState, taskStateFamily } from "./atoms";
+import { dependencyStateFamily, projectState, taskStateFamily } from "./atoms";
 
-const graphMockState = {
+const projectMockState = {
   tasks: ["task-1", "task-2"],
   dependencies: ["dependency-1"],
 };
@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
   ReactDOM.render(
     <RecoilRoot
       initializeState={({ set }) => {
-        set(graphState, graphMockState);
+        set(projectState, projectMockState);
         set(taskStateFamily("task-1"), task1Mock);
         set(taskStateFamily("task-2"), task2Mock);
         set(dependencyStateFamily("dependency-1"), dependencyMock);

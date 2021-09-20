@@ -4,7 +4,7 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import { snap } from "@/misc";
 import { addPoints } from "@/geometry";
 import useKeyboardShortcuts from "@/useKeyboardShortcuts";
-import { graphState, selectedTasksState } from "@/atoms";
+import { projectState, selectedTasksState } from "@/atoms";
 import ClickableDraggableCore from "@/ClickableDraggableCore/ClickableDraggableCore";
 
 import Task from "../Task/Task";
@@ -43,7 +43,7 @@ const GraphCanvas = (): JSX.Element => {
 
   const itemsContainerTransform = `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`;
 
-  const { tasks, dependencies } = useRecoilValue(graphState);
+  const { tasks, dependencies } = useRecoilValue(projectState);
 
   const setSelectedTasks = useSetRecoilState(selectedTasksState);
 

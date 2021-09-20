@@ -25,7 +25,7 @@ type Dependency = {
   successor: TaskId;
 };
 
-export interface Graph {
+export interface Project {
   tasks: TaskId[];
   dependencies: DependencyId[];
 }
@@ -47,8 +47,8 @@ const dependencyStateFamily = atomFamily<Dependency, DependencyId>({
   },
 });
 
-const graphState = atom<Graph>({
-  key: "Graph",
+const projectState = atom<Project>({
+  key: "Project",
   default: {
     tasks: [],
     dependencies: [],
@@ -151,7 +151,7 @@ const dependencyPathSelectorFamily = selectorFamily<string, DependencyId>({
 });
 
 export {
-  graphState,
+  projectState,
   dependencyStateFamily,
   taskStateFamily,
   taskBoxSizeStateFamily,
