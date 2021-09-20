@@ -5,7 +5,7 @@ import {
   intersectLineBox,
   Point,
 } from "@/geometry";
-import { atom, atomFamily, selector, selectorFamily } from "recoil";
+import { atom, atomFamily, selectorFamily } from "recoil";
 
 type TaskId = string;
 
@@ -150,22 +150,6 @@ const dependencyPathSelectorFamily = selectorFamily<string, DependencyId>({
     },
 });
 
-const graphTasksSelector = selector({
-  key: "Tasks",
-  get: ({ get }) => {
-    const { tasks } = get(graphState);
-    return tasks.map((id) => get(taskStateFamily(id)));
-  },
-});
-
-const graphDependenciesSelector = selector({
-  key: "Dependencies",
-  get: ({ get }) => {
-    const { dependencies } = get(graphState);
-    return dependencies.map((id) => get(dependencyStateFamily(id)));
-  },
-});
-
 export {
   graphState,
   dependencyStateFamily,
@@ -173,8 +157,6 @@ export {
   taskBoxSizeStateFamily,
   taskBoxSelectorFamily,
   dependencyPathSelectorFamily,
-  graphTasksSelector,
-  graphDependenciesSelector,
   selectedTasksState,
   taskSelectedSelectorFamily,
 };
