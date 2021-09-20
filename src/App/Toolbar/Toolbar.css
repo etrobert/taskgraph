@@ -3,27 +3,31 @@
   right: 2em;
   bottom: 2em;
   z-index: 1;
+  color: var(--task-color);
 }
 
 .Toolbar__button {
+  background-color: var(--task-color);
+  mask-size: contain;
+  mask-repeat: no-repeat;
   width: 5em;
   height: 5em;
 }
 
 .Toolbar__button-delete-selected {
-  background-image: url("resources/feather/trash-2.svg");
+  mask-image: url("resources/feather/trash-2.svg");
 }
 
 .Toolbar__button-complete-selected {
-  background-image: url("resources/feather/check-circle.svg");
+  mask-image: url("resources/feather/check-circle.svg");
 }
 
 .Toolbar__button-create-task {
-  background-image: url("resources/feather/plus-circle.svg");
+  mask-image: url("resources/feather/plus-circle.svg");
 }
 
 .Toolbar__button-change-link-mode {
-  background-image: url("resources/feather/link.svg");
+  mask-image: url("resources/feather/link.svg");
 
   border-bottom: 0.2rem solid transparent;
 

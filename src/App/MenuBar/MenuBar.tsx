@@ -1,4 +1,5 @@
 import React from "react";
+import ThemeSwitcher from "@/theme/ThemeSwitcher";
 
 import "./MenuBar.css";
 
@@ -17,11 +18,18 @@ const MenuBar = ({ open, onClose, onNewGraph }: Props): JSX.Element => {
         className="MenuBar__close-button iconButton"
         onClick={onClose}
       />
+
       <ul>
         <li>
-          <button onClick={onNewGraph}>New Graph</button>
+          <button className="action" onClick={onNewGraph}>
+            New Graph
+          </button>
         </li>
       </ul>
+      <section>
+        <h2>Themes</h2>
+        <ThemeSwitcher />
+      </section>
       <section>
         <h2>Keyboard Shortcuts</h2>
         <ul>
@@ -38,7 +46,7 @@ const MenuBar = ({ open, onClose, onNewGraph }: Props): JSX.Element => {
         target="_blank"
       />
       <p>
-        Made by
+        Made by{" "}
         <a
           href="mailto:etiennerobert33@gmail.com"
           target="_blank"

@@ -1,6 +1,6 @@
 #graph {
   height: 100%;
-  background-color: #ccc;
+  background-color: var(--canvas-background-color);
   overflow: hidden;
 }
 
@@ -12,10 +12,11 @@
 }
 
 .task {
+  color: var(--task-color);
   -webkit-tap-highlight-color: transparent;
   user-select: none;
   border-radius: 3px;
-  background-color: #ddd;
+  background-color: var(--task-background-color);
   padding: 0.2em 0.4em;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
   transition: box-shadow 0.2s ease;
@@ -76,8 +77,13 @@
 }
 
 #arrows > path {
-  stroke: black;
   stroke-width: 6px;
   stroke-linecap: round;
   marker-end: url(#Triangle);
+}
+
+#Triangle,
+#arrows > path {
+  fill: var(--dependency-stroke-color);
+  stroke: var(--dependency-stroke-color);
 }

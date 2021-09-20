@@ -10,6 +10,7 @@ import GraphCanvas from "./GraphCanvas/GraphCanvas";
 import NewTaskInput from "./NewTaskInput/NewTaskInput";
 
 import "./App.css";
+import ThemeProvider from "@/theme/ThemeProvider";
 
 const App = (): JSX.Element => {
   const [menuBarOpen, setMenuBarOpen] = useState(false);
@@ -29,7 +30,7 @@ const App = (): JSX.Element => {
   });
 
   return (
-    <>
+    <ThemeProvider>
       <button
         className="App__menu-bar-open-button iconButton"
         onClick={() => setMenuBarOpen(true)}
@@ -65,7 +66,7 @@ const App = (): JSX.Element => {
           onCancel={() => setInsertMode(false)}
         />
       )}
-    </>
+    </ThemeProvider>
   );
 };
 

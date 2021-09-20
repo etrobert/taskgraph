@@ -3,7 +3,8 @@
   left: 0;
   top: 0;
   bottom: 0;
-  background-color: #f9f9f9;
+  color: var(--task-color);
+  background-color: var(--task-background-color);
   z-index: 2;
   transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 
@@ -28,7 +29,10 @@
   width: 2.1rem;
   height: 2.1rem;
   margin: 1rem;
-  background-image: url("resources/feather/x.svg");
+  background-color: var(--task-color);
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-image: url("resources/feather/x.svg");
 }
 
 .MenuBar ul {
@@ -38,11 +42,6 @@
 .MenuBar__title {
   font-family: "PermanentMarker";
   font-size: 3rem;
-}
-
-.MenuBar button {
-  border: none;
-  background-color: transparent;
 }
 
 .MenuBar button:hover {
