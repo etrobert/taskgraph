@@ -217,4 +217,4 @@ export {
   newDependencyPathSelector,
 };
 
-export type { BoxSize, DependencyId, TaskId };
+export type { BoxSize, Dependency, DependencyId, TaskId };
