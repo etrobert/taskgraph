@@ -158,6 +158,11 @@ const dependencyPathSelectorFamily = selectorFamily<string, DependencyId>({
     },
 });
 
+const hoveredTaskState = atom<TaskId | null>({
+  key: "HoveredTask",
+  default: null,
+});
+
 type NewDependency = {
   predecessor: TaskId;
   cursor: Point;
@@ -207,6 +212,7 @@ export {
   dependencyPathSelectorFamily,
   selectedTasksState,
   taskSelectedSelectorFamily,
+  hoveredTaskState,
   newDependencyState,
   newDependencyPathSelector,
 };

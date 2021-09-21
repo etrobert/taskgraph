@@ -4,6 +4,7 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { addPoints } from "@/geometry";
 import useBoxSizeObserver from "@/useBoxSizeObserver";
 import {
+  hoveredTaskState,
   selectedTasksState,
   taskBoxSizeStateFamily,
   TaskId,
@@ -45,6 +46,8 @@ const Task = ({ id, onDragStart, onDragStop, zoom }: Props): JSX.Element => {
 
   const setSelectedTasks = useSetRecoilState(selectedTasksState);
 
+  const setHoveredTask = useSetRecoilState(hoveredTaskState);
+
   return (
     <ClickableDraggableCore
       onDrag={(e, data) => {
@@ -75,6 +78,8 @@ const Task = ({ id, onDragStart, onDragStop, zoom }: Props): JSX.Element => {
         ])}
         style={{ left: x, top: y }}
         id={id}
+        onMouseEnter={() => setHoveredTask(id)}
+        onMouseLeave={() => setHoveredTask(null)}
       >
         {name}
         <NewDependencyHandle
