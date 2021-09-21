@@ -29,8 +29,9 @@
   position: absolute;
   left: 0;
   top: 0;
-  width: 0;
-  height: 0;
+  /* width and height should be 0 but in Safari it doesn't render the arrows */
+  width: 1px;
+  height: 1px;
   overflow: visible;
 }
 
