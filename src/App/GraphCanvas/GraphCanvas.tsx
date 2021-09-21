@@ -51,7 +51,7 @@ const GraphCanvas = (): JSX.Element => {
 
   const setSelectedTasks = useSetRecoilState(selectedTasksState);
 
-  const graphRef = useRef<HTMLDivElement>(null);
+  const ref = useRef<HTMLDivElement>(null);
 
   const newDependencyPath = useRecoilValue(newDependencyPathSelector);
 
@@ -62,12 +62,12 @@ const GraphCanvas = (): JSX.Element => {
           setPan((pan) => addPoints(pan, { x: data.deltaX, y: data.deltaY }));
       }}
       onClick={(event) => {
-        if (graphRef.current === null) return;
-        if (event.target === graphRef.current) setSelectedTasks([]);
+        if (ref.current === null) return;
+        if (event.target === ref.current) setSelectedTasks([]);
       }}
     >
       {/* The outer div stays in place, receives the dragging events */}
-      <div onWheel={onWheel} id="graph" ref={graphRef}>
+      <div onWheel={onWheel} id="graph" ref={ref}>
         <p className="Graph__zoom-indicator">
           {zoom !== 1 && Math.floor(zoom * 100) + "% zoom"}
         </p>
