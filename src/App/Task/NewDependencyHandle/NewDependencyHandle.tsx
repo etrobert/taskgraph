@@ -1,4 +1,4 @@
-import React, { RefObject } from "react";
+import React from "react";
 import { DraggableCore } from "react-draggable";
 import { useSetRecoilState } from "recoil";
 
@@ -8,13 +8,13 @@ import "./NewDependencyHandle.css";
 
 type Props = {
   taskId: TaskId;
-  itemsContainerRef: RefObject<HTMLDivElement>;
+  dragOffsetParent?: HTMLElement;
   zoom: number;
 };
 
 const NewDependencyHandle = ({
   taskId,
-  itemsContainerRef,
+  dragOffsetParent,
   zoom,
 }: Props): JSX.Element => {
   const setNewDependency = useSetRecoilState(newDependencyState);
@@ -29,7 +29,7 @@ const NewDependencyHandle = ({
         setNewDependency({ predecessor: taskId, cursor: data });
       }}
       onStop={() => setNewDependency(null)}
-      offsetParent={itemsContainerRef.current ?? undefined}
+      offsetParent={dragOffsetParent}
       scale={zoom}
     >
       <div className={"NewDependencyHandle"} />

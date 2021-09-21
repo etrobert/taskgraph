@@ -55,8 +55,6 @@ const GraphCanvas = (): JSX.Element => {
 
   const newDependencyPath = useRecoilValue(newDependencyPathSelector);
 
-  const itemsContainerRef = useRef<HTMLDivElement>(null);
-
   return (
     <ClickableDraggableCore
       onDrag={(e, data) => {
@@ -74,10 +72,7 @@ const GraphCanvas = (): JSX.Element => {
           {zoom !== 1 && Math.floor(zoom * 100) + "% zoom"}
         </p>
         {/* The inner div contains the tasks and dependencies and gets translated around */}
-        <div
-          ref={itemsContainerRef}
-          style={{ transform: itemsContainerTransform }}
-        >
+        <div style={{ transform: itemsContainerTransform }}>
           <svg id="arrows">
             <defs>
               <marker
@@ -107,7 +102,6 @@ const GraphCanvas = (): JSX.Element => {
               onDragStart={() => setDraggedTasksCount((count) => count + 1)}
               onDragStop={() => setDraggedTasksCount((count) => count - 1)}
               zoom={zoom}
-              itemsContainerRef={itemsContainerRef}
             />
           ))}
         </div>

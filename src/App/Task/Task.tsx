@@ -1,4 +1,4 @@
-import React, { RefObject, useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
 import { addPoints } from "@/geometry";
@@ -21,16 +21,9 @@ type Props = {
   onDragStart: () => void;
   onDragStop: () => void;
   zoom: number;
-  itemsContainerRef: RefObject<HTMLDivElement>;
 };
 
-const Task = ({
-  id,
-  onDragStart,
-  onDragStop,
-  zoom,
-  itemsContainerRef,
-}: Props): JSX.Element => {
+const Task = ({ id, onDragStart, onDragStop, zoom }: Props): JSX.Element => {
   const [
     {
       position: { x, y },
@@ -86,7 +79,7 @@ const Task = ({
         {name}
         <NewDependencyHandle
           taskId={id}
-          itemsContainerRef={itemsContainerRef}
+          dragOffsetParent={ref.current?.parentElement ?? undefined}
           zoom={zoom}
         />
       </div>
