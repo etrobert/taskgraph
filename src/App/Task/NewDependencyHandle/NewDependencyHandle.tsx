@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { DraggableCore } from "react-draggable";
-import { useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
-import { newDependencyState, TaskId } from "@/atoms";
+import useGraphState from "@/App/useGraphState";
+import { hoveredTaskState, newDependencyState, TaskId } from "@/atoms";
 
 import "./NewDependencyHandle.css";
 
@@ -12,12 +13,31 @@ type Props = {
   zoom: number;
 };
 
+const useOnDragStop = () => {
+  const [newDependency, setNewDependency] = useRecoilState(newDependencyState);
+  const hoveredTask = useRecoilValue(hoveredTaskState);
+  const { addDependency } = useGraphState();
+
+  return useCallback(() => {
+    // Reset the newDependency state
+    setNewDependency(null);
+
+    if (hoveredTask === null || newDependency === null) return;
+
+    const { predecessor } = newDependency;
+
+    addDependency({ predecessor, successor: hoveredTask });
+  }, [addDependency, hoveredTask, newDependency, setNewDependency]);
+};
+
 const NewDependencyHandle = ({
   taskId,
   dragOffsetParent,
   zoom,
 }: Props): JSX.Element => {
   const setNewDependency = useSetRecoilState(newDependencyState);
+
+  const onDragStop = useOnDragStop();
 
   return (
     <DraggableCore
@@ -28,7 +48,7 @@ const NewDependencyHandle = ({
         event.preventDefault();
         setNewDependency({ predecessor: taskId, cursor: data });
       }}
-      onStop={() => setNewDependency(null)}
+      onStop={onDragStop}
       offsetParent={dragOffsetParent}
       scale={zoom}
     >
