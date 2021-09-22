@@ -2,8 +2,14 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { RecoilRoot } from "recoil";
 
+// Temporary fix for a Snowpack bug that prevents having __SNOWPACK_ENV__
+// Github Issue: https://github.com/snowpackjs/snowpack/issues/3621
+// TODO Remove when bug is fixed and remove package @types/snowpack-env
+import.meta.hot;
+
 import App from "./App/App";
 import { dependencyStateFamily, projectState, taskStateFamily } from "./atoms";
+import RecoilDebugObserver from "./RecoilDebugObserver";
 
 const projectMockState = {
   tasks: ["task-1", "task-2"],
@@ -40,6 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
         set(dependencyStateFamily("dependency-1"), dependencyMock);
       }}
     >
+      {__SNOWPACK_ENV__.MODE === "development" && <RecoilDebugObserver />}
       <App />
     </RecoilRoot>,
     document.getElementById("root")
