@@ -22,13 +22,11 @@ const App = (): JSX.Element => {
 
   const tasksSelected = useRecoilValue(tasksSelectedSelector);
 
-  const { addTask, clearGraph } = useGraphState();
+  const { addTask, clearGraph, deleteSelected } = useGraphState();
 
   useAppShortcuts({
     insertMode,
-    // TODO Replace when implemented
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    onDelete: () => {},
+    onDelete: deleteSelected,
     onCreateTask,
   });
 
@@ -55,9 +53,7 @@ const App = (): JSX.Element => {
         // TODO Replace when implemented
         // eslint-disable-next-line @typescript-eslint/no-empty-function
         onComplete={() => {}}
-        // TODO Replace when implemented
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
-        onDelete={() => {}}
+        onDelete={deleteSelected}
       />
 
       <GraphCanvas />

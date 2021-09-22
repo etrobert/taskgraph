@@ -1,10 +1,17 @@
-import { useRecoilCallback } from "recoil";
+import { useRecoilCallback, useRecoilTransaction_UNSTABLE } from "recoil";
+import difference from "lodash/difference";
 
-import { projectState, taskStateFamily } from "@/atoms";
+import {
+  dependencyStateFamily,
+  projectState,
+  selectedTasksState,
+  taskStateFamily,
+} from "@/atoms";
 
 type UseGraphState = () => {
   addTask: (name: string) => void;
   clearGraph: () => void;
+  deleteSelected: () => void;
 };
 
 // TODO Use a real unique id generator
@@ -33,7 +40,29 @@ const useGraphState: UseGraphState = () => {
         set(projectState, { tasks: [], dependencies: [] }),
     []
   );
-  return { addTask, clearGraph };
+
+  const deleteSelected = useRecoilTransaction_UNSTABLE(
+    ({ get, set }) =>
+      () => {
+        const selectedTasks = get(selectedTasksState);
+
+        set(projectState, (project) => ({
+          ...project,
+          tasks: difference(project.tasks, selectedTasks),
+          dependencies: project.dependencies.filter((dep) => {
+            const { predecessor, successor } = get(dependencyStateFamily(dep));
+
+            // None of the selected tasks are the predecessor or the successor
+            return !selectedTasks.some(
+              (task) => task === predecessor || task === successor
+            );
+          }),
+        }));
+      },
+    []
+  );
+
+  return { addTask, clearGraph, deleteSelected };
 };
 
 export default useGraphState;
