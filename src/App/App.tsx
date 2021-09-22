@@ -22,7 +22,8 @@ const App = (): JSX.Element => {
 
   const tasksSelected = useRecoilValue(tasksSelectedSelector);
 
-  const { addTask, clearGraph, deleteSelected } = useGraphState();
+  const { addTask, clearGraph, completeSelected, deleteSelected } =
+    useGraphState();
 
   useAppShortcuts({
     insertMode,
@@ -50,9 +51,7 @@ const App = (): JSX.Element => {
         linkMode={linkMode}
         onChangeLinkMode={() => setLinkMode((mode) => !mode)}
         onCreateTask={onCreateTask}
-        // TODO Replace when implemented
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
-        onComplete={() => {}}
+        onComplete={completeSelected}
         onDelete={deleteSelected}
       />
 

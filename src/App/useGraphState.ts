@@ -11,6 +11,7 @@ import {
 type UseGraphState = () => {
   addTask: (name: string) => void;
   clearGraph: () => void;
+  completeSelected: () => void;
   deleteSelected: () => void;
 };
 
@@ -62,7 +63,24 @@ const useGraphState: UseGraphState = () => {
     []
   );
 
-  return { addTask, clearGraph, deleteSelected };
+  const completeSelected = useRecoilTransaction_UNSTABLE(
+    ({ get, set }) =>
+      () => {
+        const selectedTasks = get(selectedTasksState);
+
+        selectedTasks.forEach((taskId) =>
+          set(taskStateFamily(taskId), (task) => ({
+            ...task,
+            status:
+              task.status === "ready"
+                ? ("completed" as const)
+                : ("ready" as const),
+          }))
+        );
+      }
+  );
+
+  return { addTask, clearGraph, completeSelected, deleteSelected };
 };
 
 export default useGraphState;
