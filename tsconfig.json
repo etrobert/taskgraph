@@ -16,6 +16,8 @@
 
     "esModuleInterop": true, /* Allows jest to work */
 
+    "module": "es2020", /* Allows to use import.meta */
+
     "baseUrl": "./src", /* Allows for absolute imports */
     "paths": {
       "@/*": ["*"]
