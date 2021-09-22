@@ -60,7 +60,7 @@ const selectedTasksState = atom<TaskId[]>({
   default: [],
 });
 
-const taskSelectedSelectorFamily = selectorFamily<boolean, TaskId>({
+const taskSelectedStateFamily = selectorFamily<boolean, TaskId>({
   key: "TaskSelected",
   get:
     (id) =>
@@ -81,7 +81,7 @@ const taskBoxSizeStateFamily = atomFamily<BoxSize, TaskId>({
   },
 });
 
-const taskBoxSelectorFamily = selectorFamily<Box, TaskId>({
+const taskBoxStateFamily = selectorFamily<Box, TaskId>({
   key: "TaskExtendedBoudingBox",
   get:
     (id) =>
@@ -101,29 +101,29 @@ const taskBoxSelectorFamily = selectorFamily<Box, TaskId>({
     },
 });
 
-const taskCenterSelectorFamily = selectorFamily<Point, TaskId>({
+const taskCenterStateFamily = selectorFamily<Point, TaskId>({
   key: "TaskCenter",
   get:
     (id) =>
     ({ get }) => {
-      const box = get(taskBoxSelectorFamily(id));
+      const box = get(taskBoxStateFamily(id));
 
       return getBoxCenter(box);
     },
 });
 
-const dependencyPathSelectorFamily = selectorFamily<string, DependencyId>({
+const dependencyPathStateFamily = selectorFamily<string, DependencyId>({
   key: "DependencyPath",
   get:
     (id) =>
     ({ get }) => {
       const { predecessor, successor } = get(dependencyStateFamily(id));
-      const predecessorCenter = get(taskCenterSelectorFamily(predecessor));
-      const successorCenter = get(taskCenterSelectorFamily(successor));
+      const predecessorCenter = get(taskCenterStateFamily(predecessor));
+      const successorCenter = get(taskCenterStateFamily(successor));
 
       const offset = 8;
 
-      const predecessorBox = get(taskBoxSelectorFamily(predecessor));
+      const predecessorBox = get(taskBoxStateFamily(predecessor));
       const expandedPredecessorBox = getExpandedBox(predecessorBox, offset);
 
       const pathPointPredecessor = intersectLineBox(
@@ -132,7 +132,7 @@ const dependencyPathSelectorFamily = selectorFamily<string, DependencyId>({
         expandedPredecessorBox
       );
 
-      const successorBox = get(taskBoxSelectorFamily(successor));
+      const successorBox = get(taskBoxStateFamily(successor));
       const expandedSuccessorBox = getExpandedBox(successorBox, offset);
 
       const pathPointSuccessor = intersectLineBox(
@@ -155,10 +155,10 @@ export {
   dependencyStateFamily,
   taskStateFamily,
   taskBoxSizeStateFamily,
-  taskBoxSelectorFamily,
-  dependencyPathSelectorFamily,
+  taskBoxStateFamily,
+  dependencyPathStateFamily,
   selectedTasksState,
-  taskSelectedSelectorFamily,
+  taskSelectedStateFamily,
 };
 
 export type { BoxSize, DependencyId, TaskId };

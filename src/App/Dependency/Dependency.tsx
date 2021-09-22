@@ -1,14 +1,14 @@
 import React from "react";
 import { useRecoilValue } from "recoil";
 
-import { DependencyId, dependencyPathSelectorFamily } from "@/atoms";
+import { DependencyId, dependencyPathStateFamily } from "@/atoms";
 
 type Props = {
   id: DependencyId;
 };
 
 const Dependency = ({ id }: Props): JSX.Element => {
-  const path = useRecoilValue(dependencyPathSelectorFamily(id));
+  const path = useRecoilValue(dependencyPathStateFamily(id));
 
   return <path d={path} />;
 };

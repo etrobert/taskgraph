@@ -7,7 +7,7 @@ import {
   selectedTasksState,
   taskBoxSizeStateFamily,
   TaskId,
-  taskSelectedSelectorFamily,
+  taskSelectedStateFamily,
   taskStateFamily,
 } from "@/atoms";
 import ClickableDraggableCore from "@/ClickableDraggableCore/ClickableDraggableCore";
@@ -32,7 +32,7 @@ const Task = ({ id, onDragStart, onDragStop, zoom }: Props): JSX.Element => {
     setTask,
   ] = useRecoilState(taskStateFamily(id));
 
-  const selected = useRecoilValue(taskSelectedSelectorFamily(id));
+  const selected = useRecoilValue(taskSelectedStateFamily(id));
 
   const setBoxSize = useSetRecoilState(taskBoxSizeStateFamily(id));
 
