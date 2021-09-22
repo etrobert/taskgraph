@@ -1,14 +1,16 @@
 import React, { useState } from "react";
 
+import { tasksSelectedSelector } from "@/atoms";
+
 import MenuBar from "./MenuBar/MenuBar";
 import useAppShortcuts from "./useAppShortcuts";
 import Toolbar from "./Toolbar/Toolbar";
-import useTasksSelected from "./useTasksSelected";
 import GraphCanvas from "./GraphCanvas/GraphCanvas";
 import NewTaskInput from "./NewTaskInput/NewTaskInput";
 
 import "./App.css";
 import useGraphState from "./useGraphState";
+import { useRecoilValue } from "recoil";
 
 const App = (): JSX.Element => {
   const [menuBarOpen, setMenuBarOpen] = useState(false);
@@ -19,15 +21,14 @@ const App = (): JSX.Element => {
   const [insertMode, setInsertMode] = useState(false);
   const onCreateTask = () => setInsertMode(true);
 
-  const tasksSelected = useTasksSelected();
+  const tasksSelected = useRecoilValue(tasksSelectedSelector);
 
-  const { addTask, clearGraph } = useGraphState();
+  const { addTask, clearGraph, completeSelected, deleteSelected } =
+    useGraphState();
 
   useAppShortcuts({
     insertMode,
-    // TODO Replace when implemented
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    onDelete: () => {},
+    onDelete: deleteSelected,
     onCreateTask,
   });
 
@@ -51,12 +52,8 @@ const App = (): JSX.Element => {
         linkMode={linkMode}
         onChangeLinkMode={() => setLinkMode((mode) => !mode)}
         onCreateTask={onCreateTask}
-        // TODO Replace when implemented
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
-        onComplete={() => {}}
-        // TODO Replace when implemented
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
-        onDelete={() => {}}
+        onComplete={completeSelected}
+        onDelete={deleteSelected}
       />
 
       <GraphCanvas />
