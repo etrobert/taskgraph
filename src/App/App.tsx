@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 
+import { tasksSelectedSelector } from "@/atoms";
+
 import MenuBar from "./MenuBar/MenuBar";
 import useAppShortcuts from "./useAppShortcuts";
 import Toolbar from "./Toolbar/Toolbar";
@@ -9,7 +11,6 @@ import NewTaskInput from "./NewTaskInput/NewTaskInput";
 import "./App.css";
 import useGraphState from "./useGraphState";
 import { useRecoilValue } from "recoil";
-import { tasksSelectedSelector } from "@/atoms";
 
 const App = (): JSX.Element => {
   const [menuBarOpen, setMenuBarOpen] = useState(false);
