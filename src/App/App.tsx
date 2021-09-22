@@ -3,12 +3,13 @@ import React, { useState } from "react";
 import MenuBar from "./MenuBar/MenuBar";
 import useAppShortcuts from "./useAppShortcuts";
 import Toolbar from "./Toolbar/Toolbar";
-import useTasksSelected from "./useTasksSelected";
 import GraphCanvas from "./GraphCanvas/GraphCanvas";
 import NewTaskInput from "./NewTaskInput/NewTaskInput";
 
 import "./App.css";
 import useGraphState from "./useGraphState";
+import { useRecoilValue } from "recoil";
+import { tasksSelectedSelector } from "@/atoms";
 
 const App = (): JSX.Element => {
   const [menuBarOpen, setMenuBarOpen] = useState(false);
@@ -19,7 +20,7 @@ const App = (): JSX.Element => {
   const [insertMode, setInsertMode] = useState(false);
   const onCreateTask = () => setInsertMode(true);
 
-  const tasksSelected = useTasksSelected();
+  const tasksSelected = useRecoilValue(tasksSelectedSelector);
 
   const { addTask, clearGraph } = useGraphState();
 

@@ -5,7 +5,7 @@ import {
   intersectLineBox,
   Point,
 } from "@/geometry";
-import { atom, atomFamily, selectorFamily } from "recoil";
+import { atom, atomFamily, selector, selectorFamily } from "recoil";
 
 type TaskId = string;
 
@@ -66,6 +66,11 @@ const taskSelectedSelectorFamily = selectorFamily<boolean, TaskId>({
     (id) =>
     ({ get }) =>
       get(selectedTasksState).includes(id),
+});
+
+const tasksSelectedSelector = selector<boolean>({
+  key: "TasksSelected",
+  get: ({ get }) => get(selectedTasksState).length !== 0,
 });
 
 type BoxSize = {
@@ -159,6 +164,7 @@ export {
   dependencyPathSelectorFamily,
   selectedTasksState,
   taskSelectedSelectorFamily,
+  tasksSelectedSelector,
 };
 
 export type { BoxSize, DependencyId, TaskId };
