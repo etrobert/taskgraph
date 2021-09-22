@@ -1,14 +1,17 @@
 import React, { useState } from "react";
 
+import useSyncFirestore from "@/useSyncFirestore";
+import useFirestoreState from "@/useFirestoreState";
+
 import MenuBar from "./MenuBar/MenuBar";
 import useAppShortcuts from "./useAppShortcuts";
 import Toolbar from "./Toolbar/Toolbar";
 import useTasksSelected from "./useTasksSelected";
 import GraphCanvas from "./GraphCanvas/GraphCanvas";
 import NewTaskInput from "./NewTaskInput/NewTaskInput";
+import useGraphState from "./useGraphState";
 
 import "./App.css";
-import useGraphState from "./useGraphState";
 
 const App = (): JSX.Element => {
   const [menuBarOpen, setMenuBarOpen] = useState(false);
@@ -21,7 +24,11 @@ const App = (): JSX.Element => {
 
   const tasksSelected = useTasksSelected();
 
-  const { addTask, clearGraph } = useGraphState();
+  const { clearGraph } = useGraphState();
+
+  const { addTask } = useFirestoreState();
+
+  useSyncFirestore();
 
   useAppShortcuts({
     insertMode,

@@ -7,6 +7,8 @@ import {
 } from "@/geometry";
 import { atom, atomFamily, selectorFamily } from "recoil";
 
+type ProjectId = string;
+
 type TaskId = string;
 
 // See https://en.wikipedia.org/wiki/Task_management
@@ -45,6 +47,11 @@ const dependencyStateFamily = atomFamily<Dependency, DependencyId>({
     predecessor: "DEFAULT-TASK-ID",
     successor: "DEFAULT-TASK-ID",
   },
+});
+
+const projectIdState = atom<ProjectId>({
+  key: "ProjectId",
+  default: "spXxYVulTgfKcj0n1sWb",
 });
 
 const projectState = atom<Project>({
@@ -151,6 +158,7 @@ const dependencyPathSelectorFamily = selectorFamily<string, DependencyId>({
 });
 
 export {
+  projectIdState,
   projectState,
   dependencyStateFamily,
   taskStateFamily,
@@ -161,4 +169,4 @@ export {
   taskSelectedSelectorFamily,
 };
 
-export type { BoxSize, DependencyId, TaskId };
+export type { ProjectId, BoxSize, DependencyId, TaskId, Task };
