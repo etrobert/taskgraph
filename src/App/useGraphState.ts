@@ -77,7 +77,8 @@ const useGraphState: UseGraphState = () => {
                 : ("ready" as const),
           }))
         );
-      }
+      },
+    []
   );
 
   return { addTask, clearGraph, completeSelected, deleteSelected };
