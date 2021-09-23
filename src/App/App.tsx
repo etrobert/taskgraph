@@ -1,3 +1,4 @@
+import GraphPage from "@/GraphPage/GraphPage";
 import LandingPage from "@/LandingPage";
 import React from "react";
 
@@ -9,7 +10,9 @@ const App = (): JSX.Element => {
   return (
     <Router>
       <Switch>
-        <Route path="/graph">Graph</Route>
+        <Route path="/graph">
+          <GraphPage />
+        </Route>
         <Route path="/">
           <LandingPage />;
         </Route>
