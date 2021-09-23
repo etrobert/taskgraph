@@ -1,105 +1,85 @@
-import React, { useRef, useState } from "react";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import React, { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 
-import { snap } from "@/misc";
-import { addPoints } from "@/geometry";
-import useKeyboardShortcuts from "@/useKeyboardShortcuts";
-import { projectState, selectedTasksState } from "@/atoms";
-import ClickableDraggableCore from "@/ClickableDraggableCore/ClickableDraggableCore";
+import { useRecoilValue } from "recoil";
+
+import cytoscape from "cytoscape";
+import type Cy from "cytoscape";
+import CytoscapeComponent from "react-cytoscapejs";
+// @ts-expect-error Module is not typed
+import cytoscapeDomNode from "cytoscape-dom-node";
+
+import { projectDependenciesSelector, projectState } from "@/atoms";
 
 import Task from "../Task/Task";
-import Dependency from "../Dependency/Dependency";
+
+import useMemoizedDivs from "./useMemoizedDivs";
+import useCytoscapeEvent from "./useCytoscapeEvent";
 
 import "./GraphCanvas.css";
+
+cytoscape.use(cytoscapeDomNode);
+
+const cytoscapeStylesheet = [
+  {
+    selector: "node",
+    style: {
+      shape: "rectangle",
+    },
+  },
+  {
+    selector: "edge",
+    style: {
+      "target-arrow-shape": "triangle",
+      "curve-style": "bezier",
+      width: "5",
+      "target-distance-from-node": 5,
+      "source-distance-from-node": 5,
+    },
+  },
+];
 
 /**
  * Interactive canvas displaying a Task Graph
  */
 const GraphCanvas = (): JSX.Element => {
-  const [pan, setPan] = useState({ x: 0, y: 0 });
-  const [zoom, setZoom] = useState(1);
+  const { tasks } = useRecoilValue(projectState);
+  const dependencies = useRecoilValue(projectDependenciesSelector);
 
-  // Used to not drag the background when a task is being dragged
-  const [draggedTasksCount, setDraggedTasksCount] = useState(0);
+  const [cy, setCy] = useState<Cy.Core>();
 
-  const onWheel: React.WheelEventHandler = (event) => {
-    const factor = event.deltaY < 0 ? 1.1 : 0.9;
-    const target = 1;
-    const offset = 0.1;
-    setZoom(snap(target)(offset)(zoom * factor));
-  };
+  // @ts-expect-error Module is not typed
+  useEffect(() => cy?.domNode(), [cy]);
 
-  useKeyboardShortcuts({
-    center: {
-      keys: ["0"],
-      callback: (event) => {
-        if (event.ctrlKey) {
-          setPan({ x: 0, y: 0 });
-          setZoom(1);
-        }
-      },
+  useCytoscapeEvent(cy, "select", (event) =>
+    console.log("Selected " + event.target.data().id)
+  );
+
+  const memoizedDivs = useMemoizedDivs();
+
+  const cyTaskData = tasks.map((task) => ({
+    data: { id: task, label: task, dom: memoizedDivs(task) },
+  }));
+
+  const cyDependencyData = dependencies.map((dependency) => ({
+    data: {
+      source: dependency.predecessor,
+      target: dependency.successor,
     },
-  });
-
-  const itemsContainerTransform = `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`;
-
-  const { tasks, dependencies } = useRecoilValue(projectState);
-
-  const setSelectedTasks = useSetRecoilState(selectedTasksState);
-
-  const ref = useRef<HTMLDivElement>(null);
+  }));
 
   return (
-    <ClickableDraggableCore
-      onDrag={(e, data) => {
-        if (draggedTasksCount === 0)
-          setPan((pan) => addPoints(pan, { x: data.deltaX, y: data.deltaY }));
-      }}
-      onClick={(event) => {
-        if (ref.current === null) return;
-        if (event.target === ref.current) setSelectedTasks([]);
-      }}
-    >
-      {/* The outer div stays in place, receives the dragging events */}
-      <div onWheel={onWheel} id="graph" ref={ref}>
-        <p className="Graph__zoom-indicator">
-          {zoom !== 1 && Math.floor(zoom * 100) + "% zoom"}
-        </p>
-        {/* The inner div contains the tasks and dependencies and gets translated around */}
-        <div style={{ transform: itemsContainerTransform }}>
-          <svg id="arrows">
-            <defs>
-              <marker
-                id="Triangle"
-                viewBox="0 0 5 5"
-                refX="2"
-                refY="2.5"
-                markerWidth="2"
-                markerHeight="2"
-                orient="auto"
-              >
-                <path
-                  d="M 0 0 L 5 2.5 L 0 5 z"
-                  className="link-arrow-triangle-path"
-                />
-              </marker>
-            </defs>
-            {dependencies.map((id) => (
-              <Dependency key={id} id={id} />
-            ))}
-          </svg>
-          {tasks.map((id) => (
-            <Task
-              key={id}
-              id={id}
-              onDragStart={() => setDraggedTasksCount((count) => count + 1)}
-              onDragStop={() => setDraggedTasksCount((count) => count - 1)}
-              zoom={zoom}
-            />
-          ))}
-        </div>
-      </div>
-    </ClickableDraggableCore>
+    <>
+      <CytoscapeComponent
+        style={{ height: "100%" }}
+        elements={[...cyTaskData, ...cyDependencyData]}
+        cy={(cy) => setCy(cy)}
+        stylesheet={cytoscapeStylesheet}
+      />
+      {tasks.map((task) =>
+        createPortal(<Task zoom={1} id={task} />, memoizedDivs(task))
+      )}
+    </>
   );
 };
 
