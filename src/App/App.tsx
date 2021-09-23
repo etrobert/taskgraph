@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import MenuBar from "./MenuBar/MenuBar";
 import useAppShortcuts from "./useAppShortcuts";
 import Toolbar from "./Toolbar/Toolbar";
-import useTasksSelected from "./useTasksSelected";
 import GraphCanvas from "./GraphCanvas/GraphCanvas";
 import NewTaskInput from "./NewTaskInput/NewTaskInput";
 
@@ -19,7 +18,8 @@ const App = (): JSX.Element => {
   const [insertMode, setInsertMode] = useState(false);
   const onCreateTask = () => setInsertMode(true);
 
-  const tasksSelected = useTasksSelected();
+  // TODO Replace when implemented
+  const tasksSelected = false;
 
   const { addTask, clearGraph } = useGraphState();
 
