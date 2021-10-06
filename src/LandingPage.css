@@ -10,6 +10,16 @@
   line-height: 0.8em;
 }
 
+@media only screen and (max-width: 480px) {
+  .LandingPage {
+    gap: 2rem;
+  }
+
+  .LandingPage__title {
+    font-size: 7rem;
+  }
+}
+
 .LandingPage__form {
   display: grid;
   gap: 0.5rem;
