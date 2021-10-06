@@ -1,19 +1,29 @@
 .LandingPage {
   display: grid;
   place-content: center;
-  /* justify-items: center; */
   height: 100%;
-  gap: 1.5rem;
+  gap: 4rem;
 }
 
 .LandingPage__title {
   font-size: 10rem;
   line-height: 0.8em;
-  padding-bottom: 0.1em;
+}
+
+.LandingPage__form {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.LandingPage__email-input {
+  font-size: 1rem;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid #bbb;
 }
 
 .LandingPage__cta {
-  padding: 1.5rem 3rem;
+  padding: 1rem 3rem;
 
   display: grid;
   place-content: center;
