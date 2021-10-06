@@ -1,0 +1,30 @@
+.LandingPage {
+  display: grid;
+  place-content: center;
+  /* justify-items: center; */
+  height: 100%;
+  gap: 1.5rem;
+}
+
+.LandingPage__title {
+  font-size: 10rem;
+  line-height: 0.8em;
+  padding-bottom: 0.1em;
+}
+
+.LandingPage__cta {
+  padding: 1.5rem 3rem;
+
+  display: grid;
+  place-content: center;
+
+  text-decoration: none;
+
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: white;
+  background-color: black;
+  border: none;
+  cursor: pointer;
+  border-radius: 0.5rem;
+}
