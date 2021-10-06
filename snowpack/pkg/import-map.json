@@ -5,6 +5,7 @@
     "react": "./react.js",
     "react-dom": "./react-dom.js",
     "react-draggable": "./react-draggable.js",
+    "react-router-dom": "./react-router-dom.js",
     "recoil": "./recoil.js"
   }
 }
