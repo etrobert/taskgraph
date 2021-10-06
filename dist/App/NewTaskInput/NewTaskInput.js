@@ -6,7 +6,7 @@ const NewTask = ({onNewTask, onCancel}) => {
     onSubmit: (event) => {
       event.preventDefault();
       if (name)
-        onNewTask({name});
+        onNewTask(name);
       else
         onCancel();
     }

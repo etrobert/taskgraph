@@ -1,5 +1,6 @@
-import {selectAll} from "../graph.js";
 import useKeyboardShortcuts from "../useKeyboardShortcuts.js";
+const selectAll = () => {
+};
 const getAppShortcuts = ({onCreateTask, onDelete}) => {
   const selectAllShortcut = {
     keys: ["a"],

@@ -1,6 +1,10 @@
 {
   "imports": {
+    "firebase/app": "./firebase/app.js",
+    "firebase/firestore": "./firebase/firestore.js",
     "react": "./react.js",
-    "react-dom": "./react-dom.js"
+    "react-dom": "./react-dom.js",
+    "react-draggable": "./react-draggable.js",
+    "recoil": "./recoil.js"
   }
 }
