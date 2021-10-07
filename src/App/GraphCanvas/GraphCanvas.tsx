@@ -25,6 +25,7 @@ const cytoscapeStylesheet = [
     selector: "node",
     style: {
       shape: "rectangle",
+      "background-opacity": 0,
     },
   },
   {
