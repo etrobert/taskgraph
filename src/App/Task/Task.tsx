@@ -14,7 +14,6 @@ import "./Task.css";
 
 type Props = {
   id: TaskId;
-  zoom: number;
 };
 
 const Task = ({ id }: Props): JSX.Element => {

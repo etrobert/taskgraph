@@ -78,7 +78,7 @@ const GraphCanvas = (): JSX.Element => {
         stylesheet={cytoscapeStylesheet}
       />
       {tasks.map((task) =>
-        createPortal(<Task zoom={1} id={task} />, memoizedDivs(task))
+        createPortal(<Task id={task} />, memoizedDivs(task))
       )}
     </>
   );
