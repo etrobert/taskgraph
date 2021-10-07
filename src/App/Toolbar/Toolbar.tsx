@@ -7,8 +7,6 @@ import "./Toolbar.css";
 
 type Props = {
   tasksSelected: boolean;
-  linkMode: boolean;
-  onChangeLinkMode: () => void;
   onCreateTask: () => void;
   onComplete: () => void;
   onDelete: () => void;
@@ -16,8 +14,6 @@ type Props = {
 
 const Toolbar = ({
   tasksSelected,
-  linkMode,
-  onChangeLinkMode,
   onCreateTask,
   onComplete,
   onDelete,
@@ -26,21 +22,8 @@ const Toolbar = ({
     {tasksSelected ? (
       <SomeSelectedButtons onComplete={onComplete} onDelete={onDelete} />
     ) : (
-      <NoneSelectedButtons
-        linkMode={linkMode}
-        onChangeLinkMode={onChangeLinkMode}
-        onCreateTask={onCreateTask}
-      />
+      <NoneSelectedButtons onCreateTask={onCreateTask} />
     )}
-
-    {/* TODO Remove: Temporary element used to communicate with graph */}
-    <input
-      style={{ display: "none" }}
-      type="checkbox"
-      checked={!tasksSelected && linkMode}
-      id="linkModeCheckbox"
-      readOnly
-    />
   </div>
 );
 

@@ -82,6 +82,11 @@ const projectDependenciesSelector = selector({
     ),
 });
 
+const drawModeState = atom<boolean>({
+  key: "DrawMode",
+  default: false,
+});
+
 export {
   projectIdState,
   projectState,
@@ -91,6 +96,7 @@ export {
   anyTasksSelectedSelector,
   taskSelectedSelectorFamily,
   projectDependenciesSelector,
+  drawModeState,
 };
 
 export type { ProjectId, DependencyId, TaskId, Task };

@@ -53,8 +53,6 @@ const GraphPage = (): JSX.Element => {
 
       <Toolbar
         tasksSelected={tasksSelected}
-        linkMode={linkMode}
-        onChangeLinkMode={() => setLinkMode((mode) => !mode)}
         onCreateTask={onCreateTask}
         // TODO Replace when implemented
         // eslint-disable-next-line @typescript-eslint/no-empty-function
