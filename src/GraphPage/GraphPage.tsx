@@ -16,8 +16,6 @@ const GraphPage = (): JSX.Element => {
   const [menuBarOpen, setMenuBarOpen] = useState(false);
   const closeMenuBar = () => setMenuBarOpen(false);
 
-  const [linkMode, setLinkMode] = useState(false);
-
   const [insertMode, setInsertMode] = useState(false);
   const onCreateTask = () => setInsertMode(true);
 
