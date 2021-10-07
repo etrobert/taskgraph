@@ -8,8 +8,14 @@ import type Cy from "cytoscape";
 import CytoscapeComponent from "react-cytoscapejs";
 // @ts-expect-error Module is not typed
 import cytoscapeDomNode from "cytoscape-dom-node";
+import edgehandles from "cytoscape-edgehandles";
+import type { EdgeHandlesInstance } from "cytoscape-edgehandles";
 
-import { projectDependenciesSelector, projectState } from "@/atoms";
+import {
+  drawModeState,
+  projectDependenciesSelector,
+  projectState,
+} from "@/atoms";
 import useSetTaskSelected from "@/useSetTaskSelected";
 
 import Task from "../Task/Task";
@@ -20,6 +26,7 @@ import useCytoscapeEvent from "./useCytoscapeEvent";
 import "./GraphCanvas.css";
 
 cytoscape.use(cytoscapeDomNode);
+cytoscape.use(edgehandles);
 
 const cytoscapeStylesheet = [
   {
@@ -51,6 +58,9 @@ const GraphCanvas = (): JSX.Element => {
   const setTaskSelected = useSetTaskSelected();
 
   const [cy, setCy] = useState<Cy.Core>();
+  const [eh, setEh] = useState<EdgeHandlesInstance>();
+
+  const drawMode = useRecoilValue(drawModeState);
 
   // @ts-expect-error Module is not typed
   useEffect(() => cy?.domNode(), [cy]);
@@ -62,6 +72,18 @@ const GraphCanvas = (): JSX.Element => {
   useCytoscapeEvent(cy, "unselect", (event) =>
     setTaskSelected(event.target.data().id, false)
   );
+
+  // Initialise edgehandles instance
+  useEffect(() => {
+    if (cy === undefined) return;
+    setEh(cy.edgehandles());
+  }, [cy]);
+
+  // Update edgehandles draw mode
+  useEffect(() => {
+    if (eh === undefined) return;
+    drawMode ? eh.enableDrawMode() : eh.disableDrawMode();
+  }, [drawMode, eh]);
 
   const memoizedDivs = useMemoizedDivs();
 
