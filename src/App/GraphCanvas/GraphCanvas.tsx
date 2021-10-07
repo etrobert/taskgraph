@@ -59,7 +59,7 @@ const GraphCanvas = (): JSX.Element => {
   const memoizedDivs = useMemoizedDivs();
 
   const cyTaskData = tasks.map((task) => ({
-    data: { id: task, label: task, dom: memoizedDivs(task) },
+    data: { id: task, dom: memoizedDivs(task) },
   }));
 
   const cyDependencyData = dependencies.map((dependency) => ({
