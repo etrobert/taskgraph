@@ -10,6 +10,7 @@ import CytoscapeComponent from "react-cytoscapejs";
 import cytoscapeDomNode from "cytoscape-dom-node";
 
 import { projectDependenciesSelector, projectState } from "@/atoms";
+import useSetTaskSelected from "@/useSetTaskSelected";
 
 import Task from "../Task/Task";
 
@@ -47,13 +48,19 @@ const GraphCanvas = (): JSX.Element => {
   const { tasks } = useRecoilValue(projectState);
   const dependencies = useRecoilValue(projectDependenciesSelector);
 
+  const setTaskSelected = useSetTaskSelected();
+
   const [cy, setCy] = useState<Cy.Core>();
 
   // @ts-expect-error Module is not typed
   useEffect(() => cy?.domNode(), [cy]);
 
   useCytoscapeEvent(cy, "select", (event) =>
-    console.log("Selected " + event.target.data().id)
+    setTaskSelected(event.target.data().id, true)
+  );
+
+  useCytoscapeEvent(cy, "unselect", (event) =>
+    setTaskSelected(event.target.data().id, false)
   );
 
   const memoizedDivs = useMemoizedDivs();
