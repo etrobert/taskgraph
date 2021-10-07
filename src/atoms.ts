@@ -61,6 +61,11 @@ const selectedTasksState = atom<TaskId[]>({
   default: [],
 });
 
+const anyTasksSelectedSelector = selector<boolean>({
+  key: "AnyTaskSelected",
+  get: ({ get }) => get(selectedTasksState).length !== 0,
+});
+
 const taskSelectedSelectorFamily = selectorFamily<boolean, TaskId>({
   key: "TaskSelected",
   get:
@@ -83,6 +88,7 @@ export {
   dependencyStateFamily,
   taskStateFamily,
   selectedTasksState,
+  anyTasksSelectedSelector,
   taskSelectedSelectorFamily,
   projectDependenciesSelector,
 };

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useRecoilValue } from "recoil";
 
 import useAppShortcuts from "@/App/useAppShortcuts";
 import MenuBar from "@/App/MenuBar/MenuBar";
@@ -7,6 +8,7 @@ import GraphCanvas from "@/App/GraphCanvas/GraphCanvas";
 import NewTaskInput from "@/App/NewTaskInput/NewTaskInput";
 import useFirestoreState from "@/useFirestoreState";
 import useSyncFirestore from "@/useSyncFirestore";
+import { anyTasksSelectedSelector } from "@/atoms";
 
 import "./GraphPage.css";
 
@@ -19,8 +21,7 @@ const GraphPage = (): JSX.Element => {
   const [insertMode, setInsertMode] = useState(false);
   const onCreateTask = () => setInsertMode(true);
 
-  // TODO Replace when implemented
-  const tasksSelected = false;
+  const tasksSelected = useRecoilValue(anyTasksSelectedSelector);
 
   const { addTask } = useFirestoreState();
 
