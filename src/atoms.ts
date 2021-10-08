@@ -82,6 +82,12 @@ const projectDependenciesSelector = selector({
     ),
 });
 
+const projectTasksSelector = selector({
+  key: "ProjectTasks",
+  get: ({ get }) =>
+    get(projectState).tasks.map((id) => ({ id, ...get(taskStateFamily(id)) })),
+});
+
 const drawModeState = atom<boolean>({
   key: "DrawMode",
   default: false,
@@ -96,6 +102,7 @@ export {
   anyTasksSelectedSelector,
   taskSelectedSelectorFamily,
   projectDependenciesSelector,
+  projectTasksSelector,
   drawModeState,
 };
 

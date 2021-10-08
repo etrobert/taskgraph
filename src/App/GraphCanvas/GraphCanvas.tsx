@@ -14,7 +14,7 @@ import type { EdgeHandlesInstance } from "cytoscape-edgehandles";
 import {
   drawModeState,
   projectDependenciesSelector,
-  projectState,
+  projectTasksSelector,
 } from "@/atoms";
 import useSetTaskSelected from "@/useSetTaskSelected";
 
@@ -52,7 +52,7 @@ const cytoscapeStylesheet = [
  * Interactive canvas displaying a Task Graph
  */
 const GraphCanvas = (): JSX.Element => {
-  const { tasks } = useRecoilValue(projectState);
+  const tasks = useRecoilValue(projectTasksSelector);
   const dependencies = useRecoilValue(projectDependenciesSelector);
 
   const setTaskSelected = useSetTaskSelected();
@@ -87,8 +87,9 @@ const GraphCanvas = (): JSX.Element => {
 
   const memoizedDivs = useMemoizedDivs();
 
-  const cyTaskData = tasks.map((task) => ({
-    data: { id: task, dom: memoizedDivs(task) },
+  const cyTaskData = tasks.map(({ id, position }) => ({
+    data: { id, dom: memoizedDivs(id) },
+    position: { ...position }, // We copy position because recoil position is read only
   }));
 
   const cyDependencyData = dependencies.map((dependency) => ({
@@ -106,9 +107,7 @@ const GraphCanvas = (): JSX.Element => {
         cy={(cy) => setCy(cy)}
         stylesheet={cytoscapeStylesheet}
       />
-      {tasks.map((task) =>
-        createPortal(<Task id={task} />, memoizedDivs(task))
-      )}
+      {tasks.map(({ id }) => createPortal(<Task id={id} />, memoizedDivs(id)))}
     </>
   );
 };
