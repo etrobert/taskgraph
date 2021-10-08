@@ -2,6 +2,7 @@
   "imports": {
     "cytoscape": "./cytoscape.js",
     "cytoscape-dom-node": "./cytoscape-dom-node.js",
+    "cytoscape-edgehandles": "./cytoscape-edgehandles.js",
     "firebase/app": "./firebase/app.js",
     "firebase/firestore": "./firebase/firestore.js",
     "lodash": "./lodash.js",

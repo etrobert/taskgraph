@@ -4,8 +4,6 @@ import SomeSelectedButtons from "./SomeSelectedButtons/SomeSelectedButtons.js";
 import "./Toolbar.css.proxy.js";
 const Toolbar = ({
   tasksSelected,
-  linkMode,
-  onChangeLinkMode,
   onCreateTask,
   onComplete,
   onDelete
@@ -15,14 +13,6 @@ const Toolbar = ({
   onComplete,
   onDelete
 }) : /* @__PURE__ */ React.createElement(NoneSelectedButtons, {
-  linkMode,
-  onChangeLinkMode,
   onCreateTask
-}), /* @__PURE__ */ React.createElement("input", {
-  style: {display: "none"},
-  type: "checkbox",
-  checked: !tasksSelected && linkMode,
-  id: "linkModeCheckbox",
-  readOnly: true
 }));
 export default Toolbar;

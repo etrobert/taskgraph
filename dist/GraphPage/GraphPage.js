@@ -1,4 +1,5 @@
 import React, {useState} from "../../snowpack/pkg/react.js";
+import {useRecoilValue} from "../../snowpack/pkg/recoil.js";
 import useAppShortcuts from "../App/useAppShortcuts.js";
 import MenuBar from "../App/MenuBar/MenuBar.js";
 import Toolbar from "../App/Toolbar/Toolbar.js";
@@ -6,14 +7,14 @@ import GraphCanvas from "../App/GraphCanvas/GraphCanvas.js";
 import NewTaskInput from "../App/NewTaskInput/NewTaskInput.js";
 import useFirestoreState from "../useFirestoreState.js";
 import useSyncFirestore from "../useSyncFirestore.js";
+import {anyTasksSelectedSelector} from "../atoms.js";
 import "./GraphPage.css.proxy.js";
 const GraphPage = () => {
   const [menuBarOpen, setMenuBarOpen] = useState(false);
   const closeMenuBar = () => setMenuBarOpen(false);
-  const [linkMode, setLinkMode] = useState(false);
   const [insertMode, setInsertMode] = useState(false);
   const onCreateTask = () => setInsertMode(true);
-  const tasksSelected = false;
+  const tasksSelected = useRecoilValue(anyTasksSelectedSelector);
   const {addTask} = useFirestoreState();
   useSyncFirestore();
   useAppShortcuts({
@@ -33,8 +34,6 @@ const GraphPage = () => {
     }
   }), /* @__PURE__ */ React.createElement(Toolbar, {
     tasksSelected,
-    linkMode,
-    onChangeLinkMode: () => setLinkMode((mode) => !mode),
     onCreateTask,
     onComplete: () => {
     },

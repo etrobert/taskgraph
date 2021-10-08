@@ -1,16 +1,19 @@
 import React, {useEffect, useState} from "../../../snowpack/pkg/react.js";
 import {createPortal} from "../../../snowpack/pkg/react-dom.js";
 import {useRecoilValue} from "../../../snowpack/pkg/recoil.js";
-import cytoscape from "../../../snowpack/pkg/cytoscape.js";
 import CytoscapeComponent from "../../../snowpack/pkg/react-cytoscapejs.js";
-import cytoscapeDomNode from "../../../snowpack/pkg/cytoscape-dom-node.js";
-import {projectDependenciesSelector, projectState} from "../../atoms.js";
+import {
+  drawModeState,
+  projectDependenciesSelector,
+  projectTasksSelector
+} from "../../atoms.js";
 import useSetTaskSelected from "../../useSetTaskSelected.js";
+import useFirestoreState from "../../useFirestoreState.js";
+import useInitCytoscapeExtensions from "../../useInitCytoscapeExtensions.js";
 import Task from "../Task/Task.js";
 import useMemoizedDivs from "./useMemoizedDivs.js";
 import useCytoscapeEvent from "./useCytoscapeEvent.js";
 import "./GraphCanvas.css.proxy.js";
-cytoscape.use(cytoscapeDomNode);
 const cytoscapeStylesheet = [
   {
     selector: "node",
@@ -31,16 +34,37 @@ const cytoscapeStylesheet = [
   }
 ];
 const GraphCanvas = () => {
-  const {tasks} = useRecoilValue(projectState);
+  const tasks = useRecoilValue(projectTasksSelector);
   const dependencies = useRecoilValue(projectDependenciesSelector);
   const setTaskSelected = useSetTaskSelected();
   const [cy, setCy] = useState();
-  useEffect(() => cy?.domNode(), [cy]);
-  useCytoscapeEvent(cy, "select", (event) => setTaskSelected(event.target.data().id, true));
-  useCytoscapeEvent(cy, "unselect", (event) => setTaskSelected(event.target.data().id, false));
+  const drawMode = useRecoilValue(drawModeState);
+  const {updateTask} = useFirestoreState();
+  const {edgeHandles} = useInitCytoscapeExtensions(cy);
+  useCytoscapeEvent(cy, "select", ({target}) => {
+    if (!target.isNode())
+      return;
+    setTaskSelected(target.data().id, true);
+  });
+  useCytoscapeEvent(cy, "unselect", ({target}) => {
+    if (!target.isNode())
+      return;
+    setTaskSelected(target.data().id, false);
+  });
+  useCytoscapeEvent(cy, "dragfree", ({target}) => {
+    if (!target.isNode())
+      return;
+    updateTask(target.data().id, {position: target.position()});
+  });
+  useEffect(() => {
+    if (edgeHandles === void 0)
+      return;
+    drawMode ? edgeHandles.enableDrawMode() : edgeHandles.disableDrawMode();
+  }, [drawMode, edgeHandles]);
   const memoizedDivs = useMemoizedDivs();
-  const cyTaskData = tasks.map((task) => ({
-    data: {id: task, dom: memoizedDivs(task)}
+  const cyTaskData = tasks.map(({id, position}) => ({
+    data: {id, dom: memoizedDivs(id)},
+    position: {...position}
   }));
   const cyDependencyData = dependencies.map((dependency) => ({
     data: {
@@ -53,8 +77,8 @@ const GraphCanvas = () => {
     elements: [...cyTaskData, ...cyDependencyData],
     cy: (cy2) => setCy(cy2),
     stylesheet: cytoscapeStylesheet
-  }), tasks.map((task) => createPortal(/* @__PURE__ */ React.createElement(Task, {
-    id: task
-  }), memoizedDivs(task))));
+  }), tasks.map(({id}) => createPortal(/* @__PURE__ */ React.createElement(Task, {
+    id
+  }), memoizedDivs(id))));
 };
 export default GraphCanvas;
