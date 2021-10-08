@@ -7,7 +7,7 @@ type Props = {
   onCreateTask: () => void;
 };
 
-const NotSelectedButtons = ({ onCreateTask }: Props): JSX.Element => {
+const NoneSelectedButtons = ({ onCreateTask }: Props): JSX.Element => {
   const [drawMode, setDrawMode] = useRecoilState(drawModeState);
 
   return (
@@ -31,4 +31,4 @@ const NotSelectedButtons = ({ onCreateTask }: Props): JSX.Element => {
   );
 };
 
-export default NotSelectedButtons;
+export default NoneSelectedButtons;
