@@ -11,6 +11,7 @@ import {
   projectTasksSelector
 } from "../../atoms.js";
 import useSetTaskSelected from "../../useSetTaskSelected.js";
+import useFirestoreState from "../../useFirestoreState.js";
 import Task from "../Task/Task.js";
 import useMemoizedDivs from "./useMemoizedDivs.js";
 import useCytoscapeEvent from "./useCytoscapeEvent.js";
@@ -43,9 +44,23 @@ const GraphCanvas = () => {
   const [cy, setCy] = useState();
   const [eh, setEh] = useState();
   const drawMode = useRecoilValue(drawModeState);
+  const {updateTask} = useFirestoreState();
   useEffect(() => cy?.domNode(), [cy]);
-  useCytoscapeEvent(cy, "select", (event) => setTaskSelected(event.target.data().id, true));
-  useCytoscapeEvent(cy, "unselect", (event) => setTaskSelected(event.target.data().id, false));
+  useCytoscapeEvent(cy, "select", ({target}) => {
+    if (!target.isNode())
+      return;
+    setTaskSelected(target.data().id, true);
+  });
+  useCytoscapeEvent(cy, "unselect", ({target}) => {
+    if (!target.isNode())
+      return;
+    setTaskSelected(target.data().id, false);
+  });
+  useCytoscapeEvent(cy, "dragfree", ({target}) => {
+    if (!target.isNode())
+      return;
+    updateTask(target.data().id, {position: target.position()});
+  });
   useEffect(() => {
     if (cy === void 0)
       return;
