@@ -21,6 +21,6 @@ const MenuBar = ({open, onClose, onNewGraph}) => {
     href: "mailto:etiennerobert33@gmail.com",
     target: "_blank",
     rel: "noreferrer"
-  }, "Etienne Robert")));
+  }, "Étienne Robert")));
 };
 export default MenuBar;
