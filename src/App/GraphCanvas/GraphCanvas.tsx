@@ -68,17 +68,20 @@ const GraphCanvas = (): JSX.Element => {
   // @ts-expect-error Module is not typed
   useEffect(() => cy?.domNode(), [cy]);
 
-  useCytoscapeEvent(cy, "select", (event) =>
-    setTaskSelected(event.target.data().id, true)
-  );
+  useCytoscapeEvent(cy, "select", ({ target }) => {
+    if (!target.isNode()) return;
+    setTaskSelected(target.data().id, true);
+  });
 
-  useCytoscapeEvent(cy, "unselect", (event) =>
-    setTaskSelected(event.target.data().id, false)
-  );
+  useCytoscapeEvent(cy, "unselect", ({ target }) => {
+    if (!target.isNode()) return;
+    setTaskSelected(target.data().id, false);
+  });
 
-  useCytoscapeEvent(cy, "dragfree", ({ target }) =>
-    updateTask(target.data().id, { position: target.position() })
-  );
+  useCytoscapeEvent(cy, "dragfree", ({ target }) => {
+    if (!target.isNode()) return;
+    updateTask(target.data().id, { position: target.position() });
+  });
 
   // Initialise edgehandles instance
   useEffect(() => {
