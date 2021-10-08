@@ -4,4 +4,5 @@ module.exports = {
     "^.+\\.(css|less)$": "<rootDir>/src/__mocks__/css.ts",
     "@/(.*)": "<rootDir>/src/$1",
   },
+  testEnvironment: "jsdom",
 };
