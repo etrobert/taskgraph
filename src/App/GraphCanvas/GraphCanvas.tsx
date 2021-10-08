@@ -17,6 +17,7 @@ import {
   projectTasksSelector,
 } from "@/atoms";
 import useSetTaskSelected from "@/useSetTaskSelected";
+import useFirestoreState from "@/useFirestoreState";
 
 import Task from "../Task/Task";
 
@@ -62,6 +63,8 @@ const GraphCanvas = (): JSX.Element => {
 
   const drawMode = useRecoilValue(drawModeState);
 
+  const { updateTask } = useFirestoreState();
+
   // @ts-expect-error Module is not typed
   useEffect(() => cy?.domNode(), [cy]);
 
@@ -71,6 +74,10 @@ const GraphCanvas = (): JSX.Element => {
 
   useCytoscapeEvent(cy, "unselect", (event) =>
     setTaskSelected(event.target.data().id, false)
+  );
+
+  useCytoscapeEvent(cy, "dragfree", ({ target }) =>
+    updateTask(target.data().id, { position: target.position() })
   );
 
   // Initialise edgehandles instance
