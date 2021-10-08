@@ -3,13 +3,8 @@ import { createPortal } from "react-dom";
 
 import { useRecoilValue } from "recoil";
 
-import cytoscape from "cytoscape";
 import type Cy from "cytoscape";
 import CytoscapeComponent from "react-cytoscapejs";
-// @ts-expect-error Module is not typed
-import cytoscapeDomNode from "cytoscape-dom-node";
-import edgehandles from "cytoscape-edgehandles";
-import type { EdgeHandlesInstance } from "cytoscape-edgehandles";
 
 import {
   drawModeState,
@@ -18,6 +13,7 @@ import {
 } from "@/atoms";
 import useSetTaskSelected from "@/useSetTaskSelected";
 import useFirestoreState from "@/useFirestoreState";
+import useInitCytoscapeExtensions from "@/useInitCytoscapeExtensions";
 
 import Task from "../Task/Task";
 
@@ -25,9 +21,6 @@ import useMemoizedDivs from "./useMemoizedDivs";
 import useCytoscapeEvent from "./useCytoscapeEvent";
 
 import "./GraphCanvas.css";
-
-cytoscape.use(cytoscapeDomNode);
-cytoscape.use(edgehandles);
 
 const cytoscapeStylesheet = [
   {
@@ -59,14 +52,12 @@ const GraphCanvas = (): JSX.Element => {
   const setTaskSelected = useSetTaskSelected();
 
   const [cy, setCy] = useState<Cy.Core>();
-  const [eh, setEh] = useState<EdgeHandlesInstance>();
 
   const drawMode = useRecoilValue(drawModeState);
 
   const { updateTask } = useFirestoreState();
 
-  // @ts-expect-error Module is not typed
-  useEffect(() => cy?.domNode(), [cy]);
+  const { edgeHandles } = useInitCytoscapeExtensions(cy);
 
   useCytoscapeEvent(cy, "select", ({ target }) => {
     if (!target.isNode()) return;
@@ -83,17 +74,11 @@ const GraphCanvas = (): JSX.Element => {
     updateTask(target.data().id, { position: target.position() });
   });
 
-  // Initialise edgehandles instance
-  useEffect(() => {
-    if (cy === undefined) return;
-    setEh(cy.edgehandles());
-  }, [cy]);
-
   // Update edgehandles draw mode
   useEffect(() => {
-    if (eh === undefined) return;
-    drawMode ? eh.enableDrawMode() : eh.disableDrawMode();
-  }, [drawMode, eh]);
+    if (edgeHandles === undefined) return;
+    drawMode ? edgeHandles.enableDrawMode() : edgeHandles.disableDrawMode();
+  }, [drawMode, edgeHandles]);
 
   const memoizedDivs = useMemoizedDivs();
 
