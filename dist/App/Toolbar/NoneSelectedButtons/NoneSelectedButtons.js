@@ -1,7 +1,7 @@
 import React from "../../../../snowpack/pkg/react.js";
 import {useRecoilState} from "../../../../snowpack/pkg/recoil.js";
 import {drawModeState} from "../../../atoms.js";
-const NotSelectedButtons = ({onCreateTask}) => {
+const NoneSelectedButtons = ({onCreateTask}) => {
   const [drawMode, setDrawMode] = useRecoilState(drawModeState);
   return /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("button", {
     "aria-label": "Change Draw Mode",
@@ -18,4 +18,4 @@ const NotSelectedButtons = ({onCreateTask}) => {
     className: "Toolbar__button Toolbar__button-create-task iconButton"
   }));
 };
-export default NotSelectedButtons;
+export default NoneSelectedButtons;
