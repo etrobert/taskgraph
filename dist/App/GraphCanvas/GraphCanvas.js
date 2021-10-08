@@ -1,10 +1,7 @@
 import React, {useEffect, useState} from "../../../snowpack/pkg/react.js";
 import {createPortal} from "../../../snowpack/pkg/react-dom.js";
 import {useRecoilValue} from "../../../snowpack/pkg/recoil.js";
-import cytoscape from "../../../snowpack/pkg/cytoscape.js";
 import CytoscapeComponent from "../../../snowpack/pkg/react-cytoscapejs.js";
-import cytoscapeDomNode from "../../../snowpack/pkg/cytoscape-dom-node.js";
-import edgehandles from "../../../snowpack/pkg/cytoscape-edgehandles.js";
 import {
   drawModeState,
   projectDependenciesSelector,
@@ -12,12 +9,11 @@ import {
 } from "../../atoms.js";
 import useSetTaskSelected from "../../useSetTaskSelected.js";
 import useFirestoreState from "../../useFirestoreState.js";
+import useInitCytoscapeExtensions from "../../useInitCytoscapeExtensions.js";
 import Task from "../Task/Task.js";
 import useMemoizedDivs from "./useMemoizedDivs.js";
 import useCytoscapeEvent from "./useCytoscapeEvent.js";
 import "./GraphCanvas.css.proxy.js";
-cytoscape.use(cytoscapeDomNode);
-cytoscape.use(edgehandles);
 const cytoscapeStylesheet = [
   {
     selector: "node",
@@ -42,10 +38,9 @@ const GraphCanvas = () => {
   const dependencies = useRecoilValue(projectDependenciesSelector);
   const setTaskSelected = useSetTaskSelected();
   const [cy, setCy] = useState();
-  const [eh, setEh] = useState();
   const drawMode = useRecoilValue(drawModeState);
   const {updateTask} = useFirestoreState();
-  useEffect(() => cy?.domNode(), [cy]);
+  const {edgeHandles} = useInitCytoscapeExtensions(cy);
   useCytoscapeEvent(cy, "select", ({target}) => {
     if (!target.isNode())
       return;
@@ -62,15 +57,10 @@ const GraphCanvas = () => {
     updateTask(target.data().id, {position: target.position()});
   });
   useEffect(() => {
-    if (cy === void 0)
+    if (edgeHandles === void 0)
       return;
-    setEh(cy.edgehandles());
-  }, [cy]);
-  useEffect(() => {
-    if (eh === void 0)
-      return;
-    drawMode ? eh.enableDrawMode() : eh.disableDrawMode();
-  }, [drawMode, eh]);
+    drawMode ? edgeHandles.enableDrawMode() : edgeHandles.disableDrawMode();
+  }, [drawMode, edgeHandles]);
   const memoizedDivs = useMemoizedDivs();
   const cyTaskData = tasks.map(({id, position}) => ({
     data: {id, dom: memoizedDivs(id)},
