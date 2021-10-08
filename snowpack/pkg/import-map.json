@@ -1,8 +1,14 @@
 {
   "imports": {
+    "cytoscape": "./cytoscape.js",
+    "cytoscape-dom-node": "./cytoscape-dom-node.js",
+    "cytoscape-edgehandles": "./cytoscape-edgehandles.js",
     "firebase/app": "./firebase/app.js",
     "firebase/firestore": "./firebase/firestore.js",
+    "lodash": "./lodash.js",
+    "lodash/without": "./lodash/without.js",
     "react": "./react.js",
+    "react-cytoscapejs": "./react-cytoscapejs.js",
     "react-dom": "./react-dom.js",
     "react-draggable": "./react-draggable.js",
     "react-router-dom": "./react-router-dom.js",

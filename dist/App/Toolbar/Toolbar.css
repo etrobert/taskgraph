@@ -22,8 +22,8 @@
   background-image: url("resources/feather/plus-circle.svg");
 }
 
-.Toolbar__button-change-link-mode {
-  background-image: url("resources/feather/link.svg");
+.Toolbar__button-change-draw-mode {
+  background-image: url("resources/feather/edit-2.svg");
 
   border-bottom: 0.2rem solid transparent;
 
@@ -32,6 +32,6 @@
   background-position: center;
 }
 
-.Toolbar__button-change-link-mode--active {
+.Toolbar__button-change-draw-mode--active {
   border-bottom: 0.2rem solid;
 }

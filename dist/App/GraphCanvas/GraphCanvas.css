@@ -24,20 +24,3 @@
     right: 0%;
   }
 }
-
-#arrows {
-  position: absolute;
-  left: 0;
-  top: 0;
-  /* width and height should be 0 but in Safari it doesn't render the arrows */
-  width: 1px;
-  height: 1px;
-  overflow: visible;
-}
-
-#arrows > path {
-  stroke: black;
-  stroke-width: 6px;
-  stroke-linecap: round;
-  marker-end: url(#Triangle);
-}
