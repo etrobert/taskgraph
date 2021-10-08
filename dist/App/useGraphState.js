@@ -1,4 +1,4 @@
-import {useRecoilCallback} from "../../snowpack/pkg/recoil.js";
+import {useRecoilCallback} from "../../_snowpack/pkg/recoil.js";
 import {projectState, taskStateFamily} from "../atoms.js";
 const useGraphState = () => {
   const addTask = useRecoilCallback(({set}) => (id, task) => {

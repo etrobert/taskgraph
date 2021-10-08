@@ -1,4 +1,4 @@
-import {atom, atomFamily, selector, selectorFamily} from "../snowpack/pkg/recoil.js";
+import {atom, atomFamily, selector, selectorFamily} from "../_snowpack/pkg/recoil.js";
 const taskStateFamily = atomFamily({
   key: "Task",
   default: {

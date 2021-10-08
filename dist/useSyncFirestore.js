@@ -1,6 +1,6 @@
-import {useEffect} from "../snowpack/pkg/react.js";
-import {collection, onSnapshot} from "../snowpack/pkg/firebase/firestore.js";
-import {useRecoilValue} from "../snowpack/pkg/recoil.js";
+import {useEffect} from "../_snowpack/pkg/react.js";
+import {collection, onSnapshot} from "../_snowpack/pkg/firebase/firestore.js";
+import {useRecoilValue} from "../_snowpack/pkg/recoil.js";
 import {projectIdState} from "./atoms.js";
 import firestore from "./firestore.js";
 import useGraphState from "./App/useGraphState.js";

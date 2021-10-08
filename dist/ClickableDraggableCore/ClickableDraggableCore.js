@@ -1,7 +1,7 @@
-import React, {useState} from "../../snowpack/pkg/react.js";
+import React, {useState} from "../../_snowpack/pkg/react.js";
 import {
   DraggableCore
-} from "../../snowpack/pkg/react-draggable.js";
+} from "../../_snowpack/pkg/react-draggable.js";
 import {squaredDistance} from "../geometry.js";
 const ClickableDraggableCore = ({
   children,

@@ -1,4 +1,4 @@
-import React from "../../../snowpack/pkg/react.js";
+import React from "../../../_snowpack/pkg/react.js";
 import NoneSelectedButtons from "./NoneSelectedButtons/NoneSelectedButtons.js";
 import SomeSelectedButtons from "./SomeSelectedButtons/SomeSelectedButtons.js";
 import "./Toolbar.css.proxy.js";

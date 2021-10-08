@@ -1,5 +1,5 @@
-import React, {useState} from "../../snowpack/pkg/react.js";
-import {useRecoilValue} from "../../snowpack/pkg/recoil.js";
+import React, {useState} from "../../_snowpack/pkg/react.js";
+import {useRecoilValue} from "../../_snowpack/pkg/recoil.js";
 import useAppShortcuts from "../App/useAppShortcuts.js";
 import MenuBar from "../App/MenuBar/MenuBar.js";
 import Toolbar from "../App/Toolbar/Toolbar.js";

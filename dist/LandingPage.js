@@ -1,4 +1,4 @@
-import React from "../snowpack/pkg/react.js";
+import React from "../_snowpack/pkg/react.js";
 import "./LandingPage.css.proxy.js";
 const LandingPage = () => {
   return /* @__PURE__ */ React.createElement("div", {

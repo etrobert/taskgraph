@@ -1,4 +1,4 @@
-import React from "../../../snowpack/pkg/react.js";
+import React from "../../../_snowpack/pkg/react.js";
 import "./MenuBar.css.proxy.js";
 const MenuBar = ({open, onClose, onNewGraph}) => {
   return /* @__PURE__ */ React.createElement("div", {

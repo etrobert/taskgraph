@@ -1,7 +1,7 @@
-import React, {useEffect, useState} from "../../../snowpack/pkg/react.js";
-import {createPortal} from "../../../snowpack/pkg/react-dom.js";
-import {useRecoilValue} from "../../../snowpack/pkg/recoil.js";
-import CytoscapeComponent from "../../../snowpack/pkg/react-cytoscapejs.js";
+import React, {useEffect, useState} from "../../../_snowpack/pkg/react.js";
+import {createPortal} from "../../../_snowpack/pkg/react-dom.js";
+import {useRecoilValue} from "../../../_snowpack/pkg/recoil.js";
+import CytoscapeComponent from "../../../_snowpack/pkg/react-cytoscapejs.js";
 import {
   drawModeState,
   projectDependenciesSelector,

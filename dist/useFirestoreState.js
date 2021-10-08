@@ -1,6 +1,6 @@
-import {useCallback} from "../snowpack/pkg/react.js";
-import {addDoc, collection, doc, updateDoc} from "../snowpack/pkg/firebase/firestore.js";
-import {useRecoilValue} from "../snowpack/pkg/recoil.js";
+import {useCallback} from "../_snowpack/pkg/react.js";
+import {addDoc, collection, doc, updateDoc} from "../_snowpack/pkg/firebase/firestore.js";
+import {useRecoilValue} from "../_snowpack/pkg/recoil.js";
 import firestore from "./firestore.js";
 import {projectIdState} from "./atoms.js";
 const useFirestoreState = () => {

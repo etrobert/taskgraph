@@ -1,4 +1,4 @@
-import {useEffect} from "../../../snowpack/pkg/react.js";
+import {useEffect} from "../../../_snowpack/pkg/react.js";
 const useCytoscapeEvent = (cy, events, handler) => {
   useEffect(() => {
     if (cy === void 0)

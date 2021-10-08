@@ -1,5 +1,5 @@
-import React from "../../../snowpack/pkg/react.js";
-import {useRecoilValue} from "../../../snowpack/pkg/recoil.js";
+import React from "../../../_snowpack/pkg/react.js";
+import {useRecoilValue} from "../../../_snowpack/pkg/recoil.js";
 import {taskSelectedSelectorFamily, taskStateFamily} from "../../atoms.js";
 import classNames from "../../classNames.js";
 import "./Task.css.proxy.js";

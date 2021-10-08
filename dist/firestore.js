@@ -1,5 +1,5 @@
-import {initializeApp} from "../snowpack/pkg/firebase/app.js";
-import {getFirestore} from "../snowpack/pkg/firebase/firestore.js";
+import {initializeApp} from "../_snowpack/pkg/firebase/app.js";
+import {getFirestore} from "../_snowpack/pkg/firebase/firestore.js";
 const firebaseConfig = {
   apiKey: "AIzaSyC3Le2ZBbGHEzjgk3yCNxh3Ioj8iNIC-EY",
   authDomain: "taskgraph-e9cf9.firebaseapp.com",

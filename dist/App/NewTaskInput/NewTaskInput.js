@@ -1,4 +1,4 @@
-import React, {useState} from "../../../snowpack/pkg/react.js";
+import React, {useState} from "../../../_snowpack/pkg/react.js";
 import "./NewTaskInput.css.proxy.js";
 const NewTask = ({onNewTask, onCancel}) => {
   const [name, setName] = useState("");

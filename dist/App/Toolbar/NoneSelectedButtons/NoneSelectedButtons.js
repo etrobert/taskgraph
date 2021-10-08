@@ -1,5 +1,5 @@
-import React from "../../../../snowpack/pkg/react.js";
-import {useRecoilState} from "../../../../snowpack/pkg/recoil.js";
+import React from "../../../../_snowpack/pkg/react.js";
+import {useRecoilState} from "../../../../_snowpack/pkg/recoil.js";
 import {drawModeState} from "../../../atoms.js";
 const NoneSelectedButtons = ({onCreateTask}) => {
   const [drawMode, setDrawMode] = useRecoilState(drawModeState);
