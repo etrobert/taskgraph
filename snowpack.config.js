@@ -8,10 +8,6 @@ module.exports = {
     public: "/",
   },
   plugins: ["@snowpack/plugin-typescript"],
-  buildOptions: {
-    // Github Pages ignores _ prefixed folders
-    metaUrlPath: "snowpack",
-  },
   alias: {
     "@": "./src",
   },
