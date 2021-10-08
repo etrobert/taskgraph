@@ -8,7 +8,7 @@ import { TaskId } from "@/atoms";
 type MemoizedDivs = ((id: TaskId) => HTMLDivElement) & MemoizedFunction;
 
 /**
- * Returns a memoized a memoized HTMLDivElement by TaskId
+ * Returns a memoized HTMLDivElement by TaskId
  */
 const useMemoizedDivs = (): MemoizedDivs =>
   // useCallback is not able to infer deps from lodash memoize
