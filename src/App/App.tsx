@@ -14,7 +14,7 @@ const App = (): JSX.Element => {
           <GraphPage />
         </Route>
         <Route path="/">
-          <LandingPage />;
+          <LandingPage />
         </Route>
       </Switch>
     </Router>
