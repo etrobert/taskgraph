@@ -2,8 +2,8 @@ import { useCallback } from "react";
 import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
 import { useRecoilValue } from "recoil";
 
-import firestore from "./firestore";
-import { projectIdState, Task, TaskId } from "./atoms";
+import firestore from "@/firestore";
+import { projectIdState, Task, TaskId } from "@/atoms";
 
 type UseFirestoreState = () => {
   addTask: (name: string) => void;

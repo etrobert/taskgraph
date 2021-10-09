@@ -44,7 +44,7 @@ const MenuBar = ({ open, onClose, onNewGraph }: Props): JSX.Element => {
           target="_blank"
           rel="noreferrer"
         >
-          Etienne Robert
+          Étienne Robert
         </a>
       </p>
     </div>

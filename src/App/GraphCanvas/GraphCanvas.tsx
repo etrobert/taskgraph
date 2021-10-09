@@ -11,9 +11,9 @@ import {
   projectDependenciesSelector,
   projectTasksSelector,
 } from "@/atoms";
-import useSetTaskSelected from "@/useSetTaskSelected";
-import useFirestoreState from "@/useFirestoreState";
-import useInitCytoscapeExtensions from "@/useInitCytoscapeExtensions";
+import useSetTaskSelected from "@/hooks/useSetTaskSelected";
+import useFirestoreState from "@/hooks/useFirestoreState";
+import useInitCytoscapeExtensions from "@/hooks/useInitCytoscapeExtensions";
 
 import Task from "../Task/Task";
 

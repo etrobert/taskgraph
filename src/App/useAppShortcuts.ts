@@ -1,4 +1,4 @@
-import useKeyboardShortcuts, { Shortcut } from "@/useKeyboardShortcuts";
+import useKeyboardShortcuts, { Shortcut } from "@/hooks/useKeyboardShortcuts";
 
 // TODO Replace when implemented
 // eslint-disable-next-line @typescript-eslint/no-empty-function

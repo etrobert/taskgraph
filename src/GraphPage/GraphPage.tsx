@@ -6,8 +6,8 @@ import MenuBar from "@/App/MenuBar/MenuBar";
 import Toolbar from "@/App/Toolbar/Toolbar";
 import GraphCanvas from "@/App/GraphCanvas/GraphCanvas";
 import NewTaskInput from "@/App/NewTaskInput/NewTaskInput";
-import useFirestoreState from "@/useFirestoreState";
-import useSyncFirestore from "@/useSyncFirestore";
+import useFirestoreState from "@/hooks/useFirestoreState";
+import useSyncFirestore from "@/hooks/useSyncFirestore";
 import { anyTasksSelectedSelector } from "@/atoms";
 
 import "./GraphPage.css";
