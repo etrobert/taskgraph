@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { useRecoilValue } from "recoil";
 
-import useAppShortcuts from "@/App/useAppShortcuts";
-import MenuBar from "@/App/MenuBar/MenuBar";
-import Toolbar from "@/App/Toolbar/Toolbar";
-import GraphCanvas from "@/App/GraphCanvas/GraphCanvas";
-import NewTaskInput from "@/App/NewTaskInput/NewTaskInput";
+import useAppShortcuts from "@/components/App/useAppShortcuts";
+import MenuBar from "@/components/MenuBar/MenuBar";
+import Toolbar from "@/components/Toolbar/Toolbar";
+import GraphCanvas from "@/components/GraphCanvas/GraphCanvas";
+import NewTaskInput from "@/components/NewTaskInput/NewTaskInput";
 import useFirestoreState from "@/hooks/useFirestoreState";
 import useSyncFirestore from "@/hooks/useSyncFirestore";
 import { anyTasksSelectedSelector } from "@/atoms";

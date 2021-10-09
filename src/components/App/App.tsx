@@ -1,6 +1,7 @@
-import GraphPage from "@/GraphPage/GraphPage";
-import LandingPage from "@/LandingPage";
 import React from "react";
+
+import GraphPage from "@/components/GraphPage/GraphPage";
+import LandingPage from "@/components/LandingPage/LandingPage";
 
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
