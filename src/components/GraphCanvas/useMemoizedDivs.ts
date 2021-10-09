@@ -3,7 +3,7 @@ import { memoize } from "lodash";
 
 import type { MemoizedFunction } from "lodash";
 
-import { TaskId } from "@/atoms";
+import type { TaskId } from "@/types";
 
 type MemoizedDivs = ((id: TaskId) => HTMLDivElement) & MemoizedFunction;
 

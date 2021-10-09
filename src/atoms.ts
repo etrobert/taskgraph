@@ -1,30 +1,13 @@
-import { Point } from "@/geometry";
 import { atom, atomFamily, selector, selectorFamily } from "recoil";
 
-type ProjectId = string;
-
-type TaskId = string;
-
-// See https://en.wikipedia.org/wiki/Task_management
-type TaskStatus = "ready" | "completed";
-
-type Task = {
-  name: string;
-  position: Point;
-  status: TaskStatus;
-};
-
-type DependencyId = string;
-
-type Dependency = {
-  predecessor: TaskId;
-  successor: TaskId;
-};
-
-export interface Project {
-  tasks: TaskId[];
-  dependencies: DependencyId[];
-}
+import type {
+  Dependency,
+  DependencyId,
+  Project,
+  ProjectId,
+  Task,
+  TaskId,
+} from "./types";
 
 const taskStateFamily = atomFamily<Task, TaskId>({
   key: "Task",
@@ -105,5 +88,3 @@ export {
   projectTasksSelector,
   drawModeState,
 };
-
-export type { ProjectId, DependencyId, TaskId, Task };

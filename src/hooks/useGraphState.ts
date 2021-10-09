@@ -1,6 +1,8 @@
 import { useRecoilCallback } from "recoil";
 
-import { projectState, Task, TaskId, taskStateFamily } from "@/atoms";
+import { projectState, taskStateFamily } from "@/atoms";
+
+import type { Task, TaskId } from "@/types";
 
 type UseGraphState = () => {
   addTask: (id: TaskId, task: Task) => void;

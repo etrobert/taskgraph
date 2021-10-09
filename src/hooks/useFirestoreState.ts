@@ -9,7 +9,9 @@ import {
 import { useRecoilValue } from "recoil";
 
 import firestore from "@/firestore";
-import { projectIdState, selectedTasksState, Task, TaskId } from "@/atoms";
+import { projectIdState, selectedTasksState } from "@/atoms";
+
+import type { Task, TaskId } from "@/types";
 
 type UseFirestoreState = () => {
   addTask: (name: string) => void;

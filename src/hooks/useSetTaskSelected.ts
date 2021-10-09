@@ -1,7 +1,9 @@
 import without from "lodash/without";
 import { useRecoilCallback } from "recoil";
 
-import { selectedTasksState, TaskId } from "@/atoms";
+import { selectedTasksState } from "@/atoms";
+
+import type { TaskId } from "@/types";
 
 type SetTaskSelected = (id: TaskId, selected: boolean) => void;
 

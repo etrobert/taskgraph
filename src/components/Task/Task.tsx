@@ -1,8 +1,10 @@
 import React from "react";
 import { useRecoilValue } from "recoil";
 
-import { TaskId, taskSelectedSelectorFamily, taskStateFamily } from "@/atoms";
+import { taskSelectedSelectorFamily, taskStateFamily } from "@/atoms";
 import classNames from "@/classNames";
+
+import type { TaskId } from "@/types";
 
 import "./Task.css";
 
