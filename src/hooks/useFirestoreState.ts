@@ -1,13 +1,20 @@
 import { useCallback } from "react";
-import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  doc,
+  updateDoc,
+  writeBatch,
+} from "firebase/firestore";
 import { useRecoilValue } from "recoil";
 
 import firestore from "@/firestore";
-import { projectIdState, Task, TaskId } from "@/atoms";
+import { projectIdState, selectedTasksState, Task, TaskId } from "@/atoms";
 
 type UseFirestoreState = () => {
   addTask: (name: string) => void;
   updateTask: (id: TaskId, task: Partial<Task>) => void;
+  deleteSelected: () => void;
 };
 
 const useFirestoreState: UseFirestoreState = () => {
@@ -31,7 +38,17 @@ const useFirestoreState: UseFirestoreState = () => {
     [projectId]
   );
 
-  return { addTask, updateTask };
+  const selectedTasks = useRecoilValue(selectedTasksState);
+
+  const deleteSelected = useCallback(() => {
+    const batch = writeBatch(firestore);
+    selectedTasks.forEach((taskId) =>
+      batch.delete(doc(firestore, `projects/${projectId}/tasks`, taskId))
+    );
+    batch.commit();
+  }, [projectId, selectedTasks]);
+
+  return { addTask, updateTask, deleteSelected };
 };
 
 export default useFirestoreState;

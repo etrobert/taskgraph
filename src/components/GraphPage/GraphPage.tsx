@@ -21,15 +21,13 @@ const GraphPage = (): JSX.Element => {
 
   const tasksSelected = useRecoilValue(anyTasksSelectedSelector);
 
-  const { addTask } = useFirestoreState();
+  const { addTask, deleteSelected } = useFirestoreState();
 
   useSyncFirestore();
 
   useAppShortcuts({
     insertMode,
-    // TODO Replace when implemented
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    onDelete: () => {},
+    onDelete: deleteSelected,
     onCreateTask,
   });
 
@@ -55,9 +53,7 @@ const GraphPage = (): JSX.Element => {
         // TODO Replace when implemented
         // eslint-disable-next-line @typescript-eslint/no-empty-function
         onComplete={() => {}}
-        // TODO Replace when implemented
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
-        onDelete={() => {}}
+        onDelete={deleteSelected}
       />
 
       <GraphCanvas />
