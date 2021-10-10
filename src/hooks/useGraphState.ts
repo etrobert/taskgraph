@@ -1,7 +1,12 @@
 import { useRecoilCallback } from "recoil";
 import without from "lodash/without";
 
-import { dependencyStateFamily, projectState, taskStateFamily } from "@/atoms";
+import {
+  dependencyStateFamily,
+  projectState,
+  selectedElementsState,
+  taskStateFamily,
+} from "@/atoms";
 
 import type { Dependency, DependencyId, Task, TaskId } from "@/types";
 
@@ -36,11 +41,17 @@ const useGraphState: UseGraphState = () => {
 
   const removeTask = useRecoilCallback(
     ({ set }) =>
-      (id: TaskId) =>
+      (id: TaskId) => {
         set(projectState, (project) => ({
           ...project,
           tasks: project.tasks.filter((currentId) => currentId !== id),
-        })),
+        }));
+        // Remove task from the selected elements
+        set(selectedElementsState, ({ tasks, dependencies }) => ({
+          dependencies,
+          tasks: without(tasks, id),
+        }));
+      },
     []
   );
 
@@ -65,11 +76,17 @@ const useGraphState: UseGraphState = () => {
 
   const removeDependency = useRecoilCallback(
     ({ set }) =>
-      (id: DependencyId) =>
+      (id: DependencyId) => {
         set(projectState, (project) => ({
           ...project,
           dependencies: without(project.dependencies, id),
-        })),
+        }));
+        // Remove task from the selected elements
+        set(selectedElementsState, ({ tasks, dependencies }) => ({
+          tasks,
+          dependencies: without(dependencies, id),
+        }));
+      },
     []
   );
 
