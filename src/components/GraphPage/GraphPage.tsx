@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useRecoilValue } from "recoil";
 
 import useAppShortcuts from "@/components/App/useAppShortcuts";
 import MenuBar from "@/components/MenuBar/MenuBar";
@@ -8,7 +7,6 @@ import GraphCanvas from "@/components/GraphCanvas/GraphCanvas";
 import NewTaskInput from "@/components/NewTaskInput/NewTaskInput";
 import useFirestoreState from "@/hooks/useFirestoreState";
 import useSyncFirestore from "@/hooks/useSyncFirestore";
-import { anyTasksSelectedState } from "@/atoms";
 
 import "./GraphPage.css";
 
@@ -18,8 +16,6 @@ const GraphPage = (): JSX.Element => {
 
   const [insertMode, setInsertMode] = useState(false);
   const onCreateTask = () => setInsertMode(true);
-
-  const tasksSelected = useRecoilValue(anyTasksSelectedState);
 
   const { addTask, deleteSelected } = useFirestoreState();
 
@@ -48,7 +44,6 @@ const GraphPage = (): JSX.Element => {
       />
 
       <Toolbar
-        tasksSelected={tasksSelected}
         onCreateTask={onCreateTask}
         // TODO Replace when implemented
         // eslint-disable-next-line @typescript-eslint/no-empty-function

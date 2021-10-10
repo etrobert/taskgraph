@@ -12,6 +12,7 @@ import {
   projectTasksState,
 } from "@/atoms";
 import useSetTaskSelected from "@/hooks/useSetTaskSelected";
+import useSetDependencySelected from "@/hooks/useSetDependencySelected";
 import useFirestoreState from "@/hooks/useFirestoreState";
 import useInitCytoscapeExtensions from "@/hooks/useInitCytoscapeExtensions";
 
@@ -50,6 +51,7 @@ const GraphCanvas = (): JSX.Element => {
   const dependencies = useRecoilValue(projectDependenciesState);
 
   const setTaskSelected = useSetTaskSelected();
+  const setDependencySelected = useSetDependencySelected();
 
   const [cy, setCy] = useState<Cy.Core>();
 
@@ -60,13 +62,15 @@ const GraphCanvas = (): JSX.Element => {
   const { edgeHandles } = useInitCytoscapeExtensions(cy);
 
   useCytoscapeEvent(cy, "select", ({ target }) => {
-    if (!target.isNode()) return;
-    setTaskSelected(target.data().id, true);
+    target.isNode()
+      ? setTaskSelected(target.data().id, true)
+      : setDependencySelected(target.data().id, true);
   });
 
   useCytoscapeEvent(cy, "unselect", ({ target }) => {
-    if (!target.isNode()) return;
-    setTaskSelected(target.data().id, false);
+    target.isNode()
+      ? setTaskSelected(target.data().id, false)
+      : setDependencySelected(target.data().id, false);
   });
 
   useCytoscapeEvent(cy, "dragfree", ({ target }) => {
@@ -104,12 +108,15 @@ const GraphCanvas = (): JSX.Element => {
     position: { ...position }, // We copy position because recoil position is read only
   }));
 
-  const cyDependencyData = dependencies.map((dependency) => ({
-    data: {
-      source: dependency.predecessor,
-      target: dependency.successor,
-    },
-  }));
+  const cyDependencyData = dependencies.map(
+    ({ id, predecessor, successor }) => ({
+      data: {
+        id,
+        source: predecessor,
+        target: successor,
+      },
+    })
+  );
 
   return (
     <>

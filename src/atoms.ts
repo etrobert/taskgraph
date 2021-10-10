@@ -39,14 +39,19 @@ const projectState = atom<Project>({
   },
 });
 
-const selectedTasksState = atom<TaskId[]>({
-  key: "SelectedTasks",
-  default: [],
+const selectedElementsState = atom<{
+  tasks: TaskId[];
+  dependencies: DependencyId[];
+}>({
+  key: "SelectedElements",
+  default: { tasks: [], dependencies: [] },
 });
 
-const anyTasksSelectedState = selector<boolean>({
-  key: "AnyTaskSelected",
-  get: ({ get }) => get(selectedTasksState).length !== 0,
+const anyElementsSelectedState = selector<boolean>({
+  key: "AnyElementsSelected",
+  get: ({ get }) =>
+    get(selectedElementsState).tasks.length !== 0 ||
+    get(selectedElementsState).dependencies.length !== 0,
 });
 
 const taskSelectedStateFamily = selectorFamily<boolean, TaskId>({
@@ -54,15 +59,16 @@ const taskSelectedStateFamily = selectorFamily<boolean, TaskId>({
   get:
     (id) =>
     ({ get }) =>
-      get(selectedTasksState).includes(id),
+      get(selectedElementsState).tasks.includes(id),
 });
 
 const projectDependenciesState = selector({
   key: "ProjectDependencies",
   get: ({ get }) =>
-    get(projectState).dependencies.map((dep) =>
-      get(dependencyStateFamily(dep))
-    ),
+    get(projectState).dependencies.map((id) => ({
+      id,
+      ...get(dependencyStateFamily(id)),
+    })),
 });
 
 const projectTasksState = selector({
@@ -81,8 +87,8 @@ export {
   projectState,
   dependencyStateFamily,
   taskStateFamily,
-  selectedTasksState,
-  anyTasksSelectedState,
+  selectedElementsState,
+  anyElementsSelectedState,
   taskSelectedStateFamily,
   projectDependenciesState,
   projectTasksState,

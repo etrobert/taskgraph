@@ -9,7 +9,7 @@ import {
 import { useRecoilValue } from "recoil";
 
 import firestore from "@/firestore";
-import { projectIdState, selectedTasksState } from "@/atoms";
+import { projectIdState, selectedElementsState } from "@/atoms";
 
 import type { Task, TaskId } from "@/types";
 
@@ -53,15 +53,18 @@ const useFirestoreState: UseFirestoreState = () => {
     [projectId]
   );
 
-  const selectedTasks = useRecoilValue(selectedTasksState);
+  const selectedElements = useRecoilValue(selectedElementsState);
 
   const deleteSelected = useCallback(() => {
     const batch = writeBatch(firestore);
-    selectedTasks.forEach((taskId) =>
+    selectedElements.tasks.forEach((taskId) =>
       batch.delete(doc(firestore, `projects/${projectId}/tasks`, taskId))
     );
+    selectedElements.dependencies.forEach((depId) =>
+      batch.delete(doc(firestore, `projects/${projectId}/dependencies`, depId))
+    );
     batch.commit();
-  }, [projectId, selectedTasks]);
+  }, [projectId, selectedElements]);
 
   return { addTask, updateTask, addDependency, deleteSelected };
 };
