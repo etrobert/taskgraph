@@ -6,10 +6,11 @@ import {
   updateDoc,
   writeBatch,
 } from "firebase/firestore";
-import { useRecoilValue } from "recoil";
+import { useRecoilTransaction_UNSTABLE, useRecoilValue } from "recoil";
 
 import firestore from "@/firestore";
 import { projectIdState, selectedElementsState } from "@/atoms";
+import getRelatedDependencies from "@/getRelatedDependencies";
 
 import type { Task, TaskId } from "@/types";
 
@@ -55,16 +56,27 @@ const useFirestoreState: UseFirestoreState = () => {
 
   const selectedElements = useRecoilValue(selectedElementsState);
 
-  const deleteSelected = useCallback(() => {
-    const batch = writeBatch(firestore);
-    selectedElements.tasks.forEach((taskId) =>
-      batch.delete(doc(firestore, `projects/${projectId}/tasks`, taskId))
-    );
-    selectedElements.dependencies.forEach((depId) =>
-      batch.delete(doc(firestore, `projects/${projectId}/dependencies`, depId))
-    );
-    batch.commit();
-  }, [projectId, selectedElements]);
+  const deleteSelected = useRecoilTransaction_UNSTABLE(
+    ({ get }) =>
+      () => {
+        const batch = writeBatch(firestore);
+        selectedElements.tasks.forEach((taskId) => {
+          batch.delete(doc(firestore, `projects/${projectId}/tasks`, taskId));
+          getRelatedDependencies(get, taskId).forEach((depId) =>
+            batch.delete(
+              doc(firestore, `projects/${projectId}/dependencies`, depId)
+            )
+          );
+        });
+        selectedElements.dependencies.forEach((depId) =>
+          batch.delete(
+            doc(firestore, `projects/${projectId}/dependencies`, depId)
+          )
+        );
+        batch.commit();
+      },
+    [projectId, selectedElements]
+  );
 
   return { addTask, updateTask, addDependency, deleteSelected };
 };
