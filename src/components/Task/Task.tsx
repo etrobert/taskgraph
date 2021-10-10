@@ -1,7 +1,7 @@
 import React from "react";
 import { useRecoilValue } from "recoil";
 
-import { taskSelectedSelectorFamily, taskStateFamily } from "@/atoms";
+import { taskSelectedStateFamily, taskStateFamily } from "@/atoms";
 import classNames from "@/classNames";
 
 import type { TaskId } from "@/types";
@@ -15,7 +15,7 @@ type Props = {
 const Task = ({ id }: Props): JSX.Element => {
   const { name, status } = useRecoilValue(taskStateFamily(id));
 
-  const selected = useRecoilValue(taskSelectedSelectorFamily(id));
+  const selected = useRecoilValue(taskSelectedStateFamily(id));
 
   return (
     <div

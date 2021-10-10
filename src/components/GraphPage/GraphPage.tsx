@@ -8,7 +8,7 @@ import GraphCanvas from "@/components/GraphCanvas/GraphCanvas";
 import NewTaskInput from "@/components/NewTaskInput/NewTaskInput";
 import useFirestoreState from "@/hooks/useFirestoreState";
 import useSyncFirestore from "@/hooks/useSyncFirestore";
-import { anyTasksSelectedSelector } from "@/atoms";
+import { anyTasksSelectedState } from "@/atoms";
 
 import "./GraphPage.css";
 
@@ -19,7 +19,7 @@ const GraphPage = (): JSX.Element => {
   const [insertMode, setInsertMode] = useState(false);
   const onCreateTask = () => setInsertMode(true);
 
-  const tasksSelected = useRecoilValue(anyTasksSelectedSelector);
+  const tasksSelected = useRecoilValue(anyTasksSelectedState);
 
   const { addTask, deleteSelected } = useFirestoreState();
 
