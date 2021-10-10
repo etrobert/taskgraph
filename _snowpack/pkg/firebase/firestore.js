@@ -12875,6 +12875,83 @@ function Nu(t) {
     s;
 }
 
+/**
+ * @license
+ * Copyright 2020 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/**
+ * A write batch, used to perform multiple writes as a single atomic unit.
+ *
+ * A `WriteBatch` object can be acquired by calling {@link writeBatch}. It
+ * provides methods for adding writes to the write batch. None of the writes
+ * will be committed (or visible locally) until {@link WriteBatch.commit} is
+ * called.
+ */ class sh {
+    /** @hideconstructor */
+    constructor(t, e) {
+        this._firestore = t, this._commitHandler = e, this._mutations = [], this._committed = !1, 
+        this._dataReader = ru(t);
+    }
+    set(t, e, n) {
+        this._verifyNotCommitted();
+        const s = ih(t, this._firestore), i = eh(s.converter, e, n), r = ou(this._dataReader, "WriteBatch.set", s._key, i, null !== s.converter, n);
+        return this._mutations.push(r.toMutation(s._key, Qe.none())), this;
+    }
+    update(t, e, n, ...s) {
+        this._verifyNotCommitted();
+        const i = ih(t, this._firestore);
+        // For Compat types, we have to "extract" the underlying types before
+        // performing validation.
+                let r;
+        return r = "string" == typeof (e = getModularInstance(e)) || e instanceof zc$1 ? wu(this._dataReader, "WriteBatch.update", i._key, e, n, s) : du(this._dataReader, "WriteBatch.update", i._key, e), 
+        this._mutations.push(r.toMutation(i._key, Qe.exists(!0))), this;
+    }
+    /**
+     * Deletes the document referred to by the provided {@link DocumentReference}.
+     *
+     * @param documentRef - A reference to the document to be deleted.
+     * @returns This `WriteBatch` instance. Used for chaining method calls.
+     */    delete(t) {
+        this._verifyNotCommitted();
+        const e = ih(t, this._firestore);
+        return this._mutations = this._mutations.concat(new rn(e._key, Qe.none())), this;
+    }
+    /**
+     * Commits all of the writes in this write batch as a single atomic unit.
+     *
+     * The result of these writes will only be reflected in document reads that
+     * occur after the returned promise resolves. If the client is offline, the
+     * write fails. If you would like to see local modifications or buffer writes
+     * until the client is online, use the full Firestore SDK.
+     *
+     * @returns A `Promise` resolved once all of the writes in the batch have been
+     * successfully written to the backend as an atomic unit (note that it won't
+     * resolve while you're offline).
+     */    commit() {
+        return this._verifyNotCommitted(), this._committed = !0, this._mutations.length > 0 ? this._commitHandler(this._mutations) : Promise.resolve();
+    }
+    _verifyNotCommitted() {
+        if (this._committed) throw new q$1(U$1.FAILED_PRECONDITION, "A write batch can no longer be used after commit() has been called.");
+    }
+}
+
+function ih(t, e) {
+    if ((t = getModularInstance(t)).firestore !== e) throw new q$1(U$1.INVALID_ARGUMENT, "Provided document reference is from a different Firestore instance.");
+    return t;
+}
+
 class oh extends th {
     constructor(t) {
         super(), this.firestore = t;
@@ -12974,6 +13051,36 @@ function mh(t, ...e) {
 }
 
 /**
+ * @license
+ * Copyright 2020 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/**
+ * Creates a write batch, used for performing multiple writes as a single
+ * atomic operation. The maximum number of writes allowed in a single {@link WriteBatch}
+ * is 500.
+ *
+ * Unlike transactions, write batches are persisted offline and therefore are
+ * preferable when you don't need to condition your writes on read data.
+ *
+ * @returns A {@link WriteBatch} that can be used to atomically execute multiple
+ * writes.
+ */ function vh(t) {
+    return $c$1(t = _c(t, Nc$1)), new sh(t, (e => yh(t, e)));
+}
+
+/**
  * Cloud Firestore
  *
  * @packageDocumentation
@@ -12988,4 +13095,4 @@ function mh(t, ...e) {
     }, e), s._setSettings(e), s;
 }), "PUBLIC" /* PUBLIC */)), registerVersion("@firebase/firestore", "3.0.2", Vh);
 
-export { _h as addDoc, Ac$1 as collection, bc$1 as doc, kc$1 as getFirestore, mh as onSnapshot, dh as updateDoc };
+export { _h as addDoc, Ac$1 as collection, bc$1 as doc, kc$1 as getFirestore, mh as onSnapshot, dh as updateDoc, vh as writeBatch };

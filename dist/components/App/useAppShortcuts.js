@@ -1,4 +1,4 @@
-import useKeyboardShortcuts from "../useKeyboardShortcuts.js";
+import useKeyboardShortcuts from "../../hooks/useKeyboardShortcuts.js";
 const selectAll = () => {
 };
 const getAppShortcuts = ({onCreateTask, onDelete}) => {

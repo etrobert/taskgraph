@@ -1,4 +1,4 @@
-import {useEffect} from "../_snowpack/pkg/react.js";
+import {useEffect} from "../../_snowpack/pkg/react.js";
 const useKeyboardShortcuts = (shortcuts) => {
   const handler = (event) => {
     Object.values(shortcuts).forEach((shortcut) => {

@@ -25,23 +25,26 @@ const projectState = atom({
     dependencies: []
   }
 });
-const selectedTasksState = atom({
-  key: "SelectedTasks",
-  default: []
+const selectedElementsState = atom({
+  key: "SelectedElements",
+  default: {tasks: [], dependencies: []}
 });
-const anyTasksSelectedSelector = selector({
-  key: "AnyTaskSelected",
-  get: ({get}) => get(selectedTasksState).length !== 0
+const anyElementsSelectedState = selector({
+  key: "AnyElementsSelected",
+  get: ({get}) => get(selectedElementsState).tasks.length !== 0 || get(selectedElementsState).dependencies.length !== 0
 });
-const taskSelectedSelectorFamily = selectorFamily({
+const taskSelectedStateFamily = selectorFamily({
   key: "TaskSelected",
-  get: (id) => ({get}) => get(selectedTasksState).includes(id)
+  get: (id) => ({get}) => get(selectedElementsState).tasks.includes(id)
 });
-const projectDependenciesSelector = selector({
+const projectDependenciesState = selector({
   key: "ProjectDependencies",
-  get: ({get}) => get(projectState).dependencies.map((dep) => get(dependencyStateFamily(dep)))
+  get: ({get}) => get(projectState).dependencies.map((id) => ({
+    id,
+    ...get(dependencyStateFamily(id))
+  }))
 });
-const projectTasksSelector = selector({
+const projectTasksState = selector({
   key: "ProjectTasks",
   get: ({get}) => get(projectState).tasks.map((id) => ({id, ...get(taskStateFamily(id))}))
 });
@@ -54,10 +57,10 @@ export {
   projectState,
   dependencyStateFamily,
   taskStateFamily,
-  selectedTasksState,
-  anyTasksSelectedSelector,
-  taskSelectedSelectorFamily,
-  projectDependenciesSelector,
-  projectTasksSelector,
+  selectedElementsState,
+  anyElementsSelectedState,
+  taskSelectedStateFamily,
+  projectDependenciesState,
+  projectTasksState,
   drawModeState
 };
