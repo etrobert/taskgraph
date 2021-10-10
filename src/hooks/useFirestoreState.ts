@@ -16,6 +16,7 @@ import type { Task, TaskId } from "@/types";
 type UseFirestoreState = () => {
   addTask: (name: string) => void;
   updateTask: (id: TaskId, task: Partial<Task>) => void;
+  addDependency: (predecessor: TaskId, successor: TaskId) => void;
   deleteSelected: () => void;
 };
 
@@ -40,6 +41,18 @@ const useFirestoreState: UseFirestoreState = () => {
     [projectId]
   );
 
+  const addDependency = useCallback(
+    (predecessor: TaskId, successor: TaskId) => {
+      const ref = collection(firestore, `projects/${projectId}/dependencies`);
+      const dependency = {
+        predecessor,
+        successor,
+      };
+      return addDoc(ref, dependency);
+    },
+    [projectId]
+  );
+
   const selectedTasks = useRecoilValue(selectedTasksState);
 
   const deleteSelected = useCallback(() => {
@@ -50,7 +63,7 @@ const useFirestoreState: UseFirestoreState = () => {
     batch.commit();
   }, [projectId, selectedTasks]);
 
-  return { addTask, updateTask, deleteSelected };
+  return { addTask, updateTask, addDependency, deleteSelected };
 };
 
 export default useFirestoreState;

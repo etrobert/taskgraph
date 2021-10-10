@@ -55,7 +55,7 @@ const GraphCanvas = (): JSX.Element => {
 
   const drawMode = useRecoilValue(drawModeState);
 
-  const { updateTask } = useFirestoreState();
+  const { updateTask, addDependency } = useFirestoreState();
 
   const { edgeHandles } = useInitCytoscapeExtensions(cy);
 
@@ -73,6 +73,23 @@ const GraphCanvas = (): JSX.Element => {
     if (!target.isNode()) return;
     updateTask(target.data().id, { position: target.position() });
   });
+
+  useCytoscapeEvent(
+    cy,
+    "ehcomplete",
+    // TODO: Extend type of useCytoscapeEvent
+    // @ts-expect-error edgehandles do not type events
+    (
+      event: Cy.EventObject,
+      sourceNode: Cy.NodeSingular,
+      targetNode: Cy.NodeSingular,
+      addedEdge: Cy.EdgeSingular
+    ) => {
+      console.log("complete");
+      addDependency(sourceNode.data().id, targetNode.data().id);
+      cy?.remove(addedEdge);
+    }
+  );
 
   // Update edgehandles draw mode
   useEffect(() => {
