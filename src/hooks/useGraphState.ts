@@ -59,7 +59,8 @@ const useGraphState: UseGraphState = () => {
           ...project,
           dependencies: [...project.dependencies, id],
         }));
-      }
+      },
+    []
   );
 
   const removeDependency = useRecoilCallback(
@@ -68,7 +69,8 @@ const useGraphState: UseGraphState = () => {
         set(projectState, (project) => ({
           ...project,
           dependencies: without(project.dependencies, id),
-        }))
+        })),
+    []
   );
 
   return {
