@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 
+import Button from "@/components/Button/Button";
+
 import "./Auth.css";
 
 const auth = getAuth();
@@ -38,7 +40,7 @@ const Auth = ({ mode }: Props): JSX.Element => {
         <form className="Auth__form">
           <input type="email" />
           <input type="password" />
-          <button type="submit">Sign In</button>
+          <Button type="submit">Sign In</Button>
         </form>
       </div>
     </div>

@@ -1,0 +1,16 @@
+.Button {
+  padding: 1rem 3rem;
+
+  display: grid;
+  place-content: center;
+
+  text-decoration: none;
+
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: white;
+  background-color: black;
+  border: none;
+  cursor: pointer;
+  border-radius: 0.5rem;
+}

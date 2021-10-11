@@ -1,4 +1,5 @@
 import React from "react";
+import Button from "../Button/Button";
 
 import "./LandingPage.css";
 
@@ -43,13 +44,7 @@ const LandingPage = (): JSX.Element => {
             value=""
           />
         </div>
-        <input
-          type="submit"
-          value="Subscribe"
-          name="subscribe"
-          id="mc-embedded-subscribe"
-          className="LandingPage__cta"
-        />
+        <Button type="submit">Subscribe</Button>
       </form>
     </div>
   );
