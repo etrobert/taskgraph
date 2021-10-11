@@ -13,10 +13,10 @@ const App = (): JSX.Element => {
     <Router>
       <Switch>
         <Route path="/signup">
-          <Auth />
+          <Auth mode="signup" />
         </Route>
         <Route path="/signin">
-          <Auth />
+          <Auth mode="signin" />
         </Route>
         <Route path="/graph">
           <GraphPage />
