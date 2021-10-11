@@ -37,9 +37,23 @@ const Auth = ({ mode }: Props): JSX.Element => {
     <div className="Auth">
       <div className="Auth__container">
         <h1>Sign in</h1>
-        <form className="Auth__form">
-          <input type="email" />
-          <input type="password" />
+        <form
+          className="Auth__form"
+          onSubmit={(e) => {
+            e.preventDefault();
+            createAccount();
+          }}
+        >
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
           <Button type="submit">Sign In</Button>
         </form>
       </div>
