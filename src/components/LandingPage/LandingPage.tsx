@@ -1,7 +1,5 @@
 import React from "react";
 
-import Auth from "@/components/Auth/Auth";
-
 import "./LandingPage.css";
 
 const LandingPage = (): JSX.Element => {
@@ -53,8 +51,6 @@ const LandingPage = (): JSX.Element => {
           className="LandingPage__cta"
         />
       </form>
-
-      <Auth />
     </div>
   );
 };
