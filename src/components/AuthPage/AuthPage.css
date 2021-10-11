@@ -1,11 +1,11 @@
-.Auth {
+.AuthPage {
   display: grid;
   place-content: center;
   height: 100%;
   grid-template-rows: 30rem;
 }
 
-.Auth__container {
+.AuthPage__container {
   display: grid;
   grid-template-columns: 30rem;
   align-content: center;
@@ -14,10 +14,4 @@
   padding: 2rem 1rem;
   border-radius: 0.5rem;
   box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
-}
-
-.Auth__form {
-  display: grid;
-  gap: 0.5rem;
-  width: calc(100% - 4rem);
 }

@@ -2,7 +2,8 @@ import React from "react";
 
 import GraphPage from "@/components/GraphPage/GraphPage";
 import LandingPage from "@/components/LandingPage/LandingPage";
-import Auth from "@/components/Auth/Auth";
+import SignUp from "@/components/SignUp/SignUp";
+import SignIn from "@/components/SignIn/SignIn";
 
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
@@ -13,10 +14,10 @@ const App = (): JSX.Element => {
     <Router>
       <Switch>
         <Route path="/signup">
-          <Auth mode="signup" />
+          <SignUp />
         </Route>
         <Route path="/signin">
-          <Auth mode="signin" />
+          <SignIn />
         </Route>
         <Route path="/graph">
           <GraphPage />
