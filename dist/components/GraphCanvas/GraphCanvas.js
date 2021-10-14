@@ -4,8 +4,8 @@ import {useRecoilValue} from "../../../_snowpack/pkg/recoil.js";
 import CytoscapeComponent from "../../../_snowpack/pkg/react-cytoscapejs.js";
 import {
   drawModeState,
-  projectDependenciesState,
-  projectTasksState
+  workspaceDependenciesState,
+  workspaceTasksState
 } from "../../atoms.js";
 import useSetTaskSelected from "../../hooks/useSetTaskSelected.js";
 import useSetDependencySelected from "../../hooks/useSetDependencySelected.js";
@@ -35,8 +35,8 @@ const cytoscapeStylesheet = [
   }
 ];
 const GraphCanvas = () => {
-  const tasks = useRecoilValue(projectTasksState);
-  const dependencies = useRecoilValue(projectDependenciesState);
+  const tasks = useRecoilValue(workspaceTasksState);
+  const dependencies = useRecoilValue(workspaceDependenciesState);
   const setTaskSelected = useSetTaskSelected();
   const setDependencySelected = useSetDependencySelected();
   const [cy, setCy] = useState();

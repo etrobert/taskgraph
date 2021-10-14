@@ -1,6 +1,10 @@
 import React from "../../../_snowpack/pkg/react.js";
+import {useRecoilValue} from "../../../_snowpack/pkg/recoil.js";
+import {signedInUserIdState} from "../../atoms.js";
 import "./MenuBar.css.proxy.js";
-const MenuBar = ({open, onClose, onNewGraph}) => {
+import {getAuth} from "../../../_snowpack/pkg/@firebase/auth.js";
+const MenuBar = ({open, onClose}) => {
+  const signedInUserId = useRecoilValue(signedInUserIdState);
   return /* @__PURE__ */ React.createElement("div", {
     className: `MenuBar ${open ? "MenuBar--open" : ""}`
   }, /* @__PURE__ */ React.createElement("h1", {
@@ -9,9 +13,11 @@ const MenuBar = ({open, onClose, onNewGraph}) => {
     "aria-label": "Close Menu",
     className: "MenuBar__close-button iconButton",
     onClick: onClose
-  }), /* @__PURE__ */ React.createElement("ul", null, /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement("button", {
-    onClick: onNewGraph
-  }, "New Graph"))), /* @__PURE__ */ React.createElement("section", null, /* @__PURE__ */ React.createElement("h2", null, "Keyboard Shortcuts"), /* @__PURE__ */ React.createElement("ul", null, /* @__PURE__ */ React.createElement("li", null, "[I]: [I]nsert a new task"), /* @__PURE__ */ React.createElement("li", null, "[D]/[Delete]: [D]elete selected tasks"), /* @__PURE__ */ React.createElement("li", null, "[Ctrl+a]: Select [a]ll tasks"))), /* @__PURE__ */ React.createElement("a", {
+  }), /* @__PURE__ */ React.createElement("div", {
+    className: "MenuBar__auth"
+  }, "Signed in as ", signedInUserId, /* @__PURE__ */ React.createElement("button", {
+    onClick: () => getAuth().signOut()
+  }, "Sign Out")), /* @__PURE__ */ React.createElement("section", null, /* @__PURE__ */ React.createElement("h2", null, "Keyboard Shortcuts"), /* @__PURE__ */ React.createElement("ul", null, /* @__PURE__ */ React.createElement("li", null, "[I]: [I]nsert a new task"), /* @__PURE__ */ React.createElement("li", null, "[D]/[Delete]: [D]elete selected tasks"), /* @__PURE__ */ React.createElement("li", null, "[Ctrl+a]: Select [a]ll tasks"))), /* @__PURE__ */ React.createElement("a", {
     "aria-label": "Github Repository",
     className: "MenuBar__github-link",
     href: "https://github.com/etrobert/taskgraph",

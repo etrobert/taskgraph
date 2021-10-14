@@ -2,41 +2,41 @@ import {useRecoilCallback} from "../../_snowpack/pkg/recoil.js";
 import without from "../../_snowpack/pkg/lodash/without.js";
 import {
   dependencyStateFamily,
-  projectState,
+  workspaceState,
   selectedElementsState,
   taskStateFamily
 } from "../atoms.js";
 const useGraphState = () => {
   const addTask = useRecoilCallback(({set}) => (id, task) => {
     set(taskStateFamily(id), task);
-    set(projectState, (project) => ({
-      ...project,
-      tasks: [...project.tasks, id]
+    set(workspaceState, (workspace) => ({
+      ...workspace,
+      tasks: [...workspace.tasks, id]
     }));
   }, []);
   const setTask = useRecoilCallback(({set}) => (id, task) => set(taskStateFamily(id), task), []);
   const removeTask = useRecoilCallback(({set}) => (id) => {
-    set(projectState, (project) => ({
-      ...project,
-      tasks: project.tasks.filter((currentId) => currentId !== id)
+    set(workspaceState, (workspace) => ({
+      ...workspace,
+      tasks: workspace.tasks.filter((currentId) => currentId !== id)
     }));
     set(selectedElementsState, ({tasks, dependencies}) => ({
       dependencies,
       tasks: without(tasks, id)
     }));
   }, []);
-  const clearGraph = useRecoilCallback(({set}) => () => set(projectState, {tasks: [], dependencies: []}), []);
+  const clearGraph = useRecoilCallback(({set}) => () => set(workspaceState, {tasks: [], dependencies: []}), []);
   const addDependency = useRecoilCallback(({set}) => (id, dependency) => {
     set(dependencyStateFamily(id), dependency);
-    set(projectState, (project) => ({
-      ...project,
-      dependencies: [...project.dependencies, id]
+    set(workspaceState, (workspace) => ({
+      ...workspace,
+      dependencies: [...workspace.dependencies, id]
     }));
   }, []);
   const removeDependency = useRecoilCallback(({set}) => (id) => {
-    set(projectState, (project) => ({
-      ...project,
-      dependencies: without(project.dependencies, id)
+    set(workspaceState, (workspace) => ({
+      ...workspace,
+      dependencies: without(workspace.dependencies, id)
     }));
     set(selectedElementsState, ({tasks, dependencies}) => ({
       tasks,

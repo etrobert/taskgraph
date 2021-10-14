@@ -1,4 +1,6 @@
 import React from "../../../_snowpack/pkg/react.js";
+import Button from "../Button/Button.js";
+import TextInput from "../TextInput/TextInput.js";
 import "./LandingPage.css.proxy.js";
 const LandingPage = () => {
   return /* @__PURE__ */ React.createElement("div", {
@@ -15,7 +17,7 @@ const LandingPage = () => {
     noValidate: true
   }, /* @__PURE__ */ React.createElement("label", {
     htmlFor: "mce-EMAIL"
-  }, /* @__PURE__ */ React.createElement("h2", null, "Get our Latest Updates")), /* @__PURE__ */ React.createElement("input", {
+  }, /* @__PURE__ */ React.createElement("h2", null, "Get our Latest Updates")), /* @__PURE__ */ React.createElement(TextInput, {
     type: "email",
     name: "EMAIL",
     className: "LandingPage__email-input",
@@ -30,12 +32,8 @@ const LandingPage = () => {
     name: "b_fcf0ac58a5bd4d1fe9162f855_389c9dac43",
     tabIndex: -1,
     value: ""
-  })), /* @__PURE__ */ React.createElement("input", {
-    type: "submit",
-    value: "Subscribe",
-    name: "subscribe",
-    id: "mc-embedded-subscribe",
-    className: "LandingPage__cta"
-  })));
+  })), /* @__PURE__ */ React.createElement(Button, {
+    type: "submit"
+  }, "Subscribe")));
 };
 export default LandingPage;

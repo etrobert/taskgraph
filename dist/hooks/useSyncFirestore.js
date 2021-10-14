@@ -1,14 +1,14 @@
 import {useEffect} from "../../_snowpack/pkg/react.js";
 import {collection, onSnapshot} from "../../_snowpack/pkg/firebase/firestore.js";
 import {useRecoilValue} from "../../_snowpack/pkg/recoil.js";
-import {projectIdState} from "../atoms.js";
+import {signedInUserIdState} from "../atoms.js";
 import firestore from "../firestore.js";
 import useGraphState from "./useGraphState.js";
 const useSyncFirestore = () => {
-  const projectId = useRecoilValue(projectIdState);
+  const signedInUserId = useRecoilValue(signedInUserIdState);
   const {addTask, setTask, removeTask, addDependency, removeDependency} = useGraphState();
   useEffect(() => {
-    const ref = collection(firestore, `projects/${projectId}/tasks`);
+    const ref = collection(firestore, `workspaces/${signedInUserId}/tasks`);
     const unsubscribe = onSnapshot(ref, (snapshot) => snapshot.docChanges().forEach((change) => {
       const {id} = change.doc;
       const task = change.doc.data();
@@ -25,9 +25,9 @@ const useSyncFirestore = () => {
       }
     }));
     return unsubscribe;
-  }, [projectId, addTask, setTask, removeTask]);
+  }, [addTask, setTask, removeTask, signedInUserId]);
   useEffect(() => {
-    const ref = collection(firestore, `projects/${projectId}/dependencies`);
+    const ref = collection(firestore, `workspaces/${signedInUserId}/dependencies`);
     const unsubscribe = onSnapshot(ref, (snapshot) => snapshot.docChanges().forEach((change) => {
       const {id} = change.doc;
       const dependency = change.doc.data();
@@ -43,6 +43,6 @@ const useSyncFirestore = () => {
       }
     }));
     return unsubscribe;
-  }, [projectId, addDependency, removeDependency]);
+  }, [addDependency, removeDependency, signedInUserId]);
 };
 export default useSyncFirestore;

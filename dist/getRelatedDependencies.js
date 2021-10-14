@@ -1,6 +1,6 @@
-import {dependencyStateFamily, projectState} from "./atoms.js";
+import {dependencyStateFamily, workspaceState} from "./atoms.js";
 const getRelatedDependencies = (get, taskId) => {
-  const {dependencies} = get(projectState);
+  const {dependencies} = get(workspaceState);
   const fullDependencies = dependencies.map((id) => ({
     id,
     ...get(dependencyStateFamily(id))

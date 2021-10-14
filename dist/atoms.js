@@ -1,4 +1,15 @@
 import {atom, atomFamily, selector, selectorFamily} from "../_snowpack/pkg/recoil.js";
+const authState = atom({
+  key: "Auth",
+  default: {status: "loading"}
+});
+const signedInUserIdState = selector({
+  key: "SignedInUserId",
+  get: ({get}) => {
+    const auth = get(authState);
+    return auth.status === "signedIn" ? auth.userId : "NOT_SIGNED_IN";
+  }
+});
 const taskStateFamily = atomFamily({
   key: "Task",
   default: {
@@ -14,12 +25,8 @@ const dependencyStateFamily = atomFamily({
     successor: "DEFAULT-TASK-ID"
   }
 });
-const projectIdState = atom({
-  key: "ProjectId",
-  default: "spXxYVulTgfKcj0n1sWb"
-});
-const projectState = atom({
-  key: "Project",
+const workspaceState = atom({
+  key: "Workspace",
   default: {
     tasks: [],
     dependencies: []
@@ -37,30 +44,34 @@ const taskSelectedStateFamily = selectorFamily({
   key: "TaskSelected",
   get: (id) => ({get}) => get(selectedElementsState).tasks.includes(id)
 });
-const projectDependenciesState = selector({
-  key: "ProjectDependencies",
-  get: ({get}) => get(projectState).dependencies.map((id) => ({
+const workspaceDependenciesState = selector({
+  key: "WorkspaceDependencies",
+  get: ({get}) => get(workspaceState).dependencies.map((id) => ({
     id,
     ...get(dependencyStateFamily(id))
   }))
 });
-const projectTasksState = selector({
-  key: "ProjectTasks",
-  get: ({get}) => get(projectState).tasks.map((id) => ({id, ...get(taskStateFamily(id))}))
+const workspaceTasksState = selector({
+  key: "WorkspaceTasks",
+  get: ({get}) => get(workspaceState).tasks.map((id) => ({
+    id,
+    ...get(taskStateFamily(id))
+  }))
 });
 const drawModeState = atom({
   key: "DrawMode",
   default: false
 });
 export {
-  projectIdState,
-  projectState,
+  authState,
+  signedInUserIdState,
+  workspaceState,
   dependencyStateFamily,
   taskStateFamily,
   selectedElementsState,
   anyElementsSelectedState,
   taskSelectedStateFamily,
-  projectDependenciesState,
-  projectTasksState,
+  workspaceDependenciesState,
+  workspaceTasksState,
   drawModeState
 };

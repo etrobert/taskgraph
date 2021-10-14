@@ -1,4 +1,5 @@
-import { g as getModularInstance, a as getApp, _ as _getProvider, b as _registerComponent, r as registerVersion, L as LogLevel, S as SDK_VERSION, C as Component, c as Logger, d as isMobileCordova, e as isReactNative, f as isElectron, h as isIE, j as isUWP, k as isBrowserExtension } from '../common/index.esm2017-31b4a104.js';
+import { g as getApp, _ as _getProvider, a as _registerComponent, r as registerVersion, L as LogLevel, S as SDK_VERSION, C as Component, b as Logger } from '../common/index.esm2017-407ec88e.js';
+import { g as getModularInstance, i as isMobileCordova, a as isReactNative, m as isElectron, k as isIE, n as isUWP, b as isBrowserExtension } from '../common/index.esm-834fc85d.js';
 
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -12965,6 +12966,12 @@ class oh extends th {
     }
 }
 
+function fh(t, e, n) {
+    t = _c(t, Ec$1);
+    const s = _c(t.firestore, Nc$1), i = eh(t.converter, e, n);
+    return yh(s, [ ou(ru(s), "setDoc", t._key, i, null !== t.converter, n).toMutation(t._key, Qe.none()) ]);
+}
+
 function dh(t, e, n, ...s) {
     t = _c(t, Ec$1);
     const i = _c(t.firestore, Nc$1), r = ru(i);
@@ -13095,4 +13102,4 @@ function mh(t, ...e) {
     }, e), s._setSettings(e), s;
 }), "PUBLIC" /* PUBLIC */)), registerVersion("@firebase/firestore", "3.0.2", Vh);
 
-export { _h as addDoc, Ac$1 as collection, bc$1 as doc, kc$1 as getFirestore, mh as onSnapshot, dh as updateDoc, vh as writeBatch };
+export { _h as addDoc, Ac$1 as collection, bc$1 as doc, kc$1 as getFirestore, mh as onSnapshot, fh as setDoc, dh as updateDoc, vh as writeBatch };

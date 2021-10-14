@@ -1,9 +1,12 @@
 {
   "imports": {
+    "@firebase/auth": "./@firebase/auth.js",
+    "@firebase/util": "./@firebase/util.js",
     "cytoscape": "./cytoscape.js",
     "cytoscape-dom-node": "./cytoscape-dom-node.js",
     "cytoscape-edgehandles": "./cytoscape-edgehandles.js",
     "firebase/app": "./firebase/app.js",
+    "firebase/auth": "./firebase/auth.js",
     "firebase/firestore": "./firebase/firestore.js",
     "lodash": "./lodash.js",
     "lodash/without": "./lodash/without.js",
@@ -11,6 +14,7 @@
     "react-cytoscapejs": "./react-cytoscapejs.js",
     "react-dom": "./react-dom.js",
     "react-draggable": "./react-draggable.js",
+    "react-router": "./react-router.js",
     "react-router-dom": "./react-router-dom.js",
     "recoil": "./recoil.js"
   }

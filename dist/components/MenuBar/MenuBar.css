@@ -31,8 +31,11 @@
   background-image: url("resources/feather/x.svg");
 }
 
-.MenuBar ul {
-  list-style: none;
+.MenuBar__auth {
+  display: grid;
+  gap: 0.5em;
+  justify-items: left;
+  align-content: start;
 }
 
 .MenuBar__title {

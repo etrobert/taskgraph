@@ -1,4 +1,6 @@
 import React, {useState} from "../../../_snowpack/pkg/react.js";
+import {Redirect} from "../../../_snowpack/pkg/react-router.js";
+import {useRecoilValue} from "../../../_snowpack/pkg/recoil.js";
 import useAppShortcuts from "../App/useAppShortcuts.js";
 import MenuBar from "../MenuBar/MenuBar.js";
 import Toolbar from "../Toolbar/Toolbar.js";
@@ -6,6 +8,7 @@ import GraphCanvas from "../GraphCanvas/GraphCanvas.js";
 import NewTaskInput from "../NewTaskInput/NewTaskInput.js";
 import useFirestoreState from "../../hooks/useFirestoreState.js";
 import useSyncFirestore from "../../hooks/useSyncFirestore.js";
+import {authState} from "../../atoms.js";
 import "./GraphPage.css.proxy.js";
 const GraphPage = () => {
   const [menuBarOpen, setMenuBarOpen] = useState(false);
@@ -19,15 +22,17 @@ const GraphPage = () => {
     onDelete: deleteSelected,
     onCreateTask
   });
+  const auth = useRecoilValue(authState);
+  if (auth.status === "notSignedIn")
+    return /* @__PURE__ */ React.createElement(Redirect, {
+      to: "/"
+    });
   return /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("button", {
     className: "GraphPage__menu-bar-open-button iconButton",
     onClick: () => setMenuBarOpen(true)
   }), /* @__PURE__ */ React.createElement(MenuBar, {
     open: menuBarOpen,
-    onClose: closeMenuBar,
-    onNewGraph: () => {
-      closeMenuBar();
-    }
+    onClose: closeMenuBar
   }), /* @__PURE__ */ React.createElement(Toolbar, {
     onCreateTask,
     onComplete: () => {

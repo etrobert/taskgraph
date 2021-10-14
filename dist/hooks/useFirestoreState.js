@@ -8,38 +8,38 @@ import {
 } from "../../_snowpack/pkg/firebase/firestore.js";
 import {useRecoilTransaction_UNSTABLE, useRecoilValue} from "../../_snowpack/pkg/recoil.js";
 import firestore from "../firestore.js";
-import {projectIdState, selectedElementsState} from "../atoms.js";
+import {signedInUserIdState, selectedElementsState} from "../atoms.js";
 import getRelatedDependencies from "../getRelatedDependencies.js";
 const useFirestoreState = () => {
-  const projectId = useRecoilValue(projectIdState);
+  const signedInUserId = useRecoilValue(signedInUserIdState);
   const addTask = useCallback((name) => {
-    const ref = collection(firestore, `projects/${projectId}/tasks`);
+    const ref = collection(firestore, `workspaces/${signedInUserId}/tasks`);
     const task = {
       name,
       position: {x: 0, y: 0},
       status: "ready"
     };
     return addDoc(ref, task);
-  }, [projectId]);
-  const updateTask = useCallback((id, task) => updateDoc(doc(firestore, `projects/${projectId}/tasks`, id), task), [projectId]);
+  }, [signedInUserId]);
+  const updateTask = useCallback((id, task) => updateDoc(doc(firestore, `workspaces/${signedInUserId}/tasks`, id), task), [signedInUserId]);
   const addDependency = useCallback((predecessor, successor) => {
-    const ref = collection(firestore, `projects/${projectId}/dependencies`);
+    const ref = collection(firestore, `workspaces/${signedInUserId}/dependencies`);
     const dependency = {
       predecessor,
       successor
     };
     return addDoc(ref, dependency);
-  }, [projectId]);
+  }, [signedInUserId]);
   const selectedElements = useRecoilValue(selectedElementsState);
   const deleteSelected = useRecoilTransaction_UNSTABLE(({get}) => () => {
     const batch = writeBatch(firestore);
     selectedElements.tasks.forEach((taskId) => {
-      batch.delete(doc(firestore, `projects/${projectId}/tasks`, taskId));
-      getRelatedDependencies(get, taskId).forEach((depId) => batch.delete(doc(firestore, `projects/${projectId}/dependencies`, depId)));
+      batch.delete(doc(firestore, `workspaces/${signedInUserId}/tasks`, taskId));
+      getRelatedDependencies(get, taskId).forEach((depId) => batch.delete(doc(firestore, `workspaces/${signedInUserId}/dependencies`, depId)));
     });
-    selectedElements.dependencies.forEach((depId) => batch.delete(doc(firestore, `projects/${projectId}/dependencies`, depId)));
+    selectedElements.dependencies.forEach((depId) => batch.delete(doc(firestore, `workspaces/${signedInUserId}/dependencies`, depId)));
     batch.commit();
-  }, [projectId, selectedElements]);
+  }, [signedInUserId, selectedElements]);
   return {addTask, updateTask, addDependency, deleteSelected};
 };
 export default useFirestoreState;
