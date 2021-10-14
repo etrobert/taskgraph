@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+import { Redirect } from "react-router";
 import { useRecoilValue } from "recoil";
 
 import useAppShortcuts from "@/components/App/useAppShortcuts";
@@ -31,7 +32,7 @@ const GraphPage = (): JSX.Element => {
 
   const auth = useRecoilValue(authState);
 
-  useEffect(() => console.log(auth), [auth]);
+  if (auth.status === "notSignedIn") return <Redirect to="/" />;
 
   return (
     <>
