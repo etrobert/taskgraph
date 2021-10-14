@@ -16,12 +16,7 @@ const SignUp = (): JSX.Element => {
 
   const createAccount = () =>
     createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        // Signed in
-        const user = userCredential.user;
-        // ...
-        console.log("Signed in ", user);
-      })
+      .then(() => (window.location.href = "/graph"))
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
