@@ -23,6 +23,14 @@ const authState = atom<AuthState>({
   default: { status: "loading" },
 });
 
+const signedInUserIdState = selector<UserId>({
+  key: "SignedInUserId",
+  get: ({ get }) => {
+    const auth = get(authState);
+    return auth.status === "signedIn" ? auth.userId : "NOT_SIGNED_IN";
+  },
+});
+
 const taskStateFamily = atomFamily<Task, TaskId>({
   key: "Task",
   default: {
@@ -98,6 +106,7 @@ const drawModeState = atom<boolean>({
 
 export {
   authState,
+  signedInUserIdState,
   projectIdState,
   projectState,
   dependencyStateFamily,

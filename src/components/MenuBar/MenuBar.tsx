@@ -1,4 +1,7 @@
 import React from "react";
+import { useRecoilValue } from "recoil";
+
+import { signedInUserIdState } from "@/atoms";
 
 import "./MenuBar.css";
 
@@ -9,6 +12,8 @@ type Props = {
 };
 
 const MenuBar = ({ open, onClose, onNewGraph }: Props): JSX.Element => {
+  const signedInUserId = useRecoilValue(signedInUserIdState);
+
   return (
     <div className={`MenuBar ${open ? "MenuBar--open" : ""}`}>
       <h1 className="MenuBar__title">TaskGraph</h1>
@@ -17,6 +22,7 @@ const MenuBar = ({ open, onClose, onNewGraph }: Props): JSX.Element => {
         className="MenuBar__close-button iconButton"
         onClick={onClose}
       />
+      Signed in as {signedInUserId}
       <ul>
         <li>
           <button onClick={onNewGraph}>New Graph</button>
