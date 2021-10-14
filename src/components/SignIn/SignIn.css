@@ -1,0 +1,5 @@
+.SignIn__form {
+  display: grid;
+  gap: 0.5rem;
+  width: calc(100% - 4rem);
+}
