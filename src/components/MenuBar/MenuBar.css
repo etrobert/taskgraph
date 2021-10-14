@@ -35,6 +35,12 @@
   list-style: none;
 }
 
+.MenuBar__auth {
+  display: grid;
+  gap: 0.5em;
+  justify-items: left;
+}
+
 .MenuBar__title {
   font-family: "PermanentMarker";
   font-size: 3rem;

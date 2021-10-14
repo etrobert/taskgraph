@@ -4,6 +4,7 @@ import { useRecoilValue } from "recoil";
 import { signedInUserIdState } from "@/atoms";
 
 import "./MenuBar.css";
+import { getAuth } from "@firebase/auth";
 
 type Props = {
   open: boolean;
@@ -22,7 +23,10 @@ const MenuBar = ({ open, onClose, onNewGraph }: Props): JSX.Element => {
         className="MenuBar__close-button iconButton"
         onClick={onClose}
       />
-      Signed in as {signedInUserId}
+      <div className={"MenuBar__auth"}>
+        Signed in as {signedInUserId}
+        <button onClick={() => getAuth().signOut()}>Sign Out</button>
+      </div>
       <ul>
         <li>
           <button onClick={onNewGraph}>New Graph</button>
