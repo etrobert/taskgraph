@@ -2,11 +2,12 @@ import React, { useState } from "react";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { FirebaseError } from "@firebase/util";
 
+import AuthPage from "@/components/AuthPage/AuthPage";
 import Button from "@/components/Button/Button";
+import TextInput from "@/components/TextInput/TextInput";
 import createNewWorkspace from "@/createNewWorkspace";
 
 import "./SignUp.css";
-import AuthPage from "../AuthPage/AuthPage";
 
 const auth = getAuth();
 
@@ -40,15 +41,17 @@ const SignUp = (): JSX.Element => {
           createAccount();
         }}
       >
-        <input
+        <TextInput
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          placeholder="Email Address"
         />
-        <input
+        <TextInput
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          placeholder="Password"
         />
         {error}
         <Button type="submit">Sign Up</Button>

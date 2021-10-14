@@ -1,5 +1,7 @@
 import React from "react";
-import Button from "../Button/Button";
+
+import Button from "@/components/Button/Button";
+import TextInput from "@/components/TextInput/TextInput";
 
 import "./LandingPage.css";
 
@@ -24,7 +26,7 @@ const LandingPage = (): JSX.Element => {
         <label htmlFor="mce-EMAIL">
           <h2>Get our Latest Updates</h2>
         </label>
-        <input
+        <TextInput
           type="email"
           name="EMAIL"
           className="LandingPage__email-input"
