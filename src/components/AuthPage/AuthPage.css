@@ -1,17 +1,36 @@
 .AuthPage {
   display: grid;
-  place-content: center;
+  align-content: center;
   height: 100%;
-  grid-template-rows: 30rem;
 }
 
 .AuthPage__container {
   display: grid;
-  grid-template-columns: 30rem;
   align-content: center;
-  justify-items: center;
-  gap: 1rem;
-  padding: 2rem 1rem;
-  border-radius: 0.5rem;
-  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+  gap: 2rem;
+
+  --padding: 1rem;
+
+  padding-left: var(--padding);
+  padding-right: var(--padding);
+  width: calc(100% - 2 * var(--padding));
+}
+
+@media only screen and (min-width: 600px) {
+  .AuthPage {
+    grid-template-rows: 30rem;
+    justify-content: center;
+  }
+
+  .AuthPage__container {
+    grid-template-columns: 25rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+
+    --padding: 4rem;
+  }
+}
+
+.AuthPage h1 {
+  font-size: 4rem;
 }
