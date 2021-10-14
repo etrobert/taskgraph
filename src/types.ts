@@ -18,9 +18,9 @@ type Dependency = {
   successor: TaskId;
 };
 
-type ProjectId = string;
+type WorkspaceId = string;
 
-type Project = {
+type Workspace = {
   tasks: TaskId[];
   dependencies: DependencyId[];
 };
@@ -33,6 +33,6 @@ export type {
   Task,
   DependencyId,
   Dependency,
-  ProjectId,
-  Project,
+  WorkspaceId,
+  Workspace,
 };

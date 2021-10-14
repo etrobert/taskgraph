@@ -3,7 +3,7 @@ import { atom, atomFamily, selector, selectorFamily } from "recoil";
 import type {
   Dependency,
   DependencyId,
-  Project,
+  Workspace,
   Task,
   TaskId,
   UserId,
@@ -47,8 +47,8 @@ const dependencyStateFamily = atomFamily<Dependency, DependencyId>({
   },
 });
 
-const projectState = atom<Project>({
-  key: "Project",
+const workspaceState = atom<Workspace>({
+  key: "Workspace",
   default: {
     tasks: [],
     dependencies: [],
@@ -78,19 +78,22 @@ const taskSelectedStateFamily = selectorFamily<boolean, TaskId>({
       get(selectedElementsState).tasks.includes(id),
 });
 
-const projectDependenciesState = selector({
-  key: "ProjectDependencies",
+const workspaceDependenciesState = selector({
+  key: "WorkspaceDependencies",
   get: ({ get }) =>
-    get(projectState).dependencies.map((id) => ({
+    get(workspaceState).dependencies.map((id) => ({
       id,
       ...get(dependencyStateFamily(id)),
     })),
 });
 
-const projectTasksState = selector({
-  key: "ProjectTasks",
+const workspaceTasksState = selector({
+  key: "WorkspaceTasks",
   get: ({ get }) =>
-    get(projectState).tasks.map((id) => ({ id, ...get(taskStateFamily(id)) })),
+    get(workspaceState).tasks.map((id) => ({
+      id,
+      ...get(taskStateFamily(id)),
+    })),
 });
 
 const drawModeState = atom<boolean>({
@@ -101,13 +104,13 @@ const drawModeState = atom<boolean>({
 export {
   authState,
   signedInUserIdState,
-  projectState,
+  workspaceState,
   dependencyStateFamily,
   taskStateFamily,
   selectedElementsState,
   anyElementsSelectedState,
   taskSelectedStateFamily,
-  projectDependenciesState,
-  projectTasksState,
+  workspaceDependenciesState,
+  workspaceTasksState,
   drawModeState,
 };

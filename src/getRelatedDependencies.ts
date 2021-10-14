@@ -1,5 +1,5 @@
 import { RecoilValue } from "recoil";
-import { dependencyStateFamily, projectState } from "./atoms";
+import { dependencyStateFamily, workspaceState } from "./atoms";
 import { TaskId } from "./types";
 
 /**
@@ -11,7 +11,7 @@ const getRelatedDependencies = (
   get: <T>(a: RecoilValue<T>) => T,
   taskId: TaskId
 ): TaskId[] => {
-  const { dependencies } = get(projectState);
+  const { dependencies } = get(workspaceState);
 
   const fullDependencies = dependencies.map((id) => ({
     id,

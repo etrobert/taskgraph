@@ -8,8 +8,8 @@ import CytoscapeComponent from "react-cytoscapejs";
 
 import {
   drawModeState,
-  projectDependenciesState,
-  projectTasksState,
+  workspaceDependenciesState,
+  workspaceTasksState,
 } from "@/atoms";
 import useSetTaskSelected from "@/hooks/useSetTaskSelected";
 import useSetDependencySelected from "@/hooks/useSetDependencySelected";
@@ -47,8 +47,8 @@ const cytoscapeStylesheet = [
  * Interactive canvas displaying a Task Graph
  */
 const GraphCanvas = (): JSX.Element => {
-  const tasks = useRecoilValue(projectTasksState);
-  const dependencies = useRecoilValue(projectDependenciesState);
+  const tasks = useRecoilValue(workspaceTasksState);
+  const dependencies = useRecoilValue(workspaceDependenciesState);
 
   const setTaskSelected = useSetTaskSelected();
   const setDependencySelected = useSetDependencySelected();

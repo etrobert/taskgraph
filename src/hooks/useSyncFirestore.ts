@@ -14,7 +14,7 @@ const useSyncFirestore = (): void => {
     useGraphState();
 
   useEffect(() => {
-    const ref = collection(firestore, `projects/${signedInUserId}/tasks`);
+    const ref = collection(firestore, `workspaces/${signedInUserId}/tasks`);
     const unsubscribe = onSnapshot(ref, (snapshot) =>
       snapshot.docChanges().forEach((change) => {
         const { id } = change.doc;
@@ -38,7 +38,7 @@ const useSyncFirestore = (): void => {
   useEffect(() => {
     const ref = collection(
       firestore,
-      `projects/${signedInUserId}/dependencies`
+      `workspaces/${signedInUserId}/dependencies`
     );
     const unsubscribe = onSnapshot(ref, (snapshot) =>
       snapshot.docChanges().forEach((change) => {

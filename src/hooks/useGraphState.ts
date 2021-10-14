@@ -3,7 +3,7 @@ import without from "lodash/without";
 
 import {
   dependencyStateFamily,
-  projectState,
+  workspaceState,
   selectedElementsState,
   taskStateFamily,
 } from "@/atoms";
@@ -24,9 +24,9 @@ const useGraphState: UseGraphState = () => {
     ({ set }) =>
       (id: TaskId, task: Task) => {
         set(taskStateFamily(id), task);
-        set(projectState, (project) => ({
-          ...project,
-          tasks: [...project.tasks, id],
+        set(workspaceState, (workspace) => ({
+          ...workspace,
+          tasks: [...workspace.tasks, id],
         }));
       },
     []
@@ -42,9 +42,9 @@ const useGraphState: UseGraphState = () => {
   const removeTask = useRecoilCallback(
     ({ set }) =>
       (id: TaskId) => {
-        set(projectState, (project) => ({
-          ...project,
-          tasks: project.tasks.filter((currentId) => currentId !== id),
+        set(workspaceState, (workspace) => ({
+          ...workspace,
+          tasks: workspace.tasks.filter((currentId) => currentId !== id),
         }));
         // Remove task from the selected elements
         set(selectedElementsState, ({ tasks, dependencies }) => ({
@@ -58,7 +58,7 @@ const useGraphState: UseGraphState = () => {
   const clearGraph = useRecoilCallback(
     ({ set }) =>
       () =>
-        set(projectState, { tasks: [], dependencies: [] }),
+        set(workspaceState, { tasks: [], dependencies: [] }),
     []
   );
 
@@ -66,9 +66,9 @@ const useGraphState: UseGraphState = () => {
     ({ set }) =>
       (id: DependencyId, dependency: Dependency) => {
         set(dependencyStateFamily(id), dependency);
-        set(projectState, (project) => ({
-          ...project,
-          dependencies: [...project.dependencies, id],
+        set(workspaceState, (workspace) => ({
+          ...workspace,
+          dependencies: [...workspace.dependencies, id],
         }));
       },
     []
@@ -77,9 +77,9 @@ const useGraphState: UseGraphState = () => {
   const removeDependency = useRecoilCallback(
     ({ set }) =>
       (id: DependencyId) => {
-        set(projectState, (project) => ({
-          ...project,
-          dependencies: without(project.dependencies, id),
+        set(workspaceState, (workspace) => ({
+          ...workspace,
+          dependencies: without(workspace.dependencies, id),
         }));
         // Remove task from the selected elements
         set(selectedElementsState, ({ tasks, dependencies }) => ({
