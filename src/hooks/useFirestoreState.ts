@@ -9,7 +9,7 @@ import {
 import { useRecoilTransaction_UNSTABLE, useRecoilValue } from "recoil";
 
 import firestore from "@/firestore";
-import { projectIdState, selectedElementsState } from "@/atoms";
+import { signedInUserIdState, selectedElementsState } from "@/atoms";
 import getRelatedDependencies from "@/getRelatedDependencies";
 
 import type { Task, TaskId } from "@/types";
@@ -22,10 +22,10 @@ type UseFirestoreState = () => {
 };
 
 const useFirestoreState: UseFirestoreState = () => {
-  const projectId = useRecoilValue(projectIdState);
+  const signedInUserId = useRecoilValue(signedInUserIdState);
   const addTask = useCallback(
     (name: string) => {
-      const ref = collection(firestore, `projects/${projectId}/tasks`);
+      const ref = collection(firestore, `projects/${signedInUserId}/tasks`);
       const task = {
         name,
         position: { x: 0, y: 0 },
@@ -33,25 +33,28 @@ const useFirestoreState: UseFirestoreState = () => {
       };
       return addDoc(ref, task);
     },
-    [projectId]
+    [signedInUserId]
   );
 
   const updateTask = useCallback(
     (id, task) =>
-      updateDoc(doc(firestore, `projects/${projectId}/tasks`, id), task),
-    [projectId]
+      updateDoc(doc(firestore, `projects/${signedInUserId}/tasks`, id), task),
+    [signedInUserId]
   );
 
   const addDependency = useCallback(
     (predecessor: TaskId, successor: TaskId) => {
-      const ref = collection(firestore, `projects/${projectId}/dependencies`);
+      const ref = collection(
+        firestore,
+        `projects/${signedInUserId}/dependencies`
+      );
       const dependency = {
         predecessor,
         successor,
       };
       return addDoc(ref, dependency);
     },
-    [projectId]
+    [signedInUserId]
   );
 
   const selectedElements = useRecoilValue(selectedElementsState);
@@ -61,21 +64,23 @@ const useFirestoreState: UseFirestoreState = () => {
       () => {
         const batch = writeBatch(firestore);
         selectedElements.tasks.forEach((taskId) => {
-          batch.delete(doc(firestore, `projects/${projectId}/tasks`, taskId));
+          batch.delete(
+            doc(firestore, `projects/${signedInUserId}/tasks`, taskId)
+          );
           getRelatedDependencies(get, taskId).forEach((depId) =>
             batch.delete(
-              doc(firestore, `projects/${projectId}/dependencies`, depId)
+              doc(firestore, `projects/${signedInUserId}/dependencies`, depId)
             )
           );
         });
         selectedElements.dependencies.forEach((depId) =>
           batch.delete(
-            doc(firestore, `projects/${projectId}/dependencies`, depId)
+            doc(firestore, `projects/${signedInUserId}/dependencies`, depId)
           )
         );
         batch.commit();
       },
-    [projectId, selectedElements]
+    [signedInUserId, selectedElements]
   );
 
   return { addTask, updateTask, addDependency, deleteSelected };

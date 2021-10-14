@@ -4,7 +4,6 @@ import type {
   Dependency,
   DependencyId,
   Project,
-  ProjectId,
   Task,
   TaskId,
   UserId,
@@ -46,11 +45,6 @@ const dependencyStateFamily = atomFamily<Dependency, DependencyId>({
     predecessor: "DEFAULT-TASK-ID",
     successor: "DEFAULT-TASK-ID",
   },
-});
-
-const projectIdState = atom<ProjectId>({
-  key: "ProjectId",
-  default: "spXxYVulTgfKcj0n1sWb",
 });
 
 const projectState = atom<Project>({
@@ -107,7 +101,6 @@ const drawModeState = atom<boolean>({
 export {
   authState,
   signedInUserIdState,
-  projectIdState,
   projectState,
   dependencyStateFamily,
   taskStateFamily,
