@@ -12,6 +12,8 @@ const SignUp = (): JSX.Element => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const [error, setError] = useState<string>();
+
   const createAccount = () =>
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
@@ -24,7 +26,7 @@ const SignUp = (): JSX.Element => {
         const errorCode = error.code;
         const errorMessage = error.message;
         // ..
-        console.log("Error", errorCode, errorMessage);
+        setError(errorMessage);
       });
 
   return (
@@ -47,6 +49,7 @@ const SignUp = (): JSX.Element => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
+        {error}
         <Button type="submit">Sign Up</Button>
       </form>
     </AuthPage>
