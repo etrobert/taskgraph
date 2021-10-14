@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { FirebaseError } from "@firebase/util";
 
 import Button from "@/components/Button/Button";
+import createNewWorkspace from "@/createNewWorkspace";
 
 import "./SignUp.css";
 import AuthPage from "../AuthPage/AuthPage";
@@ -14,15 +16,19 @@ const SignUp = (): JSX.Element => {
 
   const [error, setError] = useState<string>();
 
-  const createAccount = () =>
-    createUserWithEmailAndPassword(auth, email, password)
-      .then(() => (window.location.href = "/graph"))
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // ..
-        setError(errorMessage);
-      });
+  const createAccount = async () => {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      await createNewWorkspace(userCredential.user.uid);
+      window.location.href = "/graph";
+    } catch (error) {
+      if (error instanceof FirebaseError) setError(error.message);
+    }
+  };
 
   return (
     <AuthPage>
