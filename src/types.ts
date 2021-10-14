@@ -25,4 +25,14 @@ type Project = {
   dependencies: DependencyId[];
 };
 
-export type { TaskId, Task, DependencyId, Dependency, ProjectId, Project };
+type UserId = string;
+
+export type {
+  UserId,
+  TaskId,
+  Task,
+  DependencyId,
+  Dependency,
+  ProjectId,
+  Project,
+};

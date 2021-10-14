@@ -7,7 +7,21 @@ import type {
   ProjectId,
   Task,
   TaskId,
+  UserId,
 } from "./types";
+
+type AuthState =
+  | { status: "loading" }
+  | { status: "notSignedIn" }
+  | {
+      status: "signedIn";
+      userId: UserId;
+    };
+
+const authState = atom<AuthState>({
+  key: "Auth",
+  default: { status: "loading" },
+});
 
 const taskStateFamily = atomFamily<Task, TaskId>({
   key: "Task",
@@ -83,6 +97,7 @@ const drawModeState = atom<boolean>({
 });
 
 export {
+  authState,
   projectIdState,
   projectState,
   dependencyStateFamily,

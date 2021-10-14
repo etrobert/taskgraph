@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useRecoilValue } from "recoil";
 
 import useAppShortcuts from "@/components/App/useAppShortcuts";
 import MenuBar from "@/components/MenuBar/MenuBar";
@@ -7,6 +8,7 @@ import GraphCanvas from "@/components/GraphCanvas/GraphCanvas";
 import NewTaskInput from "@/components/NewTaskInput/NewTaskInput";
 import useFirestoreState from "@/hooks/useFirestoreState";
 import useSyncFirestore from "@/hooks/useSyncFirestore";
+import { authState } from "@/atoms";
 
 import "./GraphPage.css";
 
@@ -26,6 +28,10 @@ const GraphPage = (): JSX.Element => {
     onDelete: deleteSelected,
     onCreateTask,
   });
+
+  const auth = useRecoilValue(authState);
+
+  useEffect(() => console.log(auth), [auth]);
 
   return (
     <>

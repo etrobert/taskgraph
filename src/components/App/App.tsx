@@ -4,12 +4,15 @@ import GraphPage from "@/components/GraphPage/GraphPage";
 import LandingPage from "@/components/LandingPage/LandingPage";
 import SignUp from "@/components/SignUp/SignUp";
 import SignIn from "@/components/SignIn/SignIn";
+import useSyncFirebaseAuth from "@/hooks/useSyncFirebaseAuth";
 
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 import "./App.css";
 
 const App = (): JSX.Element => {
+  useSyncFirebaseAuth();
+
   return (
     <Router>
       <Switch>
