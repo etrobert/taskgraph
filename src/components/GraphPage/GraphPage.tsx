@@ -40,15 +40,7 @@ const GraphPage = (): JSX.Element => {
         className="GraphPage__menu-bar-open-button iconButton"
         onClick={() => setMenuBarOpen(true)}
       />
-      <MenuBar
-        open={menuBarOpen}
-        onClose={closeMenuBar}
-        onNewGraph={() => {
-          // TODO: Fix
-          // clearGraph();
-          closeMenuBar();
-        }}
-      />
+      <MenuBar open={menuBarOpen} onClose={closeMenuBar} />
 
       <Toolbar
         onCreateTask={onCreateTask}

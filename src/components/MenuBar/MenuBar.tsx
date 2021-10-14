@@ -9,10 +9,9 @@ import { getAuth } from "@firebase/auth";
 type Props = {
   open: boolean;
   onClose: () => void;
-  onNewGraph: () => void;
 };
 
-const MenuBar = ({ open, onClose, onNewGraph }: Props): JSX.Element => {
+const MenuBar = ({ open, onClose }: Props): JSX.Element => {
   const signedInUserId = useRecoilValue(signedInUserIdState);
 
   return (
@@ -27,11 +26,6 @@ const MenuBar = ({ open, onClose, onNewGraph }: Props): JSX.Element => {
         Signed in as {signedInUserId}
         <button onClick={() => getAuth().signOut()}>Sign Out</button>
       </div>
-      <ul>
-        <li>
-          <button onClick={onNewGraph}>New Graph</button>
-        </li>
-      </ul>
       <section>
         <h2>Keyboard Shortcuts</h2>
         <ul>

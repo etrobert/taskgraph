@@ -8,7 +8,7 @@
   transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 
   display: grid;
-  grid-template-rows: auto auto 1fr auto;
+  grid-template-rows: auto 1fr auto;
   row-gap: 2em;
 
   padding: 2em;
@@ -31,14 +31,11 @@
   background-image: url("resources/feather/x.svg");
 }
 
-.MenuBar ul {
-  list-style: none;
-}
-
 .MenuBar__auth {
   display: grid;
   gap: 0.5em;
   justify-items: left;
+  align-content: start;
 }
 
 .MenuBar__title {
