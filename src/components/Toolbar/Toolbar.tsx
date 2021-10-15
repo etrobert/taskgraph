@@ -3,7 +3,7 @@ import { useRecoilValue } from "recoil";
 
 import { anyElementsSelectedState } from "@/atoms";
 
-import NoneSelectedButtons from "./NoneSelectedButtons/NoneSelectedButtons";
+import BaseButtons from "./BaseButtons/BaseButtons";
 import SomeSelectedButtons from "./SomeSelectedButtons/SomeSelectedButtons";
 
 import "./Toolbar.css";
@@ -23,11 +23,10 @@ const Toolbar = ({
 
   return (
     <div className="Toolbar">
-      {anyElementsSelected ? (
+      {anyElementsSelected && (
         <SomeSelectedButtons onComplete={onComplete} onDelete={onDelete} />
-      ) : (
-        <NoneSelectedButtons onCreateTask={onCreateTask} />
       )}
+      <BaseButtons onCreateTask={onCreateTask} />
     </div>
   );
 };
