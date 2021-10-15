@@ -7,15 +7,15 @@ import { RecoilRoot } from "recoil";
 import { drawModeState } from "@/atoms";
 import RecoilObserver from "@/RecoilObserver";
 
-import NoneSelectedButtons from "./NoneSelectedButtons";
+import BaseButtons from "./BaseButtons";
 
-describe("NoneSelectedButtons", () => {
+describe("BaseButtons", () => {
   test("change draw mode when clicked", () => {
     const onChange = jest.fn();
     render(
       <RecoilRoot>
         <RecoilObserver node={drawModeState} onChange={onChange} />
-        <NoneSelectedButtons onCreateTask={noop} />
+        <BaseButtons onCreateTask={noop} />
       </RecoilRoot>
     );
 
@@ -29,7 +29,7 @@ describe("NoneSelectedButtons", () => {
     const onCreateTask = jest.fn();
     render(
       <RecoilRoot>
-        <NoneSelectedButtons onCreateTask={onCreateTask} />
+        <BaseButtons onCreateTask={onCreateTask} />
       </RecoilRoot>
     );
     userEvent.click(screen.getByLabelText("Create Task"));
