@@ -95,6 +95,13 @@ const GraphCanvas = (): JSX.Element => {
     }
   );
 
+  useCytoscapeEvent(cy, "ehstop", (event, sourceNode: Cy.NodeSingular) => {
+    // Re-allow the node to be grabbed
+    sourceNode.grabify();
+    // Re-allow the background to be moved
+    cy?.userPanningEnabled(true);
+  });
+
   // Update edgehandles draw mode
   useEffect(() => {
     if (edgeHandles === undefined) return;
@@ -126,7 +133,12 @@ const GraphCanvas = (): JSX.Element => {
         cy={(cy) => setCy(cy)}
         stylesheet={cytoscapeStylesheet}
       />
-      {tasks.map(({ id }) => createPortal(<Task id={id} />, memoizedDivs(id)))}
+      {tasks.map(({ id }) =>
+        createPortal(
+          <Task id={id} cy={cy} edgeHandles={edgeHandles} />,
+          memoizedDivs(id)
+        )
+      )}
     </>
   );
 };
