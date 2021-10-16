@@ -25,7 +25,7 @@ const SignIn = (): JSX.Element => {
           e.preventDefault();
           try {
             await signInWithEmailAndPassword(auth, email, password);
-            window.location.href = "/graph";
+            window.location.href = "/";
           } catch (error) {
             if (error instanceof FirebaseError) setError(error.message);
           }

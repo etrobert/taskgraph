@@ -25,7 +25,7 @@ const SignUp = (): JSX.Element => {
         password
       );
       await createNewWorkspace(userCredential.user.uid);
-      window.location.href = "/graph";
+      window.location.href = "/";
     } catch (error) {
       if (error instanceof FirebaseError) setError(error.message);
     }
