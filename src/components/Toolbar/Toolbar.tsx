@@ -3,7 +3,6 @@ import { useRecoilValue } from "recoil";
 
 import { anyElementsSelectedState } from "@/atoms";
 
-import BaseButtons from "./BaseButtons/BaseButtons";
 import SomeSelectedButtons from "./SomeSelectedButtons/SomeSelectedButtons";
 
 import "./Toolbar.css";
@@ -26,7 +25,11 @@ const Toolbar = ({
       {anyElementsSelected && (
         <SomeSelectedButtons onComplete={onComplete} onDelete={onDelete} />
       )}
-      <BaseButtons onCreateTask={onCreateTask} />
+      <button
+        aria-label="Create Task"
+        onClick={onCreateTask}
+        className="Toolbar__button Toolbar__button-create-task iconButton"
+      />
     </div>
   );
 };
