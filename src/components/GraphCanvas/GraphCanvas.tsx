@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { createPortal } from "react-dom";
 
 import { useRecoilValue } from "recoil";
@@ -6,11 +6,7 @@ import { useRecoilValue } from "recoil";
 import type Cy from "cytoscape";
 import CytoscapeComponent from "react-cytoscapejs";
 
-import {
-  drawModeState,
-  workspaceDependenciesState,
-  workspaceTasksState,
-} from "@/atoms";
+import { workspaceDependenciesState, workspaceTasksState } from "@/atoms";
 import useSetTaskSelected from "@/hooks/useSetTaskSelected";
 import useSetDependencySelected from "@/hooks/useSetDependencySelected";
 import useFirestoreState from "@/hooks/useFirestoreState";
@@ -54,8 +50,6 @@ const GraphCanvas = (): JSX.Element => {
   const setDependencySelected = useSetDependencySelected();
 
   const [cy, setCy] = useState<Cy.Core>();
-
-  const drawMode = useRecoilValue(drawModeState);
 
   const { updateTask, addDependency } = useFirestoreState();
 
@@ -101,12 +95,6 @@ const GraphCanvas = (): JSX.Element => {
     // Re-allow the background to be moved
     cy?.userPanningEnabled(true);
   });
-
-  // Update edgehandles draw mode
-  useEffect(() => {
-    if (edgeHandles === undefined) return;
-    drawMode ? edgeHandles.enableDrawMode() : edgeHandles.disableDrawMode();
-  }, [drawMode, edgeHandles]);
 
   const memoizedDivs = useMemoizedDivs();
 
