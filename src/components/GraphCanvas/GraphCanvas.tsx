@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
 import { useRecoilValue } from "recoil";
@@ -6,7 +6,11 @@ import { useRecoilValue } from "recoil";
 import type Cy from "cytoscape";
 import CytoscapeComponent from "react-cytoscapejs";
 
-import { workspaceDependenciesState, workspaceTasksState } from "@/atoms";
+import {
+  selectedElementsState,
+  workspaceDependenciesState,
+  workspaceTasksState,
+} from "@/atoms";
 import useSetTaskSelected from "@/hooks/useSetTaskSelected";
 import useSetDependencySelected from "@/hooks/useSetDependencySelected";
 import useFirestoreState from "@/hooks/useFirestoreState";
@@ -48,6 +52,8 @@ const GraphCanvas = (): JSX.Element => {
 
   const setTaskSelected = useSetTaskSelected();
   const setDependencySelected = useSetDependencySelected();
+
+  const selectedElements = useRecoilValue(selectedElementsState);
 
   const [cy, setCy] = useState<Cy.Core>();
 
@@ -101,6 +107,7 @@ const GraphCanvas = (): JSX.Element => {
   const cyTaskData = tasks.map(({ id, position }) => ({
     data: { id, dom: memoizedDivs(id) },
     position: { ...position }, // We copy position because recoil position is read only
+    selected: selectedElements.tasks.includes(id),
   }));
 
   const cyDependencyData = dependencies.map(

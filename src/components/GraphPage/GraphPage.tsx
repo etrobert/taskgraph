@@ -26,7 +26,6 @@ const GraphPage = (): JSX.Element => {
 
   useAppShortcuts({
     insertMode,
-    onDelete: deleteSelected,
     onCreateTask,
   });
 

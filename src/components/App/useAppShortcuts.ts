@@ -1,22 +1,12 @@
+import useFirestoreState from "@/hooks/useFirestoreState";
 import useKeyboardShortcuts, { Shortcut } from "@/hooks/useKeyboardShortcuts";
+import useSelectAll from "@/hooks/useSelectAll";
 
-// TODO Replace when implemented
-// eslint-disable-next-line @typescript-eslint/no-empty-function
-const selectAll = () => {};
+type Props = { insertMode: boolean; onCreateTask: () => void };
 
-type Props = {
-  insertMode: boolean;
-  onCreateTask: () => void;
-  onDelete: () => void;
-};
-
-const getAppShortcuts = ({ onCreateTask, onDelete }: Props) => {
-  const selectAllShortcut: Shortcut = {
-    keys: ["a"],
-    callback: (event) => {
-      if (event.ctrlKey) selectAll();
-    },
-  };
+const useAppShortcuts = ({ insertMode, onCreateTask }: Props): void => {
+  const selectAll = useSelectAll();
+  const { deleteSelected } = useFirestoreState();
 
   const insert = {
     keys: ["i"],
@@ -25,20 +15,23 @@ const getAppShortcuts = ({ onCreateTask, onDelete }: Props) => {
 
   const deleteSelectedShortcut = {
     keys: ["d", "Delete"],
-    callback: onDelete,
+    callback: deleteSelected,
   };
 
-  return {
-    selectAll: selectAllShortcut,
+  const selectAllShortcut: Shortcut = {
+    keys: ["a"],
+    callback: (event) => {
+      if (event.ctrlKey) selectAll();
+    },
+  };
+
+  const shortcuts = {
     insert,
-    delete: deleteSelectedShortcut,
+    deleteSelected: deleteSelectedShortcut,
+    selectAll: selectAllShortcut,
   };
-};
 
-const useAppShortcuts = (props: Props): void => {
-  const { insertMode } = props;
-
-  useKeyboardShortcuts(insertMode ? {} : getAppShortcuts(props));
+  useKeyboardShortcuts(insertMode ? {} : shortcuts);
 };
 
 export default useAppShortcuts;
