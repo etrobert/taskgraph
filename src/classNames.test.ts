@@ -12,4 +12,8 @@ describe("classNames", () => {
   it("should handle a false value", () => {
     expect(classNames(["classA", false, "classB"])).toBe("classA classB");
   });
+
+  it("should ignore undefined", () => {
+    expect(classNames(["classA", undefined, "classB"])).toBe("classA classB");
+  });
 });

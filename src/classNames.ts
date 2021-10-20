@@ -1,3 +1,5 @@
+import without from "lodash/without";
+
 /**
  * Filters out the false values and joins the class names in a space separated string.
  *
@@ -10,7 +12,7 @@
  *   ])}
  * />
  */
-const classNames = (classes: (string | false)[]): string =>
-  classes.filter((currentClass) => currentClass !== false).join(" ");
+const classNames = (classes: (string | false | undefined)[]): string =>
+  without(classes, false, undefined).join(" ");
 
 export default classNames;
