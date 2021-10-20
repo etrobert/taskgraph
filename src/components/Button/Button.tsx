@@ -1,4 +1,5 @@
 import React from "react";
+import classNames from "classnames";
 
 import "./Button.css";
 
@@ -8,7 +9,7 @@ const Button = ({
   className,
   ...props
 }: ButtonHTMLAttributes<HTMLButtonElement>): JSX.Element => {
-  return <button className={`Button ${className}`} {...props} />;
+  return <button className={classNames("Button", className)} {...props} />;
 };
 
 export default Button;

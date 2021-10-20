@@ -1,8 +1,8 @@
 import React from "react";
 import { useRecoilValue } from "recoil";
+import classNames from "classnames";
 
 import { taskSelectedStateFamily, taskStateFamily } from "@/atoms";
-import classNames from "@/classNames";
 
 import type { TaskId } from "@/types";
 import type { EdgeHandlesInstance } from "cytoscape-edgehandles";
@@ -23,11 +23,10 @@ const Task = ({ id, cy, edgeHandles }: Props): JSX.Element => {
 
   return (
     <div
-      className={classNames([
-        "Task",
-        status === "completed" && "Task--completed",
-        selected && "Task--selected",
-      ])}
+      className={classNames("Task", {
+        "Task--completed": status === "completed",
+        "Task--selected": selected,
+      })}
       id={id}
     >
       {name}
