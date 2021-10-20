@@ -49,7 +49,7 @@ const useGraphState: UseGraphState = () => {
         // Remove task from the selected elements
         set(selectedElementsState, ({ tasks, dependencies }) => ({
           dependencies,
-          tasks: without(tasks, id),
+          tasks: tasks.remove(id),
         }));
       },
     []
@@ -84,7 +84,7 @@ const useGraphState: UseGraphState = () => {
         // Remove task from the selected elements
         set(selectedElementsState, ({ tasks, dependencies }) => ({
           tasks,
-          dependencies: without(dependencies, id),
+          dependencies: dependencies.remove(id),
         }));
       },
     []

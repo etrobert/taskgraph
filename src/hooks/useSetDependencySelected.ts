@@ -1,4 +1,3 @@
-import without from "lodash/without";
 import { useRecoilCallback } from "recoil";
 
 import { selectedElementsState } from "@/atoms";
@@ -14,8 +13,8 @@ const useSetDependencySelected = (): SetDependencySelected =>
         set(selectedElementsState, ({ tasks, dependencies }) => ({
           tasks,
           dependencies: selected
-            ? [...dependencies, id]
-            : without(dependencies, id),
+            ? dependencies.add(id)
+            : dependencies.remove(id),
         })),
     []
   );

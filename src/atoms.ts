@@ -1,4 +1,5 @@
 import { atom, atomFamily, selector, selectorFamily } from "recoil";
+import { Set } from "immutable";
 
 import type {
   Dependency,
@@ -56,18 +57,18 @@ const workspaceState = atom<Workspace>({
 });
 
 const selectedElementsState = atom<{
-  tasks: TaskId[];
-  dependencies: DependencyId[];
+  tasks: Set<TaskId>;
+  dependencies: Set<DependencyId>;
 }>({
   key: "SelectedElements",
-  default: { tasks: [], dependencies: [] },
+  default: { tasks: Set(), dependencies: Set() },
 });
 
 const anyElementsSelectedState = selector<boolean>({
   key: "AnyElementsSelected",
   get: ({ get }) =>
-    get(selectedElementsState).tasks.length !== 0 ||
-    get(selectedElementsState).dependencies.length !== 0,
+    get(selectedElementsState).tasks.size !== 0 ||
+    get(selectedElementsState).dependencies.size !== 0,
 });
 
 const taskSelectedStateFamily = selectorFamily<boolean, TaskId>({
