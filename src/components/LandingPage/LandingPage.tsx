@@ -43,7 +43,6 @@ const LandingPage = (): JSX.Element => {
             type="text"
             name="b_fcf0ac58a5bd4d1fe9162f855_389c9dac43"
             tabIndex={-1}
-            value=""
           />
         </div>
         <Button type="submit">Subscribe</Button>
