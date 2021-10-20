@@ -21,17 +21,3 @@
 .Toolbar__button-create-task {
   background-image: url("resources/feather/plus-circle.svg");
 }
-
-.Toolbar__button-change-draw-mode {
-  background-image: url("resources/feather/edit-2.svg");
-
-  border-bottom: 0.2rem solid transparent;
-
-  /* Display the button correctly even with the border */
-  background-repeat: no-repeat;
-  background-position: center;
-}
-
-.Toolbar__button-change-draw-mode--active {
-  border-bottom: 0.2rem solid;
-}

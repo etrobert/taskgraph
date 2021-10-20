@@ -15,7 +15,7 @@ const SignUp = () => {
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       await createNewWorkspace(userCredential.user.uid);
-      window.location.href = "/graph";
+      window.location.href = "/";
     } catch (error2) {
       if (error2 instanceof FirebaseError)
         setError(error2.message);

@@ -43,3 +43,26 @@
 .Task--selected {
   background-color: lightblue;
 }
+
+.Task__handle {
+  --radius: 0rem;
+  position: absolute;
+  left: calc(50% - var(--radius));
+  bottom: calc(-1 * var(--radius));
+  width: calc(2 * var(--radius));
+  height: calc(2 * var(--radius));
+  border-radius: var(--radius);
+  background-color: black;
+
+  /* prettier-ignore */
+  transition:
+    width 0.35s ease,
+    height 0.35s ease,
+    border-radius 0.35s ease,
+    left 0.35s ease,
+    bottom 0.35s ease;
+}
+
+.Task:hover .Task__handle {
+  --radius: 0.75rem;
+}

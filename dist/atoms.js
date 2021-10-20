@@ -58,10 +58,6 @@ const workspaceTasksState = selector({
     ...get(taskStateFamily(id))
   }))
 });
-const drawModeState = atom({
-  key: "DrawMode",
-  default: false
-});
 export {
   authState,
   signedInUserIdState,
@@ -72,6 +68,5 @@ export {
   anyElementsSelectedState,
   taskSelectedStateFamily,
   workspaceDependenciesState,
-  workspaceTasksState,
-  drawModeState
+  workspaceTasksState
 };

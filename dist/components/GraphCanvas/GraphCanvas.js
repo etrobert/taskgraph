@@ -1,12 +1,8 @@
-import React, {useEffect, useState} from "../../../_snowpack/pkg/react.js";
+import React, {useState} from "../../../_snowpack/pkg/react.js";
 import {createPortal} from "../../../_snowpack/pkg/react-dom.js";
 import {useRecoilValue} from "../../../_snowpack/pkg/recoil.js";
 import CytoscapeComponent from "../../../_snowpack/pkg/react-cytoscapejs.js";
-import {
-  drawModeState,
-  workspaceDependenciesState,
-  workspaceTasksState
-} from "../../atoms.js";
+import {workspaceDependenciesState, workspaceTasksState} from "../../atoms.js";
 import useSetTaskSelected from "../../hooks/useSetTaskSelected.js";
 import useSetDependencySelected from "../../hooks/useSetDependencySelected.js";
 import useFirestoreState from "../../hooks/useFirestoreState.js";
@@ -40,7 +36,6 @@ const GraphCanvas = () => {
   const setTaskSelected = useSetTaskSelected();
   const setDependencySelected = useSetDependencySelected();
   const [cy, setCy] = useState();
-  const drawMode = useRecoilValue(drawModeState);
   const {updateTask, addDependency} = useFirestoreState();
   const {edgeHandles} = useInitCytoscapeExtensions(cy);
   useCytoscapeEvent(cy, "select", ({target}) => {
@@ -59,11 +54,10 @@ const GraphCanvas = () => {
     addDependency(sourceNode.data().id, targetNode.data().id);
     cy?.remove(addedEdge);
   });
-  useEffect(() => {
-    if (edgeHandles === void 0)
-      return;
-    drawMode ? edgeHandles.enableDrawMode() : edgeHandles.disableDrawMode();
-  }, [drawMode, edgeHandles]);
+  useCytoscapeEvent(cy, "ehstop", (event, sourceNode) => {
+    sourceNode.grabify();
+    cy?.userPanningEnabled(true);
+  });
   const memoizedDivs = useMemoizedDivs();
   const cyTaskData = tasks.map(({id, position}) => ({
     data: {id, dom: memoizedDivs(id)},
@@ -82,7 +76,9 @@ const GraphCanvas = () => {
     cy: (cy2) => setCy(cy2),
     stylesheet: cytoscapeStylesheet
   }), tasks.map(({id}) => createPortal(/* @__PURE__ */ React.createElement(Task, {
-    id
+    id,
+    cy,
+    edgeHandles
   }), memoizedDivs(id))));
 };
 export default GraphCanvas;

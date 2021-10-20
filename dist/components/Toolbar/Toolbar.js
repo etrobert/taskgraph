@@ -1,7 +1,6 @@
 import React from "../../../_snowpack/pkg/react.js";
 import {useRecoilValue} from "../../../_snowpack/pkg/recoil.js";
 import {anyElementsSelectedState} from "../../atoms.js";
-import BaseButtons from "./BaseButtons/BaseButtons.js";
 import SomeSelectedButtons from "./SomeSelectedButtons/SomeSelectedButtons.js";
 import "./Toolbar.css.proxy.js";
 const Toolbar = ({
@@ -15,8 +14,10 @@ const Toolbar = ({
   }, anyElementsSelected && /* @__PURE__ */ React.createElement(SomeSelectedButtons, {
     onComplete,
     onDelete
-  }), /* @__PURE__ */ React.createElement(BaseButtons, {
-    onCreateTask
+  }), /* @__PURE__ */ React.createElement("button", {
+    "aria-label": "Create Task",
+    onClick: onCreateTask,
+    className: "Toolbar__button Toolbar__button-create-task iconButton"
   }));
 };
 export default Toolbar;
