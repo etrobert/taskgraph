@@ -12,11 +12,11 @@ const SomeSelectedButtons = ({ onComplete, onDelete }: Props): JSX.Element => (
       onClick={onDelete}
       className="Toolbar__button Toolbar__button-delete-selected iconButton"
     />
-    <button
+    {/*<button
       aria-label="Complete Selected"
       onClick={onComplete}
       className="Toolbar__button Toolbar__button-complete-selected iconButton"
-    />
+    />*/}
   </>
 );
 
