@@ -22,7 +22,7 @@ const useGraphState = () => {
     }));
     set(selectedElementsState, ({tasks, dependencies}) => ({
       dependencies,
-      tasks: without(tasks, id)
+      tasks: tasks.remove(id)
     }));
   }, []);
   const clearGraph = useRecoilCallback(({set}) => () => set(workspaceState, {tasks: [], dependencies: []}), []);
@@ -40,7 +40,7 @@ const useGraphState = () => {
     }));
     set(selectedElementsState, ({tasks, dependencies}) => ({
       tasks,
-      dependencies: without(dependencies, id)
+      dependencies: dependencies.remove(id)
     }));
   }, []);
   return {

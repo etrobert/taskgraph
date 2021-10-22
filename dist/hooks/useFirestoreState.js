@@ -21,7 +21,10 @@ const useFirestoreState = () => {
     };
     return addDoc(ref, task);
   }, [signedInUserId]);
-  const updateTask = useCallback((id, task) => updateDoc(doc(firestore, `workspaces/${signedInUserId}/tasks`, id), task), [signedInUserId]);
+  const updateTask = useCallback((id, task) => {
+    const ref = doc(firestore, `workspaces/${signedInUserId}/tasks`, id);
+    updateDoc(ref, task);
+  }, [signedInUserId]);
   const addDependency = useCallback((predecessor, successor) => {
     const ref = collection(firestore, `workspaces/${signedInUserId}/dependencies`);
     const dependency = {

@@ -2,7 +2,11 @@ import React, {useState} from "../../../_snowpack/pkg/react.js";
 import {createPortal} from "../../../_snowpack/pkg/react-dom.js";
 import {useRecoilValue} from "../../../_snowpack/pkg/recoil.js";
 import CytoscapeComponent from "../../../_snowpack/pkg/react-cytoscapejs.js";
-import {workspaceDependenciesState, workspaceTasksState} from "../../atoms.js";
+import {
+  selectedElementsState,
+  workspaceDependenciesState,
+  workspaceTasksState
+} from "../../atoms.js";
 import useSetTaskSelected from "../../hooks/useSetTaskSelected.js";
 import useSetDependencySelected from "../../hooks/useSetDependencySelected.js";
 import useFirestoreState from "../../hooks/useFirestoreState.js";
@@ -35,6 +39,7 @@ const GraphCanvas = () => {
   const dependencies = useRecoilValue(workspaceDependenciesState);
   const setTaskSelected = useSetTaskSelected();
   const setDependencySelected = useSetDependencySelected();
+  const selectedElements = useRecoilValue(selectedElementsState);
   const [cy, setCy] = useState();
   const {updateTask, addDependency} = useFirestoreState();
   const {edgeHandles} = useInitCytoscapeExtensions(cy);
@@ -61,7 +66,8 @@ const GraphCanvas = () => {
   const memoizedDivs = useMemoizedDivs();
   const cyTaskData = tasks.map(({id, position}) => ({
     data: {id, dom: memoizedDivs(id)},
-    position: {...position}
+    position: {...position},
+    selected: selectedElements.tasks.includes(id)
   }));
   const cyDependencyData = dependencies.map(({id, predecessor, successor}) => ({
     data: {

@@ -30,8 +30,7 @@ const LandingPage = () => {
   }, /* @__PURE__ */ React.createElement("input", {
     type: "text",
     name: "b_fcf0ac58a5bd4d1fe9162f855_389c9dac43",
-    tabIndex: -1,
-    value: ""
+    tabIndex: -1
   })), /* @__PURE__ */ React.createElement(Button, {
     type: "submit"
   }, "Subscribe")));

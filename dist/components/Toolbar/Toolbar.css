@@ -11,13 +11,13 @@
 }
 
 .Toolbar__button-delete-selected {
-  background-image: url("resources/feather/trash-2.svg");
+  background-image: url("/resources/feather/trash-2.svg");
 }
 
 .Toolbar__button-complete-selected {
-  background-image: url("resources/feather/check-circle.svg");
+  background-image: url("/resources/feather/check-circle.svg");
 }
 
 .Toolbar__button-create-task {
-  background-image: url("resources/feather/plus-circle.svg");
+  background-image: url("/resources/feather/plus-circle.svg");
 }

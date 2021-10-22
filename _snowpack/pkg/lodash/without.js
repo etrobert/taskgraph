@@ -1,4 +1,4 @@
-import { c as commonjsGlobal } from '../common/_commonjsHelpers-7b5f3d4c.js';
+import { a as commonjsGlobal } from '../common/_commonjsHelpers-8c19dec8.js';
 
 /** Detect free variable `global` from Node.js. */
 var freeGlobal = typeof commonjsGlobal == 'object' && commonjsGlobal && commonjsGlobal.Object === Object && commonjsGlobal;

@@ -1,8 +1,8 @@
-import { _ as _inheritsLoose, c as createBrowserHistory, a as Router, b as createHashHistory, d as _objectWithoutPropertiesLoose, e as _extends, f as context, i as invariant, g as createLocation, h as createPath, m as matchPath } from './common/react-router-090f8271.js';
-export { j as Route, S as Switch } from './common/react-router-090f8271.js';
-import { r as react } from './common/index-e7259039.js';
-import './common/index-32333e39.js';
-import './common/_commonjsHelpers-7b5f3d4c.js';
+import { _ as _inheritsLoose, c as createBrowserHistory, a as Router, b as createHashHistory, d as _objectWithoutPropertiesLoose, e as _extends, f as context, i as invariant, g as createLocation, h as createPath, m as matchPath } from './common/react-router-d5ce8765.js';
+export { j as Route, S as Switch } from './common/react-router-d5ce8765.js';
+import { r as react } from './common/index-04edb6a1.js';
+import './common/index-ce016b4a.js';
+import './common/_commonjsHelpers-8c19dec8.js';
 
 /**
  * The public API for a <Router> that uses HTML5 history.
@@ -247,4 +247,4 @@ var NavLink = forwardRef$1(function (_ref, forwardedRef) {
   });
 });
 
-export { BrowserRouter };
+export { BrowserRouter, Link };

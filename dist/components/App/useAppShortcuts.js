@@ -1,7 +1,17 @@
+import useFirestoreState from "../../hooks/useFirestoreState.js";
 import useKeyboardShortcuts from "../../hooks/useKeyboardShortcuts.js";
-const selectAll = () => {
-};
-const getAppShortcuts = ({onCreateTask, onDelete}) => {
+import useSelectAll from "../../hooks/useSelectAll.js";
+const useAppShortcuts = ({insertMode, onCreateTask}) => {
+  const selectAll = useSelectAll();
+  const {deleteSelected} = useFirestoreState();
+  const insert = {
+    keys: ["i"],
+    callback: onCreateTask
+  };
+  const deleteSelectedShortcut = {
+    keys: ["d", "Delete"],
+    callback: deleteSelected
+  };
   const selectAllShortcut = {
     keys: ["a"],
     callback: (event) => {
@@ -9,22 +19,11 @@ const getAppShortcuts = ({onCreateTask, onDelete}) => {
         selectAll();
     }
   };
-  const insert = {
-    keys: ["i"],
-    callback: onCreateTask
-  };
-  const deleteSelectedShortcut = {
-    keys: ["d", "Delete"],
-    callback: onDelete
-  };
-  return {
-    selectAll: selectAllShortcut,
+  const shortcuts = {
     insert,
-    delete: deleteSelectedShortcut
+    deleteSelected: deleteSelectedShortcut,
+    selectAll: selectAllShortcut
   };
-};
-const useAppShortcuts = (props) => {
-  const {insertMode} = props;
-  useKeyboardShortcuts(insertMode ? {} : getAppShortcuts(props));
+  useKeyboardShortcuts(insertMode ? {} : shortcuts);
 };
 export default useAppShortcuts;

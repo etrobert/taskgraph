@@ -1,4 +1,5 @@
 import {atom, atomFamily, selector, selectorFamily} from "../_snowpack/pkg/recoil.js";
+import {Set} from "../_snowpack/pkg/immutable.js";
 const authState = atom({
   key: "Auth",
   default: {status: "loading"}
@@ -32,13 +33,17 @@ const workspaceState = atom({
     dependencies: []
   }
 });
+const taskIsInWorkspaceStateFamily = selectorFamily({
+  key: "TaskIsInWorkspace",
+  get: (id) => ({get}) => get(workspaceState).tasks.includes(id)
+});
 const selectedElementsState = atom({
   key: "SelectedElements",
-  default: {tasks: [], dependencies: []}
+  default: {tasks: Set(), dependencies: Set()}
 });
 const anyElementsSelectedState = selector({
   key: "AnyElementsSelected",
-  get: ({get}) => get(selectedElementsState).tasks.length !== 0 || get(selectedElementsState).dependencies.length !== 0
+  get: ({get}) => get(selectedElementsState).tasks.size !== 0 || get(selectedElementsState).dependencies.size !== 0
 });
 const taskSelectedStateFamily = selectorFamily({
   key: "TaskSelected",
@@ -68,5 +73,6 @@ export {
   anyElementsSelectedState,
   taskSelectedStateFamily,
   workspaceDependenciesState,
-  workspaceTasksState
+  workspaceTasksState,
+  taskIsInWorkspaceStateFamily
 };

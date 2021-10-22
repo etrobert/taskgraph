@@ -1,12 +1,13 @@
 import React from "../../../_snowpack/pkg/react.js";
 import {useRecoilValue} from "../../../_snowpack/pkg/recoil.js";
+import classNames from "../../../_snowpack/pkg/classnames.js";
 import {signedInUserIdState} from "../../atoms.js";
 import "./MenuBar.css.proxy.js";
 import {getAuth} from "../../../_snowpack/pkg/@firebase/auth.js";
 const MenuBar = ({open, onClose}) => {
   const signedInUserId = useRecoilValue(signedInUserIdState);
   return /* @__PURE__ */ React.createElement("div", {
-    className: `MenuBar ${open ? "MenuBar--open" : ""}`
+    className: classNames("MenuBar", {"MenuBar--open": open})
   }, /* @__PURE__ */ React.createElement("h1", {
     className: "MenuBar__title"
   }, "TaskGraph"), /* @__PURE__ */ React.createElement("button", {

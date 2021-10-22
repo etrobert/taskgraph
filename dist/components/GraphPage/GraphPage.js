@@ -7,7 +7,6 @@ import Toolbar from "../Toolbar/Toolbar.js";
 import GraphCanvas from "../GraphCanvas/GraphCanvas.js";
 import NewTaskInput from "../NewTaskInput/NewTaskInput.js";
 import useFirestoreState from "../../hooks/useFirestoreState.js";
-import useSyncFirestore from "../../hooks/useSyncFirestore.js";
 import {authState} from "../../atoms.js";
 import "./GraphPage.css.proxy.js";
 const GraphPage = () => {
@@ -16,10 +15,8 @@ const GraphPage = () => {
   const [insertMode, setInsertMode] = useState(false);
   const onCreateTask = () => setInsertMode(true);
   const {addTask, deleteSelected} = useFirestoreState();
-  useSyncFirestore();
   useAppShortcuts({
     insertMode,
-    onDelete: deleteSelected,
     onCreateTask
   });
   const auth = useRecoilValue(authState);
