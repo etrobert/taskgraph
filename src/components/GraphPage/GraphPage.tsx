@@ -8,7 +8,6 @@ import Toolbar from "@/components/Toolbar/Toolbar";
 import GraphCanvas from "@/components/GraphCanvas/GraphCanvas";
 import NewTaskInput from "@/components/NewTaskInput/NewTaskInput";
 import useFirestoreState from "@/hooks/useFirestoreState";
-import useSyncFirestore from "@/hooks/useSyncFirestore";
 import { authState } from "@/atoms";
 
 import "./GraphPage.css";
@@ -21,8 +20,6 @@ const GraphPage = (): JSX.Element => {
   const onCreateTask = () => setInsertMode(true);
 
   const { addTask, deleteSelected } = useFirestoreState();
-
-  useSyncFirestore();
 
   useAppShortcuts({
     insertMode,

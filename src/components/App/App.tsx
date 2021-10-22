@@ -1,11 +1,10 @@
 import React from "react";
 import { useRecoilValue } from "recoil";
 
-import GraphPage from "@/components/GraphPage/GraphPage";
 import LandingPage from "@/components/LandingPage/LandingPage";
 import SignUp from "@/components/SignUp/SignUp";
 import SignIn from "@/components/SignIn/SignIn";
-import TaskPage from "@/components/TaskPage/TaskPage";
+import SignedInApp from "@/components/SignedInApp/SignedInApp";
 import useSyncFirebaseAuth from "@/hooks/useSyncFirebaseAuth";
 import { authState } from "@/atoms";
 
@@ -18,15 +17,7 @@ const App = (): JSX.Element => {
 
   const auth = useRecoilValue(authState);
 
-  if (auth.status === "signedIn")
-    return (
-      <Router>
-        <Switch>
-          <Route path="/task/:id" component={TaskPage} />
-          <Route path="/" component={GraphPage} />
-        </Switch>
-      </Router>
-    );
+  if (auth.status === "signedIn") return <SignedInApp />;
 
   return (
     <Router>
