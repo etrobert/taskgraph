@@ -1,6 +1,7 @@
 import React from "react";
 import { useRecoilValue } from "recoil";
 import classNames from "classnames";
+import { Link } from "react-router-dom";
 
 import { taskSelectedStateFamily, taskStateFamily } from "@/atoms";
 
@@ -30,6 +31,7 @@ const Task = ({ id, cy, edgeHandles }: Props): JSX.Element => {
       id={id}
     >
       {name}
+      <Link className="iconButton Task__edit-button" to={`/task/${id}`} />
       <div
         className="Task__handle"
         onPointerDown={() => {
