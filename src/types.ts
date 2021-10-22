@@ -5,10 +5,13 @@ type TaskId = string;
 // See https://en.wikipedia.org/wiki/Task_management
 type TaskStatus = "ready" | "completed";
 
+type Priority = "veryLow" | "low" | "normal" | "high" | "veryHigh";
+
 type Task = {
   name: string;
   position: Point;
   status: TaskStatus;
+  priority?: Priority;
 };
 
 type DependencyId = string;
@@ -35,4 +38,5 @@ export type {
   Dependency,
   WorkspaceId,
   Workspace,
+  Priority,
 };

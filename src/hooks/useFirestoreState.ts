@@ -12,11 +12,12 @@ import firestore from "@/firestore";
 import { signedInUserIdState, selectedElementsState } from "@/atoms";
 import getRelatedDependencies from "@/getRelatedDependencies";
 
+import type { DocumentReference, UpdateData } from "firebase/firestore";
 import type { Task, TaskId } from "@/types";
 
 type UseFirestoreState = () => {
   addTask: (name: string) => void;
-  updateTask: (id: TaskId, task: Partial<Task>) => void;
+  updateTask: (id: TaskId, task: UpdateData<Task>) => void;
   addDependency: (predecessor: TaskId, successor: TaskId) => void;
   deleteSelected: () => void;
 };
@@ -37,8 +38,14 @@ const useFirestoreState: UseFirestoreState = () => {
   );
 
   const updateTask = useCallback(
-    (id, task) =>
-      updateDoc(doc(firestore, `workspaces/${signedInUserId}/tasks`, id), task),
+    (id, task) => {
+      const ref = doc(
+        firestore,
+        `workspaces/${signedInUserId}/tasks`,
+        id
+      ) as DocumentReference<Task>;
+      updateDoc<Task>(ref, task);
+    },
     [signedInUserId]
   );
 
