@@ -20,7 +20,7 @@ const TaskPage = ({ match }: Props): JSX.Element => {
 
   return (
     <div className="TaskPage">
-      {name}
+      <h1>{name}</h1>
       <label>
         Priority:{" "}
         <select
@@ -39,7 +39,7 @@ const TaskPage = ({ match }: Props): JSX.Element => {
           <option value="veryHigh">Very High</option>
         </select>
       </label>
-      <Link to="/">Close</Link>
+      <Link className="TaskPage__close-button iconButton" to="/" />
     </div>
   );
 };
