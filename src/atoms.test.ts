@@ -60,4 +60,19 @@ describe("nextTaskState", () => {
 
     expect(snapshot.getLoadable(nextTaskState).valueOrThrow()).toBe("task1");
   });
+
+  it("should return the task that does not have dependencies", () => {
+    const snapshot = snapshot_UNSTABLE(({ set }) => {
+      set(workspaceState, {
+        tasks: ["task1", "task2"],
+        dependencies: ["dep1"],
+      });
+      set(dependencyStateFamily("dep1"), {
+        predecessor: "task2",
+        successor: "task1",
+      });
+    });
+
+    expect(snapshot.getLoadable(nextTaskState).valueOrThrow()).toBe("task2");
+  });
 });

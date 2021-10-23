@@ -121,7 +121,7 @@ const tasksWithoutPredecessorState = selector({
 const nextTaskState = selector<TaskId>({
   key: "NextTask",
   get: ({ get }) => {
-    const { tasks } = get(workspaceState);
+    const tasks = get(tasksWithoutPredecessorState);
     return tasks.length === 0 ? "NO-TASK-FOUND" : tasks[0];
   },
 });
