@@ -56,6 +56,14 @@ const workspaceState = atom<Workspace>({
   },
 });
 
+const taskIsInWorkspaceStateFamily = selectorFamily<boolean, TaskId>({
+  key: "TaskIsInWorkspace",
+  get:
+    (id) =>
+    ({ get }) =>
+      get(workspaceState).tasks.includes(id),
+});
+
 const selectedElementsState = atom<{
   tasks: Set<TaskId>;
   dependencies: Set<DependencyId>;
@@ -108,4 +116,5 @@ export {
   taskSelectedStateFamily,
   workspaceDependenciesState,
   workspaceTasksState,
+  taskIsInWorkspaceStateFamily,
 };
