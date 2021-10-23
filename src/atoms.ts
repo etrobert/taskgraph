@@ -105,6 +105,19 @@ const workspaceTasksState = selector({
     })),
 });
 
+const tasksWithoutPredecessorState = selector({
+  key: "TasksWithoutPredecessor",
+  get: ({ get }) => {
+    const { tasks, dependencies } = get(workspaceState);
+    return tasks.filter(
+      (taskId) =>
+        !dependencies.some(
+          (depId) => get(dependencyStateFamily(depId)).successor === taskId
+        )
+    );
+  },
+});
+
 const nextTaskState = selector<TaskId>({
   key: "NextTask",
   get: ({ get }) => {
@@ -125,5 +138,6 @@ export {
   workspaceDependenciesState,
   workspaceTasksState,
   taskIsInWorkspaceStateFamily,
+  tasksWithoutPredecessorState,
   nextTaskState,
 };
