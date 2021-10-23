@@ -9,6 +9,7 @@ import type {
   TaskId,
   UserId,
 } from "./types";
+import compareByPriority from "./compareByPriority";
 
 type AuthState =
   | { status: "loading" }
@@ -122,7 +123,10 @@ const nextTaskState = selector<TaskId>({
   key: "NextTask",
   get: ({ get }) => {
     const tasks = get(tasksWithoutPredecessorState);
-    return tasks.length === 0 ? "NO-TASK-FOUND" : tasks[0];
+    const sortedTasks = tasks
+      .map((id) => ({ id, priority: get(taskStateFamily(id)).priority }))
+      .sort(compareByPriority);
+    return sortedTasks.length === 0 ? "NO-TASK-FOUND" : sortedTasks[0].id;
   },
 });
 

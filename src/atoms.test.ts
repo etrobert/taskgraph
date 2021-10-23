@@ -2,6 +2,7 @@ import { snapshot_UNSTABLE } from "recoil";
 import {
   dependencyStateFamily,
   nextTaskState,
+  taskStateFamily,
   tasksWithoutPredecessorState,
   workspaceState,
 } from "./atoms";
@@ -70,6 +71,29 @@ describe("nextTaskState", () => {
       set(dependencyStateFamily("dep1"), {
         predecessor: "task2",
         successor: "task1",
+      });
+    });
+
+    expect(snapshot.getLoadable(nextTaskState).valueOrThrow()).toBe("task2");
+  });
+
+  it("should return the task with the highest priority", () => {
+    const snapshot = snapshot_UNSTABLE(({ set }) => {
+      set(workspaceState, {
+        tasks: ["task1", "task2"],
+        dependencies: [],
+      });
+      set(taskStateFamily("task1"), {
+        name: "task1",
+        position: { x: 0, y: 0 },
+        status: "ready",
+        priority: "high",
+      });
+      set(taskStateFamily("task2"), {
+        name: "task2",
+        position: { x: 0, y: 0 },
+        status: "ready",
+        priority: "veryHigh",
       });
     });
 
