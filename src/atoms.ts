@@ -105,6 +105,14 @@ const workspaceTasksState = selector({
     })),
 });
 
+const nextTaskState = selector<TaskId>({
+  key: "NextTask",
+  get: ({ get }) => {
+    const { tasks } = get(workspaceState);
+    return tasks.length === 0 ? "NO-TASK-FOUND" : tasks[0];
+  },
+});
+
 export {
   authState,
   signedInUserIdState,
@@ -117,4 +125,5 @@ export {
   workspaceDependenciesState,
   workspaceTasksState,
   taskIsInWorkspaceStateFamily,
+  nextTaskState,
 };
