@@ -119,6 +119,16 @@ const tasksWithoutPredecessorState = selector({
   },
 });
 
+const taskSuccessorsStateFamily = selectorFamily<TaskId[], TaskId>({
+  key: "TaskSuccessors",
+  get:
+    (id) =>
+    ({ get }) =>
+      get(workspaceDependenciesState)
+        .filter((dep) => dep.predecessor === id)
+        .map((dep) => dep.successor),
+});
+
 const nextTaskState = selector<TaskId>({
   key: "NextTask",
   get: ({ get }) => {
@@ -143,5 +153,6 @@ export {
   workspaceTasksState,
   taskIsInWorkspaceStateFamily,
   tasksWithoutPredecessorState,
+  taskSuccessorsStateFamily,
   nextTaskState,
 };

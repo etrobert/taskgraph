@@ -3,6 +3,7 @@ import {
   dependencyStateFamily,
   nextTaskState,
   taskStateFamily,
+  taskSuccessorsStateFamily,
   tasksWithoutPredecessorState,
   workspaceState,
 } from "./atoms";
@@ -41,6 +42,40 @@ describe("tasksWithoutPredecessorState", () => {
     expect(
       snapshot.getLoadable(tasksWithoutPredecessorState).valueOrThrow()
     ).toStrictEqual(["task2"]);
+  });
+});
+
+describe("taskSuccessorsStateFamily", () => {
+  it("should return empty array when there are no successors", () => {
+    const snapshot = snapshot_UNSTABLE(({ set }) =>
+      set(workspaceState, { tasks: ["task1"], dependencies: [] })
+    );
+
+    expect(
+      snapshot.getLoadable(taskSuccessorsStateFamily("task1")).valueOrThrow()
+    ).toStrictEqual([]);
+  });
+
+  it("should return the successors", () => {
+    const snapshot = snapshot_UNSTABLE(({ set }) => {
+      set(workspaceState, {
+        tasks: ["task1", "task2", "task3"],
+        dependencies: ["dep1", "dep2"],
+      });
+
+      set(dependencyStateFamily("dep1"), {
+        predecessor: "task1",
+        successor: "task2",
+      });
+      set(dependencyStateFamily("dep2"), {
+        predecessor: "task1",
+        successor: "task3",
+      });
+    });
+
+    expect(
+      snapshot.getLoadable(taskSuccessorsStateFamily("task1")).valueOrThrow()
+    ).toStrictEqual(["task2", "task3"]);
   });
 });
 
