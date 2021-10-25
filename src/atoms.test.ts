@@ -177,4 +177,32 @@ describe("nextTaskState", () => {
 
     expect(snapshot.getLoadable(nextTaskState).valueOrThrow()).toBe("task2");
   });
+
+  it("should return the predecessor of the highest priority", () => {
+    const snapshot = snapshot_UNSTABLE(({ set }) => {
+      set(workspaceState, {
+        tasks: ["task1", "task2", "task3", "task4"],
+        dependencies: ["dep1", "dep2"],
+      });
+
+      set(taskStateFamily("task1"), baseTask);
+      set(taskStateFamily("task2"), baseTask);
+      set(taskStateFamily("task3"), baseTask);
+      set(taskStateFamily("task4"), {
+        ...baseTask,
+        priority: "high",
+      });
+
+      set(dependencyStateFamily("dep1"), {
+        predecessor: "task1",
+        successor: "task3",
+      });
+      set(dependencyStateFamily("dep2"), {
+        predecessor: "task2",
+        successor: "task4",
+      });
+    });
+
+    expect(snapshot.getLoadable(nextTaskState).valueOrThrow()).toBe("task2");
+  });
 });

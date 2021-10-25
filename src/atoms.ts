@@ -156,7 +156,10 @@ const nextTaskState = selector<TaskId>({
   get: ({ get }) => {
     const tasks = get(tasksWithoutPredecessorState);
     const sortedTasks = tasks
-      .map((id) => ({ id, priority: get(taskStateFamily(id)).priority }))
+      .map((id) => ({
+        id,
+        priority: get(cumulatedTaskPriorityStateFamily(id)),
+      }))
       .sort(compareByPriority);
     return sortedTasks.length === 0 ? "NO-TASK-FOUND" : sortedTasks[0].id;
   },
