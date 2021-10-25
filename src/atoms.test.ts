@@ -1,5 +1,6 @@
 import { snapshot_UNSTABLE } from "recoil";
 import {
+  cumulatedTaskPriorityStateFamily,
   dependencyStateFamily,
   nextTaskState,
   taskStateFamily,
@@ -7,6 +8,14 @@ import {
   tasksWithoutPredecessorState,
   workspaceState,
 } from "./atoms";
+
+import type { Task } from "./types";
+
+const baseTask: Task = {
+  name: "baseTask",
+  position: { x: 0, y: 0 },
+  status: "ready",
+};
 
 describe("tasksWithoutPredecessorState", () => {
   it("should return an empty array when there are no tasks", () => {
@@ -76,6 +85,40 @@ describe("taskSuccessorsStateFamily", () => {
     expect(
       snapshot.getLoadable(taskSuccessorsStateFamily("task1")).valueOrThrow()
     ).toStrictEqual(["task2", "task3"]);
+  });
+});
+
+describe("cumulatedTaskPriorityStateFamily", () => {
+  it("should return normal when no priority is specified", () => {
+    const snapshot = snapshot_UNSTABLE(({ set }) => {
+      set(workspaceState, { tasks: ["task1"], dependencies: [] });
+      set(taskStateFamily("task1"), baseTask);
+    });
+    expect(
+      snapshot
+        .getLoadable(cumulatedTaskPriorityStateFamily("task1"))
+        .valueOrThrow()
+    ).toBe("normal");
+  });
+
+  it("should return its successor priority", () => {
+    const snapshot = snapshot_UNSTABLE(({ set }) => {
+      set(workspaceState, {
+        tasks: ["task1", "task2"],
+        dependencies: ["dep1"],
+      });
+      set(taskStateFamily("task1"), baseTask);
+      set(taskStateFamily("task2"), { ...baseTask, priority: "veryHigh" });
+      set(dependencyStateFamily("dep1"), {
+        predecessor: "task1",
+        successor: "task2",
+      });
+    });
+    expect(
+      snapshot
+        .getLoadable(cumulatedTaskPriorityStateFamily("task1"))
+        .valueOrThrow()
+    ).toBe("veryHigh");
   });
 });
 

@@ -8,8 +8,10 @@ import type {
   Task,
   TaskId,
   UserId,
+  Priority,
 } from "./types";
 import compareByPriority from "./compareByPriority";
+import PriorityEnum from "./PriorityEnum";
 
 type AuthState =
   | { status: "loading" }
@@ -129,6 +131,26 @@ const taskSuccessorsStateFamily = selectorFamily<TaskId[], TaskId>({
         .map((dep) => dep.successor),
 });
 
+/**
+ * Returns the cumulated priority of a task taking into account its successors
+ */
+const cumulatedTaskPriorityStateFamily = selectorFamily<Priority, TaskId>({
+  key: "CumulatedTaskPriority",
+  get:
+    (id) =>
+    ({ get }) => {
+      const myPriority = get(taskStateFamily(id)).priority ?? "normal";
+      const successors = get(taskSuccessorsStateFamily(id));
+      const successorsCumulatedPriorities = successors.map((succId) =>
+        get(cumulatedTaskPriorityStateFamily(succId))
+      );
+      const priorities = [myPriority, ...successorsCumulatedPriorities];
+      const numberPriorities = priorities.map((pr) => PriorityEnum[pr]);
+      const maxNumberPriority = Math.max(...numberPriorities);
+      return PriorityEnum[maxNumberPriority] as Priority;
+    },
+});
+
 const nextTaskState = selector<TaskId>({
   key: "NextTask",
   get: ({ get }) => {
@@ -154,5 +176,6 @@ export {
   taskIsInWorkspaceStateFamily,
   tasksWithoutPredecessorState,
   taskSuccessorsStateFamily,
+  cumulatedTaskPriorityStateFamily,
   nextTaskState,
 };
