@@ -165,6 +165,14 @@ const nextTaskState = selector<TaskId>({
   },
 });
 
+const isNextTaskStateFamily = selectorFamily<boolean, TaskId>({
+  key: "IsNextTask",
+  get:
+    (id) =>
+    ({ get }) =>
+      get(nextTaskState) === id,
+});
+
 export {
   authState,
   signedInUserIdState,
@@ -181,4 +189,5 @@ export {
   taskSuccessorsStateFamily,
   cumulatedTaskPriorityStateFamily,
   nextTaskState,
+  isNextTaskStateFamily,
 };

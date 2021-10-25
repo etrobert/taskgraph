@@ -3,7 +3,11 @@ import { useRecoilValue } from "recoil";
 import classNames from "classnames";
 import { Link } from "react-router-dom";
 
-import { taskSelectedStateFamily, taskStateFamily } from "@/atoms";
+import {
+  isNextTaskStateFamily,
+  taskSelectedStateFamily,
+  taskStateFamily,
+} from "@/atoms";
 
 import type { TaskId } from "@/types";
 import type { EdgeHandlesInstance } from "cytoscape-edgehandles";
@@ -19,7 +23,7 @@ type Props = {
 
 const Task = ({ id, cy, edgeHandles }: Props): JSX.Element => {
   const { name, status } = useRecoilValue(taskStateFamily(id));
-
+  const isNextTask = useRecoilValue(isNextTaskStateFamily(id));
   const selected = useRecoilValue(taskSelectedStateFamily(id));
 
   return (
@@ -27,6 +31,7 @@ const Task = ({ id, cy, edgeHandles }: Props): JSX.Element => {
       className={classNames("Task", {
         "Task--completed": status === "completed",
         "Task--selected": selected,
+        "Task--next": isNextTask,
       })}
       id={id}
     >
