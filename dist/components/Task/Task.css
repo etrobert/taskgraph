@@ -88,3 +88,7 @@
 .Task:hover .Task__handle {
   --radius: 0.75rem;
 }
+
+.Task--next {
+  border: 1px solid red;
+}

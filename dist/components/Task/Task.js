@@ -2,15 +2,21 @@ import React from "../../../_snowpack/pkg/react.js";
 import {useRecoilValue} from "../../../_snowpack/pkg/recoil.js";
 import classNames from "../../../_snowpack/pkg/classnames.js";
 import {Link} from "../../../_snowpack/pkg/react-router-dom.js";
-import {taskSelectedStateFamily, taskStateFamily} from "../../atoms.js";
+import {
+  isNextTaskStateFamily,
+  taskSelectedStateFamily,
+  taskStateFamily
+} from "../../atoms.js";
 import "./Task.css.proxy.js";
 const Task = ({id, cy, edgeHandles}) => {
   const {name, status} = useRecoilValue(taskStateFamily(id));
+  const isNextTask = useRecoilValue(isNextTaskStateFamily(id));
   const selected = useRecoilValue(taskSelectedStateFamily(id));
   return /* @__PURE__ */ React.createElement("div", {
     className: classNames("Task", {
       "Task--completed": status === "completed",
-      "Task--selected": selected
+      "Task--selected": selected,
+      "Task--next": isNextTask
     }),
     id
   }, name, /* @__PURE__ */ React.createElement(Link, {
