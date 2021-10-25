@@ -22,7 +22,7 @@ type Props = {
 };
 
 const Task = ({ id, cy, edgeHandles }: Props): JSX.Element => {
-  const { name, status } = useRecoilValue(taskStateFamily(id));
+  const { name, status, priority } = useRecoilValue(taskStateFamily(id));
   const isNextTask = useRecoilValue(isNextTaskStateFamily(id));
   const selected = useRecoilValue(taskSelectedStateFamily(id));
 
@@ -35,6 +35,15 @@ const Task = ({ id, cy, edgeHandles }: Props): JSX.Element => {
       })}
       id={id}
     >
+      <div
+        className={classNames("Task__priority", {
+          "Task__priority--very-low": priority === "veryLow",
+          "Task__priority--low": priority === "low",
+          "Task__priority--normal": priority === "normal",
+          "Task__priority--high": priority === "high",
+          "Task__priority--very-high": priority === "veryHigh",
+        })}
+      />
       {name}
       <Link className="iconButton Task__edit-button" to={`/task/${id}`} />
       <div
