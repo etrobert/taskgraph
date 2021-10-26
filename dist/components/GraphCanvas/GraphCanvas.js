@@ -12,6 +12,7 @@ import useSetDependencySelected from "../../hooks/useSetDependencySelected.js";
 import useFirestoreState from "../../hooks/useFirestoreState.js";
 import useInitCytoscapeExtensions from "../../hooks/useInitCytoscapeExtensions.js";
 import Task from "../Task/Task.js";
+import Toolbar from "../Toolbar/Toolbar.js";
 import useMemoizedDivs from "./useMemoizedDivs.js";
 import useCytoscapeEvent from "./useCytoscapeEvent.js";
 import "./GraphCanvas.css.proxy.js";
@@ -76,7 +77,9 @@ const GraphCanvas = () => {
       target: successor
     }
   }));
-  return /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement(CytoscapeComponent, {
+  return /* @__PURE__ */ React.createElement("div", {
+    className: "GraphCanvas"
+  }, /* @__PURE__ */ React.createElement(CytoscapeComponent, {
     style: {height: "100%"},
     elements: [...cyTaskData, ...cyDependencyData],
     cy: (cy2) => setCy(cy2),
@@ -85,6 +88,6 @@ const GraphCanvas = () => {
     id,
     cy,
     edgeHandles
-  }), memoizedDivs(id))));
+  }), memoizedDivs(id))), /* @__PURE__ */ React.createElement(Toolbar, null));
 };
 export default GraphCanvas;

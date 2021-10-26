@@ -13,6 +13,10 @@ const signedInUserIdState = selector({
     return auth.status === "signedIn" ? auth.userId : "NOT_SIGNED_IN";
   }
 });
+const insertModeState = atom({
+  key: "InsertMode",
+  default: false
+});
 const taskStateFamily = atomFamily({
   key: "Task",
   default: {
@@ -106,6 +110,7 @@ const isNextTaskStateFamily = selectorFamily({
 export {
   authState,
   signedInUserIdState,
+  insertModeState,
   workspaceState,
   dependencyStateFamily,
   taskStateFamily,

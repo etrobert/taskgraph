@@ -1,12 +1,15 @@
+import {useRecoilState} from "../../../_snowpack/pkg/recoil.js";
+import {insertModeState} from "../../atoms.js";
 import useFirestoreState from "../../hooks/useFirestoreState.js";
 import useKeyboardShortcuts from "../../hooks/useKeyboardShortcuts.js";
 import useSelectAll from "../../hooks/useSelectAll.js";
-const useAppShortcuts = ({insertMode, onCreateTask}) => {
+const useAppShortcuts = () => {
   const selectAll = useSelectAll();
   const {deleteSelected} = useFirestoreState();
+  const [insertMode, setInsertMode] = useRecoilState(insertModeState);
   const insert = {
     keys: ["i"],
-    callback: onCreateTask
+    callback: () => setInsertMode(true)
   };
   const deleteSelectedShortcut = {
     keys: ["d", "Delete"],
@@ -15,8 +18,10 @@ const useAppShortcuts = ({insertMode, onCreateTask}) => {
   const selectAllShortcut = {
     keys: ["a"],
     callback: (event) => {
-      if (event.ctrlKey)
-        selectAll();
+      if (!event.ctrlKey)
+        return;
+      event.preventDefault();
+      selectAll();
     }
   };
   const shortcuts = {
