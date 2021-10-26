@@ -21,7 +21,9 @@ const useAppShortcuts = ({ insertMode, onCreateTask }: Props): void => {
   const selectAllShortcut: Shortcut = {
     keys: ["a"],
     callback: (event) => {
-      if (event.ctrlKey) selectAll();
+      if (!event.ctrlKey) return;
+      event.preventDefault();
+      selectAll();
     },
   };
 
