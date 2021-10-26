@@ -84,7 +84,17 @@
   border-radius: calc(var(--thickness) / 2);
 }
 
+@keyframes strikethrough {
+  from {
+    right: 100%;
+  }
+  to {
+    right: 0%;
+  }
+}
+
 .Task--selected {
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
   background-color: lightblue;
 }
 
