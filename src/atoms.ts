@@ -34,6 +34,11 @@ const signedInUserIdState = selector<UserId>({
   },
 });
 
+const insertModeState = atom<boolean>({
+  key: "InsertMode",
+  default: false,
+});
+
 const taskStateFamily = atomFamily<Task, TaskId>({
   key: "Task",
   default: {
@@ -176,6 +181,7 @@ const isNextTaskStateFamily = selectorFamily<boolean, TaskId>({
 export {
   authState,
   signedInUserIdState,
+  insertModeState,
   workspaceState,
   dependencyStateFamily,
   taskStateFamily,

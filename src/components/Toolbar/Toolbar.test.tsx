@@ -1,24 +1,25 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { noop } from "lodash";
 import { RecoilRoot } from "recoil";
+
+import RecoilObserver from "@/RecoilObserver";
+import { insertModeState } from "@/atoms";
 
 import Toolbar from "./Toolbar";
 
 describe("Toolbar", () => {
-  test("calls onCreateTask", () => {
-    const onCreateTask = jest.fn();
+  it("updates insertModeState", () => {
+    const onInsertModeChange = jest.fn();
     render(
       <RecoilRoot>
-        <Toolbar
-          onCreateTask={onCreateTask}
-          onComplete={noop}
-          onDelete={noop}
-        />
+        <RecoilObserver node={insertModeState} onChange={onInsertModeChange} />
+        <Toolbar />
       </RecoilRoot>
     );
     userEvent.click(screen.getByLabelText("Create Task"));
-    expect(onCreateTask).toHaveBeenCalledTimes(1);
+    expect(onInsertModeChange).toHaveBeenCalledTimes(2);
+    expect(onInsertModeChange).toHaveBeenCalledWith(false); // Initial State
+    expect(onInsertModeChange).toHaveBeenCalledWith(true);
   });
 });

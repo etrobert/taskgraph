@@ -1,16 +1,18 @@
+import { useRecoilState } from "recoil";
+
+import { insertModeState } from "@/atoms";
 import useFirestoreState from "@/hooks/useFirestoreState";
 import useKeyboardShortcuts, { Shortcut } from "@/hooks/useKeyboardShortcuts";
 import useSelectAll from "@/hooks/useSelectAll";
 
-type Props = { insertMode: boolean; onCreateTask: () => void };
-
-const useAppShortcuts = ({ insertMode, onCreateTask }: Props): void => {
+const useAppShortcuts = (): void => {
   const selectAll = useSelectAll();
   const { deleteSelected } = useFirestoreState();
+  const [insertMode, setInsertMode] = useRecoilState(insertModeState);
 
   const insert = {
     keys: ["i"],
-    callback: onCreateTask,
+    callback: () => setInsertMode(true),
   };
 
   const deleteSelectedShortcut = {

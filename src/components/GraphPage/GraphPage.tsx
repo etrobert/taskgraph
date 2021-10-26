@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Redirect } from "react-router";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 
 import useAppShortcuts from "@/components/App/useAppShortcuts";
 import MenuBar from "@/components/MenuBar/MenuBar";
@@ -8,7 +8,7 @@ import Toolbar from "@/components/Toolbar/Toolbar";
 import GraphCanvas from "@/components/GraphCanvas/GraphCanvas";
 import NewTaskInput from "@/components/NewTaskInput/NewTaskInput";
 import useFirestoreState from "@/hooks/useFirestoreState";
-import { authState } from "@/atoms";
+import { authState, insertModeState } from "@/atoms";
 
 import "./GraphPage.css";
 
@@ -16,15 +16,10 @@ const GraphPage = (): JSX.Element => {
   const [menuBarOpen, setMenuBarOpen] = useState(false);
   const closeMenuBar = () => setMenuBarOpen(false);
 
-  const [insertMode, setInsertMode] = useState(false);
-  const onCreateTask = () => setInsertMode(true);
+  const [insertMode, setInsertMode] = useRecoilState(insertModeState);
+  const { addTask } = useFirestoreState();
 
-  const { addTask, deleteSelected } = useFirestoreState();
-
-  useAppShortcuts({
-    insertMode,
-    onCreateTask,
-  });
+  useAppShortcuts();
 
   const auth = useRecoilValue(authState);
 
@@ -38,13 +33,7 @@ const GraphPage = (): JSX.Element => {
       />
       <MenuBar open={menuBarOpen} onClose={closeMenuBar} />
 
-      <Toolbar
-        onCreateTask={onCreateTask}
-        // TODO Replace when implemented
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
-        onComplete={() => {}}
-        onDelete={deleteSelected}
-      />
+      <Toolbar />
 
       <GraphCanvas />
 
