@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { createPortal } from "react-dom";
 
 import { useRecoilValue } from "recoil";
@@ -15,8 +15,8 @@ import useSetTaskSelected from "@/hooks/useSetTaskSelected";
 import useSetDependencySelected from "@/hooks/useSetDependencySelected";
 import useFirestoreState from "@/hooks/useFirestoreState";
 import useInitCytoscapeExtensions from "@/hooks/useInitCytoscapeExtensions";
-
-import Task from "../Task/Task";
+import Task from "@/components/Task/Task";
+import Toolbar from "@/components/Toolbar/Toolbar";
 
 import useMemoizedDivs from "./useMemoizedDivs";
 import useCytoscapeEvent from "./useCytoscapeEvent";
@@ -121,7 +121,7 @@ const GraphCanvas = (): JSX.Element => {
   );
 
   return (
-    <>
+    <div className="GraphCanvas">
       <CytoscapeComponent
         style={{ height: "100%" }}
         elements={[...cyTaskData, ...cyDependencyData]}
@@ -134,7 +134,8 @@ const GraphCanvas = (): JSX.Element => {
           memoizedDivs(id)
         )
       )}
-    </>
+      <Toolbar />
+    </div>
   );
 };
 
