@@ -1,7 +1,6 @@
 import React from "react";
 import { useRecoilValue } from "recoil";
 import classNames from "classnames";
-import { Link } from "react-router-dom";
 
 import {
   isNextTaskStateFamily,
