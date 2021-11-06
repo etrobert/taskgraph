@@ -32,7 +32,7 @@ const MenuBar = ({ open, onClose }: Props): JSX.Element => {
         <ul>
           <li>[I]: [I]nsert a new task</li>
           <li>[D]/[Delete]: [D]elete selected tasks</li>
-          <li>[Ctrl+a]: Select [a]ll tasks</li>
+          {/* <li>[Ctrl+a]: Select [a]ll tasks</li> */}
         </ul>
       </section>
       <a

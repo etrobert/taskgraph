@@ -32,7 +32,7 @@ const useAppShortcuts = (): void => {
   const shortcuts = {
     insert,
     deleteSelected: deleteSelectedShortcut,
-    selectAll: selectAllShortcut,
+    // selectAll: selectAllShortcut,
   };
 
   useKeyboardShortcuts(insertMode ? {} : shortcuts);
