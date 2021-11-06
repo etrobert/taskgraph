@@ -18,7 +18,7 @@ const MenuBar = ({open, onClose}) => {
     className: "MenuBar__auth"
   }, "Signed in as ", signedInUserId, /* @__PURE__ */ React.createElement("button", {
     onClick: () => getAuth().signOut()
-  }, "Sign Out")), /* @__PURE__ */ React.createElement("section", null, /* @__PURE__ */ React.createElement("h2", null, "Keyboard Shortcuts"), /* @__PURE__ */ React.createElement("ul", null, /* @__PURE__ */ React.createElement("li", null, "[I]: [I]nsert a new task"), /* @__PURE__ */ React.createElement("li", null, "[D]/[Delete]: [D]elete selected tasks"), /* @__PURE__ */ React.createElement("li", null, "[Ctrl+a]: Select [a]ll tasks"))), /* @__PURE__ */ React.createElement("a", {
+  }, "Sign Out")), /* @__PURE__ */ React.createElement("section", null, /* @__PURE__ */ React.createElement("h2", null, "Keyboard Shortcuts"), /* @__PURE__ */ React.createElement("ul", null, /* @__PURE__ */ React.createElement("li", null, "[I]: [I]nsert a new task"), /* @__PURE__ */ React.createElement("li", null, "[D]/[Delete]: [D]elete selected tasks"))), /* @__PURE__ */ React.createElement("a", {
     "aria-label": "Github Repository",
     className: "MenuBar__github-link",
     href: "https://github.com/etrobert/taskgraph",

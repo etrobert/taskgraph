@@ -26,8 +26,7 @@ const useAppShortcuts = () => {
   };
   const shortcuts = {
     insert,
-    deleteSelected: deleteSelectedShortcut,
-    selectAll: selectAllShortcut
+    deleteSelected: deleteSelectedShortcut
   };
   useKeyboardShortcuts(insertMode ? {} : shortcuts);
 };

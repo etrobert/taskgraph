@@ -10,7 +10,7 @@ const useKeyboardShortcuts = (shortcuts) => {
     });
   };
   useEffect(() => {
-    document.addEventListener("keydown", handler);
+    document.addEventListener("keyup", handler);
     return () => document.removeEventListener("keyup", handler);
   });
 };
