@@ -9,7 +9,7 @@ import {
 import { useRecoilTransaction_UNSTABLE, useRecoilValue } from "recoil";
 
 import firestore from "@/firestore";
-import { signedInUserIdState, selectedElementsState } from "@/atoms";
+import { selectedElementsState, workspaceIdState } from "@/atoms";
 import getRelatedDependencies from "@/getRelatedDependencies";
 
 import type { DocumentReference, UpdateData } from "firebase/firestore";
@@ -23,10 +23,10 @@ type UseFirestoreState = () => {
 };
 
 const useFirestoreState: UseFirestoreState = () => {
-  const signedInUserId = useRecoilValue(signedInUserIdState);
+  const workspaceId = useRecoilValue(workspaceIdState);
   const addTask = useCallback(
     (name: string) => {
-      const ref = collection(firestore, `workspaces/${signedInUserId}/tasks`);
+      const ref = collection(firestore, `workspaces/${workspaceId}/tasks`);
       const task = {
         name,
         position: { x: 0, y: 0 },
@@ -34,26 +34,26 @@ const useFirestoreState: UseFirestoreState = () => {
       };
       return addDoc(ref, task);
     },
-    [signedInUserId]
+    [workspaceId]
   );
 
   const updateTask = useCallback(
     (id, task) => {
       const ref = doc(
         firestore,
-        `workspaces/${signedInUserId}/tasks`,
+        `workspaces/${workspaceId}/tasks`,
         id
       ) as DocumentReference<Task>;
       updateDoc<Task>(ref, task);
     },
-    [signedInUserId]
+    [workspaceId]
   );
 
   const addDependency = useCallback(
     (predecessor: TaskId, successor: TaskId) => {
       const ref = collection(
         firestore,
-        `workspaces/${signedInUserId}/dependencies`
+        `workspaces/${workspaceId}/dependencies`
       );
       const dependency = {
         predecessor,
@@ -61,7 +61,7 @@ const useFirestoreState: UseFirestoreState = () => {
       };
       return addDoc(ref, dependency);
     },
-    [signedInUserId]
+    [workspaceId]
   );
 
   const selectedElements = useRecoilValue(selectedElementsState);
@@ -72,22 +72,22 @@ const useFirestoreState: UseFirestoreState = () => {
         const batch = writeBatch(firestore);
         selectedElements.tasks.forEach((taskId) => {
           batch.delete(
-            doc(firestore, `workspaces/${signedInUserId}/tasks`, taskId)
+            doc(firestore, `workspaces/${workspaceId}/tasks`, taskId)
           );
           getRelatedDependencies(get, taskId).forEach((depId) =>
             batch.delete(
-              doc(firestore, `workspaces/${signedInUserId}/dependencies`, depId)
+              doc(firestore, `workspaces/${workspaceId}/dependencies`, depId)
             )
           );
         });
         selectedElements.dependencies.forEach((depId) =>
           batch.delete(
-            doc(firestore, `workspaces/${signedInUserId}/dependencies`, depId)
+            doc(firestore, `workspaces/${workspaceId}/dependencies`, depId)
           )
         );
         batch.commit();
       },
-    [signedInUserId, selectedElements]
+    [workspaceId, selectedElements]
   );
 
   return { addTask, updateTask, addDependency, deleteSelected };

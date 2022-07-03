@@ -1,7 +1,7 @@
 import { atom, atomFamily, selector, selectorFamily } from "recoil";
 import { Set } from "immutable";
 
-import type {
+import {
   Dependency,
   DependencyId,
   Workspace,
@@ -9,6 +9,7 @@ import type {
   TaskId,
   UserId,
   Priority,
+  WorkspaceId,
 } from "./types";
 import compareByPriority from "./compareByPriority";
 import PriorityEnum from "./PriorityEnum";
@@ -54,6 +55,11 @@ const dependencyStateFamily = atomFamily<Dependency, DependencyId>({
     predecessor: "DEFAULT-TASK-ID",
     successor: "DEFAULT-TASK-ID",
   },
+});
+
+const workspaceIdState = atom<WorkspaceId>({
+  key: "WorkspaceId",
+  default: "DEFAULT-WORKSPACE-ID",
 });
 
 const workspaceState = atom<Workspace>({
@@ -196,4 +202,5 @@ export {
   cumulatedTaskPriorityStateFamily,
   nextTaskState,
   isNextTaskStateFamily,
+  workspaceIdState,
 };

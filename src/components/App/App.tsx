@@ -1,21 +1,22 @@
 import React from "react";
-import { useRecoilValue } from "recoil";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 import WorkspacesList from "../WorkspacesList/WorkspacesList";
-import SignedInApp from "@/components/SignedInApp/SignedInApp";
-import useSyncFirebaseAuth from "@/hooks/useSyncFirebaseAuth";
-import { authState } from "@/atoms";
+import GraphPage from "../GraphPage/GraphPage";
 
 import "./App.css";
 
-const App = (): JSX.Element => {
-  useSyncFirebaseAuth();
-
-  const auth = useRecoilValue(authState);
-
-  if (auth.status === "signedIn") return <SignedInApp />;
-
-  return <WorkspacesList />;
-};
+const App = (): JSX.Element => (
+  <Router>
+    <Switch>
+      <Route path="/workspaces/:workspaceId">
+        <GraphPage />
+      </Route>
+      <Route path="/">
+        <WorkspacesList />
+      </Route>
+    </Switch>
+  </Router>
+);
 
 export default App;

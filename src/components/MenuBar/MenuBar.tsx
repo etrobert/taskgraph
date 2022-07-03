@@ -1,11 +1,7 @@
 import React from "react";
-import { useRecoilValue } from "recoil";
 import classNames from "classnames";
 
-import { signedInUserIdState } from "@/atoms";
-
 import "./MenuBar.css";
-import { getAuth } from "@firebase/auth";
 
 type Props = {
   open: boolean;
@@ -13,8 +9,6 @@ type Props = {
 };
 
 const MenuBar = ({ open, onClose }: Props): JSX.Element => {
-  const signedInUserId = useRecoilValue(signedInUserIdState);
-
   return (
     <div className={classNames("MenuBar", { "MenuBar--open": open })}>
       <h1 className="MenuBar__title">TaskGraph</h1>
@@ -23,10 +17,6 @@ const MenuBar = ({ open, onClose }: Props): JSX.Element => {
         className="MenuBar__close-button iconButton"
         onClick={onClose}
       />
-      <div className="MenuBar__auth">
-        Signed in as {signedInUserId}
-        <button onClick={() => getAuth().signOut()}>Sign Out</button>
-      </div>
       <section>
         <h2>Keyboard Shortcuts</h2>
         <ul>

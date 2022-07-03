@@ -1,4 +1,5 @@
 import React, { useMemo } from "react";
+import { Link } from "react-router-dom";
 import stringToColor from "@/stringToColor";
 
 import "./WorkspacesListItem.css";
@@ -11,7 +12,9 @@ const WorkspacesListItem = ({ workspaceId }: Props): JSX.Element => {
   const color = useMemo(() => stringToColor(workspaceId), [workspaceId]);
 
   return (
-    <div className="WorkspacesListItem" style={{ backgroundColor: color }} />
+    <Link to={`/workspaces/${workspaceId}`}>
+      <div className="WorkspacesListItem" style={{ backgroundColor: color }} />
+    </Link>
   );
 };
 
