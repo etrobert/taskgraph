@@ -6,5 +6,6 @@ import './common/_commonjsHelpers-8c19dec8.js';
 
 var useCallback = react.useCallback;
 var useEffect = react.useEffect;
+var useMemo = react.useMemo;
 var useState = react.useState;
-export { useCallback, useEffect, useState };
+export { useCallback, useEffect, useMemo, useState };

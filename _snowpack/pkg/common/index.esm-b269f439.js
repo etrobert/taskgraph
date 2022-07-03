@@ -861,4 +861,4 @@ function getModularInstance(service) {
     }
 }
 
-export { Deferred as D, ErrorFactory as E, FirebaseError as F, isReactNative as a, isBrowserExtension as b, createSubscribe as c, deepEqual as d, extractQuerystring as e, querystring as f, getModularInstance as g, base64Decode as h, isMobileCordova as i, getUA as j, isIE as k, isEmpty as l, isElectron as m, isUWP as n, querystringDecode as q };
+export { Deferred as D, ErrorFactory as E, FirebaseError as F, isReactNative as a, isElectron as b, isIE as c, isUWP as d, isBrowserExtension as e, deepEqual as f, getModularInstance as g, createSubscribe as h, isMobileCordova as i, extractQuerystring as j, querystring as k, base64Decode as l, getUA as m, isEmpty as n, querystringDecode as q };

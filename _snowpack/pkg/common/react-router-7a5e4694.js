@@ -2258,5 +2258,10 @@ var Switch = /*#__PURE__*/function (_React$Component) {
 }(react.Component);
 
 var useContext = react.useContext;
+function useParams() {
 
-export { Redirect as R, Switch as S, _inheritsLoose as _, Router as a, createHashHistory as b, createBrowserHistory as c, _objectWithoutPropertiesLoose as d, _extends as e, context as f, createLocation as g, createPath as h, invariant as i, Route as j, matchPath as m };
+  var match = useContext(context).match;
+  return match ? match.params : {};
+}
+
+export { Redirect as R, Switch as S, _inheritsLoose as _, Router as a, createHashHistory as b, createBrowserHistory as c, _objectWithoutPropertiesLoose as d, _extends as e, context as f, createLocation as g, createPath as h, invariant as i, Route as j, matchPath as m, useParams as u };

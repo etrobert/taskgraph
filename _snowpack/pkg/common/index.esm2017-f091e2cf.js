@@ -1,5 +1,5 @@
-import { g as getApp, _ as _getProvider, a as _registerComponent, r as registerVersion, L as LogLevel, S as SDK_VERSION, C as Component, b as Logger } from './index.esm2017-407ec88e.js';
-import { g as getModularInstance, i as isMobileCordova, a as isReactNative, m as isElectron, k as isIE, n as isUWP, b as isBrowserExtension } from './index.esm-834fc85d.js';
+import { g as getApp, _ as _getProvider, a as _registerComponent, r as registerVersion, L as LogLevel, S as SDK_VERSION, C as Component, b as Logger } from './index.esm2017-4f286100.js';
+import { g as getModularInstance, i as isMobileCordova, a as isReactNative, b as isElectron, c as isIE, d as isUWP, e as isBrowserExtension } from './index.esm-b269f439.js';
 
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -10989,6 +10989,24 @@ async function Ja$1(t) {
     n;
 }
 
+function nc$1(t, e, n = {}) {
+    const s = new K$1;
+    return t.asyncQueue.enqueueAndForget((async () => function(t, e, n, s, i) {
+        const r = new Fa$1({
+            next: n => {
+                // Remove query first before passing event to user to avoid
+                // user actions affecting the now stale query.
+                e.enqueueAndForget((() => Lo(t, o))), n.fromCache && "server" === s.source ? i.reject(new q$1(U$1.UNAVAILABLE, 'Failed to get documents from server. (However, these documents may exist in the local cache. Run again without setting source to "server" to retrieve the cached documents.)')) : i.resolve(n);
+            },
+            error: t => i.reject(t)
+        }), o = new Ko(n, r, {
+            includeMetadataChanges: !0,
+            uo: !0
+        });
+        return Mo(t, o);
+    }(await Ja$1(t), t.asyncQueue, e, n, s))), s.promise;
+}
+
 class ac$1 {
     /**
      * Constructs a DatabaseInfo using the provided host, databaseId and
@@ -12966,6 +12984,21 @@ class oh extends th {
     }
 }
 
+/**
+ * Executes the query and returns the results as a `QuerySnapshot`.
+ *
+ * Note: `getDocs()` attempts to provide up-to-date data when possible by
+ * waiting for data from the server, but it may return cached data or fail if
+ * you are offline and the server cannot be reached. To specify this behavior,
+ * invoke {@link getDocsFromCache} or {@link getDocsFromServer}.
+ *
+ * @returns A `Promise` that will be resolved with the results of the query.
+ */ function uh(t) {
+    t = _c(t, Tc$1);
+    const e = _c(t.firestore, Nc$1), n = $c$1(e), s = new oh(e);
+    return ku(t._query), nc$1(n, t._query).then((n => new Cu(e, s, t, n)));
+}
+
 function fh(t, e, n) {
     t = _c(t, Ec$1);
     const s = _c(t.firestore, Nc$1), i = eh(t.converter, e, n);
@@ -13125,4 +13158,4 @@ function mh(t, ...e) {
     }, e), s._setSettings(e), s;
 }), "PUBLIC" /* PUBLIC */)), registerVersion("@firebase/firestore", "3.0.2", Vh);
 
-export { Ac$1 as A, Ih as I, _h as _, bc$1 as b, dh as d, fh as f, kc$1 as k, mh as m, vh as v };
+export { Ac$1 as A, Ih as I, _h as _, bc$1 as b, dh as d, fh as f, kc$1 as k, mh as m, uh as u, vh as v };

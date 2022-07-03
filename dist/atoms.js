@@ -32,6 +32,10 @@ const dependencyStateFamily = atomFamily({
     successor: "DEFAULT-TASK-ID"
   }
 });
+const workspaceIdState = atom({
+  key: "WorkspaceId",
+  default: "DEFAULT-WORKSPACE-ID"
+});
 const workspaceState = atom({
   key: "Workspace",
   default: {
@@ -124,5 +128,6 @@ export {
   taskSuccessorsStateFamily,
   cumulatedTaskPriorityStateFamily,
   nextTaskState,
-  isNextTaskStateFamily
+  isNextTaskStateFamily,
+  workspaceIdState
 };

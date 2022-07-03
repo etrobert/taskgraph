@@ -1,6 +1,6 @@
-import { r as registerVersion } from '../common/index.esm2017-407ec88e.js';
-export { i as initializeApp } from '../common/index.esm2017-407ec88e.js';
-import '../common/index.esm-834fc85d.js';
+import { r as registerVersion } from '../common/index.esm2017-4f286100.js';
+export { i as initializeApp } from '../common/index.esm2017-4f286100.js';
+import '../common/index.esm-b269f439.js';
 
 var name = "firebase";
 var version = "9.0.2";

@@ -1,4 +1,5 @@
 import React from "../../../_snowpack/pkg/react.js";
+import WorkspacesList from "../WorkspacesList/WorkspacesList.js";
 import Button from "../Button/Button.js";
 import TextInput from "../TextInput/TextInput.js";
 import "./LandingPage.css.proxy.js";
@@ -33,6 +34,6 @@ const LandingPage = () => {
     tabIndex: -1
   })), /* @__PURE__ */ React.createElement(Button, {
     type: "submit"
-  }, "Subscribe")));
+  }, "Subscribe")), /* @__PURE__ */ React.createElement(WorkspacesList, null));
 };
 export default LandingPage;

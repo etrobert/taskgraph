@@ -1,22 +1,31 @@
-import React, {useState} from "../../../_snowpack/pkg/react.js";
+import React, {useEffect, useState} from "../../../_snowpack/pkg/react.js";
 import {Redirect} from "../../../_snowpack/pkg/react-router.js";
-import {useRecoilState, useRecoilValue} from "../../../_snowpack/pkg/recoil.js";
+import {useRecoilState, useSetRecoilState} from "../../../_snowpack/pkg/recoil.js";
 import useAppShortcuts from "../App/useAppShortcuts.js";
 import MenuBar from "../MenuBar/MenuBar.js";
 import PropertiesPanel from "../PropertiesPanel/PropertiesPanel.js";
 import GraphCanvas from "../GraphCanvas/GraphCanvas.js";
 import NewTaskInput from "../NewTaskInput/NewTaskInput.js";
 import useFirestoreState from "../../hooks/useFirestoreState.js";
-import {authState, insertModeState} from "../../atoms.js";
+import {insertModeState, workspaceIdState} from "../../atoms.js";
 import "./GraphPage.css.proxy.js";
+import {useParams} from "../../../_snowpack/pkg/react-router-dom.js";
+import useSyncFirestore from "../../hooks/useSyncFirestore.js";
 const GraphPage = () => {
   const [menuBarOpen, setMenuBarOpen] = useState(false);
   const closeMenuBar = () => setMenuBarOpen(false);
   const [insertMode, setInsertMode] = useRecoilState(insertModeState);
   const {addTask} = useFirestoreState();
   useAppShortcuts();
-  const auth = useRecoilValue(authState);
-  if (auth.status === "notSignedIn")
+  useSyncFirestore();
+  const setWorkspaceId = useSetRecoilState(workspaceIdState);
+  const {workspaceId} = useParams();
+  useEffect(() => {
+    if (workspaceId === void 0)
+      return;
+    setWorkspaceId(workspaceId);
+  }, [setWorkspaceId, workspaceId]);
+  if (workspaceId === void 0)
     return /* @__PURE__ */ React.createElement(Redirect, {
       to: "/"
     });
