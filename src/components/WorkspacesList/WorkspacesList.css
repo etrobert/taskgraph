@@ -1,0 +1,5 @@
+.WorkspacesList {
+  display: grid;
+  grid-auto-flow: column;
+  list-style: none;
+}

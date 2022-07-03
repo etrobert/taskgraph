@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
-import WorkspacesList from "../WorkspacesList/WorkspacesList";
+import LandingPage from "../LandingPage/LandingPage";
 import GraphPage from "../GraphPage/GraphPage";
 
 import "./App.css";
@@ -13,7 +13,7 @@ const App = (): JSX.Element => (
         <GraphPage />
       </Route>
       <Route path="/">
-        <WorkspacesList />
+        <LandingPage />
       </Route>
     </Switch>
   </Router>

@@ -3,6 +3,8 @@ import { getDocs, collection } from "firebase/firestore";
 import firestore from "@/firestore";
 import WorkspacesListItem from "./WorkspacesListItem";
 
+import "./WorkspacesList.css";
+
 const WorkspacesList = (): JSX.Element => {
   useEffect(() => {
     getDocs(collection(firestore, "workspaces")).then((docs) =>
@@ -13,7 +15,7 @@ const WorkspacesList = (): JSX.Element => {
   const [workspacesList, setWorkspacesList] = useState<string[]>();
 
   return (
-    <ul>
+    <ul className="WorkspacesList">
       {workspacesList?.map((id) => (
         <li key={id}>{<WorkspacesListItem workspaceId={id} />}</li>
       ))}

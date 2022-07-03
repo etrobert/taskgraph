@@ -1,5 +1,6 @@
 import React from "react";
 
+import WorkspacesList from "@/components/WorkspacesList/WorkspacesList";
 import Button from "@/components/Button/Button";
 import TextInput from "@/components/TextInput/TextInput";
 
@@ -47,6 +48,7 @@ const LandingPage = (): JSX.Element => {
         </div>
         <Button type="submit">Subscribe</Button>
       </form>
+      <WorkspacesList />
     </div>
   );
 };
