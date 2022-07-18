@@ -1,7 +1,6 @@
 import React from "react";
 
 import WorkspacesList from "@/components/WorkspacesList/WorkspacesList";
-import MailchimpForm from "@/components/MailchimpForm/MailchimpForm";
 
 import "./LandingPage.css";
 
@@ -13,7 +12,6 @@ const LandingPage = (): JSX.Element => {
         <br />
         Graph
       </h1>
-      <MailchimpForm />
       <WorkspacesList />
     </div>
   );
