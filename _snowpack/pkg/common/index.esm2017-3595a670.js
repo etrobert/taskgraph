@@ -1,5 +1,4 @@
-import { g as getApp, _ as _getProvider, a as _registerComponent, r as registerVersion, L as LogLevel, S as SDK_VERSION, C as Component, b as Logger } from './index.esm2017-896e9e7c.js';
-import { g as getModularInstance, F as FirebaseError, i as isMobileCordova, a as isReactNative, b as isElectron, c as isIE, d as isUWP, e as isBrowserExtension } from './index.esm2017-6eb574c2.js';
+import { g as getModularInstance, a as getApp, _ as _getProvider, b as _registerComponent, r as registerVersion, L as LogLevel, F as FirebaseError, S as SDK_VERSION, C as Component, c as Logger, i as isMobileCordova, d as isReactNative, e as isElectron, f as isIE, h as isUWP, j as isBrowserExtension } from './index.esm2017-c5821091.js';
 
 var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
