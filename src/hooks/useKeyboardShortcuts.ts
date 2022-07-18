@@ -5,7 +5,7 @@ type Shortcut = {
   callback: (event: KeyboardEvent) => void;
 };
 
-type Shortcuts = Partial<Record<string, Shortcut>>;
+type Shortcuts = Record<string, Shortcut>;
 
 const useKeyboardShortcuts = (shortcuts: Shortcuts): void => {
   const handler = (event: KeyboardEvent) => {
