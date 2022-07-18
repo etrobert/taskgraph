@@ -20,6 +20,8 @@ npm start
 
 The project is built using [React](https://reactjs.org/).
 
+Static code generations using [NextJS](https://nextjs.org/).
+
 Build is done using [Snowpack](https://www.snowpack.dev/).
 
 Testing is done using [Jest](https://jestjs.io/).
