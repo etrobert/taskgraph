@@ -1,5 +1,5 @@
 import { r as react } from './index-04edb6a1.js';
-import { p as propTypes } from './index-ce016b4a.js';
+import { p as propTypes } from './index-8ab56611.js';
 import { c as createCommonjsModule } from './_commonjsHelpers-8c19dec8.js';
 
 function _setPrototypeOf(o, p) {

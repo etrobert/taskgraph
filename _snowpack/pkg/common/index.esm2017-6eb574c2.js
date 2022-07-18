@@ -1,33 +1,19 @@
-/*! *****************************************************************************
-Copyright (c) Microsoft Corporation.
-
-Permission to use, copy, modify, and/or distribute this software for any
-purpose with or without fee is hereby granted.
-
-THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
-REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
-AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
-INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
-LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
-OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
-PERFORMANCE OF THIS SOFTWARE.
-***************************************************************************** */
-/* global Reflect, Promise */
-
-var extendStatics = function(d, b) {
-    extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-    return extendStatics(d, b);
-};
-
-function __extends(d, b) {
-    if (typeof b !== "function" && b !== null)
-        throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
-    extendStatics(d, b);
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-}
+/**
+ * @license
+ * Copyright 2017 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 /**
  * @license
@@ -45,12 +31,12 @@ function __extends(d, b) {
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-var stringToByteArray$1 = function (str) {
+const stringToByteArray$1 = function (str) {
     // TODO(user): Use native implementations if/when available
-    var out = [];
-    var p = 0;
-    for (var i = 0; i < str.length; i++) {
-        var c = str.charCodeAt(i);
+    const out = [];
+    let p = 0;
+    for (let i = 0; i < str.length; i++) {
+        let c = str.charCodeAt(i);
         if (c < 128) {
             out[p++] = c;
         }
@@ -82,32 +68,32 @@ var stringToByteArray$1 = function (str) {
  * @param bytes Array of numbers representing characters.
  * @return Stringification of the array.
  */
-var byteArrayToString = function (bytes) {
+const byteArrayToString = function (bytes) {
     // TODO(user): Use native implementations if/when available
-    var out = [];
-    var pos = 0, c = 0;
+    const out = [];
+    let pos = 0, c = 0;
     while (pos < bytes.length) {
-        var c1 = bytes[pos++];
+        const c1 = bytes[pos++];
         if (c1 < 128) {
             out[c++] = String.fromCharCode(c1);
         }
         else if (c1 > 191 && c1 < 224) {
-            var c2 = bytes[pos++];
+            const c2 = bytes[pos++];
             out[c++] = String.fromCharCode(((c1 & 31) << 6) | (c2 & 63));
         }
         else if (c1 > 239 && c1 < 365) {
             // Surrogate Pair
-            var c2 = bytes[pos++];
-            var c3 = bytes[pos++];
-            var c4 = bytes[pos++];
-            var u = (((c1 & 7) << 18) | ((c2 & 63) << 12) | ((c3 & 63) << 6) | (c4 & 63)) -
+            const c2 = bytes[pos++];
+            const c3 = bytes[pos++];
+            const c4 = bytes[pos++];
+            const u = (((c1 & 7) << 18) | ((c2 & 63) << 12) | ((c3 & 63) << 6) | (c4 & 63)) -
                 0x10000;
             out[c++] = String.fromCharCode(0xd800 + (u >> 10));
             out[c++] = String.fromCharCode(0xdc00 + (u & 1023));
         }
         else {
-            var c2 = bytes[pos++];
-            var c3 = bytes[pos++];
+            const c2 = bytes[pos++];
+            const c3 = bytes[pos++];
             out[c++] = String.fromCharCode(((c1 & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
         }
     }
@@ -116,7 +102,7 @@ var byteArrayToString = function (bytes) {
 // We define it as an object literal instead of a class because a class compiled down to es5 can't
 // be treeshaked. https://github.com/rollup/rollup/issues/1691
 // Static lookup maps, lazily populated by init_()
-var base64 = {
+const base64 = {
     /**
      * Maps bytes to characters.
      */
@@ -169,25 +155,25 @@ var base64 = {
      *     alternative alphabet.
      * @return The base64 encoded string.
      */
-    encodeByteArray: function (input, webSafe) {
+    encodeByteArray(input, webSafe) {
         if (!Array.isArray(input)) {
             throw Error('encodeByteArray takes an array as a parameter');
         }
         this.init_();
-        var byteToCharMap = webSafe
+        const byteToCharMap = webSafe
             ? this.byteToCharMapWebSafe_
             : this.byteToCharMap_;
-        var output = [];
-        for (var i = 0; i < input.length; i += 3) {
-            var byte1 = input[i];
-            var haveByte2 = i + 1 < input.length;
-            var byte2 = haveByte2 ? input[i + 1] : 0;
-            var haveByte3 = i + 2 < input.length;
-            var byte3 = haveByte3 ? input[i + 2] : 0;
-            var outByte1 = byte1 >> 2;
-            var outByte2 = ((byte1 & 0x03) << 4) | (byte2 >> 4);
-            var outByte3 = ((byte2 & 0x0f) << 2) | (byte3 >> 6);
-            var outByte4 = byte3 & 0x3f;
+        const output = [];
+        for (let i = 0; i < input.length; i += 3) {
+            const byte1 = input[i];
+            const haveByte2 = i + 1 < input.length;
+            const byte2 = haveByte2 ? input[i + 1] : 0;
+            const haveByte3 = i + 2 < input.length;
+            const byte3 = haveByte3 ? input[i + 2] : 0;
+            const outByte1 = byte1 >> 2;
+            const outByte2 = ((byte1 & 0x03) << 4) | (byte2 >> 4);
+            let outByte3 = ((byte2 & 0x0f) << 2) | (byte3 >> 6);
+            let outByte4 = byte3 & 0x3f;
             if (!haveByte3) {
                 outByte4 = 64;
                 if (!haveByte2) {
@@ -206,7 +192,7 @@ var base64 = {
      *     alternative alphabet.
      * @return The base64 encoded string.
      */
-    encodeString: function (input, webSafe) {
+    encodeString(input, webSafe) {
         // Shortcut for Mozilla browsers that implement
         // a native base64 encoder in the form of "btoa/atob"
         if (this.HAS_NATIVE_SUPPORT && !webSafe) {
@@ -222,7 +208,7 @@ var base64 = {
      *     alternative alphabet.
      * @return string representing the decoded value.
      */
-    decodeString: function (input, webSafe) {
+    decodeString(input, webSafe) {
         // Shortcut for Mozilla browsers that implement
         // a native base64 encoder in the form of "btoa/atob"
         if (this.HAS_NATIVE_SUPPORT && !webSafe) {
@@ -245,33 +231,33 @@ var base64 = {
      * @param webSafe True if we should use the web-safe alphabet.
      * @return bytes representing the decoded value.
      */
-    decodeStringToByteArray: function (input, webSafe) {
+    decodeStringToByteArray(input, webSafe) {
         this.init_();
-        var charToByteMap = webSafe
+        const charToByteMap = webSafe
             ? this.charToByteMapWebSafe_
             : this.charToByteMap_;
-        var output = [];
-        for (var i = 0; i < input.length;) {
-            var byte1 = charToByteMap[input.charAt(i++)];
-            var haveByte2 = i < input.length;
-            var byte2 = haveByte2 ? charToByteMap[input.charAt(i)] : 0;
+        const output = [];
+        for (let i = 0; i < input.length;) {
+            const byte1 = charToByteMap[input.charAt(i++)];
+            const haveByte2 = i < input.length;
+            const byte2 = haveByte2 ? charToByteMap[input.charAt(i)] : 0;
             ++i;
-            var haveByte3 = i < input.length;
-            var byte3 = haveByte3 ? charToByteMap[input.charAt(i)] : 64;
+            const haveByte3 = i < input.length;
+            const byte3 = haveByte3 ? charToByteMap[input.charAt(i)] : 64;
             ++i;
-            var haveByte4 = i < input.length;
-            var byte4 = haveByte4 ? charToByteMap[input.charAt(i)] : 64;
+            const haveByte4 = i < input.length;
+            const byte4 = haveByte4 ? charToByteMap[input.charAt(i)] : 64;
             ++i;
             if (byte1 == null || byte2 == null || byte3 == null || byte4 == null) {
                 throw Error();
             }
-            var outByte1 = (byte1 << 2) | (byte2 >> 4);
+            const outByte1 = (byte1 << 2) | (byte2 >> 4);
             output.push(outByte1);
             if (byte3 !== 64) {
-                var outByte2 = ((byte2 << 4) & 0xf0) | (byte3 >> 2);
+                const outByte2 = ((byte2 << 4) & 0xf0) | (byte3 >> 2);
                 output.push(outByte2);
                 if (byte4 !== 64) {
-                    var outByte3 = ((byte3 << 6) & 0xc0) | byte4;
+                    const outByte3 = ((byte3 << 6) & 0xc0) | byte4;
                     output.push(outByte3);
                 }
             }
@@ -283,14 +269,14 @@ var base64 = {
      * accessing any of the static map variables.
      * @private
      */
-    init_: function () {
+    init_() {
         if (!this.byteToCharMap_) {
             this.byteToCharMap_ = {};
             this.charToByteMap_ = {};
             this.byteToCharMapWebSafe_ = {};
             this.charToByteMapWebSafe_ = {};
             // We want quick mappings back and forth, so we precompute two maps.
-            for (var i = 0; i < this.ENCODED_VALS.length; i++) {
+            for (let i = 0; i < this.ENCODED_VALS.length; i++) {
                 this.byteToCharMap_[i] = this.ENCODED_VALS.charAt(i);
                 this.charToByteMap_[this.byteToCharMap_[i]] = i;
                 this.byteToCharMapWebSafe_[i] = this.ENCODED_VALS_WEBSAFE.charAt(i);
@@ -305,6 +291,21 @@ var base64 = {
     }
 };
 /**
+ * URL-safe base64 encoding
+ */
+const base64Encode = function (str) {
+    const utf8Bytes = stringToByteArray$1(str);
+    return base64.encodeByteArray(utf8Bytes, true);
+};
+/**
+ * URL-safe base64 encoding (without "." padding in the end).
+ * e.g. Used in JSON Web Token (JWT) parts.
+ */
+const base64urlEncodeWithoutPadding = function (str) {
+    // Use base64url encoding and remove padding in the end (dot characters).
+    return base64Encode(str).replace(/\./g, '');
+};
+/**
  * URL-safe base64 decoding
  *
  * NOTE: DO NOT use the global atob() function - it does NOT support the
@@ -313,7 +314,7 @@ var base64 = {
  * @param str To be decoded
  * @return Decoded result, if possible
  */
-var base64Decode = function (str) {
+const base64Decode = function (str) {
     try {
         return base64.decodeString(str, true);
     }
@@ -339,14 +340,13 @@ var base64Decode = function (str) {
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-var Deferred = /** @class */ (function () {
-    function Deferred() {
-        var _this = this;
-        this.reject = function () { };
-        this.resolve = function () { };
-        this.promise = new Promise(function (resolve, reject) {
-            _this.resolve = resolve;
-            _this.reject = reject;
+class Deferred {
+    constructor() {
+        this.reject = () => { };
+        this.resolve = () => { };
+        this.promise = new Promise((resolve, reject) => {
+            this.resolve = resolve;
+            this.reject = reject;
         });
     }
     /**
@@ -354,19 +354,18 @@ var Deferred = /** @class */ (function () {
      * invoking promises inline, which Promises are forbidden to do. This method accepts an optional node-style callback
      * and returns a node-style callback which will resolve or reject the Deferred's promise.
      */
-    Deferred.prototype.wrapCallback = function (callback) {
-        var _this = this;
-        return function (error, value) {
+    wrapCallback(callback) {
+        return (error, value) => {
             if (error) {
-                _this.reject(error);
+                this.reject(error);
             }
             else {
-                _this.resolve(value);
+                this.resolve(value);
             }
             if (typeof callback === 'function') {
                 // Attaching noop handler just in case developer wasn't expecting
                 // promises
-                _this.promise.catch(function () { });
+                this.promise.catch(() => { });
                 // Some of our callbacks don't expect a value and our own tests
                 // assert that the parameter length is 1
                 if (callback.length === 1) {
@@ -377,9 +376,8 @@ var Deferred = /** @class */ (function () {
                 }
             }
         };
-    };
-    return Deferred;
-}());
+    }
+}
 
 /**
  * @license
@@ -425,7 +423,7 @@ function isMobileCordova() {
         /ios|iphone|ipod|ipad|android|blackberry|iemobile/i.test(getUA()));
 }
 function isBrowserExtension() {
-    var runtime = typeof chrome === 'object'
+    const runtime = typeof chrome === 'object'
         ? chrome.runtime
         : typeof browser === 'object'
             ? browser.runtime
@@ -446,12 +444,53 @@ function isElectron() {
 }
 /** Detects Internet Explorer. */
 function isIE() {
-    var ua = getUA();
+    const ua = getUA();
     return ua.indexOf('MSIE ') >= 0 || ua.indexOf('Trident/') >= 0;
 }
 /** Detects Universal Windows Platform apps. */
 function isUWP() {
     return getUA().indexOf('MSAppHost/') >= 0;
+}
+/**
+ * This method checks if indexedDB is supported by current browser/service worker context
+ * @return true if indexedDB is supported by current browser/service worker context
+ */
+function isIndexedDBAvailable() {
+    return typeof indexedDB === 'object';
+}
+/**
+ * This method validates browser/sw context for indexedDB by opening a dummy indexedDB database and reject
+ * if errors occur during the database open operation.
+ *
+ * @throws exception if current browser/sw context can't run idb.open (ex: Safari iframe, Firefox
+ * private browsing)
+ */
+function validateIndexedDBOpenable() {
+    return new Promise((resolve, reject) => {
+        try {
+            let preExist = true;
+            const DB_CHECK_NAME = 'validate-browser-context-for-indexeddb-analytics-module';
+            const request = self.indexedDB.open(DB_CHECK_NAME);
+            request.onsuccess = () => {
+                request.result.close();
+                // delete database only when it doesn't pre-exist
+                if (!preExist) {
+                    self.indexedDB.deleteDatabase(DB_CHECK_NAME);
+                }
+                resolve(true);
+            };
+            request.onupgradeneeded = () => {
+                preExist = false;
+            };
+            request.onerror = () => {
+                var _a;
+                reject(((_a = request.error) === null || _a === void 0 ? void 0 : _a.message) || '');
+            };
+        }
+        catch (error) {
+            reject(error);
+        }
+    });
 }
 
 /**
@@ -470,59 +509,96 @@ function isUWP() {
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-var ERROR_NAME = 'FirebaseError';
+/**
+ * @fileoverview Standardized Firebase Error.
+ *
+ * Usage:
+ *
+ *   // Typescript string literals for type-safe codes
+ *   type Err =
+ *     'unknown' |
+ *     'object-not-found'
+ *     ;
+ *
+ *   // Closure enum for type-safe error codes
+ *   // at-enum {string}
+ *   var Err = {
+ *     UNKNOWN: 'unknown',
+ *     OBJECT_NOT_FOUND: 'object-not-found',
+ *   }
+ *
+ *   let errors: Map<Err, string> = {
+ *     'generic-error': "Unknown error",
+ *     'file-not-found': "Could not find file: {$file}",
+ *   };
+ *
+ *   // Type-safe function - must pass a valid error code as param.
+ *   let error = new ErrorFactory<Err>('service', 'Service', errors);
+ *
+ *   ...
+ *   throw error.create(Err.GENERIC);
+ *   ...
+ *   throw error.create(Err.FILE_NOT_FOUND, {'file': fileName});
+ *   ...
+ *   // Service: Could not file file: foo.txt (service/file-not-found).
+ *
+ *   catch (e) {
+ *     assert(e.message === "Could not find file: foo.txt.");
+ *     if ((e as FirebaseError)?.code === 'service/file-not-found') {
+ *       console.log("Could not read file: " + e['file']);
+ *     }
+ *   }
+ */
+const ERROR_NAME = 'FirebaseError';
 // Based on code from:
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error#Custom_Error_Types
-var FirebaseError = /** @class */ (function (_super) {
-    __extends(FirebaseError, _super);
-    function FirebaseError(code, message, customData) {
-        var _this = _super.call(this, message) || this;
-        _this.code = code;
-        _this.customData = customData;
-        _this.name = ERROR_NAME;
+class FirebaseError extends Error {
+    constructor(
+    /** The error code for this error. */
+    code, message, 
+    /** Custom data for this error. */
+    customData) {
+        super(message);
+        this.code = code;
+        this.customData = customData;
+        /** The custom name for all FirebaseErrors. */
+        this.name = ERROR_NAME;
         // Fix For ES5
         // https://github.com/Microsoft/TypeScript-wiki/blob/master/Breaking-Changes.md#extending-built-ins-like-error-array-and-map-may-no-longer-work
-        Object.setPrototypeOf(_this, FirebaseError.prototype);
+        Object.setPrototypeOf(this, FirebaseError.prototype);
         // Maintains proper stack trace for where our error was thrown.
         // Only available on V8.
         if (Error.captureStackTrace) {
-            Error.captureStackTrace(_this, ErrorFactory.prototype.create);
+            Error.captureStackTrace(this, ErrorFactory.prototype.create);
         }
-        return _this;
     }
-    return FirebaseError;
-}(Error));
-var ErrorFactory = /** @class */ (function () {
-    function ErrorFactory(service, serviceName, errors) {
+}
+class ErrorFactory {
+    constructor(service, serviceName, errors) {
         this.service = service;
         this.serviceName = serviceName;
         this.errors = errors;
     }
-    ErrorFactory.prototype.create = function (code) {
-        var data = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            data[_i - 1] = arguments[_i];
-        }
-        var customData = data[0] || {};
-        var fullCode = this.service + "/" + code;
-        var template = this.errors[code];
-        var message = template ? replaceTemplate(template, customData) : 'Error';
+    create(code, ...data) {
+        const customData = data[0] || {};
+        const fullCode = `${this.service}/${code}`;
+        const template = this.errors[code];
+        const message = template ? replaceTemplate(template, customData) : 'Error';
         // Service Name: Error message (service/code).
-        var fullMessage = this.serviceName + ": " + message + " (" + fullCode + ").";
-        var error = new FirebaseError(fullCode, fullMessage, customData);
+        const fullMessage = `${this.serviceName}: ${message} (${fullCode}).`;
+        const error = new FirebaseError(fullCode, fullMessage, customData);
         return error;
-    };
-    return ErrorFactory;
-}());
+    }
+}
 function replaceTemplate(template, data) {
-    return template.replace(PATTERN, function (_, key) {
-        var value = data[key];
-        return value != null ? String(value) : "<" + key + "?>";
+    return template.replace(PATTERN, (_, key) => {
+        const value = data[key];
+        return value != null ? String(value) : `<${key}?>`;
     });
 }
-var PATTERN = /\{\$([^}]+)}/g;
+const PATTERN = /\{\$([^}]+)}/g;
 function isEmpty(obj) {
-    for (var key in obj) {
+    for (const key in obj) {
         if (Object.prototype.hasOwnProperty.call(obj, key)) {
             return false;
         }
@@ -536,15 +612,14 @@ function deepEqual(a, b) {
     if (a === b) {
         return true;
     }
-    var aKeys = Object.keys(a);
-    var bKeys = Object.keys(b);
-    for (var _i = 0, aKeys_1 = aKeys; _i < aKeys_1.length; _i++) {
-        var k = aKeys_1[_i];
+    const aKeys = Object.keys(a);
+    const bKeys = Object.keys(b);
+    for (const k of aKeys) {
         if (!bKeys.includes(k)) {
             return false;
         }
-        var aProp = a[k];
-        var bProp = b[k];
+        const aProp = a[k];
+        const bProp = b[k];
         if (isObject(aProp) && isObject(bProp)) {
             if (!deepEqual(aProp, bProp)) {
                 return false;
@@ -554,8 +629,7 @@ function deepEqual(a, b) {
             return false;
         }
     }
-    for (var _a = 0, bKeys_1 = bKeys; _a < bKeys_1.length; _a++) {
-        var k = bKeys_1[_a];
+    for (const k of bKeys) {
         if (!aKeys.includes(k)) {
             return false;
         }
@@ -588,20 +662,16 @@ function isObject(thing) {
  * Note: You must prepend it with ? when adding it to a URL.
  */
 function querystring(querystringParams) {
-    var params = [];
-    var _loop_1 = function (key, value) {
+    const params = [];
+    for (const [key, value] of Object.entries(querystringParams)) {
         if (Array.isArray(value)) {
-            value.forEach(function (arrayVal) {
+            value.forEach(arrayVal => {
                 params.push(encodeURIComponent(key) + '=' + encodeURIComponent(arrayVal));
             });
         }
         else {
             params.push(encodeURIComponent(key) + '=' + encodeURIComponent(value));
         }
-    };
-    for (var _i = 0, _a = Object.entries(querystringParams); _i < _a.length; _i++) {
-        var _b = _a[_i], key = _b[0], value = _b[1];
-        _loop_1(key, value);
     }
     return params.length ? '&' + params.join('&') : '';
 }
@@ -610,11 +680,11 @@ function querystring(querystringParams) {
  * (e.g. {arg: 'val', arg2: 'val2'})
  */
 function querystringDecode(querystring) {
-    var obj = {};
-    var tokens = querystring.replace(/^\?/, '').split('&');
-    tokens.forEach(function (token) {
+    const obj = {};
+    const tokens = querystring.replace(/^\?/, '').split('&');
+    tokens.forEach(token => {
         if (token) {
-            var _a = token.split('='), key = _a[0], value = _a[1];
+            const [key, value] = token.split('=');
             obj[decodeURIComponent(key)] = decodeURIComponent(value);
         }
     });
@@ -624,11 +694,11 @@ function querystringDecode(querystring) {
  * Extract the query string part of a URL, including the leading question mark (if present).
  */
 function extractQuerystring(url) {
-    var queryStart = url.indexOf('?');
+    const queryStart = url.indexOf('?');
     if (!queryStart) {
         return '';
     }
-    var fragmentStart = url.indexOf('#', queryStart);
+    const fragmentStart = url.indexOf('#', queryStart);
     return url.substring(queryStart, fragmentStart > 0 ? fragmentStart : undefined);
 }
 
@@ -641,21 +711,20 @@ function extractQuerystring(url) {
  * @param onNoObservers Callback when count of Observers goes to zero.
  */
 function createSubscribe(executor, onNoObservers) {
-    var proxy = new ObserverProxy(executor, onNoObservers);
+    const proxy = new ObserverProxy(executor, onNoObservers);
     return proxy.subscribe.bind(proxy);
 }
 /**
  * Implement fan-out for any number of Observers attached via a subscribe
  * function.
  */
-var ObserverProxy = /** @class */ (function () {
+class ObserverProxy {
     /**
      * @param executor Function which can make calls to a single Observer
      *     as a proxy.
      * @param onNoObservers Callback when count of Observers goes to zero.
      */
-    function ObserverProxy(executor, onNoObservers) {
-        var _this = this;
+    constructor(executor, onNoObservers) {
         this.observers = [];
         this.unsubscribes = [];
         this.observerCount = 0;
@@ -667,39 +736,38 @@ var ObserverProxy = /** @class */ (function () {
         // synchronously after the creation of the subscribe function
         // can still receive the very first value generated in the executor.
         this.task
-            .then(function () {
-            executor(_this);
+            .then(() => {
+            executor(this);
         })
-            .catch(function (e) {
-            _this.error(e);
+            .catch(e => {
+            this.error(e);
         });
     }
-    ObserverProxy.prototype.next = function (value) {
-        this.forEachObserver(function (observer) {
+    next(value) {
+        this.forEachObserver((observer) => {
             observer.next(value);
         });
-    };
-    ObserverProxy.prototype.error = function (error) {
-        this.forEachObserver(function (observer) {
+    }
+    error(error) {
+        this.forEachObserver((observer) => {
             observer.error(error);
         });
         this.close(error);
-    };
-    ObserverProxy.prototype.complete = function () {
-        this.forEachObserver(function (observer) {
+    }
+    complete() {
+        this.forEachObserver((observer) => {
             observer.complete();
         });
         this.close();
-    };
+    }
     /**
      * Subscribe function that can be used to add an Observer to the fan-out list.
      *
      * - We require that no event is sent to a subscriber sychronously to their
      *   call to subscribe().
      */
-    ObserverProxy.prototype.subscribe = function (nextOrObserver, error, complete) {
-        var _this = this;
-        var observer;
+    subscribe(nextOrObserver, error, complete) {
+        let observer;
         if (nextOrObserver === undefined &&
             error === undefined &&
             complete === undefined) {
@@ -716,8 +784,8 @@ var ObserverProxy = /** @class */ (function () {
         else {
             observer = {
                 next: nextOrObserver,
-                error: error,
-                complete: complete
+                error,
+                complete
             };
         }
         if (observer.next === undefined) {
@@ -729,16 +797,16 @@ var ObserverProxy = /** @class */ (function () {
         if (observer.complete === undefined) {
             observer.complete = noop;
         }
-        var unsub = this.unsubscribeOne.bind(this, this.observers.length);
+        const unsub = this.unsubscribeOne.bind(this, this.observers.length);
         // Attempt to subscribe to a terminated Observable - we
         // just respond to the Observer with the final error or complete
         // event.
         if (this.finalized) {
             // eslint-disable-next-line @typescript-eslint/no-floating-promises
-            this.task.then(function () {
+            this.task.then(() => {
                 try {
-                    if (_this.finalError) {
-                        observer.error(_this.finalError);
+                    if (this.finalError) {
+                        observer.error(this.finalError);
                     }
                     else {
                         observer.complete();
@@ -752,10 +820,10 @@ var ObserverProxy = /** @class */ (function () {
         }
         this.observers.push(observer);
         return unsub;
-    };
+    }
     // Unsubscribe is synchronous - we guarantee that no events are sent to
     // any unsubscribed Observer.
-    ObserverProxy.prototype.unsubscribeOne = function (i) {
+    unsubscribeOne(i) {
         if (this.observers === undefined || this.observers[i] === undefined) {
             return;
         }
@@ -764,29 +832,28 @@ var ObserverProxy = /** @class */ (function () {
         if (this.observerCount === 0 && this.onNoObservers !== undefined) {
             this.onNoObservers(this);
         }
-    };
-    ObserverProxy.prototype.forEachObserver = function (fn) {
+    }
+    forEachObserver(fn) {
         if (this.finalized) {
             // Already closed by previous event....just eat the additional values.
             return;
         }
         // Since sendOne calls asynchronously - there is no chance that
         // this.observers will become undefined.
-        for (var i = 0; i < this.observers.length; i++) {
+        for (let i = 0; i < this.observers.length; i++) {
             this.sendOne(i, fn);
         }
-    };
+    }
     // Call the Observer via one of it's callback function. We are careful to
     // confirm that the observe has not been unsubscribed since this asynchronous
     // function had been queued.
-    ObserverProxy.prototype.sendOne = function (i, fn) {
-        var _this = this;
+    sendOne(i, fn) {
         // Execute the callback asynchronously
         // eslint-disable-next-line @typescript-eslint/no-floating-promises
-        this.task.then(function () {
-            if (_this.observers !== undefined && _this.observers[i] !== undefined) {
+        this.task.then(() => {
+            if (this.observers !== undefined && this.observers[i] !== undefined) {
                 try {
-                    fn(_this.observers[i]);
+                    fn(this.observers[i]);
                 }
                 catch (e) {
                     // Ignore exceptions raised in Observers or missing methods of an
@@ -798,9 +865,8 @@ var ObserverProxy = /** @class */ (function () {
                 }
             }
         });
-    };
-    ObserverProxy.prototype.close = function (err) {
-        var _this = this;
+    }
+    close(err) {
         if (this.finalized) {
             return;
         }
@@ -810,13 +876,12 @@ var ObserverProxy = /** @class */ (function () {
         }
         // Proxy is no longer needed - garbage collect references
         // eslint-disable-next-line @typescript-eslint/no-floating-promises
-        this.task.then(function () {
-            _this.observers = undefined;
-            _this.onNoObservers = undefined;
+        this.task.then(() => {
+            this.observers = undefined;
+            this.onNoObservers = undefined;
         });
-    };
-    return ObserverProxy;
-}());
+    }
+}
 /**
  * Return true if the object passed in implements any of the named methods.
  */
@@ -824,8 +889,7 @@ function implementsAnyMethods(obj, methods) {
     if (typeof obj !== 'object' || obj === null) {
         return false;
     }
-    for (var _i = 0, methods_1 = methods; _i < methods_1.length; _i++) {
-        var method = methods_1[_i];
+    for (const method of methods) {
         if (method in obj && typeof obj[method] === 'function') {
             return true;
         }
@@ -861,4 +925,4 @@ function getModularInstance(service) {
     }
 }
 
-export { Deferred as D, ErrorFactory as E, FirebaseError as F, isReactNative as a, isElectron as b, isIE as c, isUWP as d, isBrowserExtension as e, deepEqual as f, getModularInstance as g, createSubscribe as h, isMobileCordova as i, extractQuerystring as j, querystring as k, base64Decode as l, getUA as m, isEmpty as n, querystringDecode as q };
+export { Deferred as D, ErrorFactory as E, FirebaseError as F, isReactNative as a, isElectron as b, isIE as c, isUWP as d, isBrowserExtension as e, deepEqual as f, getModularInstance as g, base64urlEncodeWithoutPadding as h, isMobileCordova as i, isIndexedDBAvailable as j, createSubscribe as k, extractQuerystring as l, querystring as m, base64Decode as n, getUA as o, isEmpty as p, querystringDecode as q, validateIndexedDBOpenable as v };

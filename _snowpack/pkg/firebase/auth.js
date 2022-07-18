@@ -1,7 +1,7 @@
-import { g as getModularInstance, f as deepEqual, i as isMobileCordova, a as isReactNative, e as isBrowserExtension, F as FirebaseError, E as ErrorFactory, h as createSubscribe, q as querystringDecode, j as extractQuerystring, k as querystring, l as base64Decode, m as getUA, c as isIE, n as isEmpty } from '../common/index.esm-b269f439.js';
-import { g as getApp, _ as _getProvider, a as _registerComponent, C as Component, S as SDK_VERSION, r as registerVersion, L as LogLevel, b as Logger } from '../common/index.esm2017-4f286100.js';
+import { g as getModularInstance, f as deepEqual, i as isMobileCordova, a as isReactNative, e as isBrowserExtension, F as FirebaseError, E as ErrorFactory, k as createSubscribe, q as querystringDecode, l as extractQuerystring, m as querystring, n as base64Decode, o as getUA, c as isIE, p as isEmpty } from '../common/index.esm2017-6eb574c2.js';
+import { g as getApp, _ as _getProvider, a as _registerComponent, C as Component, S as SDK_VERSION, r as registerVersion, L as LogLevel, b as Logger } from '../common/index.esm2017-896e9e7c.js';
 
-/*! *****************************************************************************
+/******************************************************************************
 Copyright (c) Microsoft Corporation.
 
 Permission to use, copy, modify, and/or distribute this software for any
@@ -547,7 +547,7 @@ function _addTidIfNecessary(auth, request) {
     return request;
 }
 async function _performApiRequest(auth, method, path, request, customErrorMap = {}) {
-    return _performFetchWithErrorHandling(auth, customErrorMap, () => {
+    return _performFetchWithErrorHandling(auth, customErrorMap, async () => {
         let body = {};
         let params = {};
         if (request) {
@@ -561,11 +561,10 @@ async function _performApiRequest(auth, method, path, request, customErrorMap = 
             }
         }
         const query = querystring(Object.assign({ key: auth.config.apiKey }, params)).slice(1);
-        const headers = new (FetchProvider.headers())();
-        headers.set("Content-Type" /* CONTENT_TYPE */, 'application/json');
-        headers.set("X-Client-Version" /* X_CLIENT_VERSION */, auth._getSdkClientVersion());
+        const headers = await auth._getAdditionalHeaders();
+        headers["Content-Type" /* CONTENT_TYPE */] = 'application/json';
         if (auth.languageCode) {
-            headers.set("X-Firebase-Locale" /* X_FIREBASE_LOCALE */, auth.languageCode);
+            headers["X-Firebase-Locale" /* X_FIREBASE_LOCALE */] = auth.languageCode;
         }
         return FetchProvider.fetch()(_getFinalTarget(auth, auth.config.apiHost, path, query), Object.assign({ method,
             headers, referrerPolicy: 'no-referrer' }, body));
@@ -599,6 +598,9 @@ async function _performFetchWithErrorHandling(auth, customErrorMap, fetchFn) {
             else if (serverErrorCode === "EMAIL_EXISTS" /* EMAIL_EXISTS */) {
                 throw _makeTaggedError(auth, "email-already-in-use" /* EMAIL_EXISTS */, json);
             }
+            else if (serverErrorCode === "USER_DISABLED" /* USER_DISABLED */) {
+                throw _makeTaggedError(auth, "user-disabled" /* USER_DISABLED */, json);
+            }
             const authError = errorMap[serverErrorCode] ||
                 serverErrorCode
                     .toLowerCase()
@@ -622,7 +624,7 @@ async function _performSignInRequest(auth, method, path, request, customErrorMap
     const serverResponse = (await _performApiRequest(auth, method, path, request, customErrorMap));
     if ('mfaPendingCredential' in serverResponse) {
         _fail(auth, "multi-factor-auth-required" /* MFA_REQUIRED */, {
-            serverResponse
+            _serverResponse: serverResponse
         });
     }
     return serverResponse;
@@ -643,7 +645,7 @@ class NetworkTimeout {
         this.timer = null;
         this.promise = new Promise((_, reject) => {
             this.timer = setTimeout(() => {
-                return reject(_createError(this.auth, "timeout" /* TIMEOUT */));
+                return reject(_createError(this.auth, "network-request-failed" /* NETWORK_REQUEST_FAILED */));
             }, DEFAULT_API_TIMEOUT_MS.get());
         });
     }
@@ -757,6 +759,7 @@ function secondsStringToMilliseconds(seconds) {
     return Number(seconds) * 1000;
 }
 function _parseToken(token) {
+    var _a;
     const [algorithm, payload, signature] = token.split('.');
     if (algorithm === undefined ||
         payload === undefined ||
@@ -773,7 +776,7 @@ function _parseToken(token) {
         return JSON.parse(decoded);
     }
     catch (e) {
-        _logError('Caught error parsing JWT payload as JSON', e);
+        _logError('Caught error parsing JWT payload as JSON', (_a = e) === null || _a === void 0 ? void 0 : _a.toString());
         return null;
     }
 }
@@ -894,12 +897,13 @@ class ProactiveRefresh {
         }, interval);
     }
     async iteration() {
+        var _a;
         try {
             await this.user.getIdToken(true);
         }
         catch (e) {
             // Only retry on network errors
-            if (e.code === `auth/${"network-request-failed" /* NETWORK_REQUEST_FAILED */}`) {
+            if (((_a = e) === null || _a === void 0 ? void 0 : _a.code) === `auth/${"network-request-failed" /* NETWORK_REQUEST_FAILED */}`) {
                 this.schedule(/* wasError */ true);
             }
             return;
@@ -1048,19 +1052,18 @@ function extractProviderData(providers) {
  * limitations under the License.
  */
 async function requestStsToken(auth, refreshToken) {
-    const response = await _performFetchWithErrorHandling(auth, {}, () => {
+    const response = await _performFetchWithErrorHandling(auth, {}, async () => {
         const body = querystring({
             'grant_type': 'refresh_token',
             'refresh_token': refreshToken
         }).slice(1);
         const { tokenApiHost, apiKey } = auth.config;
         const url = _getFinalTarget(auth, tokenApiHost, "/v1/token" /* TOKEN */, `key=${apiKey}`);
+        const headers = await auth._getAdditionalHeaders();
+        headers["Content-Type" /* CONTENT_TYPE */] = 'application/x-www-form-urlencoded';
         return FetchProvider.fetch()(url, {
             method: "POST" /* POST */,
-            headers: {
-                'X-Client-Version': auth._getSdkClientVersion(),
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
+            headers,
             body
         });
     });
@@ -1203,10 +1206,6 @@ class UserImpl {
         var { uid, auth, stsTokenManager } = _a, opt = __rest(_a, ["uid", "auth", "stsTokenManager"]);
         // For the user object, provider is always Firebase.
         this.providerId = "firebase" /* FIREBASE */;
-        this.emailVerified = false;
-        this.isAnonymous = false;
-        this.tenantId = null;
-        this.providerData = [];
         this.proactiveRefresh = new ProactiveRefresh(this);
         this.reloadUserInfo = null;
         this.reloadListener = null;
@@ -1216,9 +1215,12 @@ class UserImpl {
         this.accessToken = stsTokenManager.accessToken;
         this.displayName = opt.displayName || null;
         this.email = opt.email || null;
+        this.emailVerified = opt.emailVerified || false;
         this.phoneNumber = opt.phoneNumber || null;
         this.photoURL = opt.photoURL || null;
         this.isAnonymous = opt.isAnonymous || false;
+        this.tenantId = opt.tenantId || null;
+        this.providerData = opt.providerData ? [...opt.providerData] : [];
         this.metadata = new UserMetadata(opt.createdAt || undefined, opt.lastLoginAt || undefined);
     }
     async getIdToken(forceRefresh) {
@@ -1647,7 +1649,8 @@ function _isWebOS(ua = getUA()) {
     return /webos/i.test(ua);
 }
 function _isIOS(ua = getUA()) {
-    return /iphone|ipad|ipod/i.test(ua);
+    return /iphone|ipad|ipod/i.test(ua) ||
+        (/macintosh/i.test(ua) && /mobile/i.test(ua));
 }
 function _isIOSStandalone(ua = getUA()) {
     var _a;
@@ -1719,6 +1722,84 @@ function _getClientVersion(clientPlatform, frameworks = []) {
 
 /**
  * @license
+ * Copyright 2022 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+class AuthMiddlewareQueue {
+    constructor(auth) {
+        this.auth = auth;
+        this.queue = [];
+    }
+    pushCallback(callback, onAbort) {
+        // The callback could be sync or async. Wrap it into a
+        // function that is always async.
+        const wrappedCallback = (user) => new Promise((resolve, reject) => {
+            try {
+                const result = callback(user);
+                // Either resolve with existing promise or wrap a non-promise
+                // return value into a promise.
+                resolve(result);
+            }
+            catch (e) {
+                // Sync callback throws.
+                reject(e);
+            }
+        });
+        // Attach the onAbort if present
+        wrappedCallback.onAbort = onAbort;
+        this.queue.push(wrappedCallback);
+        const index = this.queue.length - 1;
+        return () => {
+            // Unsubscribe. Replace with no-op. Do not remove from array, or it will disturb
+            // indexing of other elements.
+            this.queue[index] = () => Promise.resolve();
+        };
+    }
+    async runMiddleware(nextUser) {
+        var _a;
+        if (this.auth.currentUser === nextUser) {
+            return;
+        }
+        // While running the middleware, build a temporary stack of onAbort
+        // callbacks to call if one middleware callback rejects.
+        const onAbortStack = [];
+        try {
+            for (const beforeStateCallback of this.queue) {
+                await beforeStateCallback(nextUser);
+                // Only push the onAbort if the callback succeeds
+                if (beforeStateCallback.onAbort) {
+                    onAbortStack.push(beforeStateCallback.onAbort);
+                }
+            }
+        }
+        catch (e) {
+            // Run all onAbort, with separate try/catch to ignore any errors and
+            // continue
+            onAbortStack.reverse();
+            for (const onAbort of onAbortStack) {
+                try {
+                    onAbort();
+                }
+                catch (_) { /* swallow error */ }
+            }
+            throw this.auth._errorFactory.create("login-blocked" /* LOGIN_BLOCKED */, { originalMessage: (_a = e) === null || _a === void 0 ? void 0 : _a.message });
+        }
+    }
+}
+
+/**
+ * @license
  * Copyright 2020 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -1734,14 +1815,16 @@ function _getClientVersion(clientPlatform, frameworks = []) {
  * limitations under the License.
  */
 class AuthImpl {
-    constructor(app, config) {
+    constructor(app, heartbeatServiceProvider, config) {
         this.app = app;
+        this.heartbeatServiceProvider = heartbeatServiceProvider;
         this.config = config;
         this.currentUser = null;
         this.emulatorConfig = null;
         this.operations = Promise.resolve();
         this.authStateSubscription = new Subscription(this);
         this.idTokenSubscription = new Subscription(this);
+        this.beforeStateQueue = new AuthMiddlewareQueue(this);
         this.redirectUser = null;
         this.isProactiveRefreshEnabled = false;
         // Any network calls will set this to true and prevent subsequent emulator
@@ -1770,7 +1853,7 @@ class AuthImpl {
         // Have to check for app deletion throughout initialization (after each
         // promise resolution)
         this._initializationPromise = this.queue(async () => {
-            var _a;
+            var _a, _b;
             if (this._deleted) {
                 return;
             }
@@ -1781,9 +1864,14 @@ class AuthImpl {
             // Initialize the resolver early if necessary (only applicable to web:
             // this will cause the iframe to load immediately in certain cases)
             if ((_a = this._popupRedirectResolver) === null || _a === void 0 ? void 0 : _a._shouldInitProactively) {
-                await this._popupRedirectResolver._initialize(this);
+                // If this fails, don't halt auth loading
+                try {
+                    await this._popupRedirectResolver._initialize(this);
+                }
+                catch (e) { /* Ignore the error */ }
             }
             await this.initializeCurrentUser(popupRedirectResolver);
+            this.lastNotifiedUid = ((_b = this.currentUser) === null || _b === void 0 ? void 0 : _b.uid) || null;
             if (this._deleted) {
                 return;
             }
@@ -1813,16 +1901,19 @@ class AuthImpl {
             return;
         }
         // Update current Auth state. Either a new login or logout.
-        await this._updateCurrentUser(user);
+        // Skip blocking callbacks, they should not apply to a change in another tab.
+        await this._updateCurrentUser(user, /* skipBeforeStateCallbacks */ true);
     }
     async initializeCurrentUser(popupRedirectResolver) {
         var _a;
         // First check to see if we have a pending redirect event.
-        let storedUser = (await this.assertedPersistence.getCurrentUser());
+        const previouslyStoredUser = (await this.assertedPersistence.getCurrentUser());
+        let futureCurrentUser = previouslyStoredUser;
+        let needsTocheckMiddleware = false;
         if (popupRedirectResolver && this.config.authDomain) {
             await this.getOrInitRedirectPersistenceManager();
             const redirectUserEventId = (_a = this.redirectUser) === null || _a === void 0 ? void 0 : _a._redirectEventId;
-            const storedUserEventId = storedUser === null || storedUser === void 0 ? void 0 : storedUser._redirectEventId;
+            const storedUserEventId = futureCurrentUser === null || futureCurrentUser === void 0 ? void 0 : futureCurrentUser._redirectEventId;
             const result = await this.tryRedirectSignIn(popupRedirectResolver);
             // If the stored user (i.e. the old "currentUser") has a redirectId that
             // matches the redirect user, then we want to initially sign in with the
@@ -1830,18 +1921,34 @@ class AuthImpl {
             // TODO(samgho): More thoroughly test all of this
             if ((!redirectUserEventId || redirectUserEventId === storedUserEventId) &&
                 (result === null || result === void 0 ? void 0 : result.user)) {
-                storedUser = result.user;
+                futureCurrentUser = result.user;
+                needsTocheckMiddleware = true;
             }
         }
         // If no user in persistence, there is no current user. Set to null.
-        if (!storedUser) {
+        if (!futureCurrentUser) {
             return this.directlySetCurrentUser(null);
         }
-        if (!storedUser._redirectEventId) {
-            // This isn't a redirect user, we can reload and bail
-            // This will also catch the redirected user, if available, as that method
-            // strips the _redirectEventId
-            return this.reloadAndSetCurrentUserOrClear(storedUser);
+        if (!futureCurrentUser._redirectEventId) {
+            // This isn't a redirect link operation, we can reload and bail.
+            // First though, ensure that we check the middleware is happy.
+            if (needsTocheckMiddleware) {
+                try {
+                    await this.beforeStateQueue.runMiddleware(futureCurrentUser);
+                }
+                catch (e) {
+                    futureCurrentUser = previouslyStoredUser;
+                    // We know this is available since the bit is only set when the
+                    // resolver is available
+                    this._popupRedirectResolver._overrideRedirectResult(this, () => Promise.reject(e));
+                }
+            }
+            if (futureCurrentUser) {
+                return this.reloadAndSetCurrentUserOrClear(futureCurrentUser);
+            }
+            else {
+                return this.directlySetCurrentUser(null);
+            }
         }
         _assert(this._popupRedirectResolver, this, "argument-error" /* ARGUMENT_ERROR */);
         await this.getOrInitRedirectPersistenceManager();
@@ -1849,10 +1956,10 @@ class AuthImpl {
         // DO NOT reload the current user, otherwise they'll be cleared from storage.
         // This is important for the reauthenticateWithRedirect() flow.
         if (this.redirectUser &&
-            this.redirectUser._redirectEventId === storedUser._redirectEventId) {
-            return this.directlySetCurrentUser(storedUser);
+            this.redirectUser._redirectEventId === futureCurrentUser._redirectEventId) {
+            return this.directlySetCurrentUser(futureCurrentUser);
         }
-        return this.reloadAndSetCurrentUserOrClear(storedUser);
+        return this.reloadAndSetCurrentUserOrClear(futureCurrentUser);
     }
     async tryRedirectSignIn(redirectResolver) {
         // The redirect user needs to be checked (and signed in if available)
@@ -1884,11 +1991,12 @@ class AuthImpl {
         return result;
     }
     async reloadAndSetCurrentUserOrClear(user) {
+        var _a;
         try {
             await _reloadWithoutSaving(user);
         }
         catch (e) {
-            if (e.code !== `auth/${"network-request-failed" /* NETWORK_REQUEST_FAILED */}`) {
+            if (((_a = e) === null || _a === void 0 ? void 0 : _a.code) !== `auth/${"network-request-failed" /* NETWORK_REQUEST_FAILED */}`) {
                 // Something's wrong with the user's token. Log them out and remove
                 // them from storage
                 return this.directlySetCurrentUser(null);
@@ -1913,12 +2021,15 @@ class AuthImpl {
         }
         return this._updateCurrentUser(user && user._clone(this));
     }
-    async _updateCurrentUser(user) {
+    async _updateCurrentUser(user, skipBeforeStateCallbacks = false) {
         if (this._deleted) {
             return;
         }
         if (user) {
             _assert(this.tenantId === user.tenantId, this, "tenant-id-mismatch" /* TENANT_ID_MISMATCH */);
+        }
+        if (!skipBeforeStateCallbacks) {
+            await this.beforeStateQueue.runMiddleware(user);
         }
         return this.queue(async () => {
             await this.directlySetCurrentUser(user);
@@ -1926,11 +2037,15 @@ class AuthImpl {
         });
     }
     async signOut() {
+        // Run first, to block _setRedirectUser() if any callbacks fail.
+        await this.beforeStateQueue.runMiddleware(null);
         // Clear the redirect user when signOut is called
         if (this.redirectPersistenceManager || this._popupRedirectResolver) {
             await this._setRedirectUser(null);
         }
-        return this._updateCurrentUser(null);
+        // Prevent callbacks from being called again in _updateCurrentUser, as
+        // they were already called in the first line.
+        return this._updateCurrentUser(null, /* skipBeforeStateCallbacks */ true);
     }
     setPersistence(persistence) {
         return this.queue(async () => {
@@ -1945,6 +2060,9 @@ class AuthImpl {
     }
     onAuthStateChanged(nextOrObserver, error, completed) {
         return this.registerStateListener(this.authStateSubscription, nextOrObserver, error, completed);
+    }
+    beforeAuthStateChanged(callback, onAbort) {
+        return this.beforeStateQueue.pushCallback(callback, onAbort);
     }
     onIdTokenChanged(nextOrObserver, error, completed) {
         return this.registerStateListener(this.idTokenSubscription, nextOrObserver, error, completed);
@@ -2096,8 +2214,23 @@ class AuthImpl {
     _getFrameworks() {
         return this.frameworks;
     }
-    _getSdkClientVersion() {
-        return this.clientVersion;
+    async _getAdditionalHeaders() {
+        var _a;
+        // Additional headers on every request
+        const headers = {
+            ["X-Client-Version" /* X_CLIENT_VERSION */]: this.clientVersion,
+        };
+        if (this.app.options.appId) {
+            headers["X-Firebase-gmpid" /* X_FIREBASE_GMPID */] = this.app.options.appId;
+        }
+        // If the heartbeat service exists, add the heartbeat string
+        const heartbeatsHeader = await ((_a = this.heartbeatServiceProvider.getImmediate({
+            optional: true,
+        })) === null || _a === void 0 ? void 0 : _a.getHeartbeatsHeader());
+        if (heartbeatsHeader) {
+            headers["X-Firebase-Client" /* X_FIREBASE_CLIENT */] = heartbeatsHeader;
+        }
+        return headers;
     }
 }
 /**
@@ -2783,14 +2916,14 @@ class MultiFactorError extends FirebaseError {
         super(error.code, error.message);
         this.operationType = operationType;
         this.user = user;
-        this.name = 'FirebaseError';
         // https://github.com/Microsoft/TypeScript-wiki/blob/master/Breaking-Changes.md#extending-built-ins-like-error-array-and-map-may-no-longer-work
         Object.setPrototypeOf(this, MultiFactorError.prototype);
-        this.appName = auth.name;
-        this.code = error.code;
-        this.tenantId = (_a = auth.tenantId) !== null && _a !== void 0 ? _a : undefined;
-        this.serverResponse = error.customData
-            .serverResponse;
+        this.customData = {
+            appName: auth.name,
+            tenantId: (_a = auth.tenantId) !== null && _a !== void 0 ? _a : undefined,
+            _serverResponse: error.customData._serverResponse,
+            operationType,
+        };
     }
     static _fromErrorAndOperation(auth, error, operationType, user) {
         return new MultiFactorError(auth, error, operationType, user);
@@ -2829,6 +2962,7 @@ async function _link$1(user, credential, bypassAuthState = false) {
  * limitations under the License.
  */
 async function _reauthenticate(user, credential, bypassAuthState = false) {
+    var _a;
     const { auth } = user;
     const operationType = "reauthenticate" /* REAUTHENTICATE */;
     try {
@@ -2842,7 +2976,7 @@ async function _reauthenticate(user, credential, bypassAuthState = false) {
     }
     catch (e) {
         // Convert user deleted error into user mismatch
-        if ((e === null || e === void 0 ? void 0 : e.code) === `auth/${"user-not-found" /* USER_DELETED */}`) {
+        if (((_a = e) === null || _a === void 0 ? void 0 : _a.code) === `auth/${"user-not-found" /* USER_DELETED */}`) {
             _fail(auth, "user-mismatch" /* USER_MISMATCH */);
         }
         throw e;
@@ -2943,8 +3077,10 @@ function signInWithEmailAndPassword(auth, email, password) {
  *
  * @param auth - The {@link Auth} instance.
  * @param nextOrObserver - callback triggered on change.
- * @param error - callback triggered on error.
- * @param completed - callback triggered when observer is removed.
+ * @param error - Deprecated. This callback is never triggered. Errors
+ * on signing in/out can be caught in promises returned from
+ * sign-in/sign-out functions.
+ * @param completed - Deprecated. This callback is never triggered.
  *
  * @public
  */
@@ -2974,8 +3110,8 @@ const STORAGE_AVAILABLE_KEY = '__sak';
 // Both have the same implementation but use a different underlying storage
 // object.
 class BrowserPersistenceClass {
-    constructor(storage, type) {
-        this.storage = storage;
+    constructor(storageRetriever, type) {
+        this.storageRetriever = storageRetriever;
         this.type = type;
     }
     _isAvailable() {
@@ -3002,6 +3138,9 @@ class BrowserPersistenceClass {
     _remove(key) {
         this.storage.removeItem(key);
         return Promise.resolve();
+    }
+    get storage() {
+        return this.storageRetriever();
     }
 }
 
@@ -3031,7 +3170,8 @@ const _POLLING_INTERVAL_MS$1 = 1000;
 const IE10_LOCAL_STORAGE_SYNC_DELAY = 10;
 class BrowserLocalPersistence extends BrowserPersistenceClass {
     constructor() {
-        super(window.localStorage, "LOCAL" /* LOCAL */);
+        super(() => window.localStorage, "LOCAL" /* LOCAL */);
+        this.boundEventHandler = (event, poll) => this.onStorageEvent(event, poll);
         this.listeners = {};
         this.localCache = {};
         // setTimeout return value is platform specific
@@ -3042,7 +3182,6 @@ class BrowserLocalPersistence extends BrowserPersistenceClass {
         // Whether to use polling instead of depending on window events
         this.fallbackToPolling = _isMobileBrowser();
         this._shouldAllowMigration = true;
-        this.boundEventHandler = this.onStorageEvent.bind(this);
     }
     forAllChangedKeys(cb) {
         // Check all keys with listeners on them.
@@ -3232,7 +3371,7 @@ const browserLocalPersistence = BrowserLocalPersistence;
  */
 class BrowserSessionPersistence extends BrowserPersistenceClass {
     constructor() {
-        super(window.sessionStorage, "SESSION" /* SESSION */);
+        super(() => window.sessionStorage, "SESSION" /* SESSION */);
     }
     _addListener(_key, _listener) {
         // Listeners are not supported for session storage since it cannot be shared across windows
@@ -4247,6 +4386,11 @@ class RedirectAction extends AbstractPopupRedirectOperation {
             }
             redirectOutcomeMap.set(this.auth._key(), readyOutcome);
         }
+        // If we're not bypassing auth state, the ready outcome should be set to
+        // null.
+        if (!this.bypassAuthState) {
+            redirectOutcomeMap.set(this.auth._key(), () => Promise.resolve(null));
+        }
         return readyOutcome();
     }
     async onAuthEvent(event) {
@@ -4274,9 +4418,16 @@ class RedirectAction extends AbstractPopupRedirectOperation {
 }
 async function _getAndClearPendingRedirectStatus(resolver, auth) {
     const key = pendingRedirectKey(auth);
-    const hasPendingRedirect = (await resolverPersistence(resolver)._get(key)) === 'true';
-    await resolverPersistence(resolver)._remove(key);
+    const persistence = resolverPersistence(resolver);
+    if (!(await persistence._isAvailable())) {
+        return false;
+    }
+    const hasPendingRedirect = (await persistence._get(key)) === 'true';
+    await persistence._remove(key);
     return hasPendingRedirect;
+}
+function _overrideRedirectResult(auth, result) {
+    redirectOutcomeMap.set(auth._key(), result);
 }
 function resolverPersistence(resolver) {
     return _getInstance(resolver._redirectPersistence);
@@ -4595,7 +4746,7 @@ function loadGapi(auth) {
                 }
             };
             // Load GApi loader.
-            return _loadJS(`https://apis.google.com/js/api.js?onload=${cbName}`);
+            return _loadJS(`https://apis.google.com/js/api.js?onload=${cbName}`).catch(e => reject(e));
         }
     }).catch(error => {
         // Reset cached promise to allow for retrial.
@@ -4634,7 +4785,9 @@ const IFRAME_ATTRIBUTES = {
         top: '-100px',
         width: '1px',
         height: '1px'
-    }
+    },
+    'aria-hidden': 'true',
+    tabindex: '-1'
 };
 // Map from apiHost to endpoint ID for passing into iframe. In current SDK, apiHost can be set to
 // anything (not from a list of endpoints with IDs as in legacy), so this is the closest we can get.
@@ -4886,6 +5039,7 @@ class BrowserPopupRedirectResolver {
         this.originValidationPromises = {};
         this._redirectPersistence = browserSessionPersistence;
         this._completeRedirectFn = _getRedirectResult;
+        this._overrideRedirectResult = _overrideRedirectResult;
     }
     // Wrapping in async even though we don't await anywhere in order
     // to make sure errors are raised as promise rejections
@@ -4914,6 +5068,11 @@ class BrowserPopupRedirectResolver {
         }
         const promise = this.initAndGetManager(auth);
         this.eventManagers[key] = { promise };
+        // If the promise is rejected, the key should be removed so that the
+        // operation can be retried later.
+        promise.catch(() => {
+            delete this.eventManagers[key];
+        });
         return promise;
     }
     async initAndGetManager(auth) {
@@ -4961,7 +5120,7 @@ class BrowserPopupRedirectResolver {
 const browserPopupRedirectResolver = BrowserPopupRedirectResolver;
 
 var name = "@firebase/auth";
-var version = "0.17.2";
+var version = "0.20.5";
 
 /**
  * @license
@@ -5067,8 +5226,9 @@ function getVersionForPlatform(clientPlatform) {
 function registerAuth(clientPlatform) {
     _registerComponent(new Component("auth" /* AUTH */, (container, { options: deps }) => {
         const app = container.getProvider('app').getImmediate();
+        const heartbeatServiceProvider = container.getProvider('heartbeat');
         const { apiKey, authDomain } = app.options;
-        return (app => {
+        return ((app, heartbeatServiceProvider) => {
             _assert(apiKey && !apiKey.includes(':'), "invalid-api-key" /* INVALID_API_KEY */, { appName: app.name });
             // Auth domain is optional if IdP sign in isn't being used
             _assert(!(authDomain === null || authDomain === void 0 ? void 0 : authDomain.includes(':')), "argument-error" /* ARGUMENT_ERROR */, {
@@ -5083,10 +5243,10 @@ function registerAuth(clientPlatform) {
                 apiScheme: "https" /* API_SCHEME */,
                 sdkClientVersion: _getClientVersion(clientPlatform)
             };
-            const authInstance = new AuthImpl(app, config);
+            const authInstance = new AuthImpl(app, heartbeatServiceProvider, config);
             _initializeAuthInstance(authInstance, deps);
             return authInstance;
-        })(app);
+        })(app, heartbeatServiceProvider);
     }, "PUBLIC" /* PUBLIC */)
         /**
          * Auth can only be initialized by explicitly calling getAuth() or initializeAuth()
@@ -5106,6 +5266,8 @@ function registerAuth(clientPlatform) {
         return (auth => new AuthInterop(auth))(auth);
     }, "PRIVATE" /* PRIVATE */).setInstantiationMode("EXPLICIT" /* EXPLICIT */));
     registerVersion(name, version, getVersionForPlatform(clientPlatform));
+    // BUILD_TARGET will be replaced by values like esm5, esm2017, cjs5, etc during the compilation
+    registerVersion(name, version, 'esm2017');
 }
 
 /**

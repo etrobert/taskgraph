@@ -1,6 +1,6 @@
 import { c as createCommonjsModule } from './common/_commonjsHelpers-8c19dec8.js';
 import { r as react } from './common/index-04edb6a1.js';
-import { p as propTypes } from './common/index-ce016b4a.js';
+import { p as propTypes } from './common/index-8ab56611.js';
 import { r as reactDom } from './common/index-3eae4d6e.js';
 
 function toVal(mix) {
