@@ -132,6 +132,7 @@ function TaskGraphFlow() {
         defaultEdgeOptions={{
           markerEnd: { type: MarkerType.ArrowClosed, width: 30, height: 30 },
         }}
+        fitView={true}
       />
       <button
         onClick={handleClearStorage}
