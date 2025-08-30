@@ -1,7 +1,14 @@
-import ReactFlow, { type Node, type Edge } from "reactflow";
+import ReactFlow, {
+  type Node,
+  type Edge,
+  useNodesState,
+  useEdgesState,
+} from "reactflow";
 import "reactflow/dist/style.css";
+import { useState, useEffect } from "react";
+import { saveToStorage, loadFromStorage } from "./storage";
 
-const initialNodes: Node[] = [
+const defaultNodes: Node[] = [
   {
     id: "1",
     position: { x: 0, y: 0 },
@@ -24,7 +31,7 @@ const initialNodes: Node[] = [
   },
 ];
 
-const initialEdges: Edge[] = [
+const defaultEdges: Edge[] = [
   { id: "e1-2", source: "1", target: "2" },
   { id: "e2-3", source: "2", target: "3" },
   { id: "e3-4", source: "3", target: "4" },
@@ -32,9 +39,36 @@ const initialEdges: Edge[] = [
 ];
 
 function App() {
+  const [nodes, setNodes, onNodesChange] = useNodesState([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  // Load data on startup
+  useEffect(() => {
+    const savedData = loadFromStorage();
+    if (savedData) {
+      setNodes(savedData.nodes);
+      setEdges(savedData.edges);
+    } else {
+      setNodes(defaultNodes);
+      setEdges(defaultEdges);
+    }
+    setIsLoaded(true);
+  }, [setNodes, setEdges]);
+
+  // Auto-save when nodes or edges change
+  useEffect(() => {
+    if (isLoaded) saveToStorage(nodes, edges);
+  }, [nodes, edges, isLoaded]);
+
   return (
     <div style={{ width: "100vw", height: "100vh" }}>
-      <ReactFlow nodes={initialNodes} edges={initialEdges} />
+      <ReactFlow
+        nodes={nodes}
+        edges={edges}
+        onNodesChange={onNodesChange}
+        onEdgesChange={onEdgesChange}
+      />
     </div>
   );
 }
