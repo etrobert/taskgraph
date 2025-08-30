@@ -7,27 +7,36 @@ import ReactFlow, {
 import 'reactflow/dist/style.css';
 import { useState, useEffect } from 'react';
 import { saveToStorage, loadFromStorage, clearStorage } from './storage';
+import { TaskNode } from './components/TaskNode';
+
+const nodeTypes = {
+  task: TaskNode,
+};
 
 const defaultNodes: Node[] = [
   {
     id: '1',
+    type: 'task',
     position: { x: 0, y: 0 },
-    data: { label: 'Start Task' },
+    data: { label: 'Start Task', status: 'pending' },
   },
   {
     id: '2',
+    type: 'task',
     position: { x: 0, y: 100 },
-    data: { label: 'Process Data' },
+    data: { label: 'Process Data', status: 'in-progress' },
   },
   {
     id: '3',
+    type: 'task',
     position: { x: 200, y: 100 },
-    data: { label: 'Validate Results' },
+    data: { label: 'Validate Results', status: 'pending' },
   },
   {
     id: '4',
+    type: 'task',
     position: { x: 100, y: 200 },
-    data: { label: 'Complete Task' },
+    data: { label: 'Complete Task', status: 'completed' },
   },
 ];
 
@@ -72,6 +81,7 @@ function App() {
       <ReactFlow
         nodes={nodes}
         edges={edges}
+        nodeTypes={nodeTypes}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
       />
