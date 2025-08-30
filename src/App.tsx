@@ -57,13 +57,13 @@ const defaultNodes: Node[] = [
 
 const defaultEdges: Edge[] = [
   // Dependencies point to tasks that depend on them
-  { id: 'e1-4', source: '1', target: '4' }, // Research Requirements → Design System
-  { id: 'e2-4', source: '2', target: '4' }, // Gather Resources → Design System  
-  { id: 'e2-5', source: '2', target: '5' }, // Gather Resources → Implement Features
-  { id: 'e3-5', source: '3', target: '5' }, // Setup Environment → Implement Features
+  { id: 'e1-4', source: '1', target: '4', markerEnd: { type: 'arrowclosed', width: 30, height: 30 } }, // Research Requirements → Design System
+  { id: 'e2-4', source: '2', target: '4', markerEnd: { type: 'arrowclosed', width: 30, height: 30 } }, // Gather Resources → Design System  
+  { id: 'e2-5', source: '2', target: '5', markerEnd: { type: 'arrowclosed', width: 30, height: 30 } }, // Gather Resources → Implement Features
+  { id: 'e3-5', source: '3', target: '5', markerEnd: { type: 'arrowclosed', width: 30, height: 30 } }, // Setup Environment → Implement Features
   // Intermediate dependencies point to final goal
-  { id: 'e4-6', source: '4', target: '6' }, // Design System → Launch Product
-  { id: 'e5-6', source: '5', target: '6' }, // Implement Features → Launch Product
+  { id: 'e4-6', source: '4', target: '6', markerEnd: { type: 'arrowclosed', width: 30, height: 30 } }, // Design System → Launch Product
+  { id: 'e5-6', source: '5', target: '6', markerEnd: { type: 'arrowclosed', width: 30, height: 30 } }, // Implement Features → Launch Product
 ];
 
 function App() {
