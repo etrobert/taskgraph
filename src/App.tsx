@@ -77,7 +77,7 @@ function App() {
       />
       <button
         onClick={handleClearStorage}
-        className="absolute bottom-5 right-5 px-4 py-2 bg-red-500 hover:bg-red-600 text-white text-sm font-medium rounded-md transition-colors duration-200 z-10 shadow-lg"
+        className="absolute right-5 bottom-5 z-10 rounded-md bg-red-500 px-4 py-2 text-sm font-medium text-white shadow-lg transition-colors duration-200 hover:bg-red-600"
       >
         Clear Storage
       </button>
