@@ -8,6 +8,8 @@ import ReactFlow, {
   ReactFlowProvider,
   type OnConnectEnd,
   type OnConnectStart,
+  type OnConnect,
+  addEdge,
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import { useState, useEffect, useCallback } from 'react';
@@ -138,6 +140,17 @@ function TaskGraphFlow() {
     setEdges(defaultEdges);
   };
 
+  const onConnect: OnConnect = useCallback(
+    (connection) => {
+      const edge = {
+        ...connection,
+        markerEnd: { type: MarkerType.ArrowClosed, width: 30, height: 30 },
+      };
+      setEdges((edges) => addEdge(edge, edges));
+    },
+    [setEdges],
+  );
+
   const onConnectStart: OnConnectStart = useCallback(
     (_, { nodeId, handleType }) => {
       setConnectingNodeId(nodeId);
@@ -209,6 +222,7 @@ function TaskGraphFlow() {
         nodeTypes={nodeTypes}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
+        onConnect={onConnect}
         onConnectStart={onConnectStart}
         onConnectEnd={onConnectEnd}
       />
