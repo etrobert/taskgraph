@@ -148,8 +148,9 @@ function TaskGraphFlow() {
 
   const onConnectEnd: OnConnectEnd = useCallback(
     (event) => {
+      if (connectingNodeId === null || connectingHandleType === null) return;
       const target = event.target as Element;
-      if (!target.closest('.react-flow__node') && connectingNodeId) {
+      if (!target.closest('.react-flow__node')) {
         // Only create new node if dropped on empty canvas and we have a connecting node
         const newId = getId();
         const { clientX, clientY } =
