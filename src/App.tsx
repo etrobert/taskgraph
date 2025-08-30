@@ -6,7 +6,7 @@ import ReactFlow, {
 } from "reactflow";
 import "reactflow/dist/style.css";
 import { useState, useEffect } from "react";
-import { saveToStorage, loadFromStorage } from "./storage";
+import { saveToStorage, loadFromStorage, clearStorage } from "./storage";
 
 const defaultNodes: Node[] = [
   {
@@ -61,6 +61,12 @@ function App() {
     if (isLoaded) saveToStorage(nodes, edges);
   }, [nodes, edges, isLoaded]);
 
+  const handleClearStorage = () => {
+    clearStorage();
+    setNodes(defaultNodes);
+    setEdges(defaultEdges);
+  };
+
   return (
     <div style={{ width: "100vw", height: "100vh" }}>
       <ReactFlow
@@ -69,6 +75,24 @@ function App() {
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
       />
+      <button
+        onClick={handleClearStorage}
+        style={{
+          position: "absolute",
+          bottom: "20px",
+          right: "20px",
+          padding: "8px 16px",
+          backgroundColor: "#ff4444",
+          color: "white",
+          border: "none",
+          borderRadius: "4px",
+          cursor: "pointer",
+          fontSize: "14px",
+          zIndex: 10,
+        }}
+      >
+        Clear Storage
+      </button>
     </div>
   );
 }
