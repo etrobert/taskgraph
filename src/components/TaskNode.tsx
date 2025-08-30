@@ -30,14 +30,14 @@ export function TaskNode({ data }: NodeProps<TaskNodeData>) {
 
   return (
     <>
-      <Handle type="target" position={Position.Right} />
+      <Handle type="target" position={Position.Left} />
       <div className={`rounded-lg border-2 px-4 py-2 shadow-md ${getStatusColor()}`}>
         <div className="flex items-center gap-2">
           <span className="text-lg">{getStatusIcon()}</span>
           <span className="font-medium">{data.label}</span>
         </div>
       </div>
-      <Handle type="source" position={Position.Left} />
+      <Handle type="source" position={Position.Right} />
     </>
   );
 }
