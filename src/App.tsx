@@ -64,43 +64,13 @@ const defaultNodes: Node[] = [
 
 const defaultEdges: Edge[] = [
   // Dependencies point to tasks that depend on them
-  {
-    id: 'e1-4',
-    source: '1',
-    target: '4',
-    markerEnd: { type: MarkerType.ArrowClosed, width: 30, height: 30 },
-  }, // Research Requirements → Design System
-  {
-    id: 'e2-4',
-    source: '2',
-    target: '4',
-    markerEnd: { type: MarkerType.ArrowClosed, width: 30, height: 30 },
-  }, // Gather Resources → Design System
-  {
-    id: 'e2-5',
-    source: '2',
-    target: '5',
-    markerEnd: { type: MarkerType.ArrowClosed, width: 30, height: 30 },
-  }, // Gather Resources → Implement Features
-  {
-    id: 'e3-5',
-    source: '3',
-    target: '5',
-    markerEnd: { type: MarkerType.ArrowClosed, width: 30, height: 30 },
-  }, // Setup Environment → Implement Features
+  { id: 'e1-4', source: '1', target: '4' }, // Research Requirements → Design System
+  { id: 'e2-4', source: '2', target: '4' }, // Gather Resources → Design System  
+  { id: 'e2-5', source: '2', target: '5' }, // Gather Resources → Implement Features
+  { id: 'e3-5', source: '3', target: '5' }, // Setup Environment → Implement Features
   // Intermediate dependencies point to final goal
-  {
-    id: 'e4-6',
-    source: '4',
-    target: '6',
-    markerEnd: { type: MarkerType.ArrowClosed, width: 30, height: 30 },
-  }, // Design System → Launch Product
-  {
-    id: 'e5-6',
-    source: '5',
-    target: '6',
-    markerEnd: { type: MarkerType.ArrowClosed, width: 30, height: 30 },
-  }, // Implement Features → Launch Product
+  { id: 'e4-6', source: '4', target: '6' }, // Design System → Launch Product
+  { id: 'e5-6', source: '5', target: '6' }, // Implement Features → Launch Product
 ];
 
 let id = 0;
@@ -142,11 +112,7 @@ function TaskGraphFlow() {
 
   const onConnect: OnConnect = useCallback(
     (connection) => {
-      const edge = {
-        ...connection,
-        markerEnd: { type: MarkerType.ArrowClosed, width: 30, height: 30 },
-      };
-      setEdges((edges) => addEdge(edge, edges));
+      setEdges((edges) => addEdge(connection, edges));
     },
     [setEdges],
   );
@@ -182,21 +148,11 @@ function TaskGraphFlow() {
                 id: `e-${connectingNodeId}-${newId}`,
                 source: connectingNodeId,
                 target: newId,
-                markerEnd: {
-                  type: MarkerType.ArrowClosed,
-                  width: 30,
-                  height: 30,
-                },
               }
             : {
                 id: `e-${newId}-${connectingNodeId}`,
                 source: newId,
                 target: connectingNodeId,
-                markerEnd: {
-                  type: MarkerType.ArrowClosed,
-                  width: 30,
-                  height: 30,
-                },
               };
 
         setNodes((nds) => nds.concat(newNode));
@@ -225,6 +181,9 @@ function TaskGraphFlow() {
         onConnect={onConnect}
         onConnectStart={onConnectStart}
         onConnectEnd={onConnectEnd}
+        defaultEdgeOptions={{
+          markerEnd: { type: MarkerType.ArrowClosed, width: 30, height: 30 },
+        }}
       />
       <button
         onClick={handleClearStorage}
