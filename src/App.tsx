@@ -3,39 +3,39 @@ import ReactFlow, {
   type Edge,
   useNodesState,
   useEdgesState,
-} from "reactflow";
-import "reactflow/dist/style.css";
-import { useState, useEffect } from "react";
-import { saveToStorage, loadFromStorage, clearStorage } from "./storage";
+} from 'reactflow';
+import 'reactflow/dist/style.css';
+import { useState, useEffect } from 'react';
+import { saveToStorage, loadFromStorage, clearStorage } from './storage';
 
 const defaultNodes: Node[] = [
   {
-    id: "1",
+    id: '1',
     position: { x: 0, y: 0 },
-    data: { label: "Start Task" },
+    data: { label: 'Start Task' },
   },
   {
-    id: "2",
+    id: '2',
     position: { x: 0, y: 100 },
-    data: { label: "Process Data" },
+    data: { label: 'Process Data' },
   },
   {
-    id: "3",
+    id: '3',
     position: { x: 200, y: 100 },
-    data: { label: "Validate Results" },
+    data: { label: 'Validate Results' },
   },
   {
-    id: "4",
+    id: '4',
     position: { x: 100, y: 200 },
-    data: { label: "Complete Task" },
+    data: { label: 'Complete Task' },
   },
 ];
 
 const defaultEdges: Edge[] = [
-  { id: "e1-2", source: "1", target: "2" },
-  { id: "e2-3", source: "2", target: "3" },
-  { id: "e3-4", source: "3", target: "4" },
-  { id: "e2-4", source: "2", target: "4" },
+  { id: 'e1-2', source: '1', target: '2' },
+  { id: 'e2-3', source: '2', target: '3' },
+  { id: 'e3-4', source: '3', target: '4' },
+  { id: 'e2-4', source: '2', target: '4' },
 ];
 
 function App() {
@@ -68,7 +68,7 @@ function App() {
   };
 
   return (
-    <div style={{ width: "100vw", height: "100vh" }}>
+    <div style={{ width: '100vw', height: '100vh' }}>
       <ReactFlow
         nodes={nodes}
         edges={edges}
