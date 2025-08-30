@@ -6,7 +6,7 @@ export interface TaskNodeData {
   status?: 'pending' | 'in-progress' | 'completed';
 }
 
-export function TaskNode({ data, id }: NodeProps<TaskNodeData>) {
+export function TaskNode({ data, id, selected }: NodeProps<TaskNodeData>) {
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState(data.label);
   const { setNodes } = useReactFlow();
@@ -22,6 +22,28 @@ export function TaskNode({ data, id }: NodeProps<TaskNodeData>) {
       );
     }
   }, [editValue, data.label, id, setNodes]);
+
+  const cycleStatus = useCallback(
+    (e: React.MouseEvent) => {
+      e.stopPropagation();
+      const statusOrder: TaskNodeData['status'][] = [
+        'pending',
+        'in-progress',
+        'completed',
+      ];
+      const currentIndex = statusOrder.indexOf(data.status || 'pending');
+      const nextStatus = statusOrder[(currentIndex + 1) % statusOrder.length];
+
+      setNodes((nodes) =>
+        nodes.map((node) =>
+          node.id === id
+            ? { ...node, data: { ...node.data, status: nextStatus } }
+            : node,
+        ),
+      );
+    },
+    [data.status, id, setNodes],
+  );
 
   const handleDoubleClick = useCallback(() => {
     setIsEditing(true);
@@ -74,12 +96,18 @@ export function TaskNode({ data, id }: NodeProps<TaskNodeData>) {
       <div
         className={`rounded-lg border-2 px-4 py-2 shadow-md transition-all duration-200 ${getStatusColor()} ${
           isEditing ? 'border-blue-300 ring-2 ring-blue-400' : ''
-        }`}
+        } ${selected ? 'border-purple-300 ring-2 ring-purple-400' : ''}`}
         onDoubleClick={handleDoubleClick}
         title="Double-click to edit"
       >
         <div className="flex items-center gap-2">
-          <span className="text-lg">{getStatusIcon()}</span>
+          <span
+            className="cursor-pointer text-lg transition-transform duration-150 hover:scale-110"
+            onClick={cycleStatus}
+            title="Click to change status"
+          >
+            {getStatusIcon()}
+          </span>
           {isEditing ? (
             <input
               type="text"
