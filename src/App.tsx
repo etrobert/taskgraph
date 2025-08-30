@@ -77,19 +77,7 @@ function App() {
       />
       <button
         onClick={handleClearStorage}
-        style={{
-          position: "absolute",
-          bottom: "20px",
-          right: "20px",
-          padding: "8px 16px",
-          backgroundColor: "#ff4444",
-          color: "white",
-          border: "none",
-          borderRadius: "4px",
-          cursor: "pointer",
-          fontSize: "14px",
-          zIndex: 10,
-        }}
+        className="absolute bottom-5 right-5 px-4 py-2 bg-red-500 hover:bg-red-600 text-white text-sm font-medium rounded-md transition-colors duration-200 z-10 shadow-lg"
       >
         Clear Storage
       </button>
