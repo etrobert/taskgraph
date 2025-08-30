@@ -1,4 +1,4 @@
-import { Node, Edge } from 'reactflow';
+import { type Node, type Edge } from 'reactflow';
 
 const STORAGE_KEY = 'taskgraph-data';
 
