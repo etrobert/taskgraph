@@ -17,8 +17,8 @@ export function TaskNode({ data, id }: NodeProps<TaskNodeData>) {
         nodes.map((node) =>
           node.id === id
             ? { ...node, data: { ...node.data, label: editValue.trim() } }
-            : node
-        )
+            : node,
+        ),
       );
     }
   }, [editValue, data.label, id, setNodes]);
@@ -28,15 +28,18 @@ export function TaskNode({ data, id }: NodeProps<TaskNodeData>) {
     setEditValue(data.label);
   }, [data.label]);
 
-  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      updateNodeLabel();
-      setIsEditing(false);
-    } else if (e.key === 'Escape') {
-      setIsEditing(false);
-      setEditValue(data.label);
-    }
-  }, [updateNodeLabel, data.label]);
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (e.key === 'Enter') {
+        updateNodeLabel();
+        setIsEditing(false);
+      } else if (e.key === 'Escape') {
+        setIsEditing(false);
+        setEditValue(data.label);
+      }
+    },
+    [updateNodeLabel, data.label],
+  );
 
   const handleBlur = useCallback(() => {
     updateNodeLabel();
@@ -68,9 +71,9 @@ export function TaskNode({ data, id }: NodeProps<TaskNodeData>) {
   return (
     <>
       <Handle type="target" position={Position.Left} />
-      <div 
+      <div
         className={`rounded-lg border-2 px-4 py-2 shadow-md transition-all duration-200 ${getStatusColor()} ${
-          isEditing ? 'ring-2 ring-blue-400 border-blue-300' : ''
+          isEditing ? 'border-blue-300 ring-2 ring-blue-400' : ''
         }`}
         onDoubleClick={handleDoubleClick}
         title="Double-click to edit"
@@ -84,11 +87,13 @@ export function TaskNode({ data, id }: NodeProps<TaskNodeData>) {
               onChange={(e) => setEditValue(e.target.value)}
               onKeyDown={handleKeyDown}
               onBlur={handleBlur}
-              className="bg-transparent border-none outline-none font-medium min-w-0 flex-1 text-inherit"
+              className="min-w-0 flex-1 border-none bg-transparent font-medium text-inherit outline-none"
               autoFocus
             />
           ) : (
-            <span className="font-medium cursor-pointer select-none">{data.label}</span>
+            <span className="cursor-pointer font-medium select-none">
+              {data.label}
+            </span>
           )}
         </div>
       </div>
