@@ -4,9 +4,13 @@ import ReactFlow, {
   useNodesState,
   useEdgesState,
   MarkerType,
+  useReactFlow,
+  ReactFlowProvider,
+  type OnConnectEnd,
+  type OnConnectStart,
 } from 'reactflow';
 import 'reactflow/dist/style.css';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { saveToStorage, loadFromStorage, clearStorage } from './storage';
 import { TaskNode } from './components/TaskNode';
 
@@ -97,10 +101,18 @@ const defaultEdges: Edge[] = [
   }, // Implement Features → Launch Product
 ];
 
-function App() {
+let id = 0;
+const getId = () => `dndnode_${id++}`;
+
+function TaskGraphFlow() {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [connectingNodeId, setConnectingNodeId] = useState<string | null>(null);
+  const [connectingHandleType, setConnectingHandleType] = useState<
+    'source' | 'target' | null
+  >(null);
+  const { screenToFlowPosition } = useReactFlow();
 
   // Load data on startup
   useEffect(() => {
@@ -126,6 +138,68 @@ function App() {
     setEdges(defaultEdges);
   };
 
+  const onConnectStart: OnConnectStart = useCallback(
+    (_, { nodeId, handleType }) => {
+      setConnectingNodeId(nodeId);
+      setConnectingHandleType(handleType);
+    },
+    [],
+  );
+
+  const onConnectEnd: OnConnectEnd = useCallback(
+    (event) => {
+      const target = event.target as Element;
+      if (!target.closest('.react-flow__node') && connectingNodeId) {
+        // Only create new node if dropped on empty canvas and we have a connecting node
+        const newId = getId();
+        const { clientX, clientY } =
+          'changedTouches' in event ? event.changedTouches[0] : event;
+
+        const newNode: Node = {
+          id: newId,
+          type: 'task',
+          position: screenToFlowPosition({ x: clientX, y: clientY }),
+          data: { label: 'New Task', status: 'pending' },
+        };
+
+        const newEdge: Edge =
+          connectingHandleType === 'source'
+            ? {
+                id: `e-${connectingNodeId}-${newId}`,
+                source: connectingNodeId,
+                target: newId,
+                markerEnd: {
+                  type: MarkerType.ArrowClosed,
+                  width: 30,
+                  height: 30,
+                },
+              }
+            : {
+                id: `e-${newId}-${connectingNodeId}`,
+                source: newId,
+                target: connectingNodeId,
+                markerEnd: {
+                  type: MarkerType.ArrowClosed,
+                  width: 30,
+                  height: 30,
+                },
+              };
+
+        setNodes((nds) => nds.concat(newNode));
+        setEdges((eds) => eds.concat(newEdge));
+      }
+      setConnectingNodeId(null);
+      setConnectingHandleType(null);
+    },
+    [
+      screenToFlowPosition,
+      setNodes,
+      setEdges,
+      connectingNodeId,
+      connectingHandleType,
+    ],
+  );
+
   return (
     <div style={{ width: '100vw', height: '100vh' }}>
       <ReactFlow
@@ -134,6 +208,8 @@ function App() {
         nodeTypes={nodeTypes}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
+        onConnectStart={onConnectStart}
+        onConnectEnd={onConnectEnd}
       />
       <button
         onClick={handleClearStorage}
@@ -142,6 +218,14 @@ function App() {
         Clear Storage
       </button>
     </div>
+  );
+}
+
+function App() {
+  return (
+    <ReactFlowProvider>
+      <TaskGraphFlow />
+    </ReactFlowProvider>
   );
 }
 
