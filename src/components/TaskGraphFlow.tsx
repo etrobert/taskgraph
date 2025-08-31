@@ -1,5 +1,4 @@
 import ReactFlow, {
-  type Node,
   useNodesState,
   useEdgesState,
   MarkerType,
@@ -9,7 +8,6 @@ import { useState, useCallback } from 'react';
 import { TaskNode, type TaskNodeData } from './TaskNode';
 import { ControlPanel } from './ControlPanel';
 import { TaskPropertiesPanel } from './TaskPropertiesPanel';
-import { ArchivedTasksPanel } from './ArchivedTasksPanel';
 import { useTaskConnection } from '../hooks/useTaskConnection';
 import { useTaskStorage } from '../hooks/useTaskStorage';
 
@@ -24,22 +22,20 @@ export function TaskGraphFlow() {
     nodes: [],
     edges: [],
   });
-  const [selectedArchivedTask, setSelectedArchivedTask] =
-    useState<Node<TaskNodeData> | null>(null);
 
   const { onConnect, onConnectStart, onConnectEnd } = useTaskConnection(
     setNodes,
     setEdges,
   );
   const {
+    showArchived,
     visibleNodes,
     handleClearStorage,
+    toggleShowArchived,
     handleUpdateNode,
-    handleRestoreTask,
   } = useTaskStorage(nodes, edges, setNodes, setEdges);
 
   const onSelectionChange = useCallback((params: OnSelectionChangeParams) => {
-    setSelectedArchivedTask(null);
     setSelection(params);
   }, []);
 
@@ -58,49 +54,12 @@ export function TaskGraphFlow() {
           ),
         }));
       }
-
-      // Update selectedArchivedTask if it's the one being updated
-      if (selectedArchivedTask && selectedArchivedTask.id === nodeId) {
-        const updatedNode = nodes.find((node) => node.id === nodeId);
-        if (updatedNode) {
-          setSelectedArchivedTask({
-            ...updatedNode,
-            data: { ...updatedNode.data, ...updates },
-          });
-        }
-      }
     },
-    [handleUpdateNode, selection, selectedArchivedTask, nodes],
+    [handleUpdateNode, selection],
   );
-
-  const handleSelectArchivedTask = useCallback((task: Node<TaskNodeData>) => {
-    setSelectedArchivedTask(task);
-    // Clear board selection when selecting archived task
-    setSelection({ nodes: [], edges: [] });
-  }, []);
-
-  const handleRestoreArchivedTask = useCallback(
-    (taskId: string) => {
-      handleRestoreTask(taskId);
-      // Clear selected archived task if it was the one being restored
-      if (selectedArchivedTask && selectedArchivedTask.id === taskId) {
-        setSelectedArchivedTask(null);
-      }
-    },
-    [handleRestoreTask, selectedArchivedTask],
-  );
-
-  // Get archived tasks
-  const archivedTasks = nodes.filter((node) => node.data.archived);
 
   return (
     <div style={{ width: '100vw', height: '100vh', display: 'flex' }}>
-      <ArchivedTasksPanel
-        archivedTasks={archivedTasks}
-        selectedArchivedTask={selectedArchivedTask}
-        onSelectArchivedTask={handleSelectArchivedTask}
-        onRestoreTask={handleRestoreArchivedTask}
-      />
       <div style={{ flex: 1, height: '100vh' }}>
         <ReactFlow
           nodes={visibleNodes}
@@ -121,14 +80,15 @@ export function TaskGraphFlow() {
         <ControlPanel
           nodes={nodes}
           edges={edges}
+          showArchived={showArchived}
           onNodesChange={setNodes}
           onEdgesChange={setEdges}
+          onToggleShowArchived={toggleShowArchived}
           onClearStorage={handleClearStorage}
         />
       </div>
       <TaskPropertiesPanel
         selection={selection}
-        selectedArchivedTask={selectedArchivedTask}
         onUpdateNode={handleNodeUpdate}
       />
     </div>
