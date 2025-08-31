@@ -142,6 +142,7 @@ function TaskGraphFlow() {
           markerEnd: { type: MarkerType.ArrowClosed, width: 30, height: 30 },
         }}
         fitView={true}
+        proOptions={{ hideAttribution: true }}
       />
       <ControlPanel
         nodes={nodes}
