@@ -128,29 +128,6 @@ export function TaskPropertiesPanel({
           className="w-full cursor-not-allowed rounded-md border border-gray-300 bg-gray-100 px-3 py-2 text-gray-600"
         />
       </div>
-
-      {/* Position (read-only) */}
-      <div className="mb-4">
-        <label className="mb-2 block text-sm font-medium text-gray-700">
-          Position
-        </label>
-        <div className="grid grid-cols-2 gap-2">
-          <input
-            type="text"
-            value={Math.round(selectedNode.position.x)}
-            readOnly
-            className="cursor-not-allowed rounded-md border border-gray-300 bg-gray-100 px-3 py-2 text-gray-600"
-            placeholder="X"
-          />
-          <input
-            type="text"
-            value={Math.round(selectedNode.position.y)}
-            readOnly
-            className="cursor-not-allowed rounded-md border border-gray-300 bg-gray-100 px-3 py-2 text-gray-600"
-            placeholder="Y"
-          />
-        </div>
-      </div>
     </div>
   );
 }
