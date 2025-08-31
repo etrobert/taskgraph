@@ -1,23 +1,15 @@
 import ReactFlow, {
-  type Node,
-  type Edge,
   useNodesState,
   useEdgesState,
   MarkerType,
-  useReactFlow,
-  type OnConnectEnd,
-  type OnConnectStart,
-  type OnConnect,
   type OnSelectionChangeParams,
-  addEdge,
 } from 'reactflow';
-import { useState, useEffect, useCallback } from 'react';
-import { saveToStorage, loadFromStorage, clearStorage } from '../storage';
+import { useState, useCallback } from 'react';
 import { TaskNode, type TaskNodeData } from './TaskNode';
 import { ControlPanel } from './ControlPanel';
 import { TaskPropertiesPanel } from './TaskPropertiesPanel';
-import { defaultNodes, defaultEdges } from '../defaults';
-import { v4 as uuidv4 } from 'uuid';
+import { useTaskConnection } from '../hooks/useTaskConnection';
+import { useTaskStorage } from '../hooks/useTaskStorage';
 
 const nodeTypes = {
   task: TaskNode,
@@ -26,59 +18,31 @@ const nodeTypes = {
 export function TaskGraphFlow() {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [connectingNodeId, setConnectingNodeId] = useState<string | null>(null);
-  const [connectingHandleType, setConnectingHandleType] = useState<
-    'source' | 'target' | null
-  >(null);
-  const [showArchived, setShowArchived] = useState(false);
   const [selection, setSelection] = useState<OnSelectionChangeParams>({
     nodes: [],
     edges: [],
   });
-  const { screenToFlowPosition } = useReactFlow();
 
-  // Load data on startup
-  useEffect(() => {
-    const savedData = loadFromStorage();
-    if (savedData) {
-      setNodes(savedData.nodes);
-      setEdges(savedData.edges);
-    } else {
-      setNodes(defaultNodes);
-      setEdges(defaultEdges);
-    }
-    setIsLoaded(true);
-  }, [setNodes, setEdges]);
-
-  // Auto-save when nodes or edges change
-  useEffect(() => {
-    if (isLoaded) saveToStorage(nodes, edges);
-  }, [nodes, edges, isLoaded]);
-
-  const handleClearStorage = () => {
-    clearStorage();
-    setNodes(defaultNodes);
-    setEdges(defaultEdges);
-  };
-
-  const toggleShowArchived = () => {
-    setShowArchived(!showArchived);
-  };
+  const { onConnect, onConnectStart, onConnectEnd } = useTaskConnection(
+    setNodes,
+    setEdges,
+  );
+  const {
+    showArchived,
+    visibleNodes,
+    handleClearStorage,
+    toggleShowArchived,
+    handleUpdateNode,
+  } = useTaskStorage(nodes, edges, setNodes, setEdges);
 
   const onSelectionChange = useCallback((params: OnSelectionChangeParams) => {
     setSelection(params);
   }, []);
 
-  const handleUpdateNode = useCallback(
+  const handleNodeUpdate = useCallback(
     (nodeId: string, updates: Partial<TaskNodeData>) => {
-      setNodes((nds) =>
-        nds.map((node) =>
-          node.id === nodeId
-            ? { ...node, data: { ...node.data, ...updates } }
-            : node,
-        ),
-      );
+      handleUpdateNode(nodeId, updates);
+
       // Update selection if the updated node is in the selection
       if (selection.nodes.some((node) => node.id === nodeId)) {
         setSelection((prev) => ({
@@ -91,72 +55,7 @@ export function TaskGraphFlow() {
         }));
       }
     },
-    [setNodes, selection.nodes],
-  );
-
-  // Filter nodes based on archived visibility
-  const visibleNodes = showArchived
-    ? nodes
-    : nodes.filter((node) => !node.data?.archived);
-
-  const onConnect: OnConnect = useCallback(
-    (connection) => {
-      setEdges((edges) => addEdge(connection, edges));
-    },
-    [setEdges],
-  );
-
-  const onConnectStart: OnConnectStart = useCallback(
-    (_, { nodeId, handleType }) => {
-      setConnectingNodeId(nodeId);
-      setConnectingHandleType(handleType);
-    },
-    [],
-  );
-
-  const onConnectEnd: OnConnectEnd = useCallback(
-    (event) => {
-      if (connectingNodeId === null || connectingHandleType === null) return;
-      const target = event.target as Element;
-      if (!target.closest('.react-flow__node')) {
-        // Only create new node if dropped on empty canvas and we have a connecting node
-        const newId = uuidv4();
-        const { clientX, clientY } =
-          'changedTouches' in event ? event.changedTouches[0] : event;
-
-        const newNode: Node = {
-          id: newId,
-          type: 'task',
-          position: screenToFlowPosition({ x: clientX, y: clientY }),
-          data: { label: 'New Task', status: 'pending' },
-        };
-
-        const newEdge: Edge =
-          connectingHandleType === 'source'
-            ? {
-                id: `e-${connectingNodeId}-${newId}`,
-                source: connectingNodeId,
-                target: newId,
-              }
-            : {
-                id: `e-${newId}-${connectingNodeId}`,
-                source: newId,
-                target: connectingNodeId,
-              };
-
-        setNodes((nds) => nds.concat(newNode));
-        setEdges((eds) => eds.concat(newEdge));
-      }
-      setConnectingNodeId(null);
-      setConnectingHandleType(null);
-    },
-    [
-      screenToFlowPosition,
-      setNodes,
-      setEdges,
-      connectingNodeId,
-      connectingHandleType,
-    ],
+    [handleUpdateNode, selection],
   );
 
   return (
@@ -190,7 +89,7 @@ export function TaskGraphFlow() {
       </div>
       <TaskPropertiesPanel
         selection={selection}
-        onUpdateNode={handleUpdateNode}
+        onUpdateNode={handleNodeUpdate}
       />
     </div>
   );
