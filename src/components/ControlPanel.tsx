@@ -68,7 +68,7 @@ export function ControlPanel({
       >
         Save to File
       </button>
-      <label className="cursor-pointer rounded-md bg-purple-500 px-4 py-2 text-sm font-medium text-white shadow-lg transition-colors duration-200 hover:bg-purple-600">
+      <label className="cursor-pointer rounded-md bg-purple-500 px-4 py-2 text-center text-sm font-medium text-white shadow-lg transition-colors duration-200 hover:bg-purple-600">
         Load from File
         <input
           type="file"
