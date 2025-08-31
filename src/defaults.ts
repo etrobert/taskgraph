@@ -6,7 +6,11 @@ export const defaultNodes: Node[] = [
     id: '1',
     type: 'task',
     position: { x: 0, y: 50 },
-    data: { label: 'Research Requirements', status: 'completed' },
+    data: {
+      label: 'Research Requirements',
+      status: 'completed',
+      description: 'Analyze market needs and define project requirements',
+    },
   },
   {
     id: '2',
@@ -25,7 +29,11 @@ export const defaultNodes: Node[] = [
     id: '4',
     type: 'task',
     position: { x: 250, y: 100 },
-    data: { label: 'Design System', status: 'in-progress' },
+    data: {
+      label: 'Design System',
+      status: 'in-progress',
+      description: 'Create wireframes and system architecture',
+    },
   },
   {
     id: '5',

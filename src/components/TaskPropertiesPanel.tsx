@@ -32,14 +32,6 @@ export function TaskPropertiesPanel({
     );
   }
 
-  const handleNameChange = (newName: string) => {
-    onUpdateNode(selectedNode.id, { label: newName });
-  };
-
-  const handleStatusChange = (newStatus: TaskNodeData['status']) => {
-    onUpdateNode(selectedNode.id, { status: newStatus });
-  };
-
   const handleArchiveToggle = () => {
     const newArchivedState = !selectedNode.data.archived;
     onUpdateNode(selectedNode.id, {
@@ -62,8 +54,26 @@ export function TaskPropertiesPanel({
         <input
           type="text"
           value={selectedNode.data.label}
-          onChange={(e) => handleNameChange(e.target.value)}
+          onChange={(e) =>
+            onUpdateNode(selectedNode.id, { label: e.target.value })
+          }
           className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:ring-2 focus:ring-blue-500 focus:outline-none"
+        />
+      </div>
+
+      {/* Description */}
+      <div className="mb-4">
+        <label className="mb-2 block text-sm font-medium text-gray-700">
+          Description
+        </label>
+        <textarea
+          value={selectedNode.data.description || ''}
+          onChange={(e) =>
+            onUpdateNode(selectedNode.id, { description: e.target.value })
+          }
+          placeholder="Add a description for this task..."
+          rows={3}
+          className="w-full resize-none rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:ring-2 focus:ring-blue-500 focus:outline-none"
         />
       </div>
 
@@ -75,7 +85,9 @@ export function TaskPropertiesPanel({
         <select
           value={selectedNode.data.status || 'pending'}
           onChange={(e) =>
-            handleStatusChange(e.target.value as TaskNodeData['status'])
+            onUpdateNode(selectedNode.id, {
+              status: e.target.value as TaskNodeData['status'],
+            })
           }
           className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:ring-2 focus:ring-blue-500 focus:outline-none"
         >

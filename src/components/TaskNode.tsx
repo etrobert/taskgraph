@@ -6,6 +6,7 @@ export interface TaskNodeData {
   status?: 'pending' | 'in-progress' | 'completed';
   archived?: boolean;
   archivedAt?: Date;
+  description?: string;
 }
 
 export function TaskNode({ data, id, selected }: NodeProps<TaskNodeData>) {
@@ -119,6 +120,7 @@ export function TaskNode({ data, id, selected }: NodeProps<TaskNodeData>) {
               📁
             </span>
           )}
+          {data.description && data.description.trim() !== '' && '📄'}
           {isEditing ? (
             <input
               type="text"
