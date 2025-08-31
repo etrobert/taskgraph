@@ -22,7 +22,9 @@ export const saveToFile = (nodes: Node[], edges: Edge[]) => {
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `taskgraph-${new Date().toISOString().split('T')[0]}.json`;
+  const now = new Date();
+  const dateTime = now.toISOString().replace(/[:.]/g, '-').slice(0, -5); // Remove milliseconds and replace colons/dots with dashes
+  a.download = `taskgraph-${dateTime}.json`;
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);

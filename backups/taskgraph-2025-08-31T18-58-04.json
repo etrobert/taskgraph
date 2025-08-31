@@ -1,0 +1,125 @@
+{
+  "nodes": [
+    {
+      "id": "6",
+      "type": "task",
+      "position": {
+        "x": 772.1842229793143,
+        "y": -64
+      },
+      "data": {
+        "label": "? My goal ?",
+        "status": "pending"
+      },
+      "width": 144,
+      "height": 48,
+      "selected": false,
+      "dragging": false,
+      "positionAbsolute": {
+        "x": 772.1842229793143,
+        "y": -64
+      },
+      "targetPosition": "left",
+      "sourcePosition": "right"
+    },
+    {
+      "id": "c77a8169-3a42-403c-9158-14e40d0b62c5",
+      "type": "task",
+      "position": {
+        "x": 361.576510091828,
+        "y": 18
+      },
+      "data": {
+        "label": "Publish my first YouTube video",
+        "status": "pending",
+        "archived": false
+      },
+      "width": 288,
+      "height": 48,
+      "selected": true,
+      "dragging": false,
+      "positionAbsolute": {
+        "x": 361.576510091828,
+        "y": 18
+      },
+      "targetPosition": "left",
+      "sourcePosition": "right"
+    },
+    {
+      "id": "341b4515-283c-4aed-8329-d759e69856ff",
+      "type": "task",
+      "position": {
+        "x": 0,
+        "y": 100
+      },
+      "data": {
+        "label": "Record my first YouTube video",
+        "status": "pending"
+      },
+      "width": 286,
+      "height": 48,
+      "selected": false,
+      "dragging": false,
+      "positionAbsolute": {
+        "x": 124.86330316467647,
+        "y": 254.4166144825095
+      },
+      "targetPosition": "left",
+      "sourcePosition": "right"
+    }
+  ],
+  "edges": [
+    {
+      "markerEnd": {
+        "type": "arrowclosed",
+        "width": 30,
+        "height": 30
+      },
+      "source": "dndnode_1",
+      "sourceHandle": null,
+      "target": "dndnode_0",
+      "targetHandle": null,
+      "id": "reactflow__edge-dndnode_1-dndnode_0",
+      "selected": false
+    },
+    {
+      "markerEnd": {
+        "type": "arrowclosed",
+        "width": 30,
+        "height": 30
+      },
+      "source": "dndnode_0",
+      "sourceHandle": null,
+      "target": "6",
+      "targetHandle": null,
+      "id": "reactflow__edge-dndnode_0-6",
+      "selected": false
+    },
+    {
+      "markerEnd": {
+        "type": "arrowclosed",
+        "width": 30,
+        "height": 30
+      },
+      "source": "dndnode_2",
+      "sourceHandle": null,
+      "target": "6",
+      "targetHandle": null,
+      "id": "reactflow__edge-dndnode_2-6"
+    },
+    {
+      "id": "e-c77a8169-3a42-403c-9158-14e40d0b62c5-6",
+      "source": "c77a8169-3a42-403c-9158-14e40d0b62c5",
+      "target": "6",
+      "selected": false
+    },
+    {
+      "id": "e-341b4515-283c-4aed-8329-d759e69856ff-c77a8169-3a42-403c-9158-14e40d0b62c5",
+      "source": "341b4515-283c-4aed-8329-d759e69856ff",
+      "target": "c77a8169-3a42-403c-9158-14e40d0b62c5",
+      "selected": false
+    }
+  ],
+  "version": "1.0",
+  "exportedAt": "2025-08-31T18:58:04.488Z"
+}
