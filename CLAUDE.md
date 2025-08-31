@@ -6,6 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 - ALWAYS run `npm run format` after making changes
 - ALWAYS run `npm run lint` and `npm run build` after making a set of changes to ensure that it works.
+- NEVER use `event.stopPropagation()`
 
 ## Development Commands
 
