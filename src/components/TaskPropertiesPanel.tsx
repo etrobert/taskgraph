@@ -3,19 +3,45 @@ import { type TaskNodeData } from './TaskNode';
 
 interface TaskPropertiesPanelProps {
   selection: OnSelectionChangeParams;
+  selectedArchivedTask: Node<TaskNodeData> | null;
   onUpdateNode: (nodeId: string, updates: Partial<TaskNodeData>) => void;
 }
 
 export function TaskPropertiesPanel({
   selection,
+  selectedArchivedTask,
   onUpdateNode,
 }: TaskPropertiesPanelProps) {
-  // Only show details if exactly one node is selected
-  const selectedNode =
-    selection.nodes.length === 1
+  // Determine which task to show - archived task takes priority, then board selection
+  const selectedTask =
+    selectedArchivedTask ||
+    (selection.nodes.length === 1
       ? (selection.nodes[0] as Node<TaskNodeData>)
-      : null;
-  if (!selectedNode) {
+      : null);
+
+  const handleNameChange = (newName: string) => {
+    if (selectedTask) {
+      onUpdateNode(selectedTask.id, { label: newName });
+    }
+  };
+
+  const handleStatusChange = (newStatus: TaskNodeData['status']) => {
+    if (selectedTask) {
+      onUpdateNode(selectedTask.id, { status: newStatus });
+    }
+  };
+
+  const handleArchiveToggle = () => {
+    if (selectedTask) {
+      const newArchivedState = !selectedTask.data.archived;
+      onUpdateNode(selectedTask.id, {
+        archived: newArchivedState,
+        archivedAt: newArchivedState ? new Date() : undefined,
+      });
+    }
+  };
+
+  if (!selectedTask) {
     return (
       <div className="h-full w-80 border-l border-gray-200 bg-gray-50 p-4">
         <h2 className="mb-4 text-lg font-semibold text-gray-700">
@@ -32,26 +58,15 @@ export function TaskPropertiesPanel({
     );
   }
 
-  const handleNameChange = (newName: string) => {
-    onUpdateNode(selectedNode.id, { label: newName });
-  };
-
-  const handleStatusChange = (newStatus: TaskNodeData['status']) => {
-    onUpdateNode(selectedNode.id, { status: newStatus });
-  };
-
-  const handleArchiveToggle = () => {
-    const newArchivedState = !selectedNode.data.archived;
-    onUpdateNode(selectedNode.id, {
-      archived: newArchivedState,
-      archivedAt: newArchivedState ? new Date() : undefined,
-    });
-  };
-
   return (
     <div className="h-full w-80 border-l border-gray-200 bg-gray-50 p-4">
       <h2 className="mb-4 text-lg font-semibold text-gray-700">
         Task Properties
+        {selectedArchivedTask && (
+          <span className="ml-2 rounded bg-gray-200 px-2 py-1 text-xs font-normal text-gray-600">
+            Archived
+          </span>
+        )}
       </h2>
 
       {/* Task Name */}
@@ -61,7 +76,7 @@ export function TaskPropertiesPanel({
         </label>
         <input
           type="text"
-          value={selectedNode.data.label}
+          value={selectedTask.data.label}
           onChange={(e) => handleNameChange(e.target.value)}
           className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:ring-2 focus:ring-blue-500 focus:outline-none"
         />
@@ -73,7 +88,7 @@ export function TaskPropertiesPanel({
           Status
         </label>
         <select
-          value={selectedNode.data.status || 'pending'}
+          value={selectedTask.data.status || 'pending'}
           onChange={(e) =>
             handleStatusChange(e.target.value as TaskNodeData['status'])
           }
@@ -90,16 +105,20 @@ export function TaskPropertiesPanel({
         <label className="flex items-center">
           <input
             type="checkbox"
-            checked={selectedNode.data.archived || false}
+            checked={selectedTask.data.archived || false}
             onChange={handleArchiveToggle}
             className="mr-2"
           />
-          <span className="text-sm font-medium text-gray-700">Archived</span>
+          <span className="text-sm font-medium text-gray-700">
+            {selectedTask.data.archived
+              ? 'Restore to board'
+              : 'Archive (remove from board)'}
+          </span>
         </label>
-        {selectedNode.data.archived && selectedNode.data.archivedAt && (
+        {selectedTask.data.archived && selectedTask.data.archivedAt && (
           <p className="mt-1 text-xs text-gray-500">
             Archived on{' '}
-            {new Date(selectedNode.data.archivedAt).toLocaleDateString()}
+            {new Date(selectedTask.data.archivedAt).toLocaleDateString()}
           </p>
         )}
       </div>
@@ -111,7 +130,7 @@ export function TaskPropertiesPanel({
         </label>
         <input
           type="text"
-          value={selectedNode.id}
+          value={selectedTask.id}
           readOnly
           className="w-full cursor-not-allowed rounded-md border border-gray-300 bg-gray-100 px-3 py-2 text-gray-600"
         />
@@ -125,14 +144,14 @@ export function TaskPropertiesPanel({
         <div className="grid grid-cols-2 gap-2">
           <input
             type="text"
-            value={Math.round(selectedNode.position.x)}
+            value={Math.round(selectedTask.position.x)}
             readOnly
             className="cursor-not-allowed rounded-md border border-gray-300 bg-gray-100 px-3 py-2 text-gray-600"
             placeholder="X"
           />
           <input
             type="text"
-            value={Math.round(selectedNode.position.y)}
+            value={Math.round(selectedTask.position.y)}
             readOnly
             className="cursor-not-allowed rounded-md border border-gray-300 bg-gray-100 px-3 py-2 text-gray-600"
             placeholder="Y"

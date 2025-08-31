@@ -11,7 +11,6 @@ export function useTaskStorage(
   setEdges: (edges: Edge[] | ((edges: Edge[]) => Edge[])) => void,
 ) {
   const [isLoaded, setIsLoaded] = useState(false);
-  const [showArchived, setShowArchived] = useState(false);
 
   // Load data on startup
   useEffect(() => {
@@ -37,9 +36,25 @@ export function useTaskStorage(
     setEdges(defaultEdges);
   }, [setNodes, setEdges]);
 
-  const toggleShowArchived = useCallback(() => {
-    setShowArchived(!showArchived);
-  }, [showArchived]);
+  const handleRestoreTask = useCallback(
+    (taskId: string) => {
+      setNodes((nds) =>
+        nds.map((node) =>
+          node.id === taskId
+            ? {
+                ...node,
+                data: {
+                  ...node.data,
+                  archived: false,
+                  archivedAt: undefined,
+                },
+              }
+            : node,
+        ),
+      );
+    },
+    [setNodes],
+  );
 
   const handleUpdateNode = useCallback(
     (nodeId: string, updates: Partial<TaskNodeData>) => {
@@ -54,17 +69,14 @@ export function useTaskStorage(
     [setNodes],
   );
 
-  // Filter nodes based on archived visibility
-  const visibleNodes = showArchived
-    ? nodes
-    : nodes.filter((node) => !node.data?.archived);
+  // Always filter out archived tasks from the board
+  const visibleNodes = nodes.filter((node) => !node.data?.archived);
 
   return {
     isLoaded,
-    showArchived,
     visibleNodes,
     handleClearStorage,
-    toggleShowArchived,
     handleUpdateNode,
+    handleRestoreTask,
   };
 }
