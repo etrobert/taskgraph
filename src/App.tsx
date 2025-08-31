@@ -16,13 +16,12 @@ import { useState, useEffect, useCallback } from 'react';
 import { saveToStorage, loadFromStorage, clearStorage } from './storage';
 import { TaskNode } from './components/TaskNode';
 import { defaultNodes, defaultEdges } from './defaults';
+import { v4 as uuidv4 } from 'uuid';
 
 const nodeTypes = {
   task: TaskNode,
 };
 
-let id = 0;
-const getId = () => `dndnode_${id++}`;
 
 function TaskGraphFlow() {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
@@ -106,7 +105,7 @@ function TaskGraphFlow() {
       const target = event.target as Element;
       if (!target.closest('.react-flow__node')) {
         // Only create new node if dropped on empty canvas and we have a connecting node
-        const newId = getId();
+        const newId = uuidv4();
         const { clientX, clientY } =
           'changedTouches' in event ? event.changedTouches[0] : event;
 
