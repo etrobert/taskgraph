@@ -54,7 +54,7 @@ export const loadFromFile = (
           'Invalid file format. Please select a valid TaskGraph JSON file.',
         );
       }
-    } catch (error) {
+    } catch {
       onError("Error reading file. Please ensure it's a valid JSON file.");
     }
   };
