@@ -81,10 +81,8 @@ export function TaskNode({ data, id, selected }: NodeProps<TaskNodeData>) {
           return 'bg-gray-100 border-gray-300 text-gray-800';
       }
     })();
-    
-    return data.archived 
-      ? `${baseColor} opacity-50 grayscale` 
-      : baseColor;
+
+    return data.archived ? `${baseColor} opacity-50 grayscale` : baseColor;
   };
 
   const getStatusIcon = () => {

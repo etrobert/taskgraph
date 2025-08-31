@@ -15,14 +15,13 @@ import 'reactflow/dist/style.css';
 import { useState, useEffect, useCallback } from 'react';
 import { saveToStorage, loadFromStorage, clearStorage } from './storage';
 import { TaskNode } from './components/TaskNode';
+import { ControlPanel } from './components/ControlPanel';
 import { defaultNodes, defaultEdges } from './defaults';
 import { v4 as uuidv4 } from 'uuid';
-import { saveToFile, loadFromFile } from './fileOperations';
 
 const nodeTypes = {
   task: TaskNode,
 };
-
 
 function TaskGraphFlow() {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
@@ -59,54 +58,14 @@ function TaskGraphFlow() {
     setEdges(defaultEdges);
   };
 
-  const handleArchiveCompleted = () => {
-    setNodes((nodes) =>
-      nodes.map((node) =>
-        node.data?.status === 'completed' && !node.data?.archived
-          ? {
-              ...node,
-              data: {
-                ...node.data,
-                archived: true,
-                archivedAt: new Date(),
-              },
-            }
-          : node
-      )
-    );
-  };
-
-  const handleSaveToFile = () => {
-    saveToFile(nodes, edges);
-  };
-
-  const handleLoadFromFile = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    loadFromFile(
-      file,
-      (loadedNodes, loadedEdges) => {
-        setNodes(loadedNodes);
-        setEdges(loadedEdges);
-      },
-      (errorMessage) => {
-        alert(errorMessage);
-      }
-    );
-    
-    // Reset the input value so the same file can be loaded again
-    event.target.value = '';
-  };
-
   const toggleShowArchived = () => {
     setShowArchived(!showArchived);
   };
 
   // Filter nodes based on archived visibility
-  const visibleNodes = showArchived 
-    ? nodes 
-    : nodes.filter(node => !node.data?.archived);
+  const visibleNodes = showArchived
+    ? nodes
+    : nodes.filter((node) => !node.data?.archived);
 
   const onConnect: OnConnect = useCallback(
     (connection) => {
@@ -184,45 +143,15 @@ function TaskGraphFlow() {
         }}
         fitView={true}
       />
-      <div className="absolute right-5 bottom-5 z-10 flex flex-col gap-2">
-        <button
-          onClick={handleSaveToFile}
-          className="rounded-md bg-green-500 px-4 py-2 text-sm font-medium text-white shadow-lg transition-colors duration-200 hover:bg-green-600"
-        >
-          Save to File
-        </button>
-        <label className="cursor-pointer rounded-md bg-purple-500 px-4 py-2 text-sm font-medium text-white shadow-lg transition-colors duration-200 hover:bg-purple-600">
-          Load from File
-          <input
-            type="file"
-            accept=".json"
-            onChange={handleLoadFromFile}
-            className="hidden"
-          />
-        </label>
-        <button
-          onClick={toggleShowArchived}
-          className={`rounded-md px-4 py-2 text-sm font-medium text-white shadow-lg transition-colors duration-200 ${
-            showArchived
-              ? 'bg-yellow-500 hover:bg-yellow-600'
-              : 'bg-gray-500 hover:bg-gray-600'
-          }`}
-        >
-          {showArchived ? 'Hide Archived' : 'Show Archived'}
-        </button>
-        <button
-          onClick={handleArchiveCompleted}
-          className="rounded-md bg-blue-500 px-4 py-2 text-sm font-medium text-white shadow-lg transition-colors duration-200 hover:bg-blue-600"
-        >
-          Archive Completed
-        </button>
-        <button
-          onClick={handleClearStorage}
-          className="rounded-md bg-red-500 px-4 py-2 text-sm font-medium text-white shadow-lg transition-colors duration-200 hover:bg-red-600"
-        >
-          Clear Storage
-        </button>
-      </div>
+      <ControlPanel
+        nodes={nodes}
+        edges={edges}
+        showArchived={showArchived}
+        onNodesChange={setNodes}
+        onEdgesChange={setEdges}
+        onToggleShowArchived={toggleShowArchived}
+        onClearStorage={handleClearStorage}
+      />
     </div>
   );
 }
