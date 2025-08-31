@@ -115,19 +115,6 @@ export function TaskPropertiesPanel({
           </p>
         )}
       </div>
-
-      {/* Task ID (read-only) */}
-      <div className="mb-4">
-        <label className="mb-2 block text-sm font-medium text-gray-700">
-          Task ID
-        </label>
-        <input
-          type="text"
-          value={selectedNode.id}
-          readOnly
-          className="w-full cursor-not-allowed rounded-md border border-gray-300 bg-gray-100 px-3 py-2 text-gray-600"
-        />
-      </div>
     </div>
   );
 }
