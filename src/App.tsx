@@ -32,6 +32,7 @@ function TaskGraphFlow() {
   const [connectingHandleType, setConnectingHandleType] = useState<
     'source' | 'target' | null
   >(null);
+  const [showArchived, setShowArchived] = useState(false);
   const { screenToFlowPosition } = useReactFlow();
 
   // Load data on startup
@@ -57,6 +58,32 @@ function TaskGraphFlow() {
     setNodes(defaultNodes);
     setEdges(defaultEdges);
   };
+
+  const handleArchiveCompleted = () => {
+    setNodes((nodes) =>
+      nodes.map((node) =>
+        node.data?.status === 'completed' && !node.data?.archived
+          ? {
+              ...node,
+              data: {
+                ...node.data,
+                archived: true,
+                archivedAt: new Date(),
+              },
+            }
+          : node
+      )
+    );
+  };
+
+  const toggleShowArchived = () => {
+    setShowArchived(!showArchived);
+  };
+
+  // Filter nodes based on archived visibility
+  const visibleNodes = showArchived 
+    ? nodes 
+    : nodes.filter(node => !node.data?.archived);
 
   const onConnect: OnConnect = useCallback(
     (connection) => {
@@ -121,7 +148,7 @@ function TaskGraphFlow() {
   return (
     <div style={{ width: '100vw', height: '100vh' }}>
       <ReactFlow
-        nodes={nodes}
+        nodes={visibleNodes}
         edges={edges}
         nodeTypes={nodeTypes}
         onNodesChange={onNodesChange}
@@ -134,12 +161,30 @@ function TaskGraphFlow() {
         }}
         fitView={true}
       />
-      <button
-        onClick={handleClearStorage}
-        className="absolute right-5 bottom-5 z-10 rounded-md bg-red-500 px-4 py-2 text-sm font-medium text-white shadow-lg transition-colors duration-200 hover:bg-red-600"
-      >
-        Clear Storage
-      </button>
+      <div className="absolute right-5 bottom-5 z-10 flex flex-col gap-2">
+        <button
+          onClick={toggleShowArchived}
+          className={`rounded-md px-4 py-2 text-sm font-medium text-white shadow-lg transition-colors duration-200 ${
+            showArchived
+              ? 'bg-yellow-500 hover:bg-yellow-600'
+              : 'bg-gray-500 hover:bg-gray-600'
+          }`}
+        >
+          {showArchived ? 'Hide Archived' : 'Show Archived'}
+        </button>
+        <button
+          onClick={handleArchiveCompleted}
+          className="rounded-md bg-blue-500 px-4 py-2 text-sm font-medium text-white shadow-lg transition-colors duration-200 hover:bg-blue-600"
+        >
+          Archive Completed
+        </button>
+        <button
+          onClick={handleClearStorage}
+          className="rounded-md bg-red-500 px-4 py-2 text-sm font-medium text-white shadow-lg transition-colors duration-200 hover:bg-red-600"
+        >
+          Clear Storage
+        </button>
+      </div>
     </div>
   );
 }

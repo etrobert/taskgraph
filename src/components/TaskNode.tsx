@@ -4,6 +4,8 @@ import { useState, useCallback } from 'react';
 export interface TaskNodeData {
   label: string;
   status?: 'pending' | 'in-progress' | 'completed';
+  archived?: boolean;
+  archivedAt?: Date;
 }
 
 export function TaskNode({ data, id, selected }: NodeProps<TaskNodeData>) {
@@ -69,14 +71,20 @@ export function TaskNode({ data, id, selected }: NodeProps<TaskNodeData>) {
   }, [updateNodeLabel]);
 
   const getStatusColor = () => {
-    switch (data.status) {
-      case 'completed':
-        return 'bg-green-100 border-green-300 text-green-800';
-      case 'in-progress':
-        return 'bg-blue-100 border-blue-300 text-blue-800';
-      default:
-        return 'bg-gray-100 border-gray-300 text-gray-800';
-    }
+    const baseColor = (() => {
+      switch (data.status) {
+        case 'completed':
+          return 'bg-green-100 border-green-300 text-green-800';
+        case 'in-progress':
+          return 'bg-blue-100 border-blue-300 text-blue-800';
+        default:
+          return 'bg-gray-100 border-gray-300 text-gray-800';
+      }
+    })();
+    
+    return data.archived 
+      ? `${baseColor} opacity-50 grayscale` 
+      : baseColor;
   };
 
   const getStatusIcon = () => {
@@ -108,6 +116,11 @@ export function TaskNode({ data, id, selected }: NodeProps<TaskNodeData>) {
           >
             {getStatusIcon()}
           </span>
+          {data.archived && (
+            <span className="text-xs" title="Archived">
+              📁
+            </span>
+          )}
           {isEditing ? (
             <input
               type="text"
