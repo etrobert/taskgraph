@@ -10,6 +10,7 @@ import { ControlPanel } from './ControlPanel';
 import { TaskPropertiesPanel } from './TaskPropertiesPanel';
 import { useTaskConnection } from '../hooks/useTaskConnection';
 import { useTaskStorage } from '../hooks/useTaskStorage';
+import { useZoomShortcuts } from '../hooks/useZoomShortcuts';
 
 const nodeTypes = {
   task: TaskNode,
@@ -38,6 +39,8 @@ export function TaskGraphFlow() {
   const onSelectionChange = useCallback((params: OnSelectionChangeParams) => {
     setSelection(params);
   }, []);
+
+  useZoomShortcuts();
 
   const handleNodeUpdate = useCallback(
     (nodeId: string, updates: Partial<TaskNodeData>) => {
