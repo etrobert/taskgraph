@@ -72,7 +72,7 @@ export function TaskPropertiesPanel({
             onUpdateNode(selectedNode.id, { description: e.target.value })
           }
           placeholder="Add a description for this task..."
-          rows={3}
+          rows={5}
           className="w-full resize-none rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:ring-2 focus:ring-blue-500 focus:outline-none"
         />
       </div>
