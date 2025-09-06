@@ -38,8 +38,8 @@ export function useTaskStorage(
   }, [setNodes, setEdges]);
 
   const toggleShowArchived = useCallback(() => {
-    setShowArchived(!showArchived);
-  }, [showArchived]);
+    setShowArchived((showArchived) => !showArchived);
+  }, []);
 
   const handleUpdateNode = useCallback(
     (nodeId: string, updates: Partial<TaskNodeData>) => {
