@@ -4,8 +4,6 @@ import { useState, useCallback } from 'react';
 export interface TaskNodeData {
   label: string;
   status?: 'pending' | 'in-progress' | 'completed';
-  archived?: boolean;
-  archivedAt?: Date;
   description?: string;
 }
 
@@ -83,7 +81,7 @@ export function TaskNode({ data, id, selected }: NodeProps<TaskNodeData>) {
       }
     })();
 
-    return data.archived ? `${baseColor} opacity-50 grayscale` : baseColor;
+    return baseColor;
   };
 
   const getStatusIcon = () => {
@@ -115,11 +113,6 @@ export function TaskNode({ data, id, selected }: NodeProps<TaskNodeData>) {
           >
             {getStatusIcon()}
           </span>
-          {data.archived && (
-            <span className="text-xs" title="Archived">
-              📁
-            </span>
-          )}
           {data.description && data.description.trim() !== '' && '📄'}
           {isEditing ? (
             <input

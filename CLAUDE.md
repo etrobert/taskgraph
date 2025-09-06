@@ -27,8 +27,6 @@ TaskGraph is a React Flow-based task management application that allows users to
 
 - `label`: Task name (editable via double-click)
 - `status`: 'pending' | 'in-progress' | 'completed' (cycleable via icon click)
-- `archived`: boolean flag for hiding completed tasks
-- `archivedAt`: timestamp when archived
 
 **Persistence Layer**: Dual persistence system:
 
@@ -50,14 +48,14 @@ TaskGraph is a React Flow-based task management application that allows users to
 
 ### State Management Pattern
 
-The app uses ReactFlow's `useNodesState` and `useEdgesState` hooks with automatic localStorage synchronization. Archive functionality filters nodes by `archived` property rather than changing status, preserving original task state information.
+The app uses ReactFlow's `useNodesState` and `useEdgesState` hooks with automatic localStorage synchronization.
 
 ### Component Architecture
 
 - **App.tsx**: Main container with ReactFlowProvider wrapper
 - **TaskGraphFlow**: Core flow logic and state management
 - **TaskNode**: Custom node component with inline editing and status cycling
-- **ControlPanel**: All UI controls (save, load, archive, etc.)
+- **ControlPanel**: All UI controls (save, load, etc.)
 - **fileOperations.ts**: File export/import utilities
 - **storage.ts**: localStorage persistence layer
 
@@ -66,7 +64,6 @@ The app uses ReactFlow's `useNodesState` and `useEdgesState` hooks with automati
 Uses Tailwind CSS v4 with:
 
 - Custom task node styling based on status
-- Archived tasks show with reduced opacity and grayscale
 - Tailwind class sorting via prettier-plugin-tailwindcss
 
 ### ID Generation

@@ -27,8 +27,6 @@ export function TaskGraphFlow() {
     onEdgesChange,
   } = useTaskStorage();
 
-  const [showArchived, setShowArchived] = useState(false);
-
   const handleUpdateNode = useCallback(
     (nodeId: string, updates: Partial<TaskNodeData>) => {
       setNodes((nds) =>
@@ -41,10 +39,6 @@ export function TaskGraphFlow() {
     },
     [setNodes],
   );
-
-  const toggleShowArchived = useCallback(() => {
-    setShowArchived((showArchived) => !showArchived);
-  }, []);
 
   const { onConnect, onConnectStart, onConnectEnd } = useTaskConnection(
     setNodes,
@@ -98,10 +92,8 @@ export function TaskGraphFlow() {
         <ControlPanel
           nodes={nodes}
           edges={edges}
-          showArchived={showArchived}
           onNodesChange={setNodes}
           onEdgesChange={setEdges}
-          onToggleShowArchived={toggleShowArchived}
           onClearStorage={handleClearStorage}
         />
       </div>

@@ -32,14 +32,6 @@ export function TaskPropertiesPanel({
     );
   }
 
-  const handleArchiveToggle = () => {
-    const newArchivedState = !selectedNode.data.archived;
-    onUpdateNode(selectedNode.id, {
-      archived: newArchivedState,
-      archivedAt: newArchivedState ? new Date() : undefined,
-    });
-  };
-
   return (
     <div className="h-full w-80 border-l border-gray-200 bg-gray-50 p-4">
       <h2 className="mb-4 text-lg font-semibold text-gray-700">
@@ -95,25 +87,6 @@ export function TaskPropertiesPanel({
           <option value="in-progress">In Progress</option>
           <option value="completed">Completed</option>
         </select>
-      </div>
-
-      {/* Archived Status */}
-      <div className="mb-4">
-        <label className="flex items-center">
-          <input
-            type="checkbox"
-            checked={selectedNode.data.archived || false}
-            onChange={handleArchiveToggle}
-            className="mr-2"
-          />
-          <span className="text-sm font-medium text-gray-700">Archived</span>
-        </label>
-        {selectedNode.data.archived && selectedNode.data.archivedAt && (
-          <p className="mt-1 text-xs text-gray-500">
-            Archived on{' '}
-            {new Date(selectedNode.data.archivedAt).toLocaleDateString()}
-          </p>
-        )}
       </div>
     </div>
   );
