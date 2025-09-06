@@ -18,10 +18,7 @@ export function TaskGraphFlow() {
   });
 
   const {
-    showArchived,
-    visibleNodes,
     handleClearStorage,
-    toggleShowArchived,
     handleUpdateNode,
     nodes,
     edges,
@@ -30,6 +27,17 @@ export function TaskGraphFlow() {
     onNodesChange,
     onEdgesChange,
   } = useTaskStorage();
+
+  const [showArchived, setShowArchived] = useState(false);
+
+  const toggleShowArchived = useCallback(() => {
+    setShowArchived((showArchived) => !showArchived);
+  }, []);
+
+  // Filter nodes based on archived visibility
+  const visibleNodes = showArchived
+    ? nodes
+    : nodes.filter((node) => !node.data?.archived);
 
   const { onConnect, onConnectStart, onConnectEnd } = useTaskConnection(
     setNodes,

@@ -9,7 +9,6 @@ export function useTaskStorage() {
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
   const [isLoaded, setIsLoaded] = useState(false);
-  const [showArchived, setShowArchived] = useState(false);
 
   // Load data on startup
   useEffect(() => {
@@ -35,10 +34,6 @@ export function useTaskStorage() {
     setEdges(defaultEdges);
   }, [setNodes, setEdges]);
 
-  const toggleShowArchived = useCallback(() => {
-    setShowArchived((showArchived) => !showArchived);
-  }, []);
-
   const handleUpdateNode = useCallback(
     (nodeId: string, updates: Partial<TaskNodeData>) => {
       setNodes((nds) =>
@@ -52,11 +47,6 @@ export function useTaskStorage() {
     [setNodes],
   );
 
-  // Filter nodes based on archived visibility
-  const visibleNodes = showArchived
-    ? nodes
-    : nodes.filter((node) => !node.data?.archived);
-
   return {
     nodes,
     edges,
@@ -65,10 +55,7 @@ export function useTaskStorage() {
     onNodesChange,
     onEdgesChange,
     isLoaded,
-    showArchived,
-    visibleNodes,
     handleClearStorage,
-    toggleShowArchived,
     handleUpdateNode,
   };
 }
