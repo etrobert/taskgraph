@@ -46,11 +46,6 @@ export function TaskGraphFlow() {
     setShowArchived((showArchived) => !showArchived);
   }, []);
 
-  // Filter nodes based on archived visibility
-  const visibleNodes = showArchived
-    ? nodes
-    : nodes.filter((node) => !node.data?.archived);
-
   const { onConnect, onConnectStart, onConnectEnd } = useTaskConnection(
     setNodes,
     setEdges,
@@ -85,7 +80,7 @@ export function TaskGraphFlow() {
     <div style={{ width: '100vw', height: '100vh', display: 'flex' }}>
       <div style={{ flex: 1, height: '100vh' }}>
         <ReactFlow
-          nodes={visibleNodes}
+          nodes={nodes}
           edges={edges}
           nodeTypes={nodeTypes}
           onNodesChange={onNodesChange}
