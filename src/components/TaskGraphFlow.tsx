@@ -19,7 +19,6 @@ export function TaskGraphFlow() {
 
   const {
     handleClearStorage,
-    handleUpdateNode,
     nodes,
     edges,
     setNodes,
@@ -29,6 +28,19 @@ export function TaskGraphFlow() {
   } = useTaskStorage();
 
   const [showArchived, setShowArchived] = useState(false);
+
+  const handleUpdateNode = useCallback(
+    (nodeId: string, updates: Partial<TaskNodeData>) => {
+      setNodes((nds) =>
+        nds.map((node) =>
+          node.id === nodeId
+            ? { ...node, data: { ...node.data, ...updates } }
+            : node,
+        ),
+      );
+    },
+    [setNodes],
+  );
 
   const toggleShowArchived = useCallback(() => {
     setShowArchived((showArchived) => !showArchived);

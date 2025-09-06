@@ -2,7 +2,6 @@ import { useEffect, useState, useCallback } from 'react';
 import { useNodesState, useEdgesState } from 'reactflow';
 import { saveToStorage, loadFromStorage, clearStorage } from '../storage';
 import { defaultNodes, defaultEdges } from '../defaults';
-import { type TaskNodeData } from '../components/TaskNode';
 
 export function useTaskStorage() {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
@@ -34,19 +33,6 @@ export function useTaskStorage() {
     setEdges(defaultEdges);
   }, [setNodes, setEdges]);
 
-  const handleUpdateNode = useCallback(
-    (nodeId: string, updates: Partial<TaskNodeData>) => {
-      setNodes((nds) =>
-        nds.map((node) =>
-          node.id === nodeId
-            ? { ...node, data: { ...node.data, ...updates } }
-            : node,
-        ),
-      );
-    },
-    [setNodes],
-  );
-
   return {
     nodes,
     edges,
@@ -56,6 +42,5 @@ export function useTaskStorage() {
     onEdgesChange,
     isLoaded,
     handleClearStorage,
-    handleUpdateNode,
   };
 }
