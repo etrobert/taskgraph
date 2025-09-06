@@ -1,9 +1,4 @@
-import ReactFlow, {
-  useNodesState,
-  useEdgesState,
-  MarkerType,
-  type OnSelectionChangeParams,
-} from 'reactflow';
+import ReactFlow, { MarkerType, type OnSelectionChangeParams } from 'reactflow';
 import { useState, useCallback } from 'react';
 import { TaskNode, type TaskNodeData } from './TaskNode';
 import { ControlPanel } from './ControlPanel';
@@ -17,24 +12,29 @@ const nodeTypes = {
 };
 
 export function TaskGraphFlow() {
-  const [nodes, setNodes, onNodesChange] = useNodesState([]);
-  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [selection, setSelection] = useState<OnSelectionChangeParams>({
     nodes: [],
     edges: [],
   });
 
-  const { onConnect, onConnectStart, onConnectEnd } = useTaskConnection(
-    setNodes,
-    setEdges,
-  );
   const {
     showArchived,
     visibleNodes,
     handleClearStorage,
     toggleShowArchived,
     handleUpdateNode,
-  } = useTaskStorage(nodes, edges, setNodes, setEdges);
+    nodes,
+    edges,
+    setNodes,
+    setEdges,
+    onNodesChange,
+    onEdgesChange,
+  } = useTaskStorage();
+
+  const { onConnect, onConnectStart, onConnectEnd } = useTaskConnection(
+    setNodes,
+    setEdges,
+  );
 
   const onSelectionChange = useCallback((params: OnSelectionChangeParams) => {
     setSelection(params);

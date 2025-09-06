@@ -1,15 +1,13 @@
 import { useEffect, useState, useCallback } from 'react';
-import { type Node, type Edge } from 'reactflow';
+import { useNodesState, useEdgesState } from 'reactflow';
 import { saveToStorage, loadFromStorage, clearStorage } from '../storage';
 import { defaultNodes, defaultEdges } from '../defaults';
 import { type TaskNodeData } from '../components/TaskNode';
 
-export function useTaskStorage(
-  nodes: Node[],
-  edges: Edge[],
-  setNodes: (nodes: Node[] | ((nodes: Node[]) => Node[])) => void,
-  setEdges: (edges: Edge[] | ((edges: Edge[]) => Edge[])) => void,
-) {
+export function useTaskStorage() {
+  const [nodes, setNodes, onNodesChange] = useNodesState([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+
   const [isLoaded, setIsLoaded] = useState(false);
   const [showArchived, setShowArchived] = useState(false);
 
@@ -60,6 +58,12 @@ export function useTaskStorage(
     : nodes.filter((node) => !node.data?.archived);
 
   return {
+    nodes,
+    edges,
+    setNodes,
+    setEdges,
+    onNodesChange,
+    onEdgesChange,
     isLoaded,
     showArchived,
     visibleNodes,
