@@ -26,8 +26,8 @@ const edgeSchema = z.object({
   source: z.string(),
   target: z.string(),
   type: z.string().optional(),
-  sourceHandle: z.string().optional(),
-  targetHandle: z.string().optional(),
+  sourceHandle: z.string().nullish(),
+  targetHandle: z.string().nullish(),
   animated: z.boolean().optional(),
   selected: z.boolean().optional(),
 });
