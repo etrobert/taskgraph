@@ -38,8 +38,10 @@ export function useTaskConnection(
   const onConnectEnd: OnConnectEnd = useCallback(
     (event) => {
       if (connectingNodeId === null || connectingHandleType === null) return;
-      const target = event.target as Element;
-      if (!target.closest('.react-flow__node')) {
+      if (
+        event.target instanceof HTMLElement &&
+        event.target.classList.contains('react-flow__pane')
+      ) {
         // Only create new node if dropped on empty canvas and we have a connecting node
         const newId = uuidv4();
         const { clientX, clientY } =
