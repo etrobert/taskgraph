@@ -4,10 +4,13 @@
   "version": "0.0.0",
   "type": "module",
   "workspaces": [
-    "packages/web"
+    "packages/web",
+    "packages/api"
   ],
   "scripts": {
-    "build": "npm run build --workspace=web",
+    "build": "npm run build --workspaces",
+    "dev:web": "npm run dev --workspace=web",
+    "dev:api": "npm run dev --workspace=api",
     "preview:web": "npm run preview --workspace=web"
   },
   "dependencies": {},
