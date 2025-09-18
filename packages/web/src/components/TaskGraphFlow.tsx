@@ -37,7 +37,8 @@ export function TaskGraphFlow() {
         tasks.map(({ id, name, position }) => ({
           id: id.toString(),
           position,
-          data: { label: name },
+          type: 'task',
+          data: { label: name, status: 'pending' },
         })),
       );
   }, [tasks, setNodes]);
