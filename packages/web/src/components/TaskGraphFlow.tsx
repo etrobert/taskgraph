@@ -2,6 +2,7 @@ import ReactFlow, {
   MarkerType,
   useEdgesState,
   useNodesState,
+  type NodeDragHandler,
   type OnSelectionChangeParams,
 } from 'reactflow';
 import { useState, useCallback, useEffect } from 'react';
@@ -60,6 +61,16 @@ export function TaskGraphFlow() {
     }),
   );
 
+  const onNodeDragStop = useCallback<NodeDragHandler>(
+    (_event, node) => {
+      updateTask.mutate({
+        id: parseInt(node.id),
+        updates: { position: node.position },
+      });
+    },
+    [updateTask],
+  );
+
   const handleNodeUpdate = useCallback(
     (nodeId: string, updates: Partial<TaskNodeData>) => {
       const name = updates.label;
@@ -94,6 +105,7 @@ export function TaskGraphFlow() {
           onConnectStart={onConnectStart}
           onConnectEnd={onConnectEnd}
           onSelectionChange={onSelectionChange}
+          onNodeDragStop={onNodeDragStop}
           defaultEdgeOptions={{
             markerEnd: { type: MarkerType.ArrowClosed, width: 30, height: 30 },
           }}
