@@ -23,20 +23,9 @@ app.use(express.json());
 
 app.use(
   '/trpc',
-  trpcExpress.createExpressMiddleware({
-    router: appRouter,
-    createContext,
-  }),
+  trpcExpress.createExpressMiddleware({ router: appRouter, createContext }),
 );
 
-app.get('/api/tasks', (_req, res) => {
-  // Placeholder for tasks endpoint
-  res.json({
-    tasks: [],
-    message: 'Tasks API endpoint - ready for implementation',
-  });
-});
-
-app.listen(PORT, () => {
-  console.log(`TaskGraph API server running on port ${PORT}`);
-});
+app.listen(PORT, () =>
+  console.log(`TaskGraph API server running on port ${PORT}`),
+);
