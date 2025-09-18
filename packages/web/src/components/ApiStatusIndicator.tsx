@@ -6,7 +6,7 @@ export function ApiStatusIndicator() {
   useEffect(() => {
     const checkApiHealth = async () => {
       try {
-        const response = await fetch('http://localhost:3001/api/health');
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/health`);
         const data = await response.json();
         setApiStatus(`✅ API: ${data.status}`);
       } catch {
