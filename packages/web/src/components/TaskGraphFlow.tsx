@@ -36,7 +36,7 @@ export function TaskGraphFlow() {
       setNodes(
         tasks.map(({ id, name, position }) => ({
           id: id.toString(),
-          position: { x: position[0], y: position[1] },
+          position,
           data: { label: name },
         })),
       );
