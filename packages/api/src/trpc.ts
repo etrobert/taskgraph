@@ -3,9 +3,12 @@ import { initTRPC } from '@trpc/server';
 import * as trpcExpress from '@trpc/server/adapters/express';
 import { eq } from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/node-postgres';
+import EventEmitter, { on } from 'node:events';
 import z from 'zod/v4';
 
 const db = drizzle(process.env.DATABASE_URL!);
+
+const ee = new EventEmitter();
 
 // created for each request
 export const createContext =
@@ -22,13 +25,19 @@ export const appRouter = t.router({
       await db
         .insert(tasksTable)
         .values({ name, position: { x: 0, y: 0 }, status: 'pending' });
+      ee.emit('update');
       return 'done';
     }),
   updateTask: publicProcedure
     .input(z.object({ id: z.number(), updates: tasksUpdateSchema }))
     .mutation(async ({ input: { id, updates } }) => {
       await db.update(tasksTable).set(updates).where(eq(tasksTable.id, id));
+      ee.emit('update');
       return 'done';
     }),
   tasks: publicProcedure.query(() => db.select().from(tasksTable)),
+
+  onTasksChange: publicProcedure.subscription(async function* ({ signal }) {
+    for await (const _ of on(ee, 'update', { signal })) yield 'update';
+  }),
 });

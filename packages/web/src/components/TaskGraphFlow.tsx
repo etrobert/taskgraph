@@ -12,6 +12,7 @@ import { useTaskConnection } from '../hooks/useTaskConnection';
 import { useZoomShortcuts } from '../hooks/useZoomShortcuts';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { queryClient, trpc } from '../utils/trpc';
+import { useSubscription } from '@trpc/tanstack-react-query';
 
 const nodeTypes = {
   task: TaskNode,
@@ -58,6 +59,12 @@ export function TaskGraphFlow() {
       onSuccess: () => {
         queryClient.invalidateQueries(trpc.tasks.queryFilter());
       },
+    }),
+  );
+
+  useSubscription(
+    trpc.onTasksChange.subscriptionOptions(undefined, {
+      onData: () => queryClient.invalidateQueries(trpc.tasks.queryFilter()),
     }),
   );
 
