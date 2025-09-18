@@ -5,6 +5,13 @@ import { publicProcedure } from './trpc.js';
 import * as trpcExpress from '@trpc/server/adapters/express';
 import { initTRPC } from '@trpc/server';
 
+import 'dotenv/config';
+import { drizzle } from 'drizzle-orm/node-postgres';
+import * as z from 'zod';
+import { usersTable } from './db/schema.js';
+
+const db = drizzle(process.env.DATABASE_URL!);
+
 // created for each request
 const createContext = ({}: trpcExpress.CreateExpressContextOptions) => ({}); // no context
 type Context = Awaited<ReturnType<typeof createContext>>;
@@ -12,6 +19,12 @@ type Context = Awaited<ReturnType<typeof createContext>>;
 const t = initTRPC.context<Context>().create();
 const appRouter = t.router({
   health: publicProcedure.query(() => 'ok'),
+  createUser: publicProcedure
+    .input(z.object({ name: z.string(), age: z.number(), email: z.string() }))
+    .mutation(({ input: { name, age, email } }) => {
+      db.insert(usersTable).values({ name, age, email });
+    }),
+  users: publicProcedure.query(() => db.select().from(usersTable)),
 });
 
 export type AppRouter = typeof appRouter;
