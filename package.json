@@ -7,7 +7,8 @@
     "packages/web"
   ],
   "scripts": {
-    "build": "npm run build --workspace=web"
+    "build": "npm run build --workspace=web",
+    "preview:web": "npm run preview --workspace=web"
   },
   "dependencies": {},
   "devDependencies": {}
