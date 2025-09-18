@@ -1,5 +1,5 @@
 import ReactFlow, { MarkerType, type OnSelectionChangeParams } from 'reactflow';
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { TaskNode, type TaskNodeData } from './TaskNode';
 import { ControlPanel } from './ControlPanel';
 import { TaskPropertiesPanel } from './TaskPropertiesPanel';
@@ -21,7 +21,6 @@ export function TaskGraphFlow() {
 
   const {
     handleClearStorage,
-    nodes,
     edges,
     setNodes,
     setEdges,
@@ -31,17 +30,20 @@ export function TaskGraphFlow() {
 
   const { data: tasks } = useQuery(trpc.tasks.queryOptions());
 
-  useEffect(() => {
-    if (tasks)
-      setNodes(
-        tasks.map(({ id, name, position }) => ({
-          id: id.toString(),
-          position,
-          type: 'task',
-          data: { label: name, status: 'pending' },
-        })),
-      );
-  }, [tasks, setNodes]);
+  const nodes = useMemo(
+    () =>
+      tasks === undefined
+        ? []
+        : tasks.map(({ id, name, position }) => ({
+            id: id.toString(),
+            position,
+            type: 'task',
+            data: { label: name, status: 'pending' },
+          })),
+    [tasks],
+  );
+
+  console.log(nodes);
 
   const handleUpdateNode = useCallback(
     (nodeId: string, updates: Partial<TaskNodeData>) => {
