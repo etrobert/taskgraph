@@ -30,6 +30,5 @@ export const appRouter = t.router({
       await db.update(tasksTable).set(updates).where(eq(tasksTable.id, id));
       return 'done';
     }),
-  health: publicProcedure.query(() => 'ok'),
   tasks: publicProcedure.query(() => db.select().from(tasksTable)),
 });
