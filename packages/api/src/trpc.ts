@@ -1,5 +1,5 @@
 import * as z from 'zod';
-import { usersTable } from './db/schema.js';
+import { tasksTable, usersTable } from './db/schema.js';
 import { initTRPC } from '@trpc/server';
 import * as trpcExpress from '@trpc/server/adapters/express';
 import { drizzle } from 'drizzle-orm/node-postgres';
@@ -22,4 +22,5 @@ export const appRouter = t.router({
       db.insert(usersTable).values({ name, age, email });
     }),
   users: publicProcedure.query(() => db.select().from(usersTable)),
+  tasks: publicProcedure.query(() => db.select().from(tasksTable)),
 });

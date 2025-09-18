@@ -1,11 +1,13 @@
 import ReactFlow, { MarkerType, type OnSelectionChangeParams } from 'reactflow';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { TaskNode, type TaskNodeData } from './TaskNode';
 import { ControlPanel } from './ControlPanel';
 import { TaskPropertiesPanel } from './TaskPropertiesPanel';
 import { useTaskConnection } from '../hooks/useTaskConnection';
 import { useTaskStorage } from '../hooks/useTaskStorage';
 import { useZoomShortcuts } from '../hooks/useZoomShortcuts';
+import { useQuery } from '@tanstack/react-query';
+import { trpc } from '../utils/trpc';
 
 const nodeTypes = {
   task: TaskNode,
@@ -26,6 +28,19 @@ export function TaskGraphFlow() {
     onNodesChange,
     onEdgesChange,
   } = useTaskStorage();
+
+  const { data: tasks } = useQuery(trpc.tasks.queryOptions());
+
+  useEffect(() => {
+    if (tasks)
+      setNodes(
+        tasks.map(({ id, name, position }) => ({
+          id: id.toString(),
+          position: { x: position[0], y: position[1] },
+          data: { label: name },
+        })),
+      );
+  }, [tasks, setNodes]);
 
   const handleUpdateNode = useCallback(
     (nodeId: string, updates: Partial<TaskNodeData>) => {
