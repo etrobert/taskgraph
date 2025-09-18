@@ -4,6 +4,13 @@ import cors from 'cors';
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+// Request logging middleware
+app.use((req, _res, next) => {
+  const timestamp = new Date().toISOString();
+  console.log(`[${timestamp}] ${req.method} ${req.url}`);
+  next();
+});
+
 app.use(cors());
 app.use(express.json());
 
