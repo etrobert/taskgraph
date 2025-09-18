@@ -6,11 +6,14 @@ export function ApiStatusIndicator() {
   useEffect(() => {
     const checkApiHealth = async () => {
       try {
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/health`);
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL}/api/health`,
+        );
         const data = await response.json();
         setApiStatus(`✅ API: ${data.status}`);
-      } catch {
+      } catch (error) {
         setApiStatus('❌ API: disconnected');
+        console.error(error);
       }
     };
 
@@ -26,3 +29,4 @@ export function ApiStatusIndicator() {
     </div>
   );
 }
+
