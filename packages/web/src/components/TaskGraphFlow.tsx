@@ -1,7 +1,6 @@
 import ReactFlow, { MarkerType, type OnSelectionChangeParams } from 'reactflow';
 import { useState, useCallback, useMemo } from 'react';
 import { TaskNode, type TaskNodeData } from './TaskNode';
-import { ControlPanel } from './ControlPanel';
 import { TaskPropertiesPanel } from './TaskPropertiesPanel';
 import { useTaskConnection } from '../hooks/useTaskConnection';
 import { useTaskStorage } from '../hooks/useTaskStorage';
@@ -19,14 +18,8 @@ export function TaskGraphFlow() {
     edges: [],
   });
 
-  const {
-    handleClearStorage,
-    edges,
-    setNodes,
-    setEdges,
-    onNodesChange,
-    onEdgesChange,
-  } = useTaskStorage();
+  const { edges, setNodes, setEdges, onNodesChange, onEdgesChange } =
+    useTaskStorage();
 
   const { data: tasks } = useQuery(trpc.tasks.queryOptions());
 
@@ -106,13 +99,6 @@ export function TaskGraphFlow() {
           }}
           fitView={true}
           proOptions={{ hideAttribution: true }}
-        />
-        <ControlPanel
-          nodes={nodes}
-          edges={edges}
-          onNodesChange={setNodes}
-          onEdgesChange={setEdges}
-          onClearStorage={handleClearStorage}
         />
       </div>
       <TaskPropertiesPanel
