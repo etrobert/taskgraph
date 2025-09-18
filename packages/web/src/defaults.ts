@@ -22,7 +22,7 @@ export const defaultNodes: Node[] = [
     id: '3',
     type: 'task',
     position: { x: 0, y: 250 },
-    data: { label: 'Setup Environment', status: 'in-progress' },
+    data: { label: 'Setup Environment', status: 'in progress' },
   },
   // Intermediate tasks (middle)
   {
@@ -31,7 +31,7 @@ export const defaultNodes: Node[] = [
     position: { x: 250, y: 100 },
     data: {
       label: 'Design System',
-      status: 'in-progress',
+      status: 'in progress',
       description: 'Create wireframes and system architecture',
     },
   },

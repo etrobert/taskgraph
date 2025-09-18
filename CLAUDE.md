@@ -1,11 +1,13 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to Claude Code (claude.ai/code) when working with
+code in this repository.
 
 ## Workflow Instructions
 
 - ALWAYS run `npm run format` after making changes
-- ALWAYS run `npm run lint` and `npm run build` after making a set of changes to ensure that it works.
+- ALWAYS run `npm run lint` and `npm run build` after making a set of changes to
+  ensure that it works.
 - NEVER use `event.stopPropagation()`
 
 ## Development Commands
@@ -19,14 +21,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Architecture Overview
 
-TaskGraph is a React Flow-based task management application that allows users to create, edit, and organize tasks in a visual graph format with dependency relationships.
+TaskGraph is a React Flow-based task management application that allows users to
+create, edit, and organize tasks in a visual graph format with dependency
+relationships.
 
 ### Core Data Flow
 
 **Task Node Structure**: Each task has a `TaskNodeData` interface containing:
 
 - `label`: Task name (editable via double-click)
-- `status`: 'pending' | 'in-progress' | 'completed' (cycleable via icon click)
+- `status`: 'pending' | 'in progress' | 'completed' (cycleable via icon click)
 
 **Persistence Layer**: Dual persistence system:
 
@@ -38,7 +42,8 @@ TaskGraph is a React Flow-based task management application that allows users to
 **Edge Creation**: Two methods supported:
 
 1. **Node-to-Node**: Drag between existing nodes to create dependencies
-2. **Drop-on-Void**: Drag from node handle and drop on empty canvas to create new connected task
+2. **Drop-on-Void**: Drag from node handle and drop on empty canvas to create
+   new connected task
 
 **Handle Logic**:
 
@@ -48,7 +53,8 @@ TaskGraph is a React Flow-based task management application that allows users to
 
 ### State Management Pattern
 
-The app uses ReactFlow's `useNodesState` and `useEdgesState` hooks with automatic localStorage synchronization.
+The app uses ReactFlow's `useNodesState` and `useEdgesState` hooks with
+automatic localStorage synchronization.
 
 ### Component Architecture
 
@@ -68,4 +74,5 @@ Uses Tailwind CSS v4 with:
 
 ### ID Generation
 
-New tasks use UUID v4 for globally unique, non-sequential identifiers to avoid collisions across sessions and file imports.
+New tasks use UUID v4 for globally unique, non-sequential identifiers to avoid
+collisions across sessions and file imports.

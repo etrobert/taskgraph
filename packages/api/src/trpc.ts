@@ -18,7 +18,9 @@ export const appRouter = t.router({
   createTask: publicProcedure
     .input(z.object({ name: z.string() }))
     .mutation(async ({ input: { name } }) => {
-      await db.insert(tasksTable).values({ name, position: { x: 0, y: 0 } });
+      await db
+        .insert(tasksTable)
+        .values({ name, position: { x: 0, y: 0 }, status: 'pending' });
       return 'done';
     }),
   health: publicProcedure.query(() => 'ok'),

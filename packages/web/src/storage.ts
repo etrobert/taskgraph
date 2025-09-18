@@ -5,7 +5,7 @@ const STORAGE_KEY = 'taskgraph-data';
 
 const taskNodeDataSchema = z.object({
   label: z.string(),
-  status: z.enum(['pending', 'in-progress', 'completed']).optional(),
+  status: z.enum(['pending', 'in progress', 'completed']).optional(),
   description: z.string().optional(),
 });
 

@@ -84,7 +84,7 @@ export function TaskPropertiesPanel({
           className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:ring-2 focus:ring-blue-500 focus:outline-none"
         >
           <option value="pending">Pending</option>
-          <option value="in-progress">In Progress</option>
+          <option value="in progress">In Progress</option>
           <option value="completed">Completed</option>
         </select>
       </div>

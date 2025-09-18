@@ -27,11 +27,11 @@ export function TaskGraphFlow() {
     () =>
       tasks === undefined
         ? []
-        : tasks.map(({ id, name, position }) => ({
+        : tasks.map(({ id, name, position, status }) => ({
             id: id.toString(),
             position,
             type: 'task',
-            data: { label: name, status: 'pending' },
+            data: { label: name, status },
           })),
     [tasks],
   );

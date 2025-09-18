@@ -3,7 +3,7 @@ import { useState, useCallback } from 'react';
 
 export interface TaskNodeData {
   label: string;
-  status?: 'pending' | 'in-progress' | 'completed';
+  status?: 'pending' | 'in progress' | 'completed';
   description?: string;
 }
 
@@ -29,7 +29,7 @@ export function TaskNode({ data, id, selected }: NodeProps<TaskNodeData>) {
       e.stopPropagation();
       const statusOrder: TaskNodeData['status'][] = [
         'pending',
-        'in-progress',
+        'in progress',
         'completed',
       ];
       const currentIndex = statusOrder.indexOf(data.status || 'pending');
@@ -74,7 +74,7 @@ export function TaskNode({ data, id, selected }: NodeProps<TaskNodeData>) {
       switch (data.status) {
         case 'completed':
           return 'bg-green-100 border-green-300 text-green-800';
-        case 'in-progress':
+        case 'in progress':
           return 'bg-blue-100 border-blue-300 text-blue-800';
         default:
           return 'bg-gray-100 border-gray-300 text-gray-800';
@@ -88,7 +88,7 @@ export function TaskNode({ data, id, selected }: NodeProps<TaskNodeData>) {
     switch (data.status) {
       case 'completed':
         return '✓';
-      case 'in-progress':
+      case 'in progress':
         return '⏳';
       default:
         return '○';
