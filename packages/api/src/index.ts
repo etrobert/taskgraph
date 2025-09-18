@@ -1,6 +1,21 @@
 import express from 'express';
 import cors from 'cors';
 
+import { publicProcedure } from './trpc';
+import * as trpcExpress from '@trpc/server/adapters/express';
+import { initTRPC } from '@trpc/server';
+
+// created for each request
+const createContext = ({}: trpcExpress.CreateExpressContextOptions) => ({}); // no context
+type Context = Awaited<ReturnType<typeof createContext>>;
+
+const t = initTRPC.context<Context>().create();
+const appRouter = t.router({
+  health: publicProcedure.query(() => 'ok'),
+});
+
+export type AppRouter = typeof appRouter;
+
 const app = express();
 const PORT = process.env.PORT || 3001;
 
@@ -14,13 +29,13 @@ app.use((req, _res, next) => {
 app.use(cors());
 app.use(express.json());
 
-app.get('/api/health', (_req, res) => {
-  res.json({
-    status: 'ok',
-    timestamp: new Date().toISOString(),
-    service: 'taskgraph-api',
-  });
-});
+app.use(
+  '/trpc',
+  trpcExpress.createExpressMiddleware({
+    router: appRouter,
+    createContext,
+  }),
+);
 
 app.get('/api/tasks', (_req, res) => {
   // Placeholder for tasks endpoint

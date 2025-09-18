@@ -1,31 +1,20 @@
-import { useEffect, useState } from 'react';
+import { useTRPC } from '../utils/trpc';
+import { useQuery } from '@tanstack/react-query';
 
 export function ApiStatusIndicator() {
-  const [apiStatus, setApiStatus] = useState<string>('checking...');
+  const trpc = useTRPC();
 
-  useEffect(() => {
-    const checkApiHealth = async () => {
-      try {
-        const response = await fetch(
-          `${import.meta.env.VITE_API_URL}/api/health`,
-        );
-        const data = await response.json();
-        setApiStatus(`✅ API: ${data.status}`);
-      } catch (error) {
-        setApiStatus('❌ API: disconnected');
-        console.error(error);
-      }
-    };
+  const { data, isPending, isError } = useQuery(trpc.health.queryOptions());
 
-    checkApiHealth();
-    const interval = setInterval(checkApiHealth, 10000); // Check every 10s
-
-    return () => clearInterval(interval);
-  }, []);
+  function getOutput() {
+    if (isError) return '❌ Error';
+    if (isPending) return '⏳ Loading...';
+    return '✅ ' + data;
+  }
 
   return (
     <div className="fixed top-4 right-4 z-50 rounded bg-gray-800 px-3 py-1 text-sm text-white">
-      {apiStatus}
+      {getOutput()}
     </div>
   );
 }
