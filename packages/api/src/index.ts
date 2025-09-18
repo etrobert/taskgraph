@@ -34,6 +34,28 @@ app.use(
   trpcExpress.createExpressMiddleware({ router: appRouter, createContext }),
 );
 
-app.listen(PORT, () =>
-  console.log(`TaskGraph API server running on port ${PORT}`),
-);
+app.use('/panel', async (_, res) => {
+  if (process.env.NODE_ENV !== 'development')
+    return res.status(404).send('Not Found');
+
+  // Dynamically import renderTrpcPanel only in development
+  const { renderTrpcPanel } = await import('trpc-ui');
+
+  return res.send(
+    renderTrpcPanel(appRouter, {
+      url: `http://localhost:${PORT}/trpc`, // Base url of your trpc server
+      meta: {
+        title: 'My Backend Title',
+        description:
+          'This is a description of my API, which supports [markdown](https://en.wikipedia.org/wiki/Markdown).',
+      },
+    }),
+  );
+});
+
+app.listen(PORT, () => {
+  console.log(`TaskGraph API server running on port ${PORT}`);
+  if (process.env.NODE_ENV !== 'production') {
+    console.log(`tRPC UI available at http://localhost:${PORT}/panel`);
+  }
+});
