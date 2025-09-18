@@ -1,8 +1,9 @@
-import { tasksTable } from './db/schema.js';
+import { tasksTable, tasksUpdateSchema } from './db/schema.js';
 import { initTRPC } from '@trpc/server';
 import * as trpcExpress from '@trpc/server/adapters/express';
+import { eq } from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/node-postgres';
-import z from 'zod';
+import z from 'zod/v4';
 
 const db = drizzle(process.env.DATABASE_URL!);
 
@@ -21,6 +22,12 @@ export const appRouter = t.router({
       await db
         .insert(tasksTable)
         .values({ name, position: { x: 0, y: 0 }, status: 'pending' });
+      return 'done';
+    }),
+  updateTask: publicProcedure
+    .input(z.object({ id: z.number(), updates: tasksUpdateSchema }))
+    .mutation(async ({ input: { id, updates } }) => {
+      await db.update(tasksTable).set(updates).where(eq(tasksTable.id, id));
       return 'done';
     }),
   health: publicProcedure.query(() => 'ok'),

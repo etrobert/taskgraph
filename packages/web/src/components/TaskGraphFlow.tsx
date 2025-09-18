@@ -5,8 +5,8 @@ import { TaskPropertiesPanel } from './TaskPropertiesPanel';
 import { useTaskConnection } from '../hooks/useTaskConnection';
 import { useTaskStorage } from '../hooks/useTaskStorage';
 import { useZoomShortcuts } from '../hooks/useZoomShortcuts';
-import { useQuery } from '@tanstack/react-query';
-import { trpc } from '../utils/trpc';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { queryClient, trpc } from '../utils/trpc';
 
 const nodeTypes = {
   task: TaskNode,
@@ -62,9 +62,22 @@ export function TaskGraphFlow() {
 
   useZoomShortcuts();
 
+  const updateTask = useMutation(
+    trpc.updateTask.mutationOptions({
+      onSuccess: () => {
+        queryClient.invalidateQueries(trpc.tasks.queryFilter());
+      },
+    }),
+  );
+
   const handleNodeUpdate = useCallback(
     (nodeId: string, updates: Partial<TaskNodeData>) => {
       handleUpdateNode(nodeId, updates);
+      const name = updates.label;
+      if (name !== undefined) {
+        updateTask.mutate({ id: parseInt(nodeId), updates: { name } });
+        console.log({ updates });
+      }
 
       // Update selection if the updated node is in the selection
       if (selection.nodes.some((node) => node.id === nodeId)) {
@@ -78,7 +91,7 @@ export function TaskGraphFlow() {
         }));
       }
     },
-    [handleUpdateNode, selection],
+    [handleUpdateNode, selection, updateTask],
   );
 
   return (
