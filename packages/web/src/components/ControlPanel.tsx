@@ -7,7 +7,6 @@ interface ControlPanelProps {
   edges: Edge[];
   onNodesChange: (nodes: Node[]) => void;
   onEdgesChange: (edges: Edge[]) => void;
-  onClearStorage: () => void;
 }
 
 export function ControlPanel({
@@ -15,7 +14,6 @@ export function ControlPanel({
   edges,
   onNodesChange,
   onEdgesChange,
-  onClearStorage,
 }: ControlPanelProps) {
   const handleSaveToFile = () => {
     saveToFile(nodes, edges);
@@ -57,12 +55,6 @@ export function ControlPanel({
           className="hidden"
         />
       </label>
-      <button
-        onClick={onClearStorage}
-        className="rounded-md bg-red-500 px-4 py-2 text-sm font-medium text-white shadow-lg transition-colors duration-200 hover:bg-red-600"
-      >
-        Clear Storage
-      </button>
     </div>
   );
 }
