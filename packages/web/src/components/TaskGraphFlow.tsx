@@ -41,19 +41,6 @@ export function TaskGraphFlow() {
     );
   }, [selection.nodes, setNodes, tasks]);
 
-  const handleUpdateNode = useCallback(
-    (nodeId: string, updates: Partial<TaskNodeData>) => {
-      setNodes((nds) =>
-        nds.map((node) =>
-          node.id === nodeId
-            ? { ...node, data: { ...node.data, ...updates } }
-            : node,
-        ),
-      );
-    },
-    [setNodes],
-  );
-
   const { onConnect, onConnectStart, onConnectEnd } = useTaskConnection(
     setNodes,
     setEdges,
@@ -75,7 +62,6 @@ export function TaskGraphFlow() {
 
   const handleNodeUpdate = useCallback(
     (nodeId: string, updates: Partial<TaskNodeData>) => {
-      handleUpdateNode(nodeId, updates);
       const name = updates.label;
       if (name !== undefined)
         updateTask.mutate({ id: parseInt(nodeId), updates: { name } });
@@ -92,7 +78,7 @@ export function TaskGraphFlow() {
         }));
       }
     },
-    [handleUpdateNode, selection, updateTask],
+    [selection, updateTask],
   );
 
   return (
