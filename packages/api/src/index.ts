@@ -12,9 +12,17 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 // Request logging middleware
-app.use((req, _res, next) => {
+app.use((req, res, next) => {
   const timestamp = new Date().toISOString();
-  console.log(`[${timestamp}] ${req.method} ${req.url}`);
+  const start = Date.now();
+
+  res.on('finish', () => {
+    const duration = Date.now() - start;
+    console.log(
+      `[${timestamp}] ${res.statusCode} ${req.method} ${req.url} - (${duration}ms)`,
+    );
+  });
+
   next();
 });
 
