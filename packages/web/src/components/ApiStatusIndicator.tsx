@@ -1,9 +1,7 @@
-import { useTRPC } from '../utils/trpc';
 import { useQuery } from '@tanstack/react-query';
+import { trpc } from '../utils/trpc';
 
 export function ApiStatusIndicator() {
-  const trpc = useTRPC();
-
   const { data, isPending, isError } = useQuery(trpc.health.queryOptions());
 
   function getOutput() {
