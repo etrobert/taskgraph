@@ -14,7 +14,9 @@
     "dev:web": "npm run dev --workspace=web",
     "dev:api": "npm run dev --workspace=api",
     "start:web": "npm run start --workspace=web",
-    "start:api": "npm run start --workspace=api"
+    "start:api": "npm run start --workspace=api",
+    "format": "npm run format --workspaces",
+    "format:check": "npm run format:check --workspaces"
   },
   "dependencies": {},
   "devDependencies": {}

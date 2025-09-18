@@ -18,7 +18,7 @@ app.get('/api/health', (_req, res) => {
   res.json({
     status: 'ok',
     timestamp: new Date().toISOString(),
-    service: 'taskgraph-api'
+    service: 'taskgraph-api',
   });
 });
 
@@ -26,7 +26,7 @@ app.get('/api/tasks', (_req, res) => {
   // Placeholder for tasks endpoint
   res.json({
     tasks: [],
-    message: 'Tasks API endpoint - ready for implementation'
+    message: 'Tasks API endpoint - ready for implementation',
   });
 });
 
