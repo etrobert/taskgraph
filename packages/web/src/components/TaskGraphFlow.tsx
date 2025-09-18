@@ -81,8 +81,9 @@ export function TaskGraphFlow() {
   const handleNodeUpdate = useCallback(
     (nodeId: string, updates: Partial<TaskNodeData>) => {
       const name = updates.label;
-      if (name !== undefined)
-        updateTask.mutate({ id: parseInt(nodeId), updates: { name } });
+      const status = updates.status;
+      if (name !== undefined || status !== undefined)
+        updateTask.mutate({ id: parseInt(nodeId), updates: { name, status } });
 
       // Update selection if the updated node is in the selection
       if (selection.nodes.some((node) => node.id === nodeId)) {
