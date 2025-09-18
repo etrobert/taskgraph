@@ -1,5 +1,4 @@
-import * as z from 'zod';
-import { tasksTable, usersTable } from './db/schema.js';
+import { tasksTable } from './db/schema.js';
 import { initTRPC } from '@trpc/server';
 import * as trpcExpress from '@trpc/server/adapters/express';
 import { drizzle } from 'drizzle-orm/node-postgres';
@@ -16,11 +15,5 @@ const publicProcedure = t.procedure;
 
 export const appRouter = t.router({
   health: publicProcedure.query(() => 'ok'),
-  createUser: publicProcedure
-    .input(z.object({ name: z.string(), age: z.number(), email: z.string() }))
-    .mutation(({ input: { name, age, email } }) => {
-      db.insert(usersTable).values({ name, age, email });
-    }),
-  users: publicProcedure.query(() => db.select().from(usersTable)),
   tasks: publicProcedure.query(() => db.select().from(tasksTable)),
 });
