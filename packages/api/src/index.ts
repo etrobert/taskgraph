@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 
-import { publicProcedure } from './trpc';
+import { publicProcedure } from './trpc.js';
 import * as trpcExpress from '@trpc/server/adapters/express';
 import { initTRPC } from '@trpc/server';
 
