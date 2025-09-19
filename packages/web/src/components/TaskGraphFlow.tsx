@@ -37,7 +37,7 @@ export function TaskGraphFlow() {
 
   const { data: graph } = useQuery(trpc.graph.queryOptions());
 
-  const previousGraph = useRef<typeof graph>(null);
+  const previousGraph = useRef<typeof graph>(undefined);
   useEffect(() => {
     if (graph === undefined) return;
     if (previousGraph.current === graph) return;
