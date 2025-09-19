@@ -7,7 +7,7 @@ import {
 } from './db/schema.js';
 import { initTRPC } from '@trpc/server';
 import * as trpcExpress from '@trpc/server/adapters/express';
-import { eq } from 'drizzle-orm';
+import { eq, inArray } from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import EventEmitter, { on } from 'node:events';
 import z from 'zod';
@@ -81,6 +81,14 @@ export const appRouter = t.router({
             ? { blockedTaskId: from, blockingTaskId: task[0].id }
             : { blockedTaskId: task[0].id, blockingTaskId: from },
         );
+      ee.emit('update');
+      return 'done';
+    }),
+
+  deleteTasks: publicProcedure
+    .input(z.array(z.string().uuid()))
+    .mutation(async ({ input }) => {
+      await db.delete(tasksTable).where(inArray(tasksTable.id, input));
       ee.emit('update');
       return 'done';
     }),

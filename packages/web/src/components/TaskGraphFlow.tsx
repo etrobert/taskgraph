@@ -4,6 +4,7 @@ import ReactFlow, {
   useNodesState,
   type NodeDragHandler,
   type OnSelectionChangeParams,
+  type OnNodesDelete,
 } from 'reactflow';
 import { useState, useCallback, useEffect } from 'react';
 import { TaskNode, type TaskNodeData } from './TaskNode';
@@ -116,6 +117,13 @@ export function TaskGraphFlow() {
     [selection, updateTask],
   );
 
+  const deleteTasks = useMutation(trpc.deleteTasks.mutationOptions());
+
+  const onNodesDelete = useCallback<OnNodesDelete>(
+    (nodes) => deleteTasks.mutate(nodes.map((node) => node.id)),
+    [deleteTasks],
+  );
+
   return (
     <div style={{ width: '100vw', height: '100vh', display: 'flex' }}>
       <div style={{ flex: 1, height: '100vh' }}>
@@ -131,6 +139,7 @@ export function TaskGraphFlow() {
           onSelectionChange={onSelectionChange}
           onNodeDragStop={onNodeDragStop}
           onNodeDragStart={onNodeDragStart}
+          onNodesDelete={onNodesDelete}
           defaultEdgeOptions={{
             markerEnd: { type: MarkerType.ArrowClosed, width: 30, height: 30 },
           }}
