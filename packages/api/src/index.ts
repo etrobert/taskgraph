@@ -4,7 +4,7 @@ import cors from 'cors';
 import * as trpcExpress from '@trpc/server/adapters/express';
 
 import 'dotenv/config';
-import { appRouter, createContext } from './trpc';
+import { appRouter, createContext } from './trpc.js';
 
 export type AppRouter = typeof appRouter;
 
