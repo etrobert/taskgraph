@@ -9,10 +9,10 @@ import {
 } from '@trpc/client';
 import { QueryClient } from '@tanstack/react-query';
 
-const url = import.meta.env.VITE_API_URL + '/trpc';
+const apiUrl = import.meta.env.VITE_API_URL;
+const dev = import.meta.env.DEV;
 
-// TODO: use right URL
-const wsClient = createWSClient({ url: `ws://localhost:3001` });
+const wsClient = createWSClient({ url: `${dev ? 'ws' : 'wss'}://${apiUrl}` });
 
 export const queryClient = new QueryClient();
 const trpcClient = createTRPCClient<AppRouter>({
@@ -20,7 +20,9 @@ const trpcClient = createTRPCClient<AppRouter>({
     splitLink({
       condition: (op) => op.type === 'subscription',
       true: wsLink({ client: wsClient }),
-      false: httpBatchLink({ url }),
+      false: httpBatchLink({
+        url: `${dev ? 'http' : 'https'}://${apiUrl}/trpc`,
+      }),
     }),
   ],
 });
