@@ -11,20 +11,21 @@ import { eq, inArray } from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import EventEmitter, { on } from 'node:events';
 import z from 'zod';
+import { createTaskFrom } from './routers/createTaskFrom.js';
 
-const db = drizzle({
+export const db = drizzle({
   connection: process.env.DATABASE_URL!,
   casing: 'snake_case',
 });
 
-const ee = new EventEmitter();
+export const ee = new EventEmitter();
 
 // created for each request
 export const createContext = ({}) => ({}); // no context
 type Context = Awaited<ReturnType<typeof createContext>>;
 
 const t = initTRPC.context<Context>().create();
-const publicProcedure = t.procedure;
+export const publicProcedure = t.procedure;
 
 export const appRouter = t.router({
   organizations: publicProcedure.query(() =>
@@ -62,49 +63,20 @@ export const appRouter = t.router({
     .input(z.object({ organizationId: z.string().uuid() }))
     .query(async ({ input: { organizationId } }) => {
       const [tasks, dependencies] = await Promise.all([
-        db.select().from(tasksTable).where(eq(tasksTable.organizationId, organizationId)),
-        db.select().from(dependenciesTable).where(eq(dependenciesTable.organizationId, organizationId)),
+        db
+          .select()
+          .from(tasksTable)
+          .where(eq(tasksTable.organizationId, organizationId)),
+        db
+          .select()
+          .from(dependenciesTable)
+          .where(eq(dependenciesTable.organizationId, organizationId)),
       ]);
 
       return { tasks, dependencies };
     }),
 
-  createTaskFrom: publicProcedure
-    .input(
-      tasksInsertSchema.pick({ position: true }).extend({
-        organizationId: z.string().uuid(),
-        from: z.string().uuid(),
-        newTaskType: z.enum(['blocking', 'blocked']),
-      }),
-    )
-    .mutation(
-      async ({ input: { from, position, organizationId, newTaskType } }) => {
-        const task = await db
-          .insert(tasksTable)
-          .values({
-            name: 'New Task',
-            position,
-            status: 'pending',
-            organizationId,
-          })
-          .returning();
-        await db.insert(dependenciesTable).values(
-          newTaskType === 'blocking'
-            ? {
-                blockedTaskId: from,
-                blockingTaskId: task[0].id,
-                organizationId,
-              }
-            : {
-                blockedTaskId: task[0].id,
-                blockingTaskId: from,
-                organizationId,
-              },
-        );
-        ee.emit('update');
-        return 'done';
-      },
-    ),
+  createTaskFrom,
 
   deleteTasks: publicProcedure
     .input(z.array(z.string().uuid()))
