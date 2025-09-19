@@ -24,25 +24,7 @@ export function TaskPropertiesPanel({ selection }: TaskPropertiesPanelProps) {
     setName(selectedTask.name);
   }, [graph, lastKeystroke, name, selection.nodes]);
 
-  const updateTask = useMutation(
-    trpc.updateTask.mutationOptions({
-      onMutate: ({ id, updates }) => {
-        queryClient.setQueryData(trpc.graph.queryKey(), (old) =>
-          old
-            ? {
-                ...old,
-                tasks: old.tasks.map((task) =>
-                  task.id === id ? { ...task, ...updates } : task,
-                ),
-              }
-            : undefined,
-        );
-      },
-      onError: () => {
-        queryClient.invalidateQueries(trpc.graph.queryFilter());
-      },
-    }),
-  );
+  const updateTask = useMutation(trpc.updateTask.mutationOptions());
 
   if (selection.nodes.length !== 1) {
     return (
