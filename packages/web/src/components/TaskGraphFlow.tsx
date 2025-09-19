@@ -5,6 +5,8 @@ import ReactFlow, {
   type NodeDragHandler,
   type OnSelectionChangeParams,
   type OnNodesDelete,
+  type Node,
+  type Edge,
 } from 'reactflow';
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { TaskNode, type TaskNodeData } from './TaskNode';
@@ -27,7 +29,10 @@ const squaredDistance = (
   (point2.x - point1.x) * (point2.x - point1.x);
 
 export function TaskGraphFlow() {
-  const [selection, setSelection] = useState<OnSelectionChangeParams>({
+  const [selection, setSelection] = useState<{
+    nodes: Node<TaskNodeData>[];
+    edges: Edge[];
+  }>({
     nodes: [],
     edges: [],
   });
@@ -92,28 +97,6 @@ export function TaskGraphFlow() {
     [nodeDragStartPos, updateTask],
   );
 
-  const handleNodeUpdate = useCallback(
-    (nodeId: string, updates: Partial<TaskNodeData>) => {
-      const name = updates.label;
-      const status = updates.status;
-      if (name !== undefined || status !== undefined)
-        updateTask.mutate({ id: nodeId, updates: { name, status } });
-
-      // Update selection if the updated node is in the selection
-      if (selection.nodes.some((node) => node.id === nodeId)) {
-        setSelection((prev) => ({
-          ...prev,
-          nodes: prev.nodes.map((node) =>
-            node.id === nodeId
-              ? { ...node, data: { ...node.data, ...updates } }
-              : node,
-          ),
-        }));
-      }
-    },
-    [selection, updateTask],
-  );
-
   const deleteTasks = useMutation(trpc.deleteTasks.mutationOptions());
 
   const onNodesDelete = useCallback<OnNodesDelete>(
@@ -144,10 +127,7 @@ export function TaskGraphFlow() {
           proOptions={{ hideAttribution: true }}
         />
       </div>
-      <TaskPropertiesPanel
-        selection={selection}
-        onUpdateNode={handleNodeUpdate}
-      />
+      <TaskPropertiesPanel selection={selection} setSelection={setSelection} />
     </div>
   );
 }

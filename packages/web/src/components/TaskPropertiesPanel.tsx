@@ -1,20 +1,46 @@
 import { type Node, type OnSelectionChangeParams } from 'reactflow';
 import { type TaskNodeData } from './TaskNode';
+import { useMutation } from '@tanstack/react-query';
+import { trpc } from '../utils/trpc';
+import type { SetStateAction } from 'react';
 
 interface TaskPropertiesPanelProps {
   selection: OnSelectionChangeParams;
-  onUpdateNode: (nodeId: string, updates: Partial<TaskNodeData>) => void;
+  setSelection: React.Dispatch<SetStateAction<OnSelectionChangeParams>>;
 }
 
 export function TaskPropertiesPanel({
   selection,
-  onUpdateNode,
+  setSelection,
 }: TaskPropertiesPanelProps) {
   // Only show details if exactly one node is selected
   const selectedNode =
     selection.nodes.length === 1
       ? (selection.nodes[0] as Node<TaskNodeData>)
       : null;
+
+  const updateTask = useMutation(
+    trpc.updateTask.mutationOptions({
+      onMutate: ({ id, updates }) => {
+        const { name } = updates;
+        // Update selection if the updated node is in the selection
+        if (selection.nodes.some((node) => node.id === id)) {
+          setSelection((prev) => ({
+            ...prev,
+            nodes: prev.nodes.map((node) =>
+              node.id === id
+                ? {
+                    ...node,
+                    data: { ...node.data, ...{ label: name } },
+                  }
+                : node,
+            ),
+          }));
+        }
+      },
+    }),
+  );
+
   if (!selectedNode) {
     return (
       <div className="h-full w-80 border-l border-gray-200 bg-gray-50 p-4">
@@ -47,7 +73,10 @@ export function TaskPropertiesPanel({
           type="text"
           value={selectedNode.data.label}
           onChange={(e) =>
-            onUpdateNode(selectedNode.id, { label: e.target.value })
+            updateTask.mutate({
+              id: selectedNode.id,
+              updates: { name: e.target.value },
+            })
           }
           className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:ring-2 focus:ring-blue-500 focus:outline-none"
         />
@@ -60,8 +89,9 @@ export function TaskPropertiesPanel({
         </label>
         <textarea
           value={selectedNode.data.description || ''}
-          onChange={(e) =>
-            onUpdateNode(selectedNode.id, { description: e.target.value })
+          onChange={() =>
+            // updateTask.mutate({id: selectedNode.id, updates: { description: e.target.value }})
+            console.log('not implemented yet')
           }
           placeholder="Add a description for this task..."
           rows={5}
@@ -77,8 +107,9 @@ export function TaskPropertiesPanel({
         <select
           value={selectedNode.data.status || 'pending'}
           onChange={(e) =>
-            onUpdateNode(selectedNode.id, {
-              status: e.target.value as TaskNodeData['status'],
+            updateTask.mutate({
+              id: selectedNode.id,
+              updates: { status: e.target.value as TaskNodeData['status'] },
             })
           }
           className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:ring-2 focus:ring-blue-500 focus:outline-none"
