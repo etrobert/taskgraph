@@ -20,6 +20,7 @@
     "express": "^4.21.1",
     "pg": "^8.16.3",
     "trpc-ui": "^1.0.15",
+    "ws": "^8.18.3",
     "zod": "^3.25.76"
   },
   "devDependencies": {
@@ -27,6 +28,7 @@
     "@types/express": "^5.0.0",
     "@types/node": "^22.9.1",
     "@types/pg": "^8.15.5",
+    "@types/ws": "^8.18.1",
     "drizzle-kit": "^0.31.4",
     "eslint": "^9.33.0",
     "prettier": "^3.6.2",

@@ -5,6 +5,7 @@ import * as trpcExpress from '@trpc/server/adapters/express';
 
 import 'dotenv/config';
 import { appRouter, createContext } from './trpc.js';
+import './wsServer.js';
 
 export type AppRouter = typeof appRouter;
 

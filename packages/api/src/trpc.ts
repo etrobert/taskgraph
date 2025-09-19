@@ -6,7 +6,6 @@ import {
   tasksInsertSchema,
 } from './db/schema.js';
 import { initTRPC } from '@trpc/server';
-import * as trpcExpress from '@trpc/server/adapters/express';
 import { eq, inArray } from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import EventEmitter, { on } from 'node:events';
@@ -20,8 +19,7 @@ const db = drizzle({
 const ee = new EventEmitter();
 
 // created for each request
-export const createContext =
-  ({}: trpcExpress.CreateExpressContextOptions) => ({}); // no context
+export const createContext = ({}) => ({}); // no context
 type Context = Awaited<ReturnType<typeof createContext>>;
 
 const t = initTRPC.context<Context>().create();

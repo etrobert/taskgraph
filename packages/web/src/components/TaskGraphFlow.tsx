@@ -73,7 +73,10 @@ export function TaskGraphFlow() {
 
   useSubscription(
     trpc.onTasksChange.subscriptionOptions(undefined, {
-      onData: () => queryClient.invalidateQueries(trpc.graph.queryFilter()),
+      onData: async () => {
+        console.log('received update');
+        await queryClient.invalidateQueries(trpc.graph.queryFilter());
+      },
     }),
   );
 
