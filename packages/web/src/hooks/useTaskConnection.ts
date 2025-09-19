@@ -6,9 +6,10 @@ import {
   type OnConnectEnd,
   type OnConnectStart,
   type OnConnect,
-  addEdge,
 } from 'reactflow';
 import { v4 as uuidv4 } from 'uuid';
+import { trpc } from '../utils/trpc';
+import { useMutation } from '@tanstack/react-query';
 
 export function useTaskConnection(
   setNodes: (nodes: Node[] | ((nodes: Node[]) => Node[])) => void,
@@ -20,11 +21,17 @@ export function useTaskConnection(
   >(null);
   const { screenToFlowPosition } = useReactFlow();
 
+  const createDependency = useMutation(trpc.createDependency.mutationOptions());
+
   const onConnect: OnConnect = useCallback(
     (connection) => {
-      setEdges((edges) => addEdge(connection, edges));
+      if (connection.source === null || connection.target === null) return;
+      createDependency.mutate({
+        blockingTaskId: connection.source,
+        blockedTaskId: connection.target,
+      });
     },
-    [setEdges],
+    [createDependency],
   );
 
   const onConnectStart: OnConnectStart = useCallback(
