@@ -127,7 +127,7 @@ export function TaskGraphFlow() {
           proOptions={{ hideAttribution: true }}
         />
       </div>
-      <TaskPropertiesPanel selection={selection} setSelection={setSelection} />
+      <TaskPropertiesPanel selection={selection} />
     </div>
   );
 }

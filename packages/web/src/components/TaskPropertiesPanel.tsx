@@ -1,47 +1,18 @@
-import { type Node, type OnSelectionChangeParams } from 'reactflow';
+import { type OnSelectionChangeParams } from 'reactflow';
 import { type TaskNodeData } from './TaskNode';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { trpc } from '../utils/trpc';
-import type { SetStateAction } from 'react';
 
 interface TaskPropertiesPanelProps {
   selection: OnSelectionChangeParams;
-  setSelection: React.Dispatch<SetStateAction<OnSelectionChangeParams>>;
 }
 
-export function TaskPropertiesPanel({
-  selection,
-  setSelection,
-}: TaskPropertiesPanelProps) {
-  // Only show details if exactly one node is selected
-  const selectedNode =
-    selection.nodes.length === 1
-      ? (selection.nodes[0] as Node<TaskNodeData>)
-      : null;
+export function TaskPropertiesPanel({ selection }: TaskPropertiesPanelProps) {
+  const { data: graph } = useQuery(trpc.graph.queryOptions());
 
-  const updateTask = useMutation(
-    trpc.updateTask.mutationOptions({
-      onMutate: ({ id, updates }) => {
-        const { name } = updates;
-        // Update selection if the updated node is in the selection
-        if (selection.nodes.some((node) => node.id === id)) {
-          setSelection((prev) => ({
-            ...prev,
-            nodes: prev.nodes.map((node) =>
-              node.id === id
-                ? {
-                    ...node,
-                    data: { ...node.data, ...{ label: name } },
-                  }
-                : node,
-            ),
-          }));
-        }
-      },
-    }),
-  );
+  const updateTask = useMutation(trpc.updateTask.mutationOptions());
 
-  if (!selectedNode) {
+  if (selection.nodes.length !== 1) {
     return (
       <div className="h-full w-80 border-l border-gray-200 bg-gray-50 p-4">
         <h2 className="mb-4 text-lg font-semibold text-gray-700">
@@ -58,6 +29,14 @@ export function TaskPropertiesPanel({
     );
   }
 
+  if (graph === undefined) return null;
+
+  const selectedTask = graph.tasks.find(
+    (task) => task.id === selection.nodes[0].id,
+  );
+
+  if (selectedTask === undefined) return null;
+
   return (
     <div className="h-full w-80 border-l border-gray-200 bg-gray-50 p-4">
       <h2 className="mb-4 text-lg font-semibold text-gray-700">
@@ -71,10 +50,10 @@ export function TaskPropertiesPanel({
         </label>
         <input
           type="text"
-          value={selectedNode.data.label}
+          value={selectedTask.name}
           onChange={(e) =>
             updateTask.mutate({
-              id: selectedNode.id,
+              id: selectedTask.id,
               updates: { name: e.target.value },
             })
           }
@@ -88,7 +67,7 @@ export function TaskPropertiesPanel({
           Description
         </label>
         <textarea
-          value={selectedNode.data.description || ''}
+          value={''}
           onChange={() =>
             // updateTask.mutate({id: selectedNode.id, updates: { description: e.target.value }})
             console.log('not implemented yet')
@@ -105,10 +84,10 @@ export function TaskPropertiesPanel({
           Status
         </label>
         <select
-          value={selectedNode.data.status || 'pending'}
+          value={selectedTask.status || 'pending'}
           onChange={(e) =>
             updateTask.mutate({
-              id: selectedNode.id,
+              id: selectedTask.id,
               updates: { status: e.target.value as TaskNodeData['status'] },
             })
           }
