@@ -1,6 +1,10 @@
 import z from 'zod';
-import { dependenciesTable, tasksInsertSchema, tasksTable } from '../db/schema';
-import { db, ee, publicProcedure } from '../trpc';
+import {
+  dependenciesTable,
+  tasksInsertSchema,
+  tasksTable,
+} from '../db/schema.js';
+import { db, ee, publicProcedure } from '../trpc.js';
 
 export const createTaskFrom = publicProcedure
   .input(
