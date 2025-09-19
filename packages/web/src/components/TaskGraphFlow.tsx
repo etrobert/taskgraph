@@ -27,21 +27,28 @@ export function TaskGraphFlow() {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
-  const { data: tasks } = useQuery(trpc.tasks.queryOptions());
+  const { data: graph } = useQuery(trpc.graph.queryOptions());
 
   useEffect(() => {
+    if (graph === undefined) return;
+    const { tasks, dependencies } = graph;
     setNodes(
-      tasks === undefined
-        ? []
-        : tasks.map(({ id, name, position, status }) => ({
-            id: id.toString(),
-            position,
-            type: 'task',
-            selected: selection.nodes.some((node) => node.id === id.toString()),
-            data: { label: name, status },
-          })),
+      tasks.map(({ id, name, position, status }) => ({
+        id: id.toString(),
+        position,
+        type: 'task',
+        selected: selection.nodes.some((node) => node.id === id.toString()),
+        data: { label: name, status },
+      })),
     );
-  }, [selection.nodes, setNodes, tasks]);
+    setEdges(
+      dependencies.map((dependency) => ({
+        id: dependency.id,
+        source: dependency.blockingTaskId,
+        target: dependency.blockedTaskId,
+      })),
+    );
+  }, [selection.nodes, setNodes, graph, setEdges]);
 
   const { onConnect, onConnectStart, onConnectEnd } = useTaskConnection(
     setNodes,
@@ -57,14 +64,14 @@ export function TaskGraphFlow() {
   const updateTask = useMutation(
     trpc.updateTask.mutationOptions({
       onSuccess: () => {
-        queryClient.invalidateQueries(trpc.tasks.queryFilter());
+        queryClient.invalidateQueries(trpc.graph.queryFilter());
       },
     }),
   );
 
   useSubscription(
     trpc.onTasksChange.subscriptionOptions(undefined, {
-      onData: () => queryClient.invalidateQueries(trpc.tasks.queryFilter()),
+      onData: () => queryClient.invalidateQueries(trpc.graph.queryFilter()),
     }),
   );
 

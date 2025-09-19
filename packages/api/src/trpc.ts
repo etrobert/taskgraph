@@ -57,6 +57,15 @@ export const appRouter = t.router({
     db.select().from(dependenciesTable),
   ),
 
+  graph: publicProcedure.query(async () => {
+    const [tasks, dependencies] = await Promise.all([
+      db.select().from(tasksTable),
+      db.select().from(dependenciesTable),
+    ]);
+
+    return { tasks, dependencies };
+  }),
+
   onTasksChange: publicProcedure.subscription(async function* ({ signal }) {
     for await (const _ of on(ee, 'update', { signal })) yield 'update';
   }),
