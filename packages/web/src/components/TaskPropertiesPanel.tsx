@@ -1,7 +1,7 @@
 import { type OnSelectionChangeParams } from 'reactflow';
 import { type TaskNodeData } from './TaskNode';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { trpc } from '../utils/trpc';
+import { trpc, queryClient } from '../utils/trpc';
 
 interface TaskPropertiesPanelProps {
   selection: OnSelectionChangeParams;
@@ -10,7 +10,25 @@ interface TaskPropertiesPanelProps {
 export function TaskPropertiesPanel({ selection }: TaskPropertiesPanelProps) {
   const { data: graph } = useQuery(trpc.graph.queryOptions());
 
-  const updateTask = useMutation(trpc.updateTask.mutationOptions());
+  const updateTask = useMutation(
+    trpc.updateTask.mutationOptions({
+      onMutate: ({ id, updates }) => {
+        queryClient.setQueryData(trpc.graph.queryKey(), (old) =>
+          old
+            ? {
+                ...old,
+                tasks: old.tasks.map((task) =>
+                  task.id === id ? { ...task, ...updates } : task,
+                ),
+              }
+            : undefined,
+        );
+      },
+      onError: () => {
+        queryClient.invalidateQueries(trpc.graph.queryFilter());
+      },
+    }),
+  );
 
   if (selection.nodes.length !== 1) {
     return (
