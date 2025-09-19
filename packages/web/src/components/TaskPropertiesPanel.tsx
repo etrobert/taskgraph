@@ -1,7 +1,7 @@
 import { type OnSelectionChangeParams } from 'reactflow';
 import { type TaskNodeData } from './TaskNode';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { trpc, queryClient } from '../utils/trpc';
+import { trpc } from '../utils/trpc';
 import { useEffect, useState } from 'react';
 
 interface TaskPropertiesPanelProps {
