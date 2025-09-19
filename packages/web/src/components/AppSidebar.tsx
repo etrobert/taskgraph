@@ -6,26 +6,81 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarTrigger,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
 } from '@/components/ui/sidebar';
 import { trpc } from '@/utils/trpc';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation } from '@tanstack/react-query';
+import { Building2, Plus } from 'lucide-react';
+
+const useOrganizationId = () => {
+  const organizations = useQuery(trpc.organizations.queryOptions());
+  const searchParams = new URLSearchParams(window.location.search);
+  const orgFromUrl = searchParams.get('org');
+  return orgFromUrl || organizations.data?.[0]?.id;
+};
 
 export function AppSidebar() {
   const organizations = useQuery(trpc.organizations.queryOptions());
+  const currentOrgId = useOrganizationId();
+
+  const createOrganization = useMutation(
+    trpc.createOrganization.mutationOptions({
+      onSuccess: (newOrg) => {
+        const url = new URL(window.location.href);
+        url.searchParams.set('org', newOrg[0].id);
+        window.location.href = url.toString();
+      },
+    }),
+  );
+
+  const handleOrgSwitch = (orgId: string) => {
+    const url = new URL(window.location.href);
+    url.searchParams.set('org', orgId);
+    window.location.href = url.toString();
+  };
 
   return (
     <Sidebar>
       <SidebarHeader>
-        <SidebarTrigger />
+        <div className="flex items-center gap-2 px-4 py-2">
+          <SidebarTrigger />
+          <h1 className="text-lg font-semibold">TaskGraph</h1>
+        </div>
       </SidebarHeader>
       <SidebarContent>
-        <SidebarMenu>
-          {organizations.data?.map((organization, index) => (
-            <SidebarMenuItem key={organization.id}>
-              <SidebarMenuButton>Organization {index + 1}</SidebarMenuButton>
-            </SidebarMenuItem>
-          ))}
-        </SidebarMenu>
+        <SidebarGroup>
+          <SidebarGroupLabel>Organizations</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {organizations.data?.map((organization) => (
+                <SidebarMenuItem key={organization.id}>
+                  <SidebarMenuButton
+                    onClick={() => handleOrgSwitch(organization.id)}
+                    isActive={currentOrgId === organization.id}
+                  >
+                    <Building2 size={16} />
+                    <span>Org {organization.id.slice(0, 8)}...</span>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  onClick={() => createOrganization.mutate()}
+                  disabled={createOrganization.isPending}
+                >
+                  <Plus size={16} />
+                  <span>
+                    {createOrganization.isPending
+                      ? 'Creating...'
+                      : 'New Organization'}
+                  </span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
       </SidebarContent>
     </Sidebar>
   );
