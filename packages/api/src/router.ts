@@ -19,6 +19,13 @@ export const appRouter = t.router({
   createOrganization: publicProcedure.mutation(() =>
     db.insert(organizationsTable).values({}).returning(),
   ),
+  deleteOrganization: publicProcedure
+    .input(z.object({ id: z.string().uuid() }))
+    .mutation(async ({ input: { id } }) => {
+      await db.delete(organizationsTable).where(eq(organizationsTable.id, id));
+      ee.emit('update');
+      return 'done';
+    }),
   createTask: publicProcedure
     .input(tasksInsertSchema.pick({ name: true, organizationId: true }))
     .mutation(async ({ input: task }) => {
