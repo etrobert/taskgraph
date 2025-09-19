@@ -45,7 +45,12 @@ export function TaskPropertiesPanel({ selection }: TaskPropertiesPanelProps) {
 
   if (selection.nodes.length !== 1) {
     return (
-      <Sidebar side="right" className="w-80">
+      <Sidebar
+        collapsible="none"
+        side="right"
+        style={{ '--sidebar-width': '20rem' }}
+        className="border-l"
+      >
         <SidebarHeader>
           <h2 className="text-lg font-semibold">Task Properties</h2>
         </SidebarHeader>
@@ -75,7 +80,12 @@ export function TaskPropertiesPanel({ selection }: TaskPropertiesPanelProps) {
   if (selectedTask === undefined) return null;
 
   return (
-    <Sidebar side="right" className="w-80">
+    <Sidebar
+      collapsible="none"
+      side="right"
+      style={{ '--sidebar-width': '20rem' }}
+      className="border-l"
+    >
       <SidebarHeader>
         <h2 className="text-lg font-semibold">Task Properties</h2>
       </SidebarHeader>
