@@ -16,6 +16,7 @@ import { useZoomShortcuts } from '../hooks/useZoomShortcuts';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { queryClient, trpc } from '../utils/trpc';
 import { useSubscription } from '@trpc/tanstack-react-query';
+import { useOrganizationId } from '../hooks/useOrganizationId';
 
 const nodeTypes = {
   task: TaskNode,
@@ -27,14 +28,6 @@ const squaredDistance = (
 ) =>
   (point2.y - point1.y) * (point2.y - point1.y) +
   (point2.x - point1.x) * (point2.x - point1.x);
-
-// Get org from URL query param or use first organization as fallback
-const useOrganizationId = () => {
-  const organizations = useQuery(trpc.organizations.queryOptions());
-  const searchParams = new URLSearchParams(window.location.search);
-  const orgFromUrl = searchParams.get('org');
-  return orgFromUrl || organizations.data?.[0]?.id;
-};
 
 export function TaskGraphFlow() {
   const [selection, setSelection] = useState<{

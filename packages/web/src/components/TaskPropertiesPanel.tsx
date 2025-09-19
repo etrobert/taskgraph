@@ -4,13 +4,20 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { trpc } from '../utils/trpc';
 import { useEffect, useState } from 'react';
 import { Input } from './ui/input';
+import { useOrganizationId } from '@/hooks/useOrganizationId';
 
 interface TaskPropertiesPanelProps {
   selection: OnSelectionChangeParams;
 }
 
 export function TaskPropertiesPanel({ selection }: TaskPropertiesPanelProps) {
-  const { data: graph } = useQuery(trpc.graph.queryOptions());
+  const organizationId = useOrganizationId();
+  const { data: graph } = useQuery(
+    trpc.graph.queryOptions(
+      { organizationId: organizationId! },
+      { enabled: !!organizationId },
+    ),
+  );
 
   const [lastKeystroke, setLastKeystroke] = useState(0);
   const [name, setName] = useState('');
