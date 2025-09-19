@@ -2,6 +2,7 @@ import { type OnSelectionChangeParams } from 'reactflow';
 import { type TaskNodeData } from './TaskNode';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { trpc, queryClient } from '../utils/trpc';
+import { useEffect, useState } from 'react';
 
 interface TaskPropertiesPanelProps {
   selection: OnSelectionChangeParams;
@@ -9,6 +10,19 @@ interface TaskPropertiesPanelProps {
 
 export function TaskPropertiesPanel({ selection }: TaskPropertiesPanelProps) {
   const { data: graph } = useQuery(trpc.graph.queryOptions());
+
+  const [lastKeystroke, setLastKeystroke] = useState(0);
+  const [name, setName] = useState('');
+
+  useEffect(() => {
+    if (graph === undefined) return;
+    const selectedTask = graph.tasks.find(
+      (task) => task.id === selection.nodes[0]?.id,
+    );
+    if (selectedTask === undefined) return;
+    if (Date.now() - lastKeystroke < 1000) return;
+    setName(selectedTask.name);
+  }, [graph, lastKeystroke, name, selection.nodes]);
 
   const updateTask = useMutation(
     trpc.updateTask.mutationOptions({
@@ -68,13 +82,15 @@ export function TaskPropertiesPanel({ selection }: TaskPropertiesPanelProps) {
         </label>
         <input
           type="text"
-          value={selectedTask.name}
-          onChange={(e) =>
+          value={name}
+          onChange={(e) => {
+            setLastKeystroke(Date.now());
+            setName(e.target.value);
             updateTask.mutate({
               id: selectedTask.id,
               updates: { name: e.target.value },
-            })
-          }
+            });
+          }}
           className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:ring-2 focus:ring-blue-500 focus:outline-none"
         />
       </div>
