@@ -15,6 +15,13 @@ import {
   SidebarFooter,
 } from './ui/sidebar';
 import { Label } from './ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from './ui/select';
 
 interface TaskPropertiesPanelProps {
   selection: OnSelectionChangeParams;
@@ -108,22 +115,26 @@ export function TaskPropertiesPanel({ selection }: TaskPropertiesPanelProps) {
               }}
             />
             <Label>Status</Label>
-            <select
+            <Select
               value={selectedTask.status || 'pending'}
-              onChange={(e) =>
+              onValueChange={(value) =>
                 updateTask.mutate({
                   id: selectedTask.id,
                   updates: {
-                    status: e.target.value as TaskNodeData['status'],
+                    status: value as TaskNodeData['status'],
                   },
                 })
               }
-              className="border-input bg-background ring-offset-background focus-visible:ring-ring w-full rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
             >
-              <option value="pending">Pending</option>
-              <option value="in progress">In Progress</option>
-              <option value="completed">Completed</option>
-            </select>
+              <SelectTrigger>
+                <SelectValue placeholder="Select status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="pending">Pending</SelectItem>
+                <SelectItem value="in progress">In Progress</SelectItem>
+                <SelectItem value="completed">Completed</SelectItem>
+              </SelectContent>
+            </Select>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
