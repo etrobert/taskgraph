@@ -6,7 +6,7 @@ import ReactFlow, {
   type OnSelectionChangeParams,
   type OnNodesDelete,
 } from 'reactflow';
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { TaskNode, type TaskNodeData } from './TaskNode';
 import { TaskPropertiesPanel } from './TaskPropertiesPanel';
 import { useTaskConnection } from '../hooks/useTaskConnection';
@@ -37,8 +37,11 @@ export function TaskGraphFlow() {
 
   const { data: graph } = useQuery(trpc.graph.queryOptions());
 
+  const previousGraph = useRef<typeof graph>(null);
   useEffect(() => {
     if (graph === undefined) return;
+    if (previousGraph.current === graph) return;
+    previousGraph.current = graph;
     const { tasks, dependencies } = graph;
     setNodes(
       tasks.map(({ id, name, position, status }) => ({
