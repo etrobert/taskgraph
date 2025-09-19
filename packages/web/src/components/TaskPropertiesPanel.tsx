@@ -2,7 +2,7 @@ import { type OnSelectionChangeParams } from 'reactflow';
 import { type TaskNodeData } from './TaskNode';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { trpc } from '../utils/trpc';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type CSSProperties } from 'react';
 import { Input } from './ui/input';
 import { useOrganizationId } from '@/hooks/useOrganizationId';
 import {
@@ -11,7 +11,6 @@ import {
   SidebarHeader,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarFooter,
 } from './ui/sidebar';
 import { Label } from './ui/label';
@@ -20,7 +19,7 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue
+  SelectValue,
 } from './ui/select';
 
 interface TaskPropertiesPanelProps {
@@ -56,7 +55,7 @@ export function TaskPropertiesPanel({ selection }: TaskPropertiesPanelProps) {
       <Sidebar
         collapsible="none"
         side="right"
-        style={{ '--sidebar-width': '20rem' }}
+        style={{ '--sidebar-width': '20rem' } as CSSProperties}
         className="border-l"
       >
         <SidebarHeader>
@@ -91,7 +90,7 @@ export function TaskPropertiesPanel({ selection }: TaskPropertiesPanelProps) {
     <Sidebar
       collapsible="none"
       side="right"
-      style={{ '--sidebar-width': '20rem' }}
+      style={{ '--sidebar-width': '20rem' } as CSSProperties}
       className="border-l"
     >
       <SidebarHeader>
