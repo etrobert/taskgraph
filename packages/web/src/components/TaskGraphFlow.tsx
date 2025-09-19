@@ -66,7 +66,11 @@ export function TaskGraphFlow() {
     );
   }, [selection.nodes, setNodes, graph, setEdges]);
 
-  const { onConnect, onConnectStart, onConnectEnd } = useTaskConnection();
+  const organizations = useQuery(trpc.organizations.queryOptions());
+
+  const { onConnect, onConnectStart, onConnectEnd } = useTaskConnection(
+    organizations.data?.[0].id,
+  );
 
   const onSelectionChange = useCallback((params: OnSelectionChangeParams) => {
     setSelection(params);

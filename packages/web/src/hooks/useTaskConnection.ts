@@ -8,7 +8,7 @@ import {
 import { trpc } from '../utils/trpc';
 import { useMutation } from '@tanstack/react-query';
 
-export function useTaskConnection() {
+export function useTaskConnection(organizationId: string | undefined) {
   const [connectingNodeId, setConnectingNodeId] = useState<string | null>(null);
   const [connectingHandleType, setConnectingHandleType] = useState<
     'source' | 'target' | null
@@ -19,13 +19,15 @@ export function useTaskConnection() {
 
   const onConnect: OnConnect = useCallback(
     (connection) => {
+      if (organizationId === undefined) return;
       if (connection.source === null || connection.target === null) return;
       createDependency.mutate({
+        organizationId,
         blockingTaskId: connection.source,
         blockedTaskId: connection.target,
       });
     },
-    [createDependency],
+    [createDependency, organizationId],
   );
 
   const onConnectStart: OnConnectStart = useCallback(
@@ -40,6 +42,7 @@ export function useTaskConnection() {
 
   const onConnectEnd: OnConnectEnd = useCallback(
     (event) => {
+      if (organizationId === undefined) return;
       if (connectingNodeId === null || connectingHandleType === null) return;
       if (
         event.target instanceof HTMLElement &&
@@ -49,6 +52,7 @@ export function useTaskConnection() {
           'changedTouches' in event ? event.changedTouches[0] : event;
 
         createTaskFrom.mutate({
+          organizationId,
           from: connectingNodeId,
           position: screenToFlowPosition({ x: clientX, y: clientY }),
           newTaskType:
@@ -62,6 +66,7 @@ export function useTaskConnection() {
       connectingNodeId,
       connectingHandleType,
       createTaskFrom,
+      organizationId,
       screenToFlowPosition,
     ],
   );

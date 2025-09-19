@@ -4,6 +4,7 @@ import {
   dependenciesTable,
   dependenciesInsertSchema,
   tasksInsertSchema,
+  organizationsTable,
 } from './db/schema.js';
 import { initTRPC } from '@trpc/server';
 import { eq, inArray } from 'drizzle-orm';
@@ -26,12 +27,18 @@ const t = initTRPC.context<Context>().create();
 const publicProcedure = t.procedure;
 
 export const appRouter = t.router({
+  organizations: publicProcedure.query(() =>
+    db.select().from(organizationsTable),
+  ),
+  createOrganization: publicProcedure.mutation(() =>
+    db.insert(organizationsTable).values({}).returning(),
+  ),
   createTask: publicProcedure
-    .input(z.object({ name: z.string() }))
-    .mutation(async ({ input: { name } }) => {
+    .input(tasksInsertSchema.pick({ name: true, organizationId: true }))
+    .mutation(async ({ input: task }) => {
       await db
         .insert(tasksTable)
-        .values({ name, position: { x: 0, y: 0 }, status: 'pending' });
+        .values({ ...task, position: { x: 0, y: 0 }, status: 'pending' });
       ee.emit('update');
       return 'done';
     }),
@@ -63,25 +70,39 @@ export const appRouter = t.router({
   createTaskFrom: publicProcedure
     .input(
       tasksInsertSchema.pick({ position: true }).extend({
+        organizationId: z.string().uuid(),
         from: z.string().uuid(),
         newTaskType: z.enum(['blocking', 'blocked']),
       }),
     )
-    .mutation(async ({ input: { from, position, newTaskType } }) => {
-      const task = await db
-        .insert(tasksTable)
-        .values({ name: 'New Task', position, status: 'pending' })
-        .returning();
-      await db
-        .insert(dependenciesTable)
-        .values(
+    .mutation(
+      async ({ input: { from, position, organizationId, newTaskType } }) => {
+        const task = await db
+          .insert(tasksTable)
+          .values({
+            name: 'New Task',
+            position,
+            status: 'pending',
+            organizationId,
+          })
+          .returning();
+        await db.insert(dependenciesTable).values(
           newTaskType === 'blocking'
-            ? { blockedTaskId: from, blockingTaskId: task[0].id }
-            : { blockedTaskId: task[0].id, blockingTaskId: from },
+            ? {
+                blockedTaskId: from,
+                blockingTaskId: task[0].id,
+                organizationId,
+              }
+            : {
+                blockedTaskId: task[0].id,
+                blockingTaskId: from,
+                organizationId,
+              },
         );
-      ee.emit('update');
-      return 'done';
-    }),
+        ee.emit('update');
+        return 'done';
+      },
+    ),
 
   deleteTasks: publicProcedure
     .input(z.array(z.string().uuid()))

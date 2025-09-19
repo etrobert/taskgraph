@@ -7,8 +7,15 @@ export const statusEnum = pgEnum('status', [
   'completed',
 ]);
 
+export const organizationsTable = pgTable('organizations', {
+  id: uuid().primaryKey().defaultRandom(),
+});
+
 export const tasksTable = pgTable('tasks', {
   id: uuid().primaryKey().defaultRandom(),
+  organizationId: uuid()
+    .notNull()
+    .references(() => organizationsTable.id, { onDelete: 'cascade' }),
   name: varchar({ length: 255 }).notNull(),
   position: point({ mode: 'xy' }).notNull(),
   status: statusEnum().notNull(),
@@ -16,6 +23,9 @@ export const tasksTable = pgTable('tasks', {
 
 export const dependenciesTable = pgTable('dependencies', {
   id: uuid().primaryKey().defaultRandom(),
+  organizationId: uuid()
+    .notNull()
+    .references(() => organizationsTable.id, { onDelete: 'cascade' }),
   blockingTaskId: uuid()
     .notNull()
     .references(() => tasksTable.id, { onDelete: 'cascade' }),
