@@ -43,7 +43,6 @@ export const appRouter = t.router({
       ee.emit('update');
       return 'done';
     }),
-  tasks: publicProcedure.query(() => db.select().from(tasksTable)),
 
   createDependency: publicProcedure
     .input(dependenciesInsertSchema)
@@ -52,10 +51,6 @@ export const appRouter = t.router({
       ee.emit('update');
       return 'done';
     }),
-
-  dependencies: publicProcedure.query(() =>
-    db.select().from(dependenciesTable),
-  ),
 
   graph: publicProcedure.query(async () => {
     const [tasks, dependencies] = await Promise.all([
