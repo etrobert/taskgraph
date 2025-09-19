@@ -28,6 +28,14 @@ const squaredDistance = (
   (point2.y - point1.y) * (point2.y - point1.y) +
   (point2.x - point1.x) * (point2.x - point1.x);
 
+// Get org from URL query param or use first organization as fallback
+const useOrganizationId = () => {
+  const organizations = useQuery(trpc.organizations.queryOptions());
+  const searchParams = new URLSearchParams(window.location.search);
+  const orgFromUrl = searchParams.get('org');
+  return orgFromUrl || organizations.data?.[0]?.id;
+};
+
 export function TaskGraphFlow() {
   const [selection, setSelection] = useState<{
     nodes: Node<TaskNodeData>[];
@@ -40,7 +48,14 @@ export function TaskGraphFlow() {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
-  const { data: graph } = useQuery(trpc.graph.queryOptions());
+  const organizationId = useOrganizationId();
+
+  const { data: graph } = useQuery(
+    trpc.graph.queryOptions(
+      { organizationId: organizationId! },
+      { enabled: !!organizationId },
+    ),
+  );
 
   const previousGraph = useRef<typeof graph>(undefined);
   useEffect(() => {
@@ -66,11 +81,8 @@ export function TaskGraphFlow() {
     );
   }, [selection.nodes, setNodes, graph, setEdges]);
 
-  const organizations = useQuery(trpc.organizations.queryOptions());
-
-  const { onConnect, onConnectStart, onConnectEnd } = useTaskConnection(
-    organizations.data?.[0].id,
-  );
+  const { onConnect, onConnectStart, onConnectEnd } =
+    useTaskConnection(organizationId);
 
   const onSelectionChange = useCallback((params: OnSelectionChangeParams) => {
     setSelection(params);

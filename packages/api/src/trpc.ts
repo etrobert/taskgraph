@@ -58,14 +58,16 @@ export const appRouter = t.router({
       return 'done';
     }),
 
-  graph: publicProcedure.query(async () => {
-    const [tasks, dependencies] = await Promise.all([
-      db.select().from(tasksTable),
-      db.select().from(dependenciesTable),
-    ]);
+  graph: publicProcedure
+    .input(z.object({ organizationId: z.string().uuid() }))
+    .query(async ({ input: { organizationId } }) => {
+      const [tasks, dependencies] = await Promise.all([
+        db.select().from(tasksTable).where(eq(tasksTable.organizationId, organizationId)),
+        db.select().from(dependenciesTable).where(eq(dependenciesTable.organizationId, organizationId)),
+      ]);
 
-    return { tasks, dependencies };
-  }),
+      return { tasks, dependencies };
+    }),
 
   createTaskFrom: publicProcedure
     .input(
