@@ -23,7 +23,7 @@ export function AppSidebar() {
     trpc.createOrganization.mutationOptions({
       onSuccess: (newOrg) => {
         const url = new URL(window.location.href);
-        url.searchParams.set('org', newOrg[0].id);
+        url.searchParams.set('org', newOrg.id);
         window.location.href = url.toString();
       },
     }),

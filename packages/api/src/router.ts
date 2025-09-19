@@ -11,14 +11,13 @@ import { db, ee, t, publicProcedure } from './trpc.js';
 import z from 'zod';
 import { on } from 'node:events';
 import { createTaskFrom } from './routers/createTaskFrom.js';
+import { createOrganization } from './routers/createOrganization.js';
 
 export const appRouter = t.router({
   organizations: publicProcedure.query(() =>
     db.select().from(organizationsTable),
   ),
-  createOrganization: publicProcedure.mutation(() =>
-    db.insert(organizationsTable).values({}).returning(),
-  ),
+  createOrganization,
   deleteOrganization: publicProcedure
     .input(z.object({ id: z.string().uuid() }))
     .mutation(async ({ input: { id } }) => {
@@ -84,3 +83,4 @@ export const appRouter = t.router({
 });
 
 export type AppRouter = typeof appRouter;
+
