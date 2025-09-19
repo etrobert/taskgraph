@@ -3,6 +3,7 @@ import { type TaskNodeData } from './TaskNode';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { trpc } from '../utils/trpc';
 import { useEffect, useState } from 'react';
+import { Input } from './ui/input';
 
 interface TaskPropertiesPanelProps {
   selection: OnSelectionChangeParams;
@@ -62,7 +63,7 @@ export function TaskPropertiesPanel({ selection }: TaskPropertiesPanelProps) {
         <label className="mb-2 block text-sm font-medium text-gray-700">
           Task Name
         </label>
-        <input
+        <Input
           type="text"
           value={name}
           onChange={(e) => {
@@ -73,7 +74,6 @@ export function TaskPropertiesPanel({ selection }: TaskPropertiesPanelProps) {
               updates: { name: e.target.value },
             });
           }}
-          className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:ring-2 focus:ring-blue-500 focus:outline-none"
         />
       </div>
 
