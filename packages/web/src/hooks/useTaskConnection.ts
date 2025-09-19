@@ -1,20 +1,14 @@
 import { useCallback, useState } from 'react';
 import {
-  type Node,
-  type Edge,
   useReactFlow,
   type OnConnectEnd,
   type OnConnectStart,
   type OnConnect,
 } from 'reactflow';
-import { v4 as uuidv4 } from 'uuid';
 import { trpc } from '../utils/trpc';
 import { useMutation } from '@tanstack/react-query';
 
-export function useTaskConnection(
-  setNodes: (nodes: Node[] | ((nodes: Node[]) => Node[])) => void,
-  setEdges: (edges: Edge[] | ((edges: Edge[]) => Edge[])) => void,
-) {
+export function useTaskConnection() {
   const [connectingNodeId, setConnectingNodeId] = useState<string | null>(null);
   const [connectingHandleType, setConnectingHandleType] = useState<
     'source' | 'target' | null
@@ -42,6 +36,8 @@ export function useTaskConnection(
     [],
   );
 
+  const createTaskFrom = useMutation(trpc.createTaskFrom.mutationOptions());
+
   const onConnectEnd: OnConnectEnd = useCallback(
     (event) => {
       if (connectingNodeId === null || connectingHandleType === null) return;
@@ -49,43 +45,22 @@ export function useTaskConnection(
         event.target instanceof HTMLElement &&
         event.target.classList.contains('react-flow__pane')
       ) {
-        // Only create new node if dropped on empty canvas and we have a connecting node
-        const newId = uuidv4();
         const { clientX, clientY } =
-          event instanceof TouchEvent ? event.changedTouches[0] : event;
+          'changedTouches' in event ? event.changedTouches[0] : event;
 
-        const newNode: Node = {
-          id: newId,
-          type: 'task',
+        createTaskFrom.mutate({
+          from: connectingNodeId,
           position: screenToFlowPosition({ x: clientX, y: clientY }),
-          data: { label: 'New Task', status: 'pending' },
-        };
-
-        const newEdge: Edge =
-          connectingHandleType === 'source'
-            ? {
-                id: `e-${connectingNodeId}-${newId}`,
-                source: connectingNodeId,
-                target: newId,
-              }
-            : {
-                id: `e-${newId}-${connectingNodeId}`,
-                source: newId,
-                target: connectingNodeId,
-              };
-
-        setNodes((nds) => nds.concat(newNode));
-        setEdges((eds) => eds.concat(newEdge));
+        });
       }
       setConnectingNodeId(null);
       setConnectingHandleType(null);
     },
     [
-      screenToFlowPosition,
-      setNodes,
-      setEdges,
       connectingNodeId,
       connectingHandleType,
+      createTaskFrom,
+      screenToFlowPosition,
     ],
   );
 

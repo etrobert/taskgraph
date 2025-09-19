@@ -25,4 +25,5 @@ export const dependenciesTable = pgTable('dependencies', {
 });
 
 export const tasksUpdateSchema = createUpdateSchema(tasksTable);
+export const tasksInsertSchema = createInsertSchema(tasksTable);
 export const dependenciesInsertSchema = createInsertSchema(dependenciesTable);

@@ -3,6 +3,7 @@ import {
   tasksUpdateSchema,
   dependenciesTable,
   dependenciesInsertSchema,
+  tasksInsertSchema,
 } from './db/schema.js';
 import { initTRPC } from '@trpc/server';
 import * as trpcExpress from '@trpc/server/adapters/express';
@@ -60,6 +61,24 @@ export const appRouter = t.router({
 
     return { tasks, dependencies };
   }),
+
+  createTaskFrom: publicProcedure
+    .input(
+      tasksInsertSchema.pick({ position: true }).extend({
+        from: z.string().uuid(),
+      }),
+    )
+    .mutation(async ({ input: { from, position } }) => {
+      const task = await db
+        .insert(tasksTable)
+        .values({ name: 'New Task', position, status: 'pending' })
+        .returning();
+      await db
+        .insert(dependenciesTable)
+        .values({ blockedTaskId: from, blockingTaskId: task[0].id });
+      ee.emit('update');
+      return 'done';
+    }),
 
   onTasksChange: publicProcedure.subscription(async function* ({ signal }) {
     for await (const _ of on(ee, 'update', { signal })) yield 'update';

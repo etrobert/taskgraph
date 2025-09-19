@@ -50,10 +50,7 @@ export function TaskGraphFlow() {
     );
   }, [selection.nodes, setNodes, graph, setEdges]);
 
-  const { onConnect, onConnectStart, onConnectEnd } = useTaskConnection(
-    setNodes,
-    setEdges,
-  );
+  const { onConnect, onConnectStart, onConnectEnd } = useTaskConnection();
 
   const onSelectionChange = useCallback((params: OnSelectionChangeParams) => {
     setSelection(params);
