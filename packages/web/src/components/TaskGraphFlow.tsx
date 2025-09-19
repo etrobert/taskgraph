@@ -69,13 +69,7 @@ export function TaskGraphFlow() {
 
   useZoomShortcuts();
 
-  const updateTask = useMutation(
-    trpc.updateTask.mutationOptions({
-      onSuccess: () => {
-        queryClient.invalidateQueries(trpc.graph.queryFilter());
-      },
-    }),
-  );
+  const updateTask = useMutation(trpc.updateTask.mutationOptions());
 
   useSubscription(
     trpc.onTasksChange.subscriptionOptions(undefined, {
