@@ -7,7 +7,8 @@ import { applyWSSHandler } from '@trpc/server/adapters/ws';
 import * as trpcExpress from '@trpc/server/adapters/express';
 
 import 'dotenv/config';
-import { appRouter, createContext } from './trpc.js';
+import { createContext } from './trpc.js';
+import { appRouter } from './router.js';
 
 export type AppRouter = typeof appRouter;
 
