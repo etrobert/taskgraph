@@ -45,10 +45,10 @@ export function TaskGraphFlow() {
     const { tasks, dependencies } = graph;
     setNodes(
       tasks.map(({ id, name, position, status }) => ({
-        id: id.toString(),
+        id,
         position,
         type: 'task',
-        selected: selection.nodes.some((node) => node.id === id.toString()),
+        selected: selection.nodes.some((node) => node.id === id),
         data: { label: name, status },
       })),
     );
