@@ -18,6 +18,13 @@ const nodeTypes = {
   task: TaskNode,
 };
 
+const squaredDistance = (
+  point1: { x: number; y: number },
+  point2: { x: number; y: number },
+) =>
+  (point2.y - point1.y) * (point2.y - point1.y) +
+  (point2.x - point1.x) * (point2.x - point1.x);
+
 export function TaskGraphFlow() {
   const [selection, setSelection] = useState<OnSelectionChangeParams>({
     nodes: [],
@@ -72,14 +79,19 @@ export function TaskGraphFlow() {
     }),
   );
 
+  const [nodeDragStartPos, setNodeDragStartPos] = useState({ x: 0, y: 0 });
+
+  const onNodeDragStart = useCallback<NodeDragHandler>((event) => {
+    setNodeDragStartPos({ x: event.clientX, y: event.clientY });
+  }, []);
+
   const onNodeDragStop = useCallback<NodeDragHandler>(
-    (_event, node) => {
-      updateTask.mutate({
-        id: node.id,
-        updates: { position: node.position },
-      });
+    (event, node) => {
+      const cursorPos = { x: event.clientX, y: event.clientY };
+      if (squaredDistance(nodeDragStartPos, cursorPos) < 200) return;
+      updateTask.mutate({ id: node.id, updates: { position: node.position } });
     },
-    [updateTask],
+    [nodeDragStartPos, updateTask],
   );
 
   const handleNodeUpdate = useCallback(
@@ -118,6 +130,7 @@ export function TaskGraphFlow() {
           onConnectEnd={onConnectEnd}
           onSelectionChange={onSelectionChange}
           onNodeDragStop={onNodeDragStop}
+          onNodeDragStart={onNodeDragStart}
           defaultEdgeOptions={{
             markerEnd: { type: MarkerType.ArrowClosed, width: 30, height: 30 },
           }}
