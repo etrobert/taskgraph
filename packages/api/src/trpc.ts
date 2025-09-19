@@ -4,7 +4,7 @@ import * as trpcExpress from '@trpc/server/adapters/express';
 import { eq } from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import EventEmitter, { on } from 'node:events';
-import z from 'zod/v4';
+import z from 'zod';
 
 const db = drizzle(process.env.DATABASE_URL!);
 
