@@ -51,6 +51,8 @@ export function useTaskConnection() {
         createTaskFrom.mutate({
           from: connectingNodeId,
           position: screenToFlowPosition({ x: clientX, y: clientY }),
+          newTaskType:
+            connectingHandleType === 'source' ? 'blocked' : 'blocking',
         });
       }
       setConnectingNodeId(null);

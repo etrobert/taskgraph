@@ -66,16 +66,21 @@ export const appRouter = t.router({
     .input(
       tasksInsertSchema.pick({ position: true }).extend({
         from: z.string().uuid(),
+        newTaskType: z.enum(['blocking', 'blocked']),
       }),
     )
-    .mutation(async ({ input: { from, position } }) => {
+    .mutation(async ({ input: { from, position, newTaskType } }) => {
       const task = await db
         .insert(tasksTable)
         .values({ name: 'New Task', position, status: 'pending' })
         .returning();
       await db
         .insert(dependenciesTable)
-        .values({ blockedTaskId: from, blockingTaskId: task[0].id });
+        .values(
+          newTaskType === 'blocking'
+            ? { blockedTaskId: from, blockingTaskId: task[0].id }
+            : { blockedTaskId: task[0].id, blockingTaskId: from },
+        );
       ee.emit('update');
       return 'done';
     }),
