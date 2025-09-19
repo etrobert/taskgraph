@@ -52,7 +52,7 @@ export function useTaskConnection(
         // Only create new node if dropped on empty canvas and we have a connecting node
         const newId = uuidv4();
         const { clientX, clientY } =
-          'changedTouches' in event ? event.changedTouches[0] : event;
+          event instanceof TouchEvent ? event.changedTouches[0] : event;
 
         const newNode: Node = {
           id: newId,
