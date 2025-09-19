@@ -12,7 +12,7 @@ import { QueryClient } from '@tanstack/react-query';
 const url = import.meta.env.VITE_API_URL + '/trpc';
 
 // TODO: use right URL
-const wsClient = createWSClient({ url: `ws://localhost:3002` });
+const wsClient = createWSClient({ url: `ws://localhost:3001` });
 
 export const queryClient = new QueryClient();
 const trpcClient = createTRPCClient<AppRouter>({

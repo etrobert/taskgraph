@@ -1,11 +1,13 @@
 import express from 'express';
 import cors from 'cors';
+import { createServer } from 'http';
+import { WebSocketServer } from 'ws';
+import { applyWSSHandler } from '@trpc/server/adapters/ws';
 
 import * as trpcExpress from '@trpc/server/adapters/express';
 
 import 'dotenv/config';
 import { appRouter, createContext } from './trpc.js';
-import './wsServer.js';
 
 export type AppRouter = typeof appRouter;
 
@@ -54,9 +56,41 @@ app.use('/panel', async (_, res) => {
   );
 });
 
-app.listen(PORT, () => {
+// Create HTTP server
+const server = createServer(app);
+
+// Create WebSocket server attached to the same HTTP server
+const wss = new WebSocketServer({ server });
+
+const handler = applyWSSHandler({
+  wss,
+  router: appRouter,
+  createContext,
+  // Enable heartbeat messages to keep connection open
+  keepAlive: {
+    enabled: true,
+    pingMs: 30000,
+    pongWaitMs: 5000,
+  },
+});
+
+wss.on('connection', (ws) => {
+  console.log(`➕➕ Connection (${wss.clients.size})`);
+  ws.once('close', () => {
+    console.log(`➖➖ Connection (${wss.clients.size})`);
+  });
+});
+
+server.listen(PORT, () => {
   console.log(`TaskGraph API server running on port ${PORT}`);
+  console.log(`✅ WebSocket Server available at ws://localhost:${PORT}`);
   if (process.env.NODE_ENV !== 'production') {
     console.log(`tRPC UI available at http://localhost:${PORT}/panel`);
   }
+});
+
+process.on('SIGTERM', () => {
+  console.log('SIGTERM');
+  handler.broadcastReconnectNotification();
+  wss.close();
 });
