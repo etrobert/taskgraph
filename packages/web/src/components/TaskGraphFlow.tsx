@@ -71,7 +71,7 @@ export function TaskGraphFlow() {
   const onNodeDragStop = useCallback<NodeDragHandler>(
     (_event, node) => {
       updateTask.mutate({
-        id: parseInt(node.id),
+        id: node.id,
         updates: { position: node.position },
       });
     },
@@ -83,7 +83,7 @@ export function TaskGraphFlow() {
       const name = updates.label;
       const status = updates.status;
       if (name !== undefined || status !== undefined)
-        updateTask.mutate({ id: parseInt(nodeId), updates: { name, status } });
+        updateTask.mutate({ id: nodeId, updates: { name, status } });
 
       // Update selection if the updated node is in the selection
       if (selection.nodes.some((node) => node.id === nodeId)) {

@@ -29,7 +29,7 @@ export const appRouter = t.router({
       return 'done';
     }),
   updateTask: publicProcedure
-    .input(z.object({ id: z.number(), updates: tasksUpdateSchema }))
+    .input(z.object({ id: z.string().uuid(), updates: tasksUpdateSchema }))
     .mutation(async ({ input: { id, updates } }) => {
       await db.update(tasksTable).set(updates).where(eq(tasksTable.id, id));
       ee.emit('update');
