@@ -5,6 +5,15 @@ import { trpc } from '../utils/trpc';
 import { useEffect, useState } from 'react';
 import { Input } from './ui/input';
 import { useOrganizationId } from '@/hooks/useOrganizationId';
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarHeader,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarFooter,
+} from './ui/sidebar';
 
 interface TaskPropertiesPanelProps {
   selection: OnSelectionChangeParams;
@@ -36,18 +45,24 @@ export function TaskPropertiesPanel({ selection }: TaskPropertiesPanelProps) {
 
   if (selection.nodes.length !== 1) {
     return (
-      <div className="h-full w-80 border-l border-gray-200 bg-gray-50 p-4">
-        <h2 className="mb-4 text-lg font-semibold text-gray-700">
-          Task Properties
-        </h2>
-        <p className="text-gray-500">
-          {selection.nodes.length === 0
-            ? 'Select a task to view its properties'
-            : selection.nodes.length > 1
-              ? `${selection.nodes.length} tasks selected`
-              : 'Select a task to view its properties'}
-        </p>
-      </div>
+      <Sidebar side="right" className="w-80">
+        <SidebarHeader>
+          <h2 className="text-lg font-semibold">Task Properties</h2>
+        </SidebarHeader>
+        <SidebarContent>
+          <SidebarGroup>
+            <SidebarGroupContent>
+              <p className="text-muted-foreground px-2 text-sm">
+                {selection.nodes.length === 0
+                  ? 'Select a task to view its properties'
+                  : selection.nodes.length > 1
+                    ? `${selection.nodes.length} tasks selected`
+                    : 'Select a task to view its properties'}
+              </p>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        </SidebarContent>
+      </Sidebar>
     );
   }
 
@@ -60,67 +75,55 @@ export function TaskPropertiesPanel({ selection }: TaskPropertiesPanelProps) {
   if (selectedTask === undefined) return null;
 
   return (
-    <div className="h-full w-80 border-l border-gray-200 bg-gray-50 p-4">
-      <h2 className="mb-4 text-lg font-semibold text-gray-700">
-        Task Properties
-      </h2>
-
-      {/* Task Name */}
-      <div className="mb-4">
-        <label className="mb-2 block text-sm font-medium text-gray-700">
-          Task Name
-        </label>
-        <Input
-          type="text"
-          value={name}
-          onChange={(e) => {
-            setLastKeystroke(Date.now());
-            setName(e.target.value);
-            updateTask.mutate({
-              id: selectedTask.id,
-              updates: { name: e.target.value },
-            });
-          }}
-        />
-      </div>
-
-      {/* Description */}
-      <div className="mb-4">
-        <label className="mb-2 block text-sm font-medium text-gray-700">
-          Description
-        </label>
-        <textarea
-          value={''}
-          onChange={() =>
-            // updateTask.mutate({id: selectedNode.id, updates: { description: e.target.value }})
-            console.log('not implemented yet')
-          }
-          placeholder="Add a description for this task..."
-          rows={5}
-          className="w-full resize-none rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:ring-2 focus:ring-blue-500 focus:outline-none"
-        />
-      </div>
-
-      {/* Status */}
-      <div className="mb-4">
-        <label className="mb-2 block text-sm font-medium text-gray-700">
-          Status
-        </label>
-        <select
-          value={selectedTask.status || 'pending'}
-          onChange={(e) =>
-            updateTask.mutate({
-              id: selectedTask.id,
-              updates: { status: e.target.value as TaskNodeData['status'] },
-            })
-          }
-          className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:ring-2 focus:ring-blue-500 focus:outline-none"
-        >
-          <option value="pending">Pending</option>
-          <option value="in progress">In Progress</option>
-          <option value="completed">Completed</option>
-        </select>
-      </div>
-    </div>
+    <Sidebar side="right" className="w-80">
+      <SidebarHeader>
+        <h2 className="text-lg font-semibold">Task Properties</h2>
+      </SidebarHeader>
+      <SidebarContent>
+        <SidebarGroup>
+          <SidebarGroupLabel>Basic Info</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <label htmlFor="task-name">Task Name</label>
+            <Input
+              id="task-name"
+              type="text"
+              value={name}
+              onChange={(e) => {
+                setLastKeystroke(Date.now());
+                setName(e.target.value);
+                updateTask.mutate({
+                  id: selectedTask.id,
+                  updates: { name: e.target.value },
+                });
+              }}
+            />
+            <label>
+              Status
+              <select
+                value={selectedTask.status || 'pending'}
+                onChange={(e) =>
+                  updateTask.mutate({
+                    id: selectedTask.id,
+                    updates: {
+                      status: e.target.value as TaskNodeData['status'],
+                    },
+                  })
+                }
+                className="border-input bg-background ring-offset-background focus-visible:ring-ring w-full rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+              >
+                <option value="pending">Pending</option>
+                <option value="in progress">In Progress</option>
+                <option value="completed">Completed</option>
+              </select>
+            </label>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      </SidebarContent>
+      <SidebarFooter>
+        <div className="text-muted-foreground font-mono text-xs">
+          taskId: {selectedTask.id.slice(0, 25)}...
+        </div>
+      </SidebarFooter>
+    </Sidebar>
   );
 }
