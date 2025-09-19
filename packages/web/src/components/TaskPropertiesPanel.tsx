@@ -14,6 +14,7 @@ import {
   SidebarGroupLabel,
   SidebarFooter,
 } from './ui/sidebar';
+import { Label } from './ui/label';
 
 interface TaskPropertiesPanelProps {
   selection: OnSelectionChangeParams;
@@ -91,9 +92,8 @@ export function TaskPropertiesPanel({ selection }: TaskPropertiesPanelProps) {
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Basic Info</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <label htmlFor="task-name">Task Name</label>
+          <SidebarGroupContent className="grid gap-2">
+            <Label htmlFor="task-name">Task Name</Label>
             <Input
               id="task-name"
               type="text"
@@ -107,25 +107,23 @@ export function TaskPropertiesPanel({ selection }: TaskPropertiesPanelProps) {
                 });
               }}
             />
-            <label>
-              Status
-              <select
-                value={selectedTask.status || 'pending'}
-                onChange={(e) =>
-                  updateTask.mutate({
-                    id: selectedTask.id,
-                    updates: {
-                      status: e.target.value as TaskNodeData['status'],
-                    },
-                  })
-                }
-                className="border-input bg-background ring-offset-background focus-visible:ring-ring w-full rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
-              >
-                <option value="pending">Pending</option>
-                <option value="in progress">In Progress</option>
-                <option value="completed">Completed</option>
-              </select>
-            </label>
+            <Label>Status</Label>
+            <select
+              value={selectedTask.status || 'pending'}
+              onChange={(e) =>
+                updateTask.mutate({
+                  id: selectedTask.id,
+                  updates: {
+                    status: e.target.value as TaskNodeData['status'],
+                  },
+                })
+              }
+              className="border-input bg-background ring-offset-background focus-visible:ring-ring w-full rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+            >
+              <option value="pending">Pending</option>
+              <option value="in progress">In Progress</option>
+              <option value="completed">Completed</option>
+            </select>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
