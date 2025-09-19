@@ -126,7 +126,7 @@ export function TaskPropertiesPanel({ selection }: TaskPropertiesPanelProps) {
                 })
               }
             >
-              <SelectTrigger>
+              <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select status" />
               </SelectTrigger>
               <SelectContent>
