@@ -1,4 +1,9 @@
-import { tasksTable, tasksUpdateSchema } from './db/schema.js';
+import {
+  tasksTable,
+  tasksUpdateSchema,
+  dependenciesTable,
+  dependenciesInsertSchema,
+} from './db/schema.js';
 import { initTRPC } from '@trpc/server';
 import * as trpcExpress from '@trpc/server/adapters/express';
 import { eq } from 'drizzle-orm';
@@ -39,6 +44,18 @@ export const appRouter = t.router({
       return 'done';
     }),
   tasks: publicProcedure.query(() => db.select().from(tasksTable)),
+
+  createDependency: publicProcedure
+    .input(dependenciesInsertSchema)
+    .mutation(async ({ input: dependency }) => {
+      await db.insert(dependenciesTable).values(dependency);
+      ee.emit('update');
+      return 'done';
+    }),
+
+  dependencies: publicProcedure.query(() =>
+    db.select().from(dependenciesTable),
+  ),
 
   onTasksChange: publicProcedure.subscription(async function* ({ signal }) {
     for await (const _ of on(ee, 'update', { signal })) yield 'update';

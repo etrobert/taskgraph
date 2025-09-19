@@ -1,5 +1,5 @@
 import { pgEnum, pgTable, point, varchar, uuid } from 'drizzle-orm/pg-core';
-import { createUpdateSchema } from 'drizzle-zod';
+import { createInsertSchema, createUpdateSchema } from 'drizzle-zod';
 
 export const statusEnum = pgEnum('status', [
   'pending',
@@ -14,4 +14,15 @@ export const tasksTable = pgTable('tasks', {
   status: statusEnum().notNull(),
 });
 
+export const dependenciesTable = pgTable('dependencies', {
+  id: uuid().primaryKey().defaultRandom(),
+  blockingTaskId: uuid()
+    .notNull()
+    .references(() => tasksTable.id, { onDelete: 'cascade' }),
+  blockedTaskId: uuid()
+    .notNull()
+    .references(() => tasksTable.id, { onDelete: 'cascade' }),
+});
+
 export const tasksUpdateSchema = createUpdateSchema(tasksTable);
+export const dependenciesInsertSchema = createInsertSchema(dependenciesTable);
