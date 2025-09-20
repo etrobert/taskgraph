@@ -3,7 +3,7 @@ import { type Node, Handle, Position, type NodeProps } from '@xyflow/react';
 import type { Task } from '../../../api/src/db/schema';
 
 export const getTaskNodeFromTask = (
-  { id, name, position, status }: Task,
+  { id, position, ...data }: Task,
   selection: { id: string }[],
 ) =>
   ({
@@ -11,7 +11,7 @@ export const getTaskNodeFromTask = (
     position,
     type: 'task',
     selected: selection.some((node) => node.id === id),
-    data: { label: name, status },
+    data,
   }) as const;
 
 export type TaskNodeData = ReturnType<typeof getTaskNodeFromTask>['data'];
@@ -56,7 +56,7 @@ export function TaskNode({ data, selected }: NodeProps<TaskNode>) {
             {getStatusIcon()}
           </span>
           <span className="cursor-pointer font-medium select-none">
-            {data.label}
+            {data.name}
           </span>
         </div>
       </div>
