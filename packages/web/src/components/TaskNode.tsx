@@ -2,9 +2,9 @@ import { cn } from '@/lib/utils';
 import { type Node, Handle, Position, type NodeProps } from '@xyflow/react';
 import { type TaskNodeData } from '@/lib/getTaskNodeFromTask';
 
-export type TaskNode = Node<TaskNodeData, 'task'>;
+export type TaskNodeType = Node<TaskNodeData, 'task'>;
 
-export function TaskNode({ data, selected }: NodeProps<TaskNode>) {
+export function TaskNode({ data, selected }: NodeProps<TaskNodeType>) {
   const getStatusColor = () => {
     switch (data.status) {
       case 'completed':

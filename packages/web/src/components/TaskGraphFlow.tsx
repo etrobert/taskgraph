@@ -9,7 +9,8 @@ import {
   ReactFlow,
 } from '@xyflow/react';
 import { useState, useCallback, useEffect, useRef } from 'react';
-import { TaskNode } from './TaskNode';
+import { TaskNode, type TaskNodeType } from './TaskNode';
+import { ProjectNode, type ProjectNodeType } from './ProjectNode';
 import { TaskPropertiesPanel } from './TaskPropertiesPanel';
 import { useTaskConnection } from '../hooks/useTaskConnection';
 import { useZoomShortcuts } from '../hooks/useZoomShortcuts';
@@ -21,7 +22,10 @@ import { getTaskNodeFromTask } from '@/lib/getTaskNodeFromTask';
 
 const nodeTypes = {
   task: TaskNode,
+  project: ProjectNode,
 };
+
+type NodeType = TaskNodeType | ProjectNodeType;
 
 const squaredDistance = (
   point1: { x: number; y: number },
@@ -32,14 +36,14 @@ const squaredDistance = (
 
 export function TaskGraphFlow() {
   const [selection, setSelection] = useState<{
-    nodes: TaskNode[];
+    nodes: NodeType[];
     edges: Edge[];
   }>({
     nodes: [],
     edges: [],
   });
 
-  const [nodes, setNodes, onNodesChange] = useNodesState<TaskNode>([]);
+  const [nodes, setNodes, onNodesChange] = useNodesState<NodeType>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
 
   const organizationId = useOrganizationId();
@@ -57,7 +61,26 @@ export function TaskGraphFlow() {
     if (previousGraph.current === graph) return;
     previousGraph.current = graph;
     const { tasks, dependencies } = graph;
-    setNodes(tasks.map((task) => getTaskNodeFromTask(task, selection.nodes)));
+    const projects = [
+      { id: 'project', position: { x: 0, y: 0 }, name: 'My Project' },
+    ];
+
+    const allNodes = [
+      // Create project nodes
+      ...projects.map(
+        ({ id, position, ...data }) =>
+          ({
+            id,
+            type: 'project',
+            position,
+            data,
+          }) as const,
+      ),
+      // Create task nodes
+      ...tasks.map((task) => getTaskNodeFromTask(task, selection.nodes)),
+    ];
+
+    setNodes(allNodes);
     setEdges(
       dependencies.map((dependency) => ({
         id: dependency.id,
@@ -71,7 +94,7 @@ export function TaskGraphFlow() {
     useTaskConnection(organizationId);
 
   const onSelectionChange = useCallback(
-    (params: OnSelectionChangeParams<TaskNode>) => {
+    (params: OnSelectionChangeParams<NodeType>) => {
       setSelection(params);
     },
     [],
@@ -89,11 +112,11 @@ export function TaskGraphFlow() {
 
   const [nodeDragStartPos, setNodeDragStartPos] = useState({ x: 0, y: 0 });
 
-  const onNodeDragStart = useCallback<OnNodeDrag<TaskNode>>((event) => {
+  const onNodeDragStart = useCallback<OnNodeDrag<NodeType>>((event) => {
     setNodeDragStartPos({ x: event.clientX, y: event.clientY });
   }, []);
 
-  const onNodeDragStop = useCallback<OnNodeDrag<TaskNode>>(
+  const onNodeDragStop = useCallback<OnNodeDrag<NodeType>>(
     (event, node) => {
       const cursorPos = { x: event.clientX, y: event.clientY };
       if (squaredDistance(nodeDragStartPos, cursorPos) < 200) return;
