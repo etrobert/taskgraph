@@ -5,12 +5,11 @@ import {
   type OnSelectionChangeParams,
   type OnNodesDelete,
   type OnNodeDrag,
-  type Node,
   type Edge,
   ReactFlow,
 } from '@xyflow/react';
 import { useState, useCallback, useEffect, useRef } from 'react';
-import { TaskNode, type TaskNodeData } from './TaskNode';
+import { TaskNode } from './TaskNode';
 import { TaskPropertiesPanel } from './TaskPropertiesPanel';
 import { useTaskConnection } from '../hooks/useTaskConnection';
 import { useZoomShortcuts } from '../hooks/useZoomShortcuts';
@@ -32,7 +31,7 @@ const squaredDistance = (
 
 export function TaskGraphFlow() {
   const [selection, setSelection] = useState<{
-    nodes: Node<TaskNodeData>[];
+    nodes: TaskNode[];
     edges: Edge[];
   }>({
     nodes: [],
