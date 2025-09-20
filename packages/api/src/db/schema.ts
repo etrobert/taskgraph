@@ -1,5 +1,9 @@
 import { pgEnum, pgTable, point, varchar, uuid } from 'drizzle-orm/pg-core';
-import { createInsertSchema, createUpdateSchema } from 'drizzle-zod';
+import {
+  createInsertSchema,
+  createSelectSchema,
+  createUpdateSchema,
+} from 'drizzle-zod';
 
 export const statusEnum = pgEnum('status', [
   'pending',
@@ -34,6 +38,9 @@ export const dependenciesTable = pgTable('dependencies', {
     .references(() => tasksTable.id, { onDelete: 'cascade' }),
 });
 
+export const tasksSelectSchema = createSelectSchema(tasksTable);
 export const tasksUpdateSchema = createUpdateSchema(tasksTable);
 export const tasksInsertSchema = createInsertSchema(tasksTable);
 export const dependenciesInsertSchema = createInsertSchema(dependenciesTable);
+
+export type Task = typeof tasksTable.$inferSelect;

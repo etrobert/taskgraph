@@ -9,7 +9,7 @@ import {
   ReactFlow,
 } from '@xyflow/react';
 import { useState, useCallback, useEffect, useRef } from 'react';
-import { TaskNode } from './TaskNode';
+import { getTaskNodeFromTask, TaskNode } from './TaskNode';
 import { TaskPropertiesPanel } from './TaskPropertiesPanel';
 import { useTaskConnection } from '../hooks/useTaskConnection';
 import { useZoomShortcuts } from '../hooks/useZoomShortcuts';
@@ -56,15 +56,7 @@ export function TaskGraphFlow() {
     if (previousGraph.current === graph) return;
     previousGraph.current = graph;
     const { tasks, dependencies } = graph;
-    setNodes(
-      tasks.map(({ id, name, position, status }) => ({
-        id,
-        position,
-        type: 'task',
-        selected: selection.nodes.some((node) => node.id === id),
-        data: { label: name, status },
-      })),
-    );
+    setNodes(tasks.map((task) => getTaskNodeFromTask(task, selection.nodes)));
     setEdges(
       dependencies.map((dependency) => ({
         id: dependency.id,

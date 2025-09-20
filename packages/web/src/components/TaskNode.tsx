@@ -1,11 +1,20 @@
 import { cn } from '@/lib/utils';
 import { type Node, Handle, Position, type NodeProps } from '@xyflow/react';
+import type { Task } from '../../../api/src/db/schema';
 
-export type TaskNodeData = {
-  label: string;
-  status?: 'pending' | 'in progress' | 'completed';
-  description?: string;
-};
+export const getTaskNodeFromTask = (
+  { id, name, position, status }: Task,
+  selection: { id: string }[],
+) =>
+  ({
+    id,
+    position,
+    type: 'task',
+    selected: selection.some((node) => node.id === id),
+    data: { label: name, status },
+  }) as const;
+
+export type TaskNodeData = ReturnType<typeof getTaskNodeFromTask>['data'];
 
 export type TaskNode = Node<TaskNodeData, 'task'>;
 
@@ -46,7 +55,6 @@ export function TaskNode({ data, selected }: NodeProps<TaskNode>) {
           <span className="cursor-pointer text-lg transition-transform duration-150 hover:scale-110">
             {getStatusIcon()}
           </span>
-          {data.description && data.description.trim() !== '' && '📄'}
           <span className="cursor-pointer font-medium select-none">
             {data.label}
           </span>
