@@ -11,18 +11,14 @@ export type TaskNode = Node<TaskNodeData, 'task'>;
 
 export function TaskNode({ data, selected }: NodeProps<TaskNode>) {
   const getStatusColor = () => {
-    const baseColor = (() => {
-      switch (data.status) {
-        case 'completed':
-          return 'bg-green-100 border-green-300 text-green-800';
-        case 'in progress':
-          return 'bg-blue-100 border-blue-300 text-blue-800';
-        default:
-          return 'bg-gray-100 border-gray-300 text-gray-800';
-      }
-    })();
-
-    return baseColor;
+    switch (data.status) {
+      case 'completed':
+        return 'bg-green-100 border-green-300 text-green-800';
+      case 'in progress':
+        return 'bg-blue-100 border-blue-300 text-blue-800';
+      default:
+        return 'bg-gray-100 border-gray-300 text-gray-800';
+    }
   };
 
   const getStatusIcon = () => {
