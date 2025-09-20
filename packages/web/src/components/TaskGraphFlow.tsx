@@ -7,6 +7,7 @@ import {
   type OnNodeDrag,
   type Edge,
   ReactFlow,
+  useReactFlow,
 } from '@xyflow/react';
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { TaskNode, type TaskNodeType } from './TaskNode';
@@ -116,13 +117,22 @@ export function TaskGraphFlow() {
     setNodeDragStartPos({ x: event.clientX, y: event.clientY });
   }, []);
 
+  const { getIntersectingNodes } = useReactFlow<NodeType>();
+
   const onNodeDragStop = useCallback<OnNodeDrag<NodeType>>(
     (event, node) => {
+      const intersectingNodes = getIntersectingNodes(node);
+      const projectIntersectingNodes = intersectingNodes.filter(
+        (node) => node.type === 'project',
+      );
+      // TODO: Add to project
+      console.log(projectIntersectingNodes);
+
       const cursorPos = { x: event.clientX, y: event.clientY };
       if (squaredDistance(nodeDragStartPos, cursorPos) < 200) return;
       updateTask.mutate({ id: node.id, updates: { position: node.position } });
     },
-    [nodeDragStartPos, updateTask],
+    [getIntersectingNodes, nodeDragStartPos, updateTask],
   );
 
   const deleteTasks = useMutation(trpc.deleteTasks.mutationOptions());
