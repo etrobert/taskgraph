@@ -10,26 +10,26 @@ import {
   useViewport,
   type OnSelectionChangeFunc,
 } from '@xyflow/react';
-import { useState, useEffect, useRef, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { TaskNode, type TaskNodeType } from '../TaskNode';
 import { ProjectNode, type ProjectNodeType } from '../ProjectNode';
 import { TaskPropertiesPanel } from '../TaskPropertiesPanel';
 import { useTaskConnection } from '../../hooks/useTaskConnection';
 import { useZoomShortcuts } from '../../hooks/useZoomShortcuts';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { queryClient, trpc } from '../../utils/trpc';
 import { useSubscription } from '@trpc/tanstack-react-query';
 import { useOrganizationId } from '../../hooks/useOrganizationId';
-import { getTaskNodeFromTask } from '@/lib/getTaskNodeFromTask';
 import { Button } from '../ui/button';
 import { useMoving } from './useMoving';
+import { useGraphSync } from './useGraphSync';
 
 const nodeTypes = {
   task: TaskNode,
   project: ProjectNode,
 };
 
-type NodeType = TaskNodeType | ProjectNodeType;
+export type NodeType = TaskNodeType | ProjectNodeType;
 
 const squaredDistance = (
   point1: { x: number; y: number },
@@ -66,44 +66,7 @@ export function TaskGraphFlow() {
 
   const organizationId = useOrganizationId();
 
-  const { data: graph } = useQuery(
-    trpc.graph.queryOptions(
-      { organizationId: organizationId! },
-      { enabled: !!organizationId },
-    ),
-  );
-
-  const previousGraph = useRef<typeof graph>(undefined);
-  useEffect(() => {
-    if (graph === undefined) return;
-    if (previousGraph.current === graph) return;
-    previousGraph.current = graph;
-    const { projects, tasks, dependencies } = graph;
-
-    const allNodes = [
-      // Create project nodes
-      ...projects.map(
-        ({ id, ...data }) =>
-          ({
-            id,
-            type: 'project',
-            position: { x: 0, y: 0 },
-            data,
-          }) as const,
-      ),
-      // Create task nodes
-      ...tasks.map((task) => getTaskNodeFromTask(task, selection.nodes)),
-    ];
-
-    setNodes(allNodes);
-    setEdges(
-      dependencies.map((dependency) => ({
-        id: dependency.id,
-        source: dependency.blockingTaskId,
-        target: dependency.blockedTaskId,
-      })),
-    );
-  }, [selection.nodes, setNodes, graph, setEdges]);
+  useGraphSync(organizationId, selection, setNodes, setEdges);
 
   const { onConnect, onConnectStart, onConnectEnd } =
     useTaskConnection(organizationId);
