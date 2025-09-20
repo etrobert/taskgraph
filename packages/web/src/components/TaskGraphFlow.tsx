@@ -2,15 +2,15 @@ import {
   MarkerType,
   useEdgesState,
   useNodesState,
-  type OnSelectionChangeParams,
   type OnNodesDelete,
   type OnNodeDrag,
   type Edge,
   ReactFlow,
   useReactFlow,
   useViewport,
+  type OnSelectionChangeFunc,
 } from '@xyflow/react';
-import { useState, useCallback, useEffect, useRef, useMemo } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { TaskNode, type TaskNodeType } from './TaskNode';
 import { ProjectNode, type ProjectNodeType } from './ProjectNode';
 import { TaskPropertiesPanel } from './TaskPropertiesPanel';
@@ -55,11 +55,11 @@ function useMoving() {
   const [moving, setMoving] = useState(false);
 
   const timeoutRef = useRef<NodeJS.Timeout>(undefined);
-  const onMove = useCallback(() => {
+  const onMove = () => {
     setMoving(true);
     clearTimeout(timeoutRef.current);
     timeoutRef.current = setTimeout(() => setMoving(false), 100);
-  }, []);
+  };
 
   return { onMove, moving };
 }
@@ -120,12 +120,8 @@ export function TaskGraphFlow() {
   const { onConnect, onConnectStart, onConnectEnd } =
     useTaskConnection(organizationId);
 
-  const onSelectionChange = useCallback(
-    (params: OnSelectionChangeParams<NodeType>) => {
-      setSelection(params);
-    },
-    [],
-  );
+  const onSelectionChange: OnSelectionChangeFunc<NodeType> = (params) =>
+    setSelection(params);
 
   useZoomShortcuts();
 
@@ -141,36 +137,31 @@ export function TaskGraphFlow() {
 
   const { onMove, moving } = useMoving();
 
-  const onNodeDragStart = useCallback<OnNodeDrag<NodeType>>((event) => {
+  const onNodeDragStart: OnNodeDrag<NodeType> = (event) => {
     setNodeDragStartPos({ x: event.clientX, y: event.clientY });
-  }, []);
+  };
 
   const { getIntersectingNodes } = useReactFlow<NodeType>();
 
   const selectionScreenBounds = useScreenNodesBounds(selection.nodes);
 
-  const onNodeDragStop = useCallback<OnNodeDrag<NodeType>>(
-    (event, node) => {
-      const intersectingNodes = getIntersectingNodes(node);
-      const projectIntersectingNodes = intersectingNodes.filter(
-        (node) => node.type === 'project',
-      );
-      // TODO: Add to project
-      console.log(projectIntersectingNodes);
+  const onNodeDragStop: OnNodeDrag<NodeType> = (event, node) => {
+    const intersectingNodes = getIntersectingNodes(node);
+    const projectIntersectingNodes = intersectingNodes.filter(
+      (node) => node.type === 'project',
+    );
+    // TODO: Add to project
+    console.log(projectIntersectingNodes);
 
-      const cursorPos = { x: event.clientX, y: event.clientY };
-      if (squaredDistance(nodeDragStartPos, cursorPos) < 200) return;
-      updateTask.mutate({ id: node.id, updates: { position: node.position } });
-    },
-    [getIntersectingNodes, nodeDragStartPos, updateTask],
-  );
+    const cursorPos = { x: event.clientX, y: event.clientY };
+    if (squaredDistance(nodeDragStartPos, cursorPos) < 200) return;
+    updateTask.mutate({ id: node.id, updates: { position: node.position } });
+  };
 
   const deleteTasks = useMutation(trpc.deleteTasks.mutationOptions());
 
-  const onNodesDelete = useCallback<OnNodesDelete>(
-    (nodes) => deleteTasks.mutate(nodes.map((node) => node.id)),
-    [deleteTasks],
-  );
+  const onNodesDelete: OnNodesDelete = (nodes) =>
+    deleteTasks.mutate(nodes.map((node) => node.id));
 
   return (
     <div style={{ width: '100vw', height: '100vh', display: 'flex' }}>

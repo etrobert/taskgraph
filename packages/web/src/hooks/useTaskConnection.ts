@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import {
   useReactFlow,
   type OnConnectEnd,
@@ -17,59 +17,43 @@ export function useTaskConnection(organizationId: string | undefined) {
 
   const createDependency = useMutation(trpc.createDependency.mutationOptions());
 
-  const onConnect: OnConnect = useCallback(
-    (connection) => {
-      if (organizationId === undefined) return;
-      if (connection.source === null || connection.target === null) return;
-      createDependency.mutate({
-        organizationId,
-        blockingTaskId: connection.source,
-        blockedTaskId: connection.target,
-      });
-    },
-    [createDependency, organizationId],
-  );
+  const onConnect: OnConnect = (connection) => {
+    if (organizationId === undefined) return;
+    if (connection.source === null || connection.target === null) return;
+    createDependency.mutate({
+      organizationId,
+      blockingTaskId: connection.source,
+      blockedTaskId: connection.target,
+    });
+  };
 
-  const onConnectStart: OnConnectStart = useCallback(
-    (_, { nodeId, handleType }) => {
-      setConnectingNodeId(nodeId);
-      setConnectingHandleType(handleType);
-    },
-    [],
-  );
+  const onConnectStart: OnConnectStart = (_, { nodeId, handleType }) => {
+    setConnectingNodeId(nodeId);
+    setConnectingHandleType(handleType);
+  };
 
   const createTaskFrom = useMutation(trpc.createTaskFrom.mutationOptions());
 
-  const onConnectEnd: OnConnectEnd = useCallback(
-    (event) => {
-      if (organizationId === undefined) return;
-      if (connectingNodeId === null || connectingHandleType === null) return;
-      if (
-        event.target instanceof HTMLElement &&
-        event.target.classList.contains('react-flow__pane')
-      ) {
-        const { clientX, clientY } =
-          'changedTouches' in event ? event.changedTouches[0] : event;
+  const onConnectEnd: OnConnectEnd = (event) => {
+    if (organizationId === undefined) return;
+    if (connectingNodeId === null || connectingHandleType === null) return;
+    if (
+      event.target instanceof HTMLElement &&
+      event.target.classList.contains('react-flow__pane')
+    ) {
+      const { clientX, clientY } =
+        'changedTouches' in event ? event.changedTouches[0] : event;
 
-        createTaskFrom.mutate({
-          organizationId,
-          from: connectingNodeId,
-          position: screenToFlowPosition({ x: clientX, y: clientY }),
-          newTaskType:
-            connectingHandleType === 'source' ? 'blocked' : 'blocking',
-        });
-      }
-      setConnectingNodeId(null);
-      setConnectingHandleType(null);
-    },
-    [
-      connectingNodeId,
-      connectingHandleType,
-      createTaskFrom,
-      organizationId,
-      screenToFlowPosition,
-    ],
-  );
+      createTaskFrom.mutate({
+        organizationId,
+        from: connectingNodeId,
+        position: screenToFlowPosition({ x: clientX, y: clientY }),
+        newTaskType: connectingHandleType === 'source' ? 'blocked' : 'blocking',
+      });
+    }
+    setConnectingNodeId(null);
+    setConnectingHandleType(null);
+  };
 
   return {
     onConnect,
