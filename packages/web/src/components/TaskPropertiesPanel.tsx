@@ -1,4 +1,4 @@
-import { type OnSelectionChangeParams } from 'reactflow';
+import { type OnSelectionChangeParams } from '@xyflow/react';
 import { type TaskNodeData } from './TaskNode';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { trpc } from '../utils/trpc';

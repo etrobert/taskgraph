@@ -1,13 +1,14 @@
-import ReactFlow, {
+import {
   MarkerType,
   useEdgesState,
   useNodesState,
-  type NodeDragHandler,
   type OnSelectionChangeParams,
   type OnNodesDelete,
+  type OnNodeDrag,
   type Node,
   type Edge,
-} from 'reactflow';
+  ReactFlow,
+} from '@xyflow/react';
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { TaskNode, type TaskNodeData } from './TaskNode';
 import { TaskPropertiesPanel } from './TaskPropertiesPanel';
@@ -38,8 +39,8 @@ export function TaskGraphFlow() {
     edges: [],
   });
 
-  const [nodes, setNodes, onNodesChange] = useNodesState([]);
-  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  const [nodes, setNodes, onNodesChange] = useNodesState<TaskNode>([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
 
   const organizationId = useOrganizationId();
 
@@ -77,9 +78,12 @@ export function TaskGraphFlow() {
   const { onConnect, onConnectStart, onConnectEnd } =
     useTaskConnection(organizationId);
 
-  const onSelectionChange = useCallback((params: OnSelectionChangeParams) => {
-    setSelection(params);
-  }, []);
+  const onSelectionChange = useCallback(
+    (params: OnSelectionChangeParams<TaskNode>) => {
+      setSelection(params);
+    },
+    [],
+  );
 
   useZoomShortcuts();
 
@@ -93,11 +97,11 @@ export function TaskGraphFlow() {
 
   const [nodeDragStartPos, setNodeDragStartPos] = useState({ x: 0, y: 0 });
 
-  const onNodeDragStart = useCallback<NodeDragHandler>((event) => {
+  const onNodeDragStart = useCallback<OnNodeDrag<TaskNode>>((event) => {
     setNodeDragStartPos({ x: event.clientX, y: event.clientY });
   }, []);
 
-  const onNodeDragStop = useCallback<NodeDragHandler>(
+  const onNodeDragStop = useCallback<OnNodeDrag<TaskNode>>(
     (event, node) => {
       const cursorPos = { x: event.clientX, y: event.clientY };
       if (squaredDistance(nodeDragStartPos, cursorPos) < 200) return;

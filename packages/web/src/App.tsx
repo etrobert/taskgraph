@@ -1,5 +1,5 @@
-import { ReactFlowProvider } from 'reactflow';
-import 'reactflow/dist/style.css';
+import { ReactFlowProvider } from '@xyflow/react';
+import '@xyflow/react/dist/style.css';
 import { TaskGraphFlow } from './components/TaskGraphFlow';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClient } from './utils/trpc';

@@ -1,13 +1,15 @@
 import { cn } from '@/lib/utils';
-import { Handle, Position, type NodeProps } from 'reactflow';
+import { type Node, Handle, Position, type NodeProps } from '@xyflow/react';
 
-export interface TaskNodeData {
+export type TaskNodeData = {
   label: string;
   status?: 'pending' | 'in progress' | 'completed';
   description?: string;
-}
+};
 
-export function TaskNode({ data, selected }: NodeProps<TaskNodeData>) {
+export type TaskNode = Node<TaskNodeData, 'task'>;
+
+export function TaskNode({ data, selected }: NodeProps<TaskNode>) {
   const getStatusColor = () => {
     const baseColor = (() => {
       switch (data.status) {

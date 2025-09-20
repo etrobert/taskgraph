@@ -4,7 +4,7 @@ import {
   type OnConnectEnd,
   type OnConnectStart,
   type OnConnect,
-} from 'reactflow';
+} from '@xyflow/react';
 import { trpc } from '../utils/trpc';
 import { useMutation } from '@tanstack/react-query';
 
