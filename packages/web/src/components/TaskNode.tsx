@@ -1,20 +1,6 @@
 import { cn } from '@/lib/utils';
 import { type Node, Handle, Position, type NodeProps } from '@xyflow/react';
-import type { Task } from '../../../api/src/db/schema';
-
-export const getTaskNodeFromTask = (
-  { id, position, ...data }: Task,
-  selection: { id: string }[],
-) =>
-  ({
-    id,
-    position,
-    type: 'task',
-    selected: selection.some((node) => node.id === id),
-    data,
-  }) as const;
-
-export type TaskNodeData = ReturnType<typeof getTaskNodeFromTask>['data'];
+import { type TaskNodeData } from '@/lib/getTaskNodeFromTask';
 
 export type TaskNode = Node<TaskNodeData, 'task'>;
 

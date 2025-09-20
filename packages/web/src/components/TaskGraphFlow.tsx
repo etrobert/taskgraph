@@ -9,7 +9,7 @@ import {
   ReactFlow,
 } from '@xyflow/react';
 import { useState, useCallback, useEffect, useRef } from 'react';
-import { getTaskNodeFromTask, TaskNode } from './TaskNode';
+import { TaskNode } from './TaskNode';
 import { TaskPropertiesPanel } from './TaskPropertiesPanel';
 import { useTaskConnection } from '../hooks/useTaskConnection';
 import { useZoomShortcuts } from '../hooks/useZoomShortcuts';
@@ -17,6 +17,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { queryClient, trpc } from '../utils/trpc';
 import { useSubscription } from '@trpc/tanstack-react-query';
 import { useOrganizationId } from '../hooks/useOrganizationId';
+import { getTaskNodeFromTask } from '@/lib/getTaskNodeFromTask';
 
 const nodeTypes = {
   task: TaskNode,

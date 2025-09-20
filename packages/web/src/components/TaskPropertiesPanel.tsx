@@ -1,5 +1,4 @@
 import { type OnSelectionChangeParams } from '@xyflow/react';
-import { type TaskNodeData } from './TaskNode';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { trpc } from '../utils/trpc';
 import { useEffect, useState, type CSSProperties } from 'react';
@@ -21,6 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from './ui/select';
+import type { TaskNodeData } from '@/lib/getTaskNodeFromTask';
 
 interface TaskPropertiesPanelProps {
   selection: OnSelectionChangeParams;
