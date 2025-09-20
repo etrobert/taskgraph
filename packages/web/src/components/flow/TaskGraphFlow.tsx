@@ -11,17 +11,18 @@ import {
   type OnSelectionChangeFunc,
 } from '@xyflow/react';
 import { useState, useEffect, useRef, useMemo } from 'react';
-import { TaskNode, type TaskNodeType } from './TaskNode';
-import { ProjectNode, type ProjectNodeType } from './ProjectNode';
-import { TaskPropertiesPanel } from './TaskPropertiesPanel';
-import { useTaskConnection } from '../hooks/useTaskConnection';
-import { useZoomShortcuts } from '../hooks/useZoomShortcuts';
+import { TaskNode, type TaskNodeType } from '../TaskNode';
+import { ProjectNode, type ProjectNodeType } from '../ProjectNode';
+import { TaskPropertiesPanel } from '../TaskPropertiesPanel';
+import { useTaskConnection } from '../../hooks/useTaskConnection';
+import { useZoomShortcuts } from '../../hooks/useZoomShortcuts';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { queryClient, trpc } from '../utils/trpc';
+import { queryClient, trpc } from '../../utils/trpc';
 import { useSubscription } from '@trpc/tanstack-react-query';
-import { useOrganizationId } from '../hooks/useOrganizationId';
+import { useOrganizationId } from '../../hooks/useOrganizationId';
 import { getTaskNodeFromTask } from '@/lib/getTaskNodeFromTask';
-import { Button } from './ui/button';
+import { Button } from '../ui/button';
+import { useMoving } from './useMoving';
 
 const nodeTypes = {
   task: TaskNode,
@@ -49,19 +50,6 @@ function useScreenNodesBounds(nodes: NodeType[]) {
     const size = { width: width * zoom, height: height * zoom };
     return { ...pos, ...size };
   }, [flowToScreenPosition, getNodesBounds, nodes, viewport]);
-}
-
-function useMoving() {
-  const [moving, setMoving] = useState(false);
-
-  const timeoutRef = useRef<NodeJS.Timeout>(undefined);
-  const onMove = () => {
-    setMoving(true);
-    clearTimeout(timeoutRef.current);
-    timeoutRef.current = setTimeout(() => setMoving(false), 100);
-  };
-
-  return { onMove, moving };
 }
 
 export function TaskGraphFlow() {
