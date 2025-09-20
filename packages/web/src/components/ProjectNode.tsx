@@ -6,10 +6,10 @@ export type ProjectNodeData = {
 
 export type ProjectNodeType = Node<ProjectNodeData, 'project'>;
 
-export function ProjectNode({ data }: NodeProps<ProjectNodeType>) {
+export function ProjectNode({ data, selected }: NodeProps<ProjectNodeType>) {
   return (
     <div className="h-full rounded-lg border-2 border-blue-300 bg-blue-50 p-3">
-      <NodeResizer />
+      {selected && <NodeResizer />}
       <div className="text-lg font-medium text-blue-800">{data.name}</div>
     </div>
   );
