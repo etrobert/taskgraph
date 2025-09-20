@@ -8,8 +8,9 @@ import {
   type Edge,
   ReactFlow,
   useReactFlow,
+  useViewport,
 } from '@xyflow/react';
-import { useState, useCallback, useEffect, useRef } from 'react';
+import { useState, useCallback, useEffect, useRef, useMemo } from 'react';
 import { TaskNode, type TaskNodeType } from './TaskNode';
 import { ProjectNode, type ProjectNodeType } from './ProjectNode';
 import { TaskPropertiesPanel } from './TaskPropertiesPanel';
@@ -20,6 +21,7 @@ import { queryClient, trpc } from '../utils/trpc';
 import { useSubscription } from '@trpc/tanstack-react-query';
 import { useOrganizationId } from '../hooks/useOrganizationId';
 import { getTaskNodeFromTask } from '@/lib/getTaskNodeFromTask';
+import { Button } from './ui/button';
 
 const nodeTypes = {
   task: TaskNode,
@@ -34,6 +36,33 @@ const squaredDistance = (
 ) =>
   (point2.y - point1.y) * (point2.y - point1.y) +
   (point2.x - point1.x) * (point2.x - point1.x);
+
+function useScreenNodesBounds(nodes: NodeType[]) {
+  const { getNodesBounds, flowToScreenPosition } = useReactFlow<NodeType>();
+
+  const viewport = useViewport();
+
+  return useMemo(() => {
+    const { width, height, ...flowPos } = getNodesBounds(nodes);
+    const pos = flowToScreenPosition(flowPos);
+    const { zoom } = viewport;
+    const size = { width: width * zoom, height: height * zoom };
+    return { ...pos, ...size };
+  }, [flowToScreenPosition, getNodesBounds, nodes, viewport]);
+}
+
+function useMoving() {
+  const [moving, setMoving] = useState(false);
+
+  const timeoutRef = useRef<NodeJS.Timeout>(undefined);
+  const onMove = useCallback(() => {
+    setMoving(true);
+    clearTimeout(timeoutRef.current);
+    timeoutRef.current = setTimeout(() => setMoving(false), 100);
+  }, []);
+
+  return { onMove, moving };
+}
 
 export function TaskGraphFlow() {
   const [selection, setSelection] = useState<{
@@ -110,11 +139,15 @@ export function TaskGraphFlow() {
 
   const [nodeDragStartPos, setNodeDragStartPos] = useState({ x: 0, y: 0 });
 
+  const { onMove, moving } = useMoving();
+
   const onNodeDragStart = useCallback<OnNodeDrag<NodeType>>((event) => {
     setNodeDragStartPos({ x: event.clientX, y: event.clientY });
   }, []);
 
   const { getIntersectingNodes } = useReactFlow<NodeType>();
+
+  const selectionScreenBounds = useScreenNodesBounds(selection.nodes);
 
   const onNodeDragStop = useCallback<OnNodeDrag<NodeType>>(
     (event, node) => {
@@ -146,6 +179,7 @@ export function TaskGraphFlow() {
           nodes={nodes}
           edges={edges}
           nodeTypes={nodeTypes}
+          onMove={onMove}
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
           onConnect={onConnect}
@@ -161,6 +195,17 @@ export function TaskGraphFlow() {
           fitView={true}
           proOptions={{ hideAttribution: true }}
         />
+        {!moving && selection.nodes.length > 1 && (
+          <Button
+            className="absolute -translate-x-1/2 -translate-y-[calc(100%+8px)]"
+            style={{
+              left: selectionScreenBounds.x + selectionScreenBounds.width / 2,
+              top: selectionScreenBounds.y,
+            }}
+          >
+            Group
+          </Button>
+        )}
       </div>
       <TaskPropertiesPanel selection={selection} />
     </div>
