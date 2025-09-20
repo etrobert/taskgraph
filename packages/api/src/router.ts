@@ -5,6 +5,7 @@ import {
   dependenciesInsertSchema,
   tasksInsertSchema,
   organizationsTable,
+  projectsTable,
 } from './db/schema.js';
 import { eq, inArray } from 'drizzle-orm';
 import { db, ee, t, publicProcedure } from './trpc.js';
@@ -53,7 +54,11 @@ export const appRouter = t.router({
   graph: publicProcedure
     .input(z.object({ organizationId: z.string().uuid() }))
     .query(async ({ input: { organizationId } }) => {
-      const [tasks, dependencies] = await Promise.all([
+      const [projects, tasks, dependencies] = await Promise.all([
+        db
+          .select()
+          .from(projectsTable)
+          .where(eq(projectsTable.organizationId, organizationId)),
         db
           .select()
           .from(tasksTable)
@@ -64,7 +69,7 @@ export const appRouter = t.router({
           .where(eq(dependenciesTable.organizationId, organizationId)),
       ]);
 
-      return { tasks, dependencies };
+      return { projects, tasks, dependencies };
     }),
 
   createTaskFrom,
@@ -83,4 +88,3 @@ export const appRouter = t.router({
 });
 
 export type AppRouter = typeof appRouter;
-

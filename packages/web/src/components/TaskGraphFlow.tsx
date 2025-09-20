@@ -61,19 +61,16 @@ export function TaskGraphFlow() {
     if (graph === undefined) return;
     if (previousGraph.current === graph) return;
     previousGraph.current = graph;
-    const { tasks, dependencies } = graph;
-    const projects = [
-      { id: 'project', position: { x: 0, y: 0 }, name: 'My Project' },
-    ];
+    const { projects, tasks, dependencies } = graph;
 
     const allNodes = [
       // Create project nodes
       ...projects.map(
-        ({ id, position, ...data }) =>
+        ({ id, ...data }) =>
           ({
             id,
             type: 'project',
-            position,
+            position: { x: 0, y: 0 },
             data,
           }) as const,
       ),

@@ -23,6 +23,7 @@ export const tasksTable = pgTable('tasks', {
   name: varchar({ length: 255 }).notNull(),
   position: point({ mode: 'xy' }).notNull(),
   status: statusEnum().notNull(),
+  projectId: uuid().references(() => projectsTable.id),
 });
 
 export const dependenciesTable = pgTable('dependencies', {
@@ -36,6 +37,13 @@ export const dependenciesTable = pgTable('dependencies', {
   blockedTaskId: uuid()
     .notNull()
     .references(() => tasksTable.id, { onDelete: 'cascade' }),
+});
+
+export const projectsTable = pgTable('projects', {
+  id: uuid().primaryKey().defaultRandom(),
+  organizationId: uuid()
+    .notNull()
+    .references(() => organizationsTable.id, { onDelete: 'cascade' }),
 });
 
 export const tasksSelectSchema = createSelectSchema(tasksTable);
