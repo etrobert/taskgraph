@@ -96,6 +96,8 @@ export function TaskGraphFlow() {
 
   const selectionScreenBounds = useScreenNodesBounds(selection.nodes);
 
+  const updateProject = useMutation(trpc.updateProject.mutationOptions());
+
   const onNodeDragStop: OnNodeDrag<NodeType> = (event, node) => {
     const intersectingNodes = getIntersectingNodes(node);
     const projectIntersectingNodes = intersectingNodes.filter(
@@ -110,7 +112,13 @@ export function TaskGraphFlow() {
 
     const cursorPos = { x: event.clientX, y: event.clientY };
     if (squaredDistance(nodeDragStartPos, cursorPos) < 200) return;
-    updateTask.mutate({ id: node.id, updates: { position: node.position } });
+    if (node.type === 'task')
+      updateTask.mutate({ id: node.id, updates: { position: node.position } });
+    else
+      updateProject.mutate({
+        id: node.id,
+        updates: { position: node.position },
+      });
   };
 
   const deleteTasks = useMutation(trpc.deleteTasks.mutationOptions());

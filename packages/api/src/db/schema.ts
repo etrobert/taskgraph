@@ -44,11 +44,16 @@ export const projectsTable = pgTable('projects', {
   organizationId: uuid()
     .notNull()
     .references(() => organizationsTable.id, { onDelete: 'cascade' }),
+  position: point({ mode: 'xy' }).notNull(),
 });
 
 export const tasksSelectSchema = createSelectSchema(tasksTable);
 export const tasksUpdateSchema = createUpdateSchema(tasksTable);
 export const tasksInsertSchema = createInsertSchema(tasksTable);
 export const dependenciesInsertSchema = createInsertSchema(dependenciesTable);
+export const projectsSelectSchema = createSelectSchema(projectsTable);
+export const projectsUpdateSchema = createUpdateSchema(projectsTable);
+export const projectsInsertSchema = createInsertSchema(projectsTable);
 
 export type Task = typeof tasksTable.$inferSelect;
+export type Project = typeof projectsTable.$inferSelect;
