@@ -120,7 +120,25 @@ export function TaskGraphFlow() {
         return;
       } else if (projectIntersectingNodes.length === 0) {
         if (node.parentId !== undefined) {
-          updateTask.mutate({ id: node.id, updates: { projectId: null } });
+          // Find the parent project to convert from relative to absolute position
+          const parentProject = nodes.find(
+            (n) => n.id === node.parentId && n.type === 'project',
+          );
+          if (parentProject) {
+            updateTask.mutate({
+              id: node.id,
+              updates: {
+                projectId: null,
+                position: {
+                  x: node.position.x + parentProject.position.x,
+                  y: node.position.y + parentProject.position.y,
+                },
+              },
+            });
+          } else {
+            console.error('Could not find parent project!');
+            updateTask.mutate({ id: node.id, updates: { projectId: null } });
+          }
           return;
         }
       }
