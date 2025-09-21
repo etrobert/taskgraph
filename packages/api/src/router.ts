@@ -20,6 +20,15 @@ export const appRouter = t.router({
   organizations: publicProcedure.query(() =>
     db.select().from(organizationsTable),
   ),
+  getTask: publicProcedure
+    .input(z.object({ id: z.string().uuid() }))
+    .query(async ({ input: { id } }) => {
+      const [task] = await db
+        .select()
+        .from(tasksTable)
+        .where(eq(tasksTable.id, id));
+      return task;
+    }),
   createOrganization,
   createProject,
   deleteOrganization: publicProcedure
