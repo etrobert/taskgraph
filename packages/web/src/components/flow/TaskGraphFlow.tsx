@@ -3,7 +3,6 @@ import {
   useEdgesState,
   useNodesState,
   type OnNodesDelete,
-  type OnNodeDrag,
   type Edge,
   ReactFlow,
   useReactFlow,
@@ -16,13 +15,14 @@ import { ProjectNode, type ProjectNodeType } from '../ProjectNode';
 import { TaskPropertiesPanel } from '../TaskPropertiesPanel';
 import { useTaskConnection } from '../../hooks/useTaskConnection';
 import { useZoomShortcuts } from '../../hooks/useZoomShortcuts';
-import { useMutation } from '@tanstack/react-query';
 import { queryClient, trpc } from '../../utils/trpc';
 import { useSubscription } from '@trpc/tanstack-react-query';
 import { useOrganizationId } from '../../hooks/useOrganizationId';
 import { Button } from '../ui/button';
 import { useMoving } from './useMoving';
 import { useGraphSync } from './useGraphSync';
+import { useNodeDrag } from '../../hooks/useNodeDrag';
+import { useMutation } from '@tanstack/react-query';
 
 const nodeTypes = {
   task: TaskNode,
@@ -30,13 +30,6 @@ const nodeTypes = {
 };
 
 export type NodeType = TaskNodeType | ProjectNodeType;
-
-const squaredDistance = (
-  point1: { x: number; y: number },
-  point2: { x: number; y: number },
-) =>
-  (point2.y - point1.y) * (point2.y - point1.y) +
-  (point2.x - point1.x) * (point2.x - point1.x);
 
 function useScreenNodesBounds(nodes: NodeType[]) {
   const { getNodesBounds, flowToScreenPosition } = useReactFlow<NodeType>();
@@ -76,84 +69,17 @@ export function TaskGraphFlow() {
 
   useZoomShortcuts();
 
-  const updateTask = useMutation(trpc.updateTask.mutationOptions());
-
   useSubscription(
     trpc.onTasksChange.subscriptionOptions(undefined, {
       onData: () => queryClient.invalidateQueries(trpc.graph.queryFilter()),
     }),
   );
 
-  const [nodeDragStartPos, setNodeDragStartPos] = useState({ x: 0, y: 0 });
-
   const { onMove, moving } = useMoving();
-
-  const onNodeDragStart: OnNodeDrag<NodeType> = (event) => {
-    setNodeDragStartPos({ x: event.clientX, y: event.clientY });
-  };
-
-  const { getIntersectingNodes } = useReactFlow<NodeType>();
 
   const selectionScreenBounds = useScreenNodesBounds(selection.nodes);
 
-  const updateProject = useMutation(trpc.updateProject.mutationOptions());
-
-  const onNodeDragStop: OnNodeDrag<NodeType> = (event, node) => {
-    const intersectingNodes = getIntersectingNodes(node);
-    const projectIntersectingNodes = intersectingNodes.filter(
-      (node) => node.type === 'project',
-    );
-    if (node.type === 'task') {
-      if (projectIntersectingNodes.length === 1) {
-        const projectNode = projectIntersectingNodes[0];
-        if (node.parentId !== projectNode.id)
-          updateTask.mutate({
-            id: node.id,
-            updates: {
-              projectId: projectNode.id,
-              position: {
-                x: node.position.x - projectNode.position.x,
-                y: node.position.y - projectNode.position.y,
-              },
-            },
-          });
-        return;
-      } else if (projectIntersectingNodes.length === 0) {
-        if (node.parentId !== undefined) {
-          // Find the parent project to convert from relative to absolute position
-          const parentProject = nodes.find(
-            (n) => n.id === node.parentId && n.type === 'project',
-          );
-          if (parentProject) {
-            updateTask.mutate({
-              id: node.id,
-              updates: {
-                projectId: null,
-                position: {
-                  x: node.position.x + parentProject.position.x,
-                  y: node.position.y + parentProject.position.y,
-                },
-              },
-            });
-          } else {
-            console.error('Could not find parent project!');
-            updateTask.mutate({ id: node.id, updates: { projectId: null } });
-          }
-          return;
-        }
-      }
-    }
-
-    const cursorPos = { x: event.clientX, y: event.clientY };
-    if (squaredDistance(nodeDragStartPos, cursorPos) < 200) return;
-    if (node.type === 'task')
-      updateTask.mutate({ id: node.id, updates: { position: node.position } });
-    else
-      updateProject.mutate({
-        id: node.id,
-        updates: { position: node.position },
-      });
-  };
+  const { onNodeDragStart, onNodeDragStop } = useNodeDrag(nodes);
 
   const deleteTasks = useMutation(trpc.deleteTasks.mutationOptions());
 
