@@ -29,11 +29,13 @@ export function useGraphSync(
     const allNodes = [
       // Create project nodes
       ...projects.map(
-        ({ id, position, ...data }) =>
+        ({ id, position, width, height, ...data }) =>
           ({
             id,
             type: 'project',
             position,
+            width,
+            height,
             data,
           }) as const,
       ),

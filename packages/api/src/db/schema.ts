@@ -1,4 +1,11 @@
-import { pgEnum, pgTable, point, varchar, uuid } from 'drizzle-orm/pg-core';
+import {
+  pgEnum,
+  pgTable,
+  point,
+  varchar,
+  uuid,
+  integer,
+} from 'drizzle-orm/pg-core';
 import {
   createInsertSchema,
   createSelectSchema,
@@ -45,6 +52,8 @@ export const projectsTable = pgTable('projects', {
     .notNull()
     .references(() => organizationsTable.id, { onDelete: 'cascade' }),
   position: point({ mode: 'xy' }).notNull(),
+  width: integer().notNull().default(250),
+  height: integer().notNull().default(200),
 });
 
 export const tasksSelectSchema = createSelectSchema(tasksTable);
