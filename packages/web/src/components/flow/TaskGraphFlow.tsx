@@ -101,8 +101,12 @@ export function TaskGraphFlow() {
     const projectIntersectingNodes = intersectingNodes.filter(
       (node) => node.type === 'project',
     );
-    // TODO: Add to project
-    console.log(projectIntersectingNodes);
+    if (projectIntersectingNodes.length === 1) {
+      updateTask.mutate({
+        id: node.id,
+        updates: { projectId: projectIntersectingNodes[0].id },
+      });
+    }
 
     const cursorPos = { x: event.clientX, y: event.clientY };
     if (squaredDistance(nodeDragStartPos, cursorPos) < 200) return;
