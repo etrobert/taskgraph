@@ -105,14 +105,24 @@ export function TaskGraphFlow() {
     );
     if (node.type === 'task') {
       if (projectIntersectingNodes.length === 1) {
-        if (node.parentId !== projectIntersectingNodes[0].id)
+        const projectNode = projectIntersectingNodes[0];
+        if (node.parentId !== projectNode.id)
           updateTask.mutate({
             id: node.id,
-            updates: { projectId: projectIntersectingNodes[0].id },
+            updates: {
+              projectId: projectNode.id,
+              position: {
+                x: node.position.x - projectNode.position.x,
+                y: node.position.y - projectNode.position.y,
+              },
+            },
           });
+        return;
       } else if (projectIntersectingNodes.length === 0) {
-        if (node.parentId !== undefined)
+        if (node.parentId !== undefined) {
           updateTask.mutate({ id: node.id, updates: { projectId: null } });
+          return;
+        }
       }
     }
 
