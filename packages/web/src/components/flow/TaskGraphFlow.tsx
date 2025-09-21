@@ -12,7 +12,7 @@ import {
 import { useState, useMemo } from 'react';
 import { TaskNode, type TaskNodeType } from '../TaskNode';
 import { ProjectNode, type ProjectNodeType } from '../ProjectNode';
-import { TaskPropertiesPanel } from '../TaskPropertiesPanel';
+import { PropertiesPanel } from '../PropertiesPanel';
 import { useTaskConnection } from '../../hooks/useTaskConnection';
 import { useZoomShortcuts } from '../../hooks/useZoomShortcuts';
 import { queryClient, trpc } from '../../utils/trpc';
@@ -121,7 +121,7 @@ export function TaskGraphFlow() {
           </Button>
         )}
       </div>
-      <TaskPropertiesPanel selection={selection} />
+      <PropertiesPanel selection={selection} />
     </div>
   );
 }
