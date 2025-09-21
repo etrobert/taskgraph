@@ -2,11 +2,17 @@ import { trpc } from '@/utils/trpc';
 import { useMutation } from '@tanstack/react-query';
 import { NodeResizer, type Node, type NodeProps } from '@xyflow/react';
 
-export type ProjectNodeData = {};
+export type ProjectNodeData = {
+  name: string;
+};
 
 export type ProjectNodeType = Node<ProjectNodeData, 'project'>;
 
-export function ProjectNode({ id, selected }: NodeProps<ProjectNodeType>) {
+export function ProjectNode({
+  id,
+  selected,
+  data: { name },
+}: NodeProps<ProjectNodeType>) {
   const resizeProject = useMutation(trpc.resizeProject.mutationOptions());
 
   return (
@@ -23,7 +29,7 @@ export function ProjectNode({ id, selected }: NodeProps<ProjectNodeType>) {
           }
         />
       )}
-      <div className="text-lg font-medium text-blue-800">Project</div>
+      <div className="text-lg font-medium text-blue-800">{name}</div>
     </div>
   );
 }

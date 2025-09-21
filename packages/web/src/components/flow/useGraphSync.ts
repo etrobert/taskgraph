@@ -36,6 +36,7 @@ export function useGraphSync(
             position,
             width,
             height,
+            selected: selection.nodes.some((node) => node.id === id),
             data,
           }) as const,
       ),

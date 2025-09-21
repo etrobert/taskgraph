@@ -51,6 +51,7 @@ export const projectsTable = pgTable('projects', {
   organizationId: uuid()
     .notNull()
     .references(() => organizationsTable.id, { onDelete: 'cascade' }),
+  name: varchar({ length: 255 }).notNull().default('New Project'),
   position: point({ mode: 'xy' }).notNull(),
   width: integer().notNull().default(250),
   height: integer().notNull().default(200),
