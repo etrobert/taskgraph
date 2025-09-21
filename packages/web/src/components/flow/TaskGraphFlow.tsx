@@ -103,11 +103,17 @@ export function TaskGraphFlow() {
     const projectIntersectingNodes = intersectingNodes.filter(
       (node) => node.type === 'project',
     );
-    if (projectIntersectingNodes.length === 1) {
-      updateTask.mutate({
-        id: node.id,
-        updates: { projectId: projectIntersectingNodes[0].id },
-      });
+    if (node.type === 'task') {
+      if (projectIntersectingNodes.length === 1) {
+        if (node.parentId !== projectIntersectingNodes[0].id)
+          updateTask.mutate({
+            id: node.id,
+            updates: { projectId: projectIntersectingNodes[0].id },
+          });
+      } else if (projectIntersectingNodes.length === 0) {
+        if (node.parentId !== undefined)
+          updateTask.mutate({ id: node.id, updates: { projectId: null } });
+      }
     }
 
     const cursorPos = { x: event.clientX, y: event.clientY };
