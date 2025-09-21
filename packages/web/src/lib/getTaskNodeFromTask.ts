@@ -1,12 +1,13 @@
 import type { Task } from '../../../api/src/db/schema';
 
 export const getTaskNodeFromTask = (
-  { id, position, ...data }: Task,
+  { id, position, projectId, ...data }: Task,
   selection: { id: string }[],
 ) =>
   ({
     id,
     position,
+    parentId: projectId,
     type: 'task',
     selected: selection.some((node) => node.id === id),
     data,
