@@ -51,6 +51,7 @@ This file provides guidance for working with the TaskGraph API package.
 ## Environment Setup
 
 Required environment variables in `.env`:
+
 - `DATABASE_URL` - PostgreSQL connection string
 - `PORT` - Server port (defaults to 3001)
 - `NODE_ENV` - Environment mode (development/production)

@@ -12,4 +12,3 @@ export function ProjectNode({ selected }: NodeProps<ProjectNodeType>) {
     </div>
   );
 }
-

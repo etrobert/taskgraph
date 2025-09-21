@@ -19,4 +19,3 @@ export const createOrganization = publicProcedure.mutation(async () => {
 
   return organization;
 });
-
