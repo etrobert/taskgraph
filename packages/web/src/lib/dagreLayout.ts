@@ -41,8 +41,8 @@ export const applyDagreLayout = (
 
     return {
       ...node,
-      width,
-      height,
+      width: width === 0 ? undefined : width,
+      height: height === 0 ? undefined : height,
       position: {
         x: x - width / 2 - parentPos.x,
         y: y - height / 2 - parentPos.y,
