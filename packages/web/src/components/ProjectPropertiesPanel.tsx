@@ -12,6 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from './ui/select';
+import { Button } from './ui/button';
 import type { ProjectNodeType } from './ProjectNode';
 import type { Status } from '@/lib/statusHelpers';
 
@@ -89,6 +90,31 @@ export function ProjectPropertiesPanel({
             <SelectItem value="completed">Completed</SelectItem>
           </SelectContent>
         </Select>
+
+        {selectedProject.archivedAt && (
+          <>
+            <Label>Archive Information</Label>
+            <div className="text-muted-foreground text-sm">
+              Archived: {selectedProject.archivedAt.toLocaleString()}
+            </div>
+          </>
+        )}
+
+        {selectedProject.archivedAt && (
+          <Button
+            variant="outline"
+            onClick={() =>
+              updateProject.mutate({
+                id: selectedProject.id,
+                updates: { archivedAt: null },
+              })
+            }
+            disabled={updateProject.isPending}
+            className="w-full"
+          >
+            {updateProject.isPending ? 'Unarchiving...' : 'Unarchive'}
+          </Button>
+        )}
       </SidebarGroupContent>
     </SidebarGroup>
   );

@@ -12,6 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from './ui/select';
+import { Button } from './ui/button';
 import type { TaskNodeData } from '@/lib/getTaskNodeFromTask';
 import type { TaskNodeType } from './TaskNode';
 
@@ -89,6 +90,31 @@ export function TaskPropertiesPanel({
             <SelectItem value="completed">Completed</SelectItem>
           </SelectContent>
         </Select>
+
+        {selectedTask.archivedAt && (
+          <>
+            <Label>Archive Information</Label>
+            <div className="text-muted-foreground text-sm">
+              Archived: {selectedTask.archivedAt.toLocaleString()}
+            </div>
+          </>
+        )}
+
+        {selectedTask.archivedAt && (
+          <Button
+            variant="outline"
+            onClick={() =>
+              updateTask.mutate({
+                id: selectedTask.id,
+                updates: { archivedAt: null },
+              })
+            }
+            disabled={updateTask.isPending}
+            className="w-full"
+          >
+            {updateTask.isPending ? 'Unarchiving...' : 'Unarchive'}
+          </Button>
+        )}
       </SidebarGroupContent>
     </SidebarGroup>
   );
