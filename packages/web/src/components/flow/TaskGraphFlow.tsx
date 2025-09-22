@@ -2,8 +2,6 @@ import {
   MarkerType,
   useEdgesState,
   useNodesState,
-  type OnNodesDelete,
-  type OnEdgesDelete,
   type Edge,
   ReactFlow,
   useReactFlow,
