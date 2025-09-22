@@ -8,6 +8,7 @@ import {
   wsLink,
 } from '@trpc/client';
 import { QueryClient } from '@tanstack/react-query';
+import superjson from 'superjson';
 
 const apiUrl = import.meta.env.VITE_API_URL;
 const dev = import.meta.env.DEV;
@@ -19,9 +20,10 @@ const trpcClient = createTRPCClient<AppRouter>({
   links: [
     splitLink({
       condition: (op) => op.type === 'subscription',
-      true: wsLink({ client: wsClient }),
+      true: wsLink({ client: wsClient, transformer: superjson }),
       false: httpBatchLink({
         url: `${dev ? 'http' : 'https'}://${apiUrl}/trpc`,
+        transformer: superjson,
       }),
     }),
   ],
