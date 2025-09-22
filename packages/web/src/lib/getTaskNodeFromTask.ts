@@ -2,7 +2,7 @@ import type { Node } from '@xyflow/react';
 import type { Task } from '../../../api/src/db/schema';
 
 export const getTaskNodeFromTask = (
-  { id, position, projectId, archivedAt, ...data }: Task,
+  { id, position, projectId, ...data }: Task,
   selection: { id: string }[],
 ) =>
   ({
@@ -10,7 +10,7 @@ export const getTaskNodeFromTask = (
     position,
     parentId: projectId ?? undefined,
     type: 'task',
-    hidden: archivedAt !== null,
+    hidden: data.archivedAt !== null,
     selected: selection.some((node) => node.id === id),
     data,
   }) as const satisfies Node;
