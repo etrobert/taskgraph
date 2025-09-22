@@ -28,8 +28,19 @@ export function TaskNode({ data, selected }: NodeProps<TaskNodeType>) {
   };
 
   return (
-    <>
-      <Handle type="target" position={Position.Left} />
+    <div className="group">
+      <Handle
+        type="target"
+        position={Position.Left}
+        style={{
+          width: '16px',
+          height: '16px',
+          background: '#fff',
+          border: '2px solid #9ca3af',
+          transition: 'opacity 0.1s',
+        }}
+        className="opacity-0 group-hover:opacity-100"
+      />
       <div
         className={cn(
           'rounded-lg border-2 px-4 py-2 shadow-md transition-all duration-200',
@@ -38,15 +49,24 @@ export function TaskNode({ data, selected }: NodeProps<TaskNodeType>) {
         )}
       >
         <div className="flex items-center gap-2">
-          <span className="cursor-pointer text-lg">
-            {getStatusIcon()}
-          </span>
+          <span className="cursor-pointer text-lg">{getStatusIcon()}</span>
           <span className="cursor-pointer font-medium select-none">
             {data.name}
           </span>
         </div>
       </div>
-      <Handle type="source" position={Position.Right} />
-    </>
+      <Handle
+        type="source"
+        position={Position.Right}
+        style={{
+          width: '16px',
+          height: '16px',
+          background: '#fff',
+          border: '2px solid #9ca3af',
+          transition: 'opacity 0.1s',
+        }}
+        className="opacity-0 group-hover:opacity-100"
+      />
+    </div>
   );
 }
