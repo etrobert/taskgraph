@@ -9,6 +9,7 @@ import {
   useReactFlow,
   useViewport,
   type OnSelectionChangeFunc,
+  Background,
 } from '@xyflow/react';
 import { useState, useMemo } from 'react';
 import { TaskNode, type TaskNodeType } from '../TaskNode';
@@ -160,7 +161,12 @@ export function TaskGraphFlow() {
           }}
           fitView={true}
           proOptions={{ hideAttribution: true }}
-        />
+        >
+          {isComputedView && (
+            // @ts-expect-error idk what's going on here
+            <Background variant="dots" gap={20} size={2} color="#3b82f6" />
+          )}
+        </ReactFlow>
         <Button
           className="absolute bottom-4 left-4 z-10"
           variant={isComputedView ? 'default' : 'outline'}
