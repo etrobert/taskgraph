@@ -1,7 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import type { OnNodesDelete, OnEdgesDelete } from '@xyflow/react';
 import { trpc } from '../utils/trpc';
-import type { NodeType } from '../components/flow/TaskGraphFlow';
 
 export const useOnDelete = () => {
   const deleteTasks = useMutation(trpc.deleteTasks.mutationOptions());
@@ -32,3 +31,4 @@ export const useOnDelete = () => {
     onEdgesDelete,
   };
 };
+

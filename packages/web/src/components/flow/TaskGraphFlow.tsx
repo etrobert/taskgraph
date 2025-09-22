@@ -24,7 +24,7 @@ import { Button } from '../ui/button';
 import { useMoving } from './useMoving';
 import { useGraphSync } from './useGraphSync';
 import { useNodeDrag } from '../../hooks/useNodeDrag';
-import { useOnDelete } from '../../hooks/useNodeDeletion';
+import { useOnDelete } from '../../hooks/useOnDelete';
 import { useMutation } from '@tanstack/react-query';
 import { applyDagreLayout } from '../../lib/dagreLayout';
 
