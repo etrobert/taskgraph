@@ -32,7 +32,7 @@ export function TaskNode({ data, selected }: NodeProps<TaskNodeType>) {
           <span className="cursor-pointer text-lg">
             {getStatusIcon(data.status)}
           </span>
-          <span className="cursor-pointer font-medium select-none">
+          <span className="cursor-pointer truncate font-medium select-none">
             {data.name}
           </span>
           {data.archivedAt && '📁'}
