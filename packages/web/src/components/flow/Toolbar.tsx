@@ -31,8 +31,7 @@ export function Toolbar({
 
   // Check if there are any completed, non-archived tasks or projects visible
   const hasCompletedItems = nodes.some(
-    (node) =>
-      node.data.status === 'completed' && !node.data.archivedAt,
+    (node) => node.data.status === 'completed' && !node.data.archivedAt,
   );
 
   return (
