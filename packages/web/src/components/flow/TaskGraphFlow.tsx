@@ -58,13 +58,16 @@ export function TaskGraphFlow() {
   });
 
   const [isComputedView, setIsComputedView] = useState(false);
+  const [showArchived, setShowArchived] = useState(false);
   const [rawNodes, setRawNodes, onNodesChange] = useNodesState<NodeType>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
 
   const organizationId = useOrganizationId();
 
   // Compute display nodes based on view mode
-  const nodes = isComputedView ? applyDagreLayout(rawNodes, edges) : rawNodes;
+  const nodes = isComputedView
+    ? applyDagreLayout(rawNodes, edges, showArchived)
+    : rawNodes;
 
   useGraphSync(organizationId, selection, setRawNodes, setEdges);
 
@@ -95,6 +98,12 @@ export function TaskGraphFlow() {
     setIsComputedView((isComputedView) => !isComputedView);
     // Fit view after state change to show the new layout
     setTimeout(() => fitView(), 0);
+  };
+
+  const toggleShowArchived = () => {
+    setShowArchived((showArchived) => !showArchived);
+    // Fit view after state change to show the new layout
+    setTimeout(fitView, 0);
   };
 
   const groupTasksMutation = useMutation(trpc.groupTasks.mutationOptions());
@@ -165,6 +174,8 @@ export function TaskGraphFlow() {
           onToggleComputedView={toggleComputedView}
           organizationId={organizationId}
           nodes={nodes}
+          showArchived={showArchived}
+          onToggleShowArchived={toggleShowArchived}
         />
         {!moving &&
           selection.nodes.filter((node) => node.type === 'task').length > 1 && (

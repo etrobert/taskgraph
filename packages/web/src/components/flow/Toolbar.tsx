@@ -8,6 +8,8 @@ interface ToolbarProps {
   onToggleComputedView: () => void;
   organizationId: string | undefined;
   nodes: NodeType[];
+  showArchived: boolean;
+  onToggleShowArchived: () => void;
 }
 
 export function Toolbar({
@@ -15,6 +17,8 @@ export function Toolbar({
   onToggleComputedView,
   organizationId,
   nodes,
+  showArchived,
+  onToggleShowArchived,
 }: ToolbarProps) {
   const archiveCompletedTasksMutation = useMutation(
     trpc.archiveCompletedTasks.mutationOptions(),
@@ -41,6 +45,14 @@ export function Toolbar({
       >
         {isComputedView ? 'Spatial View' : 'Computed View'}
       </Button>
+      {isComputedView && (
+        <Button
+          variant={showArchived ? 'default' : 'outline'}
+          onClick={onToggleShowArchived}
+        >
+          {showArchived ? 'Hide Archived' : 'Show Archived'}
+        </Button>
+      )}
       {hasCompletedTasks && (
         <Button
           variant="destructive"
