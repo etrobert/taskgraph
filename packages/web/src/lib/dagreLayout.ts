@@ -2,13 +2,13 @@ import dagre from '@dagrejs/dagre';
 import type { Edge } from '@xyflow/react';
 import type { NodeType } from '@/components/flow/TaskGraphFlow';
 
-const dagreGraph = new dagre.graphlib.Graph({ compound: true });
-dagreGraph.setDefaultEdgeLabel(() => ({}));
-
 export const applyDagreLayout = (
   nodes: NodeType[],
   edges: Edge[],
 ): NodeType[] => {
+  const dagreGraph = new dagre.graphlib.Graph({ compound: true });
+  dagreGraph.setDefaultEdgeLabel(() => ({}));
+
   dagreGraph.setGraph({ rankdir: 'LR' });
 
   // Add nodes to dagre graph
