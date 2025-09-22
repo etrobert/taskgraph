@@ -17,7 +17,7 @@ import { createOrganization } from './routers/createOrganization.js';
 import { createProject } from './routers/createProject.js';
 import { resizeProject } from './routers/resizeProject.js';
 import { groupTasks } from './routers/groupTasks.js';
-import { archiveCompletedTasks } from './routers/archiveCompletedTasks.js';
+import { archiveCompleted } from './routers/archiveCompleted.js';
 
 export const appRouter = t.router({
   organizations: publicProcedure.query(() =>
@@ -36,7 +36,7 @@ export const appRouter = t.router({
   createProject,
   resizeProject,
   groupTasks,
-  archiveCompletedTasks,
+  archiveCompleted,
   deleteOrganization: publicProcedure
     .input(z.object({ id: z.string().uuid() }))
     .mutation(async ({ input: { id } }) => {

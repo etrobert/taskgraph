@@ -1,15 +1,18 @@
 import { publicProcedure } from '../trpc.js';
 import { db, ee } from '../trpc.js';
-import { tasksTable } from '../db/schema.js';
+import { tasksTable, projectsTable } from '../db/schema.js';
 import { eq, and, isNull } from 'drizzle-orm';
 import z from 'zod';
 
-export const archiveCompletedTasks = publicProcedure
+export const archiveCompleted = publicProcedure
   .input(z.object({ organizationId: z.string().uuid() }))
   .mutation(async ({ input: { organizationId } }) => {
+    const now = new Date();
+
+    // Archive completed tasks
     await db
       .update(tasksTable)
-      .set({ archivedAt: new Date() })
+      .set({ archivedAt: now })
       .where(
         and(
           eq(tasksTable.organizationId, organizationId),
@@ -17,6 +20,19 @@ export const archiveCompletedTasks = publicProcedure
           isNull(tasksTable.archivedAt),
         ),
       );
+
+    // Archive completed projects
+    await db
+      .update(projectsTable)
+      .set({ archivedAt: now })
+      .where(
+        and(
+          eq(projectsTable.organizationId, organizationId),
+          eq(projectsTable.status, 'completed'),
+          isNull(projectsTable.archivedAt),
+        ),
+      );
+
     ee.emit('update');
     return 'done';
   });

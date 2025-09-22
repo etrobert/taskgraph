@@ -4,6 +4,7 @@ import { trpc } from '../../utils/trpc';
 import { getTaskNodeFromTask } from '@/lib/getTaskNodeFromTask';
 import type { NodeType } from './TaskGraphFlow';
 import type { Edge } from '@xyflow/react';
+import { getProjectNodeFromProject } from '@/lib/getProjectNodeFromProject';
 
 export function useGraphSync(
   organizationId: string | undefined,
@@ -28,17 +29,8 @@ export function useGraphSync(
 
     const allNodes = [
       // Create project nodes
-      ...projects.map(
-        ({ id, position, width, height, ...data }) =>
-          ({
-            id,
-            type: 'project',
-            position,
-            width,
-            height,
-            selected: selection.nodes.some((node) => node.id === id),
-            data,
-          }) as const,
+      ...projects.map((project) =>
+        getProjectNodeFromProject(project, selection.nodes),
       ),
       // Create task nodes
       ...tasks.map((task) => getTaskNodeFromTask(task, selection.nodes)),

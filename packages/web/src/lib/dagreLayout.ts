@@ -13,7 +13,7 @@ export const applyDagreLayout = (
   dagreGraph.setGraph({ rankdir: 'LR' });
 
   const isHidden = (node: NodeType) =>
-    node.type === 'task' && node.data.archivedAt !== null && !showArchived;
+    node.data.archivedAt !== null && !showArchived;
 
   // Add nodes to dagre graph
   nodes.forEach((node) => {

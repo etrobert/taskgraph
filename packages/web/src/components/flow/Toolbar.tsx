@@ -20,21 +20,19 @@ export function Toolbar({
   showArchived,
   onToggleShowArchived,
 }: ToolbarProps) {
-  const archiveCompletedTasksMutation = useMutation(
-    trpc.archiveCompletedTasks.mutationOptions(),
+  const archiveCompletedMutation = useMutation(
+    trpc.archiveCompleted.mutationOptions(),
   );
 
   const handleArchiveCompleted = () => {
     if (!organizationId) return;
-    archiveCompletedTasksMutation.mutate({ organizationId });
+    archiveCompletedMutation.mutate({ organizationId });
   };
 
-  // Check if there are any completed, non-archived tasks visible
-  const hasCompletedTasks = nodes.some(
+  // Check if there are any completed, non-archived tasks or projects visible
+  const hasCompletedItems = nodes.some(
     (node) =>
-      node.type === 'task' &&
-      node.data.status === 'completed' &&
-      !node.data.archivedAt,
+      node.data.status === 'completed' && !node.data.archivedAt,
   );
 
   return (
@@ -53,13 +51,13 @@ export function Toolbar({
           {showArchived ? 'Hide Archived' : 'Show Archived'}
         </Button>
       )}
-      {hasCompletedTasks && (
+      {hasCompletedItems && (
         <Button
           variant="destructive"
           onClick={handleArchiveCompleted}
-          disabled={archiveCompletedTasksMutation.isPending}
+          disabled={archiveCompletedMutation.isPending}
         >
-          {archiveCompletedTasksMutation.isPending
+          {archiveCompletedMutation.isPending
             ? 'Archiving...'
             : 'Archive Completed'}
         </Button>

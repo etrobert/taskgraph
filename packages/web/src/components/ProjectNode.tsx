@@ -6,13 +6,8 @@ import {
   getStatusColor,
   getStatusIcon,
   cycleStatus,
-  type Status,
 } from '@/lib/statusHelpers';
-
-export type ProjectNodeData = {
-  name: string;
-  status: Status;
-};
+import type { ProjectNodeData } from '@/lib/getProjectNodeFromProject';
 
 export type ProjectNodeType = Node<ProjectNodeData, 'project'>;
 
