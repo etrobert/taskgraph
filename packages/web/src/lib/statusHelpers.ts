@@ -27,4 +27,3 @@ export const cycleStatus = (currentStatus: Status): Status => {
   const currentIndex = status.indexOf(currentStatus);
   return status[(currentIndex + 1) % status.length];
 };
-
