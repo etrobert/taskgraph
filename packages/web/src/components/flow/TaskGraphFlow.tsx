@@ -111,8 +111,13 @@ export function TaskGraphFlow() {
       deleteDependencies.mutate(edges.map((edge) => edge.id));
   };
 
-  const toggleComputedView = () =>
+  const { fitView } = useReactFlow<NodeType>();
+
+  const toggleComputedView = () => {
     setIsComputedView((isComputedView) => !isComputedView);
+    // Fit view after state change to show the new layout
+    setTimeout(() => fitView(), 0);
+  };
 
   const groupTasksMutation = useMutation(trpc.groupTasks.mutationOptions());
   const { getNodesBounds } = useReactFlow<NodeType>();
@@ -156,6 +161,7 @@ export function TaskGraphFlow() {
           onNodesDelete={onNodesDelete}
           onEdgesDelete={onEdgesDelete}
           multiSelectionKeyCode="Shift"
+          minZoom={0.1}
           defaultEdgeOptions={{
             markerEnd: { type: MarkerType.ArrowClosed, width: 30, height: 30 },
           }}
