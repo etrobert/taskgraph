@@ -94,17 +94,23 @@ export function useNodeDrag(nodes: NodeType[]) {
     setNodeDragStartPos({ x: event.clientX, y: event.clientY });
   };
 
-  const onNodeDragStop: OnNodeDrag<NodeType> = (event, node) => {
-    // Handle project assignment changes first
-    const assignmentChanged = handleProjectAssignmentChanges(node);
-    // Early return if project assignment changed, position was updated there
-    if (assignmentChanged) return;
-
+  const onNodeDragStop: OnNodeDrag<NodeType> = (event, _, nodes) => {
     // Only update position if it was a significant drag (not just a click)
     const cursorPos = { x: event.clientX, y: event.clientY };
     const wasDraggedFar = squaredDistance(nodeDragStartPos, cursorPos) >= 200;
 
-    if (wasDraggedFar) handlePositionUpdate(node);
+    if (!wasDraggedFar) return;
+
+    // Handle all dragged nodes (for group drag support)
+    for (const draggedNode of nodes) {
+      // Handle project assignment changes first
+      const assignmentChanged = handleProjectAssignmentChanges(draggedNode);
+      // Skip position update if project assignment changed (position was updated there)
+      if (assignmentChanged) continue;
+
+      // Update position for nodes that weren't reassigned to projects
+      handlePositionUpdate(draggedNode);
+    }
   };
 
   return { onNodeDragStart, onNodeDragStop };
