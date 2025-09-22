@@ -6,7 +6,6 @@ import { getStatusColor, getStatusIcon } from '@/lib/statusHelpers';
 export type TaskNodeType = Node<TaskNodeData, 'task'>;
 
 export function TaskNode({ data, selected }: NodeProps<TaskNodeType>) {
-
   return (
     <div className="group">
       <Handle
@@ -29,7 +28,9 @@ export function TaskNode({ data, selected }: NodeProps<TaskNodeType>) {
         )}
       >
         <div className="flex items-center gap-2">
-          <span className="cursor-pointer text-lg">{getStatusIcon(data.status)}</span>
+          <span className="cursor-pointer text-lg">
+            {getStatusIcon(data.status)}
+          </span>
           <span className="cursor-pointer font-medium select-none">
             {data.name}
           </span>

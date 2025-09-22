@@ -17,6 +17,7 @@ import { createOrganization } from './routers/createOrganization.js';
 import { createProject } from './routers/createProject.js';
 import { resizeProject } from './routers/resizeProject.js';
 import { groupTasks } from './routers/groupTasks.js';
+import { archiveCompletedTasks } from './routers/archiveCompletedTasks.js';
 
 export const appRouter = t.router({
   organizations: publicProcedure.query(() =>
@@ -35,6 +36,7 @@ export const appRouter = t.router({
   createProject,
   resizeProject,
   groupTasks,
+  archiveCompletedTasks,
   deleteOrganization: publicProcedure
     .input(z.object({ id: z.string().uuid() }))
     .mutation(async ({ input: { id } }) => {
@@ -120,7 +122,9 @@ export const appRouter = t.router({
   deleteDependencies: publicProcedure
     .input(z.array(z.string().uuid()))
     .mutation(async ({ input }) => {
-      await db.delete(dependenciesTable).where(inArray(dependenciesTable.id, input));
+      await db
+        .delete(dependenciesTable)
+        .where(inArray(dependenciesTable.id, input));
       ee.emit('update');
       return 'done';
     }),

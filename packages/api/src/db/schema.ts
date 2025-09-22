@@ -5,6 +5,7 @@ import {
   varchar,
   uuid,
   integer,
+  timestamp,
 } from 'drizzle-orm/pg-core';
 import {
   createInsertSchema,
@@ -31,6 +32,7 @@ export const tasksTable = pgTable('tasks', {
   position: point({ mode: 'xy' }).notNull(),
   status: statusEnum().notNull(),
   projectId: uuid().references(() => projectsTable.id),
+  archivedAt: timestamp(),
 });
 
 export const dependenciesTable = pgTable('dependencies', {

@@ -97,6 +97,9 @@ export function TaskGraphFlow() {
   };
 
   const groupTasksMutation = useMutation(trpc.groupTasks.mutationOptions());
+  const archiveCompletedTasksMutation = useMutation(
+    trpc.archiveCompletedTasks.mutationOptions(),
+  );
   const { getNodesBounds } = useReactFlow<NodeType>();
 
   const handleGroupTasks = () => {
@@ -118,6 +121,19 @@ export function TaskGraphFlow() {
       },
     });
   };
+
+  const handleArchiveCompleted = () => {
+    if (!organizationId) return;
+    archiveCompletedTasksMutation.mutate({ organizationId });
+  };
+
+  // Check if there are any completed, non-archived tasks visible
+  const hasCompletedTasks = nodes.some(
+    (node) =>
+      node.type === 'task' &&
+      node.data.status === 'completed' &&
+      !node.data.archivedAt,
+  );
 
   return (
     <div style={{ width: '100vw', height: '100vh', display: 'flex' }}>
@@ -166,6 +182,18 @@ export function TaskGraphFlow() {
         >
           {isComputedView ? 'Spatial View' : 'Computed View'}
         </Button>
+        {hasCompletedTasks && (
+          <Button
+            className="absolute bottom-4 left-48 z-10"
+            variant="destructive"
+            onClick={handleArchiveCompleted}
+            disabled={archiveCompletedTasksMutation.isPending}
+          >
+            {archiveCompletedTasksMutation.isPending
+              ? 'Archiving...'
+              : 'Archive Completed'}
+          </Button>
+        )}
         {!moving &&
           selection.nodes.filter((node) => node.type === 'task').length > 1 && (
             <Button
