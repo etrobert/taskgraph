@@ -82,9 +82,19 @@ export function TaskGraphFlow() {
   const { onNodeDragStart, onNodeDragStop } = useNodeDrag(nodes);
 
   const deleteTasks = useMutation(trpc.deleteTasks.mutationOptions());
+  const deleteProjects = useMutation(trpc.deleteProjects.mutationOptions());
 
-  const onNodesDelete: OnNodesDelete = (nodes) =>
-    deleteTasks.mutate(nodes.map((node) => node.id));
+  const onNodesDelete: OnNodesDelete = (nodes) => {
+    const taskNodes = nodes.filter((node) => node.type === 'task');
+    const projectNodes = nodes.filter((node) => node.type === 'project');
+
+    if (taskNodes.length > 0) {
+      deleteTasks.mutate(taskNodes.map((node) => node.id));
+    }
+    if (projectNodes.length > 0) {
+      deleteProjects.mutate(projectNodes.map((node) => node.id));
+    }
+  };
 
   const groupTasksMutation = useMutation(trpc.groupTasks.mutationOptions());
   const { getNodesBounds } = useReactFlow<NodeType>();

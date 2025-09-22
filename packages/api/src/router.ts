@@ -109,6 +109,14 @@ export const appRouter = t.router({
       return 'done';
     }),
 
+  deleteProjects: publicProcedure
+    .input(z.array(z.string().uuid()))
+    .mutation(async ({ input }) => {
+      await db.delete(projectsTable).where(inArray(projectsTable.id, input));
+      ee.emit('update');
+      return 'done';
+    }),
+
   onTasksChange: publicProcedure.subscription(async function* ({ signal }) {
     for await (const _ of on(ee, 'update', { signal })) yield 'update';
   }),
