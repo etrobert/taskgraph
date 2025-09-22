@@ -1,4 +1,4 @@
-import dagre from 'dagre';
+import dagre from '@dagrejs/dagre';
 import type { Edge } from '@xyflow/react';
 import type { NodeType } from '@/components/flow/TaskGraphFlow';
 
