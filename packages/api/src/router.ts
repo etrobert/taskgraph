@@ -16,6 +16,7 @@ import { createTaskFrom } from './routers/createTaskFrom.js';
 import { createOrganization } from './routers/createOrganization.js';
 import { createProject } from './routers/createProject.js';
 import { resizeProject } from './routers/resizeProject.js';
+import { groupTasks } from './routers/groupTasks.js';
 
 export const appRouter = t.router({
   organizations: publicProcedure.query(() =>
@@ -33,6 +34,7 @@ export const appRouter = t.router({
   createOrganization,
   createProject,
   resizeProject,
+  groupTasks,
   deleteOrganization: publicProcedure
     .input(z.object({ id: z.string().uuid() }))
     .mutation(async ({ input: { id } }) => {

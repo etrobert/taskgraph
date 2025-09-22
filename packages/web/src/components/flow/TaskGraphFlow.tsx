@@ -86,6 +86,18 @@ export function TaskGraphFlow() {
   const onNodesDelete: OnNodesDelete = (nodes) =>
     deleteTasks.mutate(nodes.map((node) => node.id));
 
+  const groupTasksMutation = useMutation(trpc.groupTasks.mutationOptions());
+
+  const handleGroupTasks = () => {
+    const taskNodes = selection.nodes.filter((node) => node.type === 'task');
+    if (taskNodes.length < 2 || !organizationId) return;
+
+    groupTasksMutation.mutate({
+      taskIds: taskNodes.map((node) => node.id),
+      organizationId,
+    });
+  };
+
   return (
     <div style={{ width: '100vw', height: '100vh', display: 'flex' }}>
       <div style={{ flex: 1, height: '100vh' }}>
@@ -110,13 +122,14 @@ export function TaskGraphFlow() {
           fitView={true}
           proOptions={{ hideAttribution: true }}
         />
-        {!moving && selection.nodes.length > 1 && (
+        {!moving && selection.nodes.filter(node => node.type === 'task').length > 1 && (
           <Button
             className="absolute -translate-x-1/2 -translate-y-[calc(100%+8px)]"
             style={{
               left: selectionScreenBounds.x + selectionScreenBounds.width / 2,
               top: selectionScreenBounds.y,
             }}
+            onClick={handleGroupTasks}
           >
             Group
           </Button>
