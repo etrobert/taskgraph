@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef } from 'react';
 import {
   useReactFlow,
   type OnConnectEnd,
@@ -9,10 +9,8 @@ import { trpc } from '../utils/trpc';
 import { useMutation } from '@tanstack/react-query';
 
 export function useTaskConnection(organizationId: string | undefined) {
-  const [connectingNodeId, setConnectingNodeId] = useState<string | null>(null);
-  const [connectingHandleType, setConnectingHandleType] = useState<
-    'source' | 'target' | null
-  >(null);
+  const connectingNodeId = useRef<string>(null);
+  const connectingHandleType = useRef<'source' | 'target'>(null);
   const { screenToFlowPosition } = useReactFlow();
 
   const createDependency = useMutation(trpc.createDependency.mutationOptions());
@@ -28,15 +26,19 @@ export function useTaskConnection(organizationId: string | undefined) {
   };
 
   const onConnectStart: OnConnectStart = (_, { nodeId, handleType }) => {
-    setConnectingNodeId(nodeId);
-    setConnectingHandleType(handleType);
+    connectingNodeId.current = nodeId;
+    connectingHandleType.current = handleType;
   };
 
   const createTaskFrom = useMutation(trpc.createTaskFrom.mutationOptions());
 
   const onConnectEnd: OnConnectEnd = (event) => {
     if (organizationId === undefined) return;
-    if (connectingNodeId === null || connectingHandleType === null) return;
+    if (
+      connectingNodeId.current === null ||
+      connectingHandleType.current === null
+    )
+      return;
     if (
       event.target instanceof HTMLElement &&
       event.target.classList.contains('react-flow__pane')
@@ -46,13 +48,14 @@ export function useTaskConnection(organizationId: string | undefined) {
 
       createTaskFrom.mutate({
         organizationId,
-        from: connectingNodeId,
+        from: connectingNodeId.current,
         position: screenToFlowPosition({ x: clientX, y: clientY }),
-        newTaskType: connectingHandleType === 'source' ? 'blocked' : 'blocking',
+        newTaskType:
+          connectingHandleType.current === 'source' ? 'blocked' : 'blocking',
       });
     }
-    setConnectingNodeId(null);
-    setConnectingHandleType(null);
+    connectingNodeId.current = null;
+    connectingHandleType.current = null;
   };
 
   return {
