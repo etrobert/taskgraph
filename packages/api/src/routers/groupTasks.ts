@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { publicProcedure, db, ee } from '../trpc';
 import { tasksTable, projectsTable } from '../db/schema';
-import { eq, inArray } from 'drizzle-orm';
+import { eq, inArray, sql } from 'drizzle-orm';
 
 export const groupTasks = publicProcedure
   .input(
@@ -39,19 +39,16 @@ export const groupTasks = publicProcedure
       })
       .returning();
 
-    // Update each task individually with their relative position
-    for (const task of tasks) {
-      await db
-        .update(tasksTable)
-        .set({
-          projectId: project.id,
-          position: {
-            x: task.position.x - projectBounds.x,
-            y: task.position.y - projectBounds.y,
-          },
-        })
-        .where(eq(tasksTable.id, task.id));
-    }
+    await db
+      .update(tasksTable)
+      .set({
+        projectId: project.id,
+        position: sql`point(
+          (position[0]::float - ${projectBounds.x}),
+          (position[1]::float - ${projectBounds.y})
+        )`,
+      })
+      .where(inArray(tasksTable.id, taskIds));
 
     ee.emit('update');
     return project;
