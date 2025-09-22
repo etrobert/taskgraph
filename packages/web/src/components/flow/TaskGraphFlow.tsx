@@ -3,6 +3,7 @@ import {
   useEdgesState,
   useNodesState,
   type OnNodesDelete,
+  type OnEdgesDelete,
   type Edge,
   ReactFlow,
   useReactFlow,
@@ -83,6 +84,9 @@ export function TaskGraphFlow() {
 
   const deleteTasks = useMutation(trpc.deleteTasks.mutationOptions());
   const deleteProjects = useMutation(trpc.deleteProjects.mutationOptions());
+  const deleteDependencies = useMutation(
+    trpc.deleteDependencies.mutationOptions(),
+  );
 
   const onNodesDelete: OnNodesDelete = (nodes) => {
     const taskNodes = nodes.filter((node) => node.type === 'task');
@@ -94,6 +98,11 @@ export function TaskGraphFlow() {
     if (projectNodes.length > 0) {
       deleteProjects.mutate(projectNodes.map((node) => node.id));
     }
+  };
+
+  const onEdgesDelete: OnEdgesDelete = (edges) => {
+    if (edges.length > 0)
+      deleteDependencies.mutate(edges.map((edge) => edge.id));
   };
 
   const groupTasksMutation = useMutation(trpc.groupTasks.mutationOptions());
@@ -113,8 +122,8 @@ export function TaskGraphFlow() {
       projectBounds: {
         x: bounds.x - padding,
         y: bounds.y - padding,
-        width: bounds.width + (2 * padding),
-        height: bounds.height + (2 * padding),
+        width: bounds.width + 2 * padding,
+        height: bounds.height + 2 * padding,
       },
     });
   };
@@ -136,6 +145,7 @@ export function TaskGraphFlow() {
           onNodeDragStop={onNodeDragStop}
           onNodeDragStart={onNodeDragStart}
           onNodesDelete={onNodesDelete}
+          onEdgesDelete={onEdgesDelete}
           multiSelectionKeyCode="Shift"
           defaultEdgeOptions={{
             markerEnd: { type: MarkerType.ArrowClosed, width: 30, height: 30 },
@@ -143,18 +153,19 @@ export function TaskGraphFlow() {
           fitView={true}
           proOptions={{ hideAttribution: true }}
         />
-        {!moving && selection.nodes.filter(node => node.type === 'task').length > 1 && (
-          <Button
-            className="absolute -translate-x-1/2 -translate-y-[calc(100%+8px)]"
-            style={{
-              left: selectionScreenBounds.x + selectionScreenBounds.width / 2,
-              top: selectionScreenBounds.y,
-            }}
-            onClick={handleGroupTasks}
-          >
-            Group
-          </Button>
-        )}
+        {!moving &&
+          selection.nodes.filter((node) => node.type === 'task').length > 1 && (
+            <Button
+              className="absolute -translate-x-1/2 -translate-y-[calc(100%+8px)]"
+              style={{
+                left: selectionScreenBounds.x + selectionScreenBounds.width / 2,
+                top: selectionScreenBounds.y,
+              }}
+              onClick={handleGroupTasks}
+            >
+              Group
+            </Button>
+          )}
       </div>
       <PropertiesPanel selection={selection} />
     </div>
