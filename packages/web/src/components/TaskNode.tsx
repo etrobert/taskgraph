@@ -25,6 +25,7 @@ export function TaskNode({ data, selected }: NodeProps<TaskNodeType>) {
           'rounded-lg border-2 px-4 py-2 shadow-md transition-all duration-200',
           getStatusColor(data.status),
           selected && 'border-purple-300 ring-2 ring-purple-400',
+          data.archivedAt && 'border-dashed bg-gray-50',
         )}
       >
         <div className="flex items-center gap-2">
@@ -34,6 +35,7 @@ export function TaskNode({ data, selected }: NodeProps<TaskNodeType>) {
           <span className="cursor-pointer font-medium select-none">
             {data.name}
           </span>
+          {data.archivedAt && '📁'}
         </div>
       </div>
       <Handle

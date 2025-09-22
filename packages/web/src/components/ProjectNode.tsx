@@ -14,14 +14,18 @@ export type ProjectNodeType = Node<ProjectNodeData, 'project'>;
 export function ProjectNode({
   id,
   selected,
-  data: { name, status },
+  data: { name, status, archivedAt },
 }: NodeProps<ProjectNodeType>) {
   const resizeProject = useMutation(trpc.resizeProject.mutationOptions());
   const updateProject = useMutation(trpc.updateProject.mutationOptions());
 
   return (
     <div
-      className={cn('h-full rounded-lg border-2 p-3', getStatusColor(status))}
+      className={cn(
+        'h-full rounded-lg border-2 p-3',
+        getStatusColor(status),
+        archivedAt && 'border-dashed bg-gray-50',
+      )}
     >
       {selected && (
         <NodeResizer
@@ -48,6 +52,7 @@ export function ProjectNode({
           {getStatusIcon(status)}
         </span>
         <div className="text-lg font-medium">{name}</div>
+        {archivedAt && '📁'}
       </div>
     </div>
   );
