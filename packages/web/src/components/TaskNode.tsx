@@ -38,7 +38,7 @@ export function TaskNode({ data, selected }: NodeProps<TaskNodeType>) {
         )}
       >
         <div className="flex items-center gap-2">
-          <span className="cursor-pointer text-lg transition-transform duration-150 hover:scale-110">
+          <span className="cursor-pointer text-lg">
             {getStatusIcon()}
           </span>
           <span className="cursor-pointer font-medium select-none">
