@@ -21,6 +21,7 @@ export const statusEnum = pgEnum('status', [
 
 export const organizationsTable = pgTable('organizations', {
   id: uuid().primaryKey().defaultRandom(),
+  createdAt: timestamp().notNull().defaultNow(),
 });
 
 export const tasksTable = pgTable('tasks', {
@@ -32,6 +33,7 @@ export const tasksTable = pgTable('tasks', {
   position: point({ mode: 'xy' }).notNull(),
   status: statusEnum().notNull(),
   projectId: uuid().references(() => projectsTable.id),
+  createdAt: timestamp().notNull().defaultNow(),
   archivedAt: timestamp(),
 });
 
@@ -46,6 +48,7 @@ export const dependenciesTable = pgTable('dependencies', {
   blockedTaskId: uuid()
     .notNull()
     .references(() => tasksTable.id, { onDelete: 'cascade' }),
+  createdAt: timestamp().notNull().defaultNow(),
 });
 
 export const projectsTable = pgTable('projects', {
@@ -58,6 +61,7 @@ export const projectsTable = pgTable('projects', {
   width: integer().notNull().default(250),
   height: integer().notNull().default(200),
   status: statusEnum().notNull().default('pending'),
+  createdAt: timestamp().notNull().defaultNow(),
   archivedAt: timestamp(),
 });
 
