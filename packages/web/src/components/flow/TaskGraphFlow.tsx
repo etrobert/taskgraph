@@ -56,8 +56,6 @@ export function TaskGraphFlow() {
     edges: [],
   });
 
-  const { getNodesBounds } = useReactFlow<NodeType>();
-
   const [isComputedView, setIsComputedView] = useState(false);
   const [rawNodes, setRawNodes, onNodesChange] = useNodesState<NodeType>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
@@ -65,9 +63,7 @@ export function TaskGraphFlow() {
   const organizationId = useOrganizationId();
 
   // Compute display nodes based on view mode
-  const nodes = isComputedView
-    ? applyDagreLayout(rawNodes, edges, getNodesBounds)
-    : rawNodes;
+  const nodes = isComputedView ? applyDagreLayout(rawNodes, edges) : rawNodes;
 
   useGraphSync(organizationId, selection, setRawNodes, setEdges);
 
@@ -118,6 +114,7 @@ export function TaskGraphFlow() {
     setIsComputedView((isComputedView) => !isComputedView);
 
   const groupTasksMutation = useMutation(trpc.groupTasks.mutationOptions());
+  const { getNodesBounds } = useReactFlow<NodeType>();
 
   const handleGroupTasks = () => {
     const taskNodes = selection.nodes.filter((node) => node.type === 'task');

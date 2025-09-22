@@ -8,12 +8,16 @@ dagreGraph.setDefaultEdgeLabel(() => ({}));
 export const applyDagreLayout = (
   nodes: NodeType[],
   edges: Edge[],
-  getNodesBounds: (node: NodeType[]) => Rect,
 ): NodeType[] => {
   dagreGraph.setGraph({ rankdir: 'LR', nodesep: 60, ranksep: 150 });
 
   // Add nodes to dagre graph
-  nodes.forEach((node) => dagreGraph.setNode(node.id, getNodesBounds([node])));
+  nodes.forEach((node) =>
+    dagreGraph.setNode(node.id, {
+      width: node.measured?.width ?? 0,
+      height: node.measured?.height ?? 0,
+    }),
+  );
 
   // Add edges to dagre graph
   edges.forEach((edge) => dagreGraph.setEdge(edge.source, edge.target));
@@ -25,10 +29,9 @@ export const applyDagreLayout = (
   return nodes.map((node) => {
     const { x, y } = dagreGraph.node(node.id);
 
-    // PERF: We're calculating this twice in this function
-    const { width, height } = getNodesBounds([node]);
+    const width = node.measured?.width ?? 0;
+    const height = node.measured?.height ?? 0;
 
     return { ...node, position: { x: x - width / 2, y: y - height / 2 } };
   });
 };
-
