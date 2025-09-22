@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { publicProcedure, db, ee } from '../trpc';
 import { tasksTable, projectsTable } from '../db/schema';
-import { eq, inArray, sql } from 'drizzle-orm';
+import { inArray, sql } from 'drizzle-orm';
 
 export const groupTasks = publicProcedure
   .input(
