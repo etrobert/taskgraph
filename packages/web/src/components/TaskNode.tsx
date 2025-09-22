@@ -24,7 +24,7 @@ export function TaskNode({ data, selected }: NodeProps<TaskNodeType>) {
         className={cn(
           'rounded-lg border-2 px-4 py-2 shadow-md transition-all duration-200',
           getStatusColor(data.status),
-          selected && 'border-purple-300 ring-2 ring-purple-400',
+          selected && 'border-blue-300 ring-2 ring-blue-300',
           data.archivedAt && 'border-dashed bg-gray-50',
         )}
       >
