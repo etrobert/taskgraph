@@ -87,14 +87,25 @@ export function TaskGraphFlow() {
     deleteTasks.mutate(nodes.map((node) => node.id));
 
   const groupTasksMutation = useMutation(trpc.groupTasks.mutationOptions());
+  const { getNodesBounds } = useReactFlow<NodeType>();
 
   const handleGroupTasks = () => {
     const taskNodes = selection.nodes.filter((node) => node.type === 'task');
     if (taskNodes.length < 2 || !organizationId) return;
 
+    // Calculate accurate bounding box using React Flow's method
+    const bounds = getNodesBounds(taskNodes);
+    const padding = 20;
+
     groupTasksMutation.mutate({
       taskIds: taskNodes.map((node) => node.id),
       organizationId,
+      projectBounds: {
+        x: bounds.x - padding,
+        y: bounds.y - padding,
+        width: bounds.width + (2 * padding),
+        height: bounds.height + (2 * padding),
+      },
     });
   };
 
