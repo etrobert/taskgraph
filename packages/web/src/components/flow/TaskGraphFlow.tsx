@@ -162,6 +162,7 @@ export function TaskGraphFlow() {
           onEdgesDelete={onEdgesDelete}
           multiSelectionKeyCode="Shift"
           minZoom={0.1}
+          nodesDraggable={!isComputedView}
           defaultEdgeOptions={{
             markerEnd: { type: MarkerType.ArrowClosed, width: 30, height: 30 },
           }}
