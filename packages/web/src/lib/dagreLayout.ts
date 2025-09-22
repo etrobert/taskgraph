@@ -9,7 +9,7 @@ export const applyDagreLayout = (
   nodes: NodeType[],
   edges: Edge[],
 ): NodeType[] => {
-  dagreGraph.setGraph({ rankdir: 'LR', nodesep: 60, ranksep: 150 });
+  dagreGraph.setGraph({ rankdir: 'LR' });
 
   // Add nodes to dagre graph
   nodes.forEach((node) => {
