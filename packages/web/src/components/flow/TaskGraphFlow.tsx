@@ -24,6 +24,7 @@ import { Button } from '../ui/button';
 import { useMoving } from './useMoving';
 import { useGraphSync } from './useGraphSync';
 import { useNodeDrag } from '../../hooks/useNodeDrag';
+import { useOnDelete } from '../../hooks/useNodeDeletion';
 import { useMutation } from '@tanstack/react-query';
 import { applyDagreLayout } from '../../lib/dagreLayout';
 
@@ -87,29 +88,7 @@ export function TaskGraphFlow() {
   const selectionScreenBounds = useScreenNodesBounds(selection.nodes);
 
   const { onNodeDragStart, onNodeDragStop } = useNodeDrag(nodes);
-
-  const deleteTasks = useMutation(trpc.deleteTasks.mutationOptions());
-  const deleteProjects = useMutation(trpc.deleteProjects.mutationOptions());
-  const deleteDependencies = useMutation(
-    trpc.deleteDependencies.mutationOptions(),
-  );
-
-  const onNodesDelete: OnNodesDelete = (nodes) => {
-    const taskNodes = nodes.filter((node) => node.type === 'task');
-    const projectNodes = nodes.filter((node) => node.type === 'project');
-
-    if (taskNodes.length > 0) {
-      deleteTasks.mutate(taskNodes.map((node) => node.id));
-    }
-    if (projectNodes.length > 0) {
-      deleteProjects.mutate(projectNodes.map((node) => node.id));
-    }
-  };
-
-  const onEdgesDelete: OnEdgesDelete = (edges) => {
-    if (edges.length > 0)
-      deleteDependencies.mutate(edges.map((edge) => edge.id));
-  };
+  const { onNodesDelete, onEdgesDelete } = useOnDelete();
 
   const { fitView } = useReactFlow<NodeType>();
 
