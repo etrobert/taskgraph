@@ -32,29 +32,31 @@ export const applyDagreLayout = (
   dagre.layout(dagreGraph);
 
   // Apply calculated positions back to nodes
-  return nodes
-    .filter((node) => !isHidden(node))
-    .map((node) => {
-      const { x, y, width, height } = dagreGraph.node(node.id);
+  return nodes.map((node) => {
+    if (isHidden(node)) return node;
+    const { x, y, width, height } = dagreGraph.node(node.id);
 
-      const parent = node.parentId
-        ? dagreGraph.node(node.parentId)
+    const parent = nodes.find(({ id }) => id === node.parentId);
+
+    const parentNode =
+      parent && !isHidden(parent)
+        ? dagreGraph.node(parent.id)
         : { x: 0, y: 0, width: 0, height: 0 };
 
-      const parentPos = {
-        x: parent.x - parent.width / 2,
-        y: parent.y - parent.height / 2,
-      };
+    const parentPos = {
+      x: parentNode.x - parentNode.width / 2,
+      y: parentNode.y - parentNode.height / 2,
+    };
 
-      return {
-        ...node,
-        hidden: isHidden(node),
-        width: width === 0 ? undefined : width,
-        height: height === 0 ? undefined : height,
-        position: {
-          x: x - width / 2 - parentPos.x,
-          y: y - height / 2 - parentPos.y,
-        },
-      };
-    });
+    return {
+      ...node,
+      hidden: isHidden(node),
+      width: width === 0 ? undefined : width,
+      height: height === 0 ? undefined : height,
+      position: {
+        x: x - width / 2 - parentPos.x,
+        y: y - height / 2 - parentPos.y,
+      },
+    };
+  });
 };
