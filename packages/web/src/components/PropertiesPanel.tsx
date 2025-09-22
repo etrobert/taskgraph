@@ -4,8 +4,6 @@ import {
   Sidebar,
   SidebarContent,
   SidebarHeader,
-  SidebarGroup,
-  SidebarGroupContent,
   SidebarFooter,
 } from './ui/sidebar';
 import type { NodeType } from './flow/TaskGraphFlow';
@@ -16,63 +14,50 @@ interface PropertiesPanelProps {
   selection: OnSelectionChangeParams<NodeType>;
 }
 
+function PropertiesPanelContent({ selection }: PropertiesPanelProps) {
+  if (selection.nodes.length === 0)
+    return (
+      <p className="text-muted-foreground text-sm">
+        Select a node to view its properties
+      </p>
+    );
+  if (selection.nodes.length > 1)
+    return (
+      <p className="text-muted-foreground text-sm">
+        {selection.nodes.length} nodes selected
+      </p>
+    );
+
+  const selectedNode = selection.nodes[0];
+
+  if (selectedNode.type === 'task')
+    return <TaskPropertiesPanel selectedNode={selectedNode} />;
+
+  if (selectedNode?.type === 'project')
+    return <ProjectPropertiesPanel selectedNode={selectedNode} />;
+}
+
 export function PropertiesPanel({ selection }: PropertiesPanelProps) {
   const selectedNode = selection.nodes.at(0);
-
-  if (selection.nodes.length !== 1) {
-    return (
-      <Sidebar
-        collapsible="none"
-        side="right"
-        style={{ '--sidebar-width': '20rem' } as CSSProperties}
-        className="border-l"
-      >
-        <SidebarHeader>
-          <h2 className="text-lg font-semibold">Properties</h2>
-        </SidebarHeader>
-        <SidebarContent>
-          <SidebarGroup>
-            <SidebarGroupContent>
-              <p className="text-muted-foreground px-2 text-sm">
-                {selection.nodes.length === 0
-                  ? 'Select a node to view its properties'
-                  : selection.nodes.length > 1
-                    ? `${selection.nodes.length} nodes selected`
-                    : 'Select a node to view its properties'}
-              </p>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        </SidebarContent>
-      </Sidebar>
-    );
-  }
-
-  if (!selectedNode) return null;
-
   return (
     <Sidebar
       collapsible="none"
       side="right"
       style={{ '--sidebar-width': '20rem' } as CSSProperties}
-      className="border-l"
+      className="border-l p-3"
     >
       <SidebarHeader>
-        <h2 className="text-lg font-semibold">
-          {selectedNode.type === 'task' ? 'Task' : 'Project'} Properties
-        </h2>
+        <h2 className="text-lg font-semibold">Properties</h2>
       </SidebarHeader>
       <SidebarContent>
-        {selectedNode.type === 'task' && (
-          <TaskPropertiesPanel selectedNode={selectedNode} />
-        )}
-        {selectedNode.type === 'project' && (
-          <ProjectPropertiesPanel selectedNode={selectedNode} />
-        )}
+        <PropertiesPanelContent selection={selection} />
       </SidebarContent>
       <SidebarFooter>
-        <div className="text-muted-foreground font-mono text-xs">
-          {selectedNode.type}: {selectedNode.id.slice(0, 25)}...
-        </div>
+        {selectedNode && (
+          <div className="text-muted-foreground font-mono text-xs">
+            {selectedNode.type}: {selectedNode.id.slice(0, 25)}...
+          </div>
+        )}
       </SidebarFooter>
     </Sidebar>
   );
