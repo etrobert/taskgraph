@@ -55,6 +55,7 @@ export const projectsTable = pgTable('projects', {
   position: point({ mode: 'xy' }).notNull(),
   width: integer().notNull().default(250),
   height: integer().notNull().default(200),
+  status: statusEnum().notNull().default('pending'),
 });
 
 export const tasksSelectSchema = createSelectSchema(tasksTable);

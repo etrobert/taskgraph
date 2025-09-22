@@ -5,7 +5,15 @@ import { Input } from './ui/input';
 import { useOrganizationId } from '@/hooks/useOrganizationId';
 import { SidebarGroup, SidebarGroupContent } from './ui/sidebar';
 import { Label } from './ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from './ui/select';
 import type { ProjectNodeType } from './ProjectNode';
+import type { Status } from '@/lib/statusHelpers';
 
 interface ProjectPropertiesPanelProps {
   selectedNode: ProjectNodeType;
@@ -30,7 +38,9 @@ export function ProjectPropertiesPanel({
   useEffect(() => {
     if (graph === undefined) return;
 
-    const selectedProject = graph.projects.find(project => project.id === selectedNode.id);
+    const selectedProject = graph.projects.find(
+      (project) => project.id === selectedNode.id,
+    );
     if (selectedProject && Date.now() - lastKeystroke >= 1000) {
       setProjectName(selectedProject.name);
     }
@@ -38,28 +48,52 @@ export function ProjectPropertiesPanel({
 
   if (graph === undefined) return null;
 
-  const selectedProject = graph.projects.find(project => project.id === selectedNode.id);
+  const selectedProject = graph.projects.find(
+    (project) => project.id === selectedNode.id,
+  );
   if (!selectedProject) return null;
 
   return (
     <SidebarGroup>
-      <SidebarGroupContent className="grid gap-2">
-        <Label htmlFor="project-name">Project Name</Label>
-        <Input
-          id="project-name"
-          type="text"
-          value={projectName}
-          onChange={(e) => {
-            setLastKeystroke(Date.now());
-            setProjectName(e.target.value);
-            updateProject.mutate({
-              id: selectedProject.id,
-              updates: { name: e.target.value },
-            });
-          }}
-        />
+      <SidebarGroupContent className="grid gap-4">
+        <div>
+          <Label htmlFor="project-name">Project Name</Label>
+          <Input
+            id="project-name"
+            type="text"
+            value={projectName}
+            onChange={(e) => {
+              setLastKeystroke(Date.now());
+              setProjectName(e.target.value);
+              updateProject.mutate({
+                id: selectedProject.id,
+                updates: { name: e.target.value },
+              });
+            }}
+          />
+        </div>
+        <div>
+          <Label htmlFor="project-status">Status</Label>
+          <Select
+            value={selectedProject.status}
+            onValueChange={(value: Status) =>
+              updateProject.mutate({
+                id: selectedProject.id,
+                updates: { status: value as Status },
+              })
+            }
+          >
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Select status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="pending">Pending</SelectItem>
+              <SelectItem value="in progress">In Progress</SelectItem>
+              <SelectItem value="completed">Completed</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </SidebarGroupContent>
     </SidebarGroup>
   );
 }
-

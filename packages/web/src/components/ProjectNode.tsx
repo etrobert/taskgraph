@@ -1,9 +1,17 @@
 import { trpc } from '@/utils/trpc';
 import { useMutation } from '@tanstack/react-query';
 import { NodeResizer, type Node, type NodeProps } from '@xyflow/react';
+import { cn } from '@/lib/utils';
+import {
+  getStatusColor,
+  getStatusIcon,
+  cycleStatus,
+  type Status,
+} from '@/lib/statusHelpers';
 
 export type ProjectNodeData = {
   name: string;
+  status: Status;
 };
 
 export type ProjectNodeType = Node<ProjectNodeData, 'project'>;
@@ -11,12 +19,15 @@ export type ProjectNodeType = Node<ProjectNodeData, 'project'>;
 export function ProjectNode({
   id,
   selected,
-  data: { name },
+  data: { name, status },
 }: NodeProps<ProjectNodeType>) {
   const resizeProject = useMutation(trpc.resizeProject.mutationOptions());
+  const updateProject = useMutation(trpc.updateProject.mutationOptions());
 
   return (
-    <div className="h-full rounded-lg border-2 border-blue-300 bg-blue-50 p-3">
+    <div
+      className={cn('h-full rounded-lg border-2 p-3', getStatusColor(status))}
+    >
       {selected && (
         <NodeResizer
           onResizeEnd={(_event, params) =>
@@ -29,7 +40,20 @@ export function ProjectNode({
           }
         />
       )}
-      <div className="text-lg font-medium text-blue-800">{name}</div>
+      <div className="mb-2 flex items-center gap-2">
+        <span
+          className="cursor-pointer text-lg"
+          onClick={() =>
+            updateProject.mutate({
+              id,
+              updates: { status: cycleStatus(status) },
+            })
+          }
+        >
+          {getStatusIcon(status)}
+        </span>
+        <div className="text-lg font-medium">{name}</div>
+      </div>
     </div>
   );
 }
