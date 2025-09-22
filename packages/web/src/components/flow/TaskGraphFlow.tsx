@@ -170,8 +170,16 @@ export function TaskGraphFlow() {
           proOptions={{ hideAttribution: true }}
         >
           {isComputedView && (
-            // @ts-expect-error idk what's going on here
-            <Background variant="dots" gap={20} size={2} color="#3b82f6" />
+            <>
+              <Background
+                // @ts-expect-error idk what's going on here
+                variant="dots"
+                gap={20}
+                size={2}
+                color="#3b82f6"
+              />
+              <div className="pointer-events-none absolute inset-0 animate-pulse border-4 border-dashed border-blue-500 opacity-80" />
+            </>
           )}
         </ReactFlow>
         <Button
