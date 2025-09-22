@@ -103,6 +103,7 @@ export function TaskGraphFlow() {
           onNodeDragStop={onNodeDragStop}
           onNodeDragStart={onNodeDragStart}
           onNodesDelete={onNodesDelete}
+          multiSelectionKeyCode="Shift"
           defaultEdgeOptions={{
             markerEnd: { type: MarkerType.ArrowClosed, width: 30, height: 30 },
           }}
