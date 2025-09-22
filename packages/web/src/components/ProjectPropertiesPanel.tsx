@@ -55,44 +55,40 @@ export function ProjectPropertiesPanel({
 
   return (
     <SidebarGroup>
-      <SidebarGroupContent className="grid gap-4">
-        <div>
-          <Label htmlFor="project-name">Project Name</Label>
-          <Input
-            id="project-name"
-            type="text"
-            value={projectName}
-            onChange={(e) => {
-              setLastKeystroke(Date.now());
-              setProjectName(e.target.value);
-              updateProject.mutate({
-                id: selectedProject.id,
-                updates: { name: e.target.value },
-              });
-            }}
-          />
-        </div>
-        <div>
-          <Label htmlFor="project-status">Status</Label>
-          <Select
-            value={selectedProject.status}
-            onValueChange={(value: Status) =>
-              updateProject.mutate({
-                id: selectedProject.id,
-                updates: { status: value as Status },
-              })
-            }
-          >
-            <SelectTrigger className="w-full">
-              <SelectValue placeholder="Select status" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="pending">Pending</SelectItem>
-              <SelectItem value="in progress">In Progress</SelectItem>
-              <SelectItem value="completed">Completed</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+      <SidebarGroupContent className="grid gap-2">
+        <Label htmlFor="project-name">Project Name</Label>
+        <Input
+          id="project-name"
+          type="text"
+          value={projectName}
+          onChange={(e) => {
+            setLastKeystroke(Date.now());
+            setProjectName(e.target.value);
+            updateProject.mutate({
+              id: selectedProject.id,
+              updates: { name: e.target.value },
+            });
+          }}
+        />
+        <Label htmlFor="project-status">Status</Label>
+        <Select
+          value={selectedProject.status}
+          onValueChange={(value: Status) =>
+            updateProject.mutate({
+              id: selectedProject.id,
+              updates: { status: value as Status },
+            })
+          }
+        >
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder="Select status" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="pending">Pending</SelectItem>
+            <SelectItem value="in progress">In Progress</SelectItem>
+            <SelectItem value="completed">Completed</SelectItem>
+          </SelectContent>
+        </Select>
       </SidebarGroupContent>
     </SidebarGroup>
   );
