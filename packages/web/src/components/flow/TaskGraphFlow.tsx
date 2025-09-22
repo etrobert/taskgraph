@@ -24,6 +24,7 @@ import { useMoving } from './useMoving';
 import { useGraphSync } from './useGraphSync';
 import { useNodeDrag } from '../../hooks/useNodeDrag';
 import { useMutation } from '@tanstack/react-query';
+import { applyDagreLayout } from '../../lib/dagreLayout';
 
 const nodeTypes = {
   task: TaskNode,
@@ -55,12 +56,20 @@ export function TaskGraphFlow() {
     edges: [],
   });
 
-  const [nodes, setNodes, onNodesChange] = useNodesState<NodeType>([]);
+  const { getNodesBounds } = useReactFlow<NodeType>();
+
+  const [isComputedView, setIsComputedView] = useState(false);
+  const [rawNodes, setRawNodes, onNodesChange] = useNodesState<NodeType>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
 
   const organizationId = useOrganizationId();
 
-  useGraphSync(organizationId, selection, setNodes, setEdges);
+  // Compute display nodes based on view mode
+  const nodes = isComputedView
+    ? applyDagreLayout(rawNodes, edges, getNodesBounds)
+    : rawNodes;
+
+  useGraphSync(organizationId, selection, setRawNodes, setEdges);
 
   const { onConnect, onConnectStart, onConnectEnd } =
     useTaskConnection(organizationId);
@@ -105,8 +114,10 @@ export function TaskGraphFlow() {
       deleteDependencies.mutate(edges.map((edge) => edge.id));
   };
 
+  const toggleComputedView = () =>
+    setIsComputedView((isComputedView) => !isComputedView);
+
   const groupTasksMutation = useMutation(trpc.groupTasks.mutationOptions());
-  const { getNodesBounds } = useReactFlow<NodeType>();
 
   const handleGroupTasks = () => {
     const taskNodes = selection.nodes.filter((node) => node.type === 'task');
@@ -153,6 +164,13 @@ export function TaskGraphFlow() {
           fitView={true}
           proOptions={{ hideAttribution: true }}
         />
+        <Button
+          className="absolute bottom-4 left-4 z-10"
+          variant={isComputedView ? 'default' : 'outline'}
+          onClick={toggleComputedView}
+        >
+          {isComputedView ? 'Spatial View' : 'Computed View'}
+        </Button>
         {!moving &&
           selection.nodes.filter((node) => node.type === 'task').length > 1 && (
             <Button
