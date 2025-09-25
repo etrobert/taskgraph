@@ -3,7 +3,6 @@ import {
   tasksUpdateSchema,
   dependenciesTable,
   dependenciesInsertSchema,
-  tasksInsertSchema,
   organizationsTable,
   projectsTable,
   projectsUpdateSchema,
@@ -34,15 +33,6 @@ export const appRouter = t.router({
     .input(z.object({ id: z.string().uuid() }))
     .mutation(async ({ input: { id } }) => {
       await db.delete(organizationsTable).where(eq(organizationsTable.id, id));
-      ee.emit('update');
-      return 'done';
-    }),
-  createTask: publicProcedure
-    .input(tasksInsertSchema.pick({ name: true, organizationId: true }))
-    .mutation(async ({ input: task }) => {
-      await db
-        .insert(tasksTable)
-        .values({ ...task, position: { x: 0, y: 0 }, status: 'pending' });
       ee.emit('update');
       return 'done';
     }),
@@ -147,7 +137,7 @@ export const appRouter = t.router({
 
     await writeFile(
       path.join(exportDir, 'taskgraph-export.json'),
-      JSON.stringify(exportData, null, 2)
+      JSON.stringify(exportData, null, 2),
     );
 
     return `Exported ${organizations.length} organizations, ${tasks.length} tasks, ${projects.length} projects, ${dependencies.length} dependencies to ./data-export/taskgraph-export.json`;
