@@ -2,7 +2,7 @@ import { initTRPC } from '@trpc/server';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import EventEmitter from 'node:events';
 import superjson from 'superjson';
-import { requireEnv } from './requireEnv';
+import { requireEnv } from './requireEnv.js';
 
 export const db = drizzle({
   connection: requireEnv('DATABASE_URL'),
