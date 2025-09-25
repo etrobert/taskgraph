@@ -95,6 +95,7 @@ export const projectsTable = pgTable('projects', {
   archivedAt: timestamp(),
 });
 
+// Existing schemas
 export const tasksSelectSchema = createSelectSchema(tasksTable);
 export const tasksUpdateSchema = createUpdateSchema(tasksTable);
 export const tasksInsertSchema = createInsertSchema(tasksTable);
@@ -103,5 +104,20 @@ export const projectsSelectSchema = createSelectSchema(projectsTable);
 export const projectsUpdateSchema = createUpdateSchema(projectsTable);
 export const projectsInsertSchema = createInsertSchema(projectsTable);
 
+// New node schemas
+export const nodesSelectSchema = createSelectSchema(nodesTable);
+export const nodesUpdateSchema = createUpdateSchema(nodesTable);
+export const nodesInsertSchema = createInsertSchema(nodesTable);
+export const taskDetailsUpdateSchema = createUpdateSchema(taskDetailsTable);
+export const taskDetailsInsertSchema = createInsertSchema(taskDetailsTable);
+export const projectDetailsUpdateSchema = createUpdateSchema(projectDetailsTable);
+export const projectDetailsInsertSchema = createInsertSchema(projectDetailsTable);
+
+// Existing types
 export type Task = typeof tasksTable.$inferSelect;
 export type Project = typeof projectsTable.$inferSelect;
+
+// New types
+export type Node = typeof nodesTable.$inferSelect;
+export type TaskDetails = typeof taskDetailsTable.$inferSelect;
+export type ProjectDetails = typeof projectDetailsTable.$inferSelect;
