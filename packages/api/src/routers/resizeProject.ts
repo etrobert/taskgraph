@@ -43,27 +43,23 @@ export const resizeProject = publicProcedure
 
       // If position changed (resize to left/top), adjust child task positions
       if (deltaX !== 0 || deltaY !== 0) {
-        const taskNodes = await tx
-          .select({ nodeId: taskDetailsTable.nodeId })
-          .from(taskDetailsTable)
-          .where(eq(taskDetailsTable.projectId, id));
-
-        if (taskNodes.length > 0) {
-          await tx
-            .update(nodesTable)
-            .set({
-              position: sql`point(
-                (position[0]::float - ${deltaX}),
-                (position[1]::float - ${deltaY})
-              )`,
-            })
-            .where(
-              inArray(
-                nodesTable.id,
-                taskNodes.map(({ nodeId }) => nodeId),
-              ),
-            );
-        }
+        await tx
+          .update(nodesTable)
+          .set({
+            position: sql`point(
+              (position[0]::float - ${deltaX}),
+              (position[1]::float - ${deltaY})
+            )`,
+          })
+          .where(
+            inArray(
+              nodesTable.id,
+              tx
+                .select({ nodeId: taskDetailsTable.nodeId })
+                .from(taskDetailsTable)
+                .where(eq(taskDetailsTable.projectId, id)),
+            ),
+          );
       }
     });
 
