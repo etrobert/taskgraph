@@ -8,6 +8,8 @@ import {
   projectsUpdateSchema,
   nodesTable,
   nodesUpdateSchema,
+  taskDetailsTable,
+  taskDetailsUpdateSchema,
 } from './db/schema.js';
 import { eq, inArray } from 'drizzle-orm';
 import { db, ee, t, publicProcedure } from './trpc.js';
@@ -74,6 +76,14 @@ export const appRouter = t.router({
     .input(z.object({ id: z.string().uuid(), updates: nodesUpdateSchema }))
     .mutation(async ({ input: { id, updates } }) => {
       await db.update(nodesTable).set(updates).where(eq(nodesTable.id, id));
+      ee.emit('update');
+      return 'done';
+    }),
+
+  updateTaskDetails: publicProcedure
+    .input(z.object({ nodeId: z.string().uuid(), updates: taskDetailsUpdateSchema }))
+    .mutation(async ({ input: { nodeId, updates } }) => {
+      await db.update(taskDetailsTable).set(updates).where(eq(taskDetailsTable.nodeId, nodeId));
       ee.emit('update');
       return 'done';
     }),
