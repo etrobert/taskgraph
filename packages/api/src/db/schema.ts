@@ -19,9 +19,23 @@ export const statusEnum = pgEnum('status', [
   'completed',
 ]);
 
+export const nodeTypeEnum = pgEnum('node_type', ['task', 'project']);
+
 export const organizationsTable = pgTable('organizations', {
   id: uuid().primaryKey().defaultRandom(),
   createdAt: timestamp().notNull().defaultNow(),
+});
+
+export const nodesTable = pgTable('nodes', {
+  id: uuid().primaryKey().defaultRandom(),
+  organizationId: uuid()
+    .notNull()
+    .references(() => organizationsTable.id, { onDelete: 'cascade' }),
+  type: nodeTypeEnum().notNull(),
+  name: varchar({ length: 255 }).notNull(),
+  position: point({ mode: 'xy' }).notNull(),
+  createdAt: timestamp().notNull().defaultNow(),
+  archivedAt: timestamp(),
 });
 
 export const tasksTable = pgTable('tasks', {
