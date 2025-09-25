@@ -9,8 +9,9 @@ import {
 } from '@trpc/client';
 import { QueryClient } from '@tanstack/react-query';
 import superjson from 'superjson';
+import { requireEnv } from './requireEnv.ts';
 
-const apiUrl = import.meta.env.VITE_API_URL;
+const apiUrl = requireEnv('VITE_API_URL');
 const dev = import.meta.env.DEV;
 
 const wsClient = createWSClient({ url: `${dev ? 'ws' : 'wss'}://${apiUrl}` });
