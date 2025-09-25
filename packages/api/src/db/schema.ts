@@ -45,6 +45,15 @@ export const taskDetailsTable = pgTable('task_details', {
   status: statusEnum().notNull(),
 });
 
+export const projectDetailsTable = pgTable('project_details', {
+  nodeId: uuid()
+    .primaryKey()
+    .references(() => nodesTable.id, { onDelete: 'cascade' }),
+  width: integer().notNull().default(250),
+  height: integer().notNull().default(200),
+  status: statusEnum().notNull().default('pending'),
+});
+
 export const tasksTable = pgTable('tasks', {
   id: uuid().primaryKey().defaultRandom(),
   organizationId: uuid()
