@@ -4,7 +4,6 @@ import {
   dependenciesTable,
   dependenciesInsertSchema,
   organizationsTable,
-  projectsTable,
   nodesTable,
   nodesUpdateSchema,
   taskDetailsTable,
@@ -22,8 +21,6 @@ import { resizeProject } from './routers/resizeProject.js';
 import { groupTasks } from './routers/groupTasks.js';
 import { archiveCompleted } from './routers/archiveCompleted.js';
 import { graph } from './routers/graph.js';
-import { writeFile, mkdir } from 'fs/promises';
-import path from 'path';
 
 export const appRouter = t.router({
   organizations: publicProcedure.query(() =>
@@ -114,33 +111,6 @@ export const appRouter = t.router({
 
   onTasksChange: publicProcedure.subscription(async function* ({ signal }) {
     for await (const _ of on(ee, 'update', { signal })) yield 'update';
-  }),
-
-  exportData: publicProcedure.mutation(async () => {
-    const [organizations, tasks, projects, dependencies] = await Promise.all([
-      db.select().from(organizationsTable),
-      db.select().from(tasksTable),
-      db.select().from(projectsTable),
-      db.select().from(dependenciesTable),
-    ]);
-
-    const exportData = {
-      organizations,
-      tasks,
-      projects,
-      dependencies,
-      exportDate: new Date().toISOString(),
-    };
-
-    const exportDir = path.join(process.cwd(), 'data-export');
-    await mkdir(exportDir, { recursive: true });
-
-    await writeFile(
-      path.join(exportDir, 'taskgraph-export.json'),
-      JSON.stringify(exportData, null, 2),
-    );
-
-    return `Exported ${organizations.length} organizations, ${tasks.length} tasks, ${projects.length} projects, ${dependencies.length} dependencies to ./data-export/taskgraph-export.json`;
   }),
 });
 
