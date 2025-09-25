@@ -3,22 +3,13 @@ import type { OnNodesDelete, OnEdgesDelete } from '@xyflow/react';
 import { trpc } from '../utils/trpc';
 
 export const useOnDelete = () => {
-  const deleteTasks = useMutation(trpc.deleteTasks.mutationOptions());
-  const deleteProjects = useMutation(trpc.deleteProjects.mutationOptions());
+  const deleteNodes = useMutation(trpc.deleteNodes.mutationOptions());
   const deleteDependencies = useMutation(
     trpc.deleteDependencies.mutationOptions(),
   );
 
   const onNodesDelete: OnNodesDelete = (nodes) => {
-    const taskNodes = nodes.filter((node) => node.type === 'task');
-    const projectNodes = nodes.filter((node) => node.type === 'project');
-
-    if (taskNodes.length > 0) {
-      deleteTasks.mutate(taskNodes.map((node) => node.id));
-    }
-    if (projectNodes.length > 0) {
-      deleteProjects.mutate(projectNodes.map((node) => node.id));
-    }
+    deleteNodes.mutate(nodes.map((node) => node.id));
   };
 
   const onEdgesDelete: OnEdgesDelete = (edges) => {
