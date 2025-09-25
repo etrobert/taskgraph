@@ -5,7 +5,7 @@ import {
   projectDetailsTable,
   taskDetailsTable,
 } from '../db/schema.js';
-import { inArray, sql } from 'drizzle-orm';
+import { and, eq, inArray, sql } from 'drizzle-orm';
 
 export const groupTasks = publicProcedure
   .input(
@@ -23,44 +23,58 @@ export const groupTasks = publicProcedure
   .mutation(async ({ input }) => {
     const { taskIds, organizationId, projectBounds } = input;
 
-    // Get the tasks to update their positions
-    const taskNodes = await db
-      .select()
-      .from(nodesTable)
-      .where(inArray(nodesTable.id, taskIds));
+    const project = await db.transaction(async (tx) => {
+      const taskNodes = await tx
+        .select({ id: nodesTable.id })
+        .from(nodesTable)
+        .where(
+          and(
+            eq(nodesTable.organizationId, organizationId),
+            eq(nodesTable.type, 'task'),
+            inArray(nodesTable.id, taskIds),
+          ),
+        );
 
-    if (taskNodes.length === 0) throw new Error('No tasks found');
+      if (taskNodes.length === 0) throw new Error('No tasks found');
 
-    const [project] = await db
-      .insert(nodesTable)
-      .values({
-        organizationId,
-        name: 'My Project',
-        type: 'project',
-        position: { x: projectBounds.x, y: projectBounds.y },
-      })
-      .returning();
+      const [project] = await tx
+        .insert(nodesTable)
+        .values({
+          organizationId,
+          name: 'My Project',
+          type: 'project',
+          position: { x: projectBounds.x, y: projectBounds.y },
+        })
+        .returning();
 
-    await db.insert(projectDetailsTable).values({
-      nodeId: project.id,
-      width: Math.round(projectBounds.width),
-      height: Math.round(projectBounds.height),
+      await tx.insert(projectDetailsTable).values({
+        nodeId: project.id,
+        width: Math.round(projectBounds.width),
+        height: Math.round(projectBounds.height),
+      });
+
+      await tx
+        .update(nodesTable)
+        .set({
+          position: sql`point(
+            (position[0]::float - ${projectBounds.x}),
+            (position[1]::float - ${projectBounds.y})
+          )`,
+        })
+        .where(
+          inArray(
+            nodesTable.id,
+            taskNodes.map(({ id }) => id),
+          ),
+        );
+
+      await tx
+        .update(taskDetailsTable)
+        .set({ projectId: project.id })
+        .where(inArray(taskDetailsTable.nodeId, taskIds));
+
+      return project;
     });
-
-    await db
-      .update(nodesTable)
-      .set({
-        position: sql`point(
-          (position[0]::float - ${projectBounds.x}),
-          (position[1]::float - ${projectBounds.y})
-        )`,
-      })
-      .where(inArray(nodesTable.id, taskIds));
-
-    await db
-      .update(taskDetailsTable)
-      .set({ projectId: project.id })
-      .where(inArray(taskDetailsTable.nodeId, taskIds));
 
     ee.emit('update');
     return project;
