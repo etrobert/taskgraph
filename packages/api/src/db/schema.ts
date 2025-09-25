@@ -38,6 +38,13 @@ export const nodesTable = pgTable('nodes', {
   archivedAt: timestamp(),
 });
 
+export const taskDetailsTable = pgTable('task_details', {
+  nodeId: uuid()
+    .primaryKey()
+    .references(() => nodesTable.id, { onDelete: 'cascade' }),
+  status: statusEnum().notNull(),
+});
+
 export const tasksTable = pgTable('tasks', {
   id: uuid().primaryKey().defaultRandom(),
   organizationId: uuid()
