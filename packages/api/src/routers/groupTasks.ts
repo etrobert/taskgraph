@@ -35,7 +35,8 @@ export const groupTasks = publicProcedure
           ),
         );
 
-      if (taskNodes.length === 0) throw new Error('No tasks found');
+      if (taskNodes.length !== taskIds.length)
+        throw new Error('All tasks were not found');
 
       const [project] = await tx
         .insert(nodesTable)
