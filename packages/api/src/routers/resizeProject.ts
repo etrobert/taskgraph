@@ -30,12 +30,6 @@ export const resizeProject = publicProcedure
       const deltaX = newPosition.x - currentProject.position.x;
       const deltaY = newPosition.y - currentProject.position.y;
 
-      // Update the project
-      await tx
-        .update(nodesTable)
-        .set({ position: newPosition })
-        .where(eq(nodesTable.id, id));
-
       await tx
         .update(projectDetailsTable)
         .set({ width, height })
@@ -43,6 +37,11 @@ export const resizeProject = publicProcedure
 
       // If position changed (resize to left/top), adjust child task positions
       if (deltaX !== 0 || deltaY !== 0) {
+        await tx
+          .update(nodesTable)
+          .set({ position: newPosition })
+          .where(eq(nodesTable.id, id));
+
         await tx
           .update(nodesTable)
           .set({
