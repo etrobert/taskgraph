@@ -79,15 +79,8 @@ export function useNodeDrag(nodes: NodeType[]) {
     return false;
   };
 
-  const handlePositionUpdate = ({ id, type, position }: NodeType) => {
-    switch (type) {
-      case 'task':
-        updateTask.mutate({ id, updates: { position } });
-        break;
-      case 'project':
-        updateNode.mutate({ id, updates: { position } });
-        break;
-    }
+  const handlePositionUpdate = ({ id, position }: NodeType) => {
+    updateNode.mutate({ id, updates: { position } });
   };
 
   const onNodeDragStart: OnNodeDrag<NodeType> = (event) => {
