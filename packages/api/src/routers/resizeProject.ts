@@ -1,6 +1,10 @@
-import { projectsTable, tasksTable } from '../db/schema.js';
+import {
+  nodesTable,
+  projectDetailsTable,
+  taskDetailsTable,
+} from '../db/schema.js';
 import { db, ee, publicProcedure } from '../trpc.js';
-import { eq, sql } from 'drizzle-orm';
+import { and, eq, sql, inArray } from 'drizzle-orm';
 import z from 'zod';
 
 export const resizeProject = publicProcedure
@@ -13,40 +17,55 @@ export const resizeProject = publicProcedure
     }),
   )
   .mutation(async ({ input: { id, position: newPosition, width, height } }) => {
-    // Get the current project position from database
-    const [currentProject] = await db
-      .select()
-      .from(projectsTable)
-      .where(eq(projectsTable.id, id));
+    await db.transaction(async (tx) => {
+      // Get the current project position from database
+      const [currentProject] = await tx
+        .select()
+        .from(nodesTable)
+        .where(and(eq(nodesTable.id, id), eq(nodesTable.type, 'project')));
 
-    if (!currentProject) throw new Error('Project not found');
+      if (!currentProject) throw new Error('Project not found');
 
-    // Calculate position delta (how much the project moved)
-    const deltaX = newPosition.x - currentProject.position.x;
-    const deltaY = newPosition.y - currentProject.position.y;
+      // Calculate position delta (how much the project moved)
+      const deltaX = newPosition.x - currentProject.position.x;
+      const deltaY = newPosition.y - currentProject.position.y;
 
-    // Update the project
-    await db
-      .update(projectsTable)
-      .set({
-        position: newPosition,
-        width,
-        height,
-      })
-      .where(eq(projectsTable.id, id));
+      // Update the project
+      await tx
+        .update(nodesTable)
+        .set({ position: newPosition })
+        .where(eq(nodesTable.id, id));
 
-    // If position changed (resize to left/top), adjust child task positions
-    if (deltaX !== 0 || deltaY !== 0) {
-      await db
-        .update(tasksTable)
-        .set({
-          position: sql`point(
-              (position[0]::float - ${deltaX}),
-              (position[1]::float - ${deltaY})
-            )`,
-        })
-        .where(eq(tasksTable.projectId, id));
-    }
+      await tx
+        .update(projectDetailsTable)
+        .set({ width, height })
+        .where(eq(projectDetailsTable.nodeId, id));
+
+      // If position changed (resize to left/top), adjust child task positions
+      if (deltaX !== 0 || deltaY !== 0) {
+        const taskNodes = await tx
+          .select({ nodeId: taskDetailsTable.nodeId })
+          .from(taskDetailsTable)
+          .where(eq(taskDetailsTable.projectId, id));
+
+        if (taskNodes.length > 0) {
+          await tx
+            .update(nodesTable)
+            .set({
+              position: sql`point(
+                (position[0]::float - ${deltaX}),
+                (position[1]::float - ${deltaY})
+              )`,
+            })
+            .where(
+              inArray(
+                nodesTable.id,
+                taskNodes.map(({ nodeId }) => nodeId),
+              ),
+            );
+        }
+      }
+    });
 
     ee.emit('update');
     return 'done';
