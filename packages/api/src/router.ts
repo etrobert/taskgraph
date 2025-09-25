@@ -17,7 +17,6 @@ import z from 'zod';
 import { on } from 'node:events';
 import { createTaskFrom } from './routers/createTaskFrom.js';
 import { createOrganization } from './routers/createOrganization.js';
-import { createProject } from './routers/createProject.js';
 import { resizeProject } from './routers/resizeProject.js';
 import { groupTasks } from './routers/groupTasks.js';
 import { archiveCompleted } from './routers/archiveCompleted.js';
@@ -30,7 +29,6 @@ export const appRouter = t.router({
     db.select().from(organizationsTable),
   ),
   createOrganization,
-  createProject,
   resizeProject,
   groupTasks,
   archiveCompleted,
@@ -81,9 +79,14 @@ export const appRouter = t.router({
     }),
 
   updateTaskDetails: publicProcedure
-    .input(z.object({ nodeId: z.string().uuid(), updates: taskDetailsUpdateSchema }))
+    .input(
+      z.object({ nodeId: z.string().uuid(), updates: taskDetailsUpdateSchema }),
+    )
     .mutation(async ({ input: { nodeId, updates } }) => {
-      await db.update(taskDetailsTable).set(updates).where(eq(taskDetailsTable.nodeId, nodeId));
+      await db
+        .update(taskDetailsTable)
+        .set(updates)
+        .where(eq(taskDetailsTable.nodeId, nodeId));
       ee.emit('update');
       return 'done';
     }),
