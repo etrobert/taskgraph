@@ -15,7 +15,7 @@ export function useNodeDrag(nodes: NodeType[]) {
   const [nodeDragStartPos, setNodeDragStartPos] = useState({ x: 0, y: 0 });
   const { getIntersectingNodes } = useReactFlow<NodeType>();
   const updateTask = useMutation(trpc.updateTask.mutationOptions());
-  const updateProject = useMutation(trpc.updateProject.mutationOptions());
+  const updateNode = useMutation(trpc.updateNode.mutationOptions());
 
   const handleTaskToProjectAssignment = (
     taskNode: NodeType,
@@ -85,7 +85,7 @@ export function useNodeDrag(nodes: NodeType[]) {
         updateTask.mutate({ id, updates: { position } });
         break;
       case 'project':
-        updateProject.mutate({ id, updates: { position } });
+        updateNode.mutate({ id, updates: { position } });
         break;
     }
   };
