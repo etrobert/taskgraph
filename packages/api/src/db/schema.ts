@@ -43,6 +43,7 @@ export const taskDetailsTable = pgTable('task_details', {
     .primaryKey()
     .references(() => nodesTable.id, { onDelete: 'cascade' }),
   status: statusEnum().notNull(),
+  projectId: uuid().references(() => nodesTable.id, { onDelete: 'set null' }),
 });
 
 export const projectDetailsTable = pgTable('project_details', {
