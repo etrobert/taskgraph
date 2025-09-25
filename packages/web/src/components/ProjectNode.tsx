@@ -17,7 +17,9 @@ export function ProjectNode({
   data: { name, status, archivedAt },
 }: NodeProps<ProjectNodeType>) {
   const resizeProject = useMutation(trpc.resizeProject.mutationOptions());
-  const updateProject = useMutation(trpc.updateProject.mutationOptions());
+  const updateProjectDetails = useMutation(
+    trpc.updateProjectDetails.mutationOptions(),
+  );
 
   return (
     <div
@@ -43,7 +45,7 @@ export function ProjectNode({
         <span
           className="cursor-pointer text-lg"
           onClick={() =>
-            updateProject.mutate({
+            updateProjectDetails.mutate({
               id,
               updates: { status: cycleStatus(status) },
             })
