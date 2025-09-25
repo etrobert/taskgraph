@@ -6,8 +6,11 @@ import {
   organizationsTable,
   projectsTable,
   projectsUpdateSchema,
+  nodesTable,
+  taskDetailsTable,
+  projectDetailsTable,
 } from './db/schema.js';
-import { eq, inArray } from 'drizzle-orm';
+import { eq, inArray, and } from 'drizzle-orm';
 import { db, ee, t, publicProcedure } from './trpc.js';
 import z from 'zod';
 import { on } from 'node:events';
@@ -66,15 +69,38 @@ export const appRouter = t.router({
   graph: publicProcedure
     .input(z.object({ organizationId: z.string().uuid() }))
     .query(async ({ input: { organizationId } }) => {
-      const [projects, tasks, dependencies] = await Promise.all([
+      const [tasks, projects, dependencies] = await Promise.all([
+        // Get task nodes with their task details
         db
           .select()
-          .from(projectsTable)
-          .where(eq(projectsTable.organizationId, organizationId)),
+          .from(nodesTable)
+          .innerJoin(
+            taskDetailsTable,
+            eq(nodesTable.id, taskDetailsTable.nodeId),
+          )
+          .where(
+            and(
+              eq(nodesTable.organizationId, organizationId),
+              eq(nodesTable.type, 'task'),
+            ),
+          ),
+
+        // Get project nodes with their project details
         db
           .select()
-          .from(tasksTable)
-          .where(eq(tasksTable.organizationId, organizationId)),
+          .from(nodesTable)
+          .innerJoin(
+            projectDetailsTable,
+            eq(nodesTable.id, projectDetailsTable.nodeId),
+          )
+          .where(
+            and(
+              eq(nodesTable.organizationId, organizationId),
+              eq(nodesTable.type, 'project'),
+            ),
+          ),
+
+        // Dependencies remain unchanged
         db
           .select()
           .from(dependenciesTable)
