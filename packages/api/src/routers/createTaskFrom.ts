@@ -1,14 +1,15 @@
 import z from 'zod';
 import {
   dependenciesTable,
-  tasksInsertSchema,
-  tasksTable,
+  nodesTable,
+  taskDetailsTable,
 } from '../db/schema.js';
 import { db, ee, publicProcedure } from '../trpc.js';
 
 export const createTaskFrom = publicProcedure
   .input(
-    tasksInsertSchema.pick({ position: true }).extend({
+    z.object({
+      position: z.object({ x: z.number(), y: z.number() }),
       organizationId: z.string().uuid(),
       from: z.string().uuid(),
       newTaskType: z.enum(['blocking', 'blocked']),
@@ -16,28 +17,40 @@ export const createTaskFrom = publicProcedure
   )
   .mutation(
     async ({ input: { from, position, organizationId, newTaskType } }) => {
-      const task = await db
-        .insert(tasksTable)
-        .values({
-          name: 'New Task',
-          position,
+      await db.transaction(async (tx) => {
+        // Create the base node
+        const [node] = await tx
+          .insert(nodesTable)
+          .values({
+            name: 'New Task',
+            position,
+            organizationId,
+            type: 'task',
+          })
+          .returning();
+
+        // Create the task-specific details
+        await tx.insert(taskDetailsTable).values({
+          nodeId: node.id,
           status: 'pending',
-          organizationId,
-        })
-        .returning();
-      await db.insert(dependenciesTable).values(
-        newTaskType === 'blocking'
-          ? {
-              blockedTaskId: from,
-              blockingTaskId: task[0].id,
-              organizationId,
-            }
-          : {
-              blockedTaskId: task[0].id,
-              blockingTaskId: from,
-              organizationId,
-            },
-      );
+        });
+
+        // Create the dependency relationship
+        await tx.insert(dependenciesTable).values(
+          newTaskType === 'blocking'
+            ? {
+                blockedTaskId: from,
+                blockingTaskId: node.id,
+                organizationId,
+              }
+            : {
+                blockedTaskId: node.id,
+                blockingTaskId: from,
+                organizationId,
+              },
+        );
+      });
+
       ee.emit('update');
       return 'done';
     },
