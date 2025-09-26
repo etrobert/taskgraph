@@ -16,8 +16,7 @@ export const archiveCompleted = publicProcedure
       const completedTaskNodes = tx
         .select({ nodeId: taskDetailsTable.nodeId })
         .from(taskDetailsTable)
-        .where(eq(taskDetailsTable.status, 'completed'))
-        .as('completed_task_nodes');
+        .where(eq(taskDetailsTable.status, 'completed'));
 
       await tx
         .update(nodesTable)
@@ -34,8 +33,7 @@ export const archiveCompleted = publicProcedure
       const completedProjectNodes = tx
         .select({ nodeId: projectDetailsTable.nodeId })
         .from(projectDetailsTable)
-        .where(eq(projectDetailsTable.status, 'completed'))
-        .as('completed_project_nodes');
+        .where(eq(projectDetailsTable.status, 'completed'));
 
       await tx
         .update(nodesTable)
