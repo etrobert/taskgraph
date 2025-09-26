@@ -1,10 +1,10 @@
 import z from 'zod';
-import { db, ee, publicProcedure, type TransactionType } from '../trpc';
+import { db, ee, publicProcedure, type TransactionType } from '../trpc.js';
 import {
   nodesTable,
   projectDetailsTable,
   taskDetailsTable,
-} from '../db/schema';
+} from '../db/schema.js';
 import { eq, and, getTableColumns } from 'drizzle-orm';
 import { TRPCError } from '@trpc/server';
 
