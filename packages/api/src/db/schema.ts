@@ -90,3 +90,5 @@ export type ProjectDetails = typeof projectDetailsTable.$inferSelect;
 
 export type ExtendedTask = Node & TaskDetails;
 export type ExtendedProject = Node & ProjectDetails;
+
+export type Point = { x: number; y: number };

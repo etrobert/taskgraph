@@ -2,17 +2,16 @@ import z from 'zod';
 import { db, ee, publicProcedure, type TransactionType } from '../trpc.js';
 import {
   nodesTable,
+  Point,
   projectDetailsTable,
+  TaskDetails,
   taskDetailsTable,
 } from '../db/schema.js';
 import { eq, and, getTableColumns } from 'drizzle-orm';
 import { TRPCError } from '@trpc/server';
 
-const simpleMove = (
-  tx: TransactionType,
-  nodeId: string,
-  position: { x: number; y: number },
-) => tx.update(nodesTable).set({ position }).where(eq(nodesTable.id, nodeId));
+const simpleMove = (tx: TransactionType, nodeId: string, position: Point) =>
+  tx.update(nodesTable).set({ position }).where(eq(nodesTable.id, nodeId));
 
 // TODO: batch multiple node drag
 export const dragNodes = publicProcedure
@@ -52,11 +51,38 @@ export const dragNodes = publicProcedure
     return 'done';
   });
 
+async function getAbsolutePosition(
+  tx: TransactionType,
+  task: TaskDetails,
+  position: Point,
+) {
+  if (task.projectId === null) return position;
+
+  const [project] = await tx
+    .select()
+    .from(nodesTable)
+    .where(eq(nodesTable.id, task.projectId));
+
+  return {
+    x: position.x + project.position.x,
+    y: position.y + project.position.y,
+  };
+}
+
+const intersects = (
+  point: Point,
+  area: { position: Point; width: number; height: number },
+) =>
+  point.x >= area.position.x &&
+  point.x < area.position.x + area.width &&
+  point.y >= area.position.y &&
+  point.y < area.position.y + area.height;
+
 async function handleTaskDrag(
   tx: TransactionType,
   organizationId: string,
   nodeId: string,
-  position: { x: number; y: number },
+  position: Point,
 ) {
   const allProjects = await tx
     .select({
@@ -75,12 +101,15 @@ async function handleTaskDrag(
       ),
     );
 
-  const intersectingProjects = allProjects.filter(
-    (project) =>
-      position.x >= project.position.x &&
-      position.x < project.position.x + project.width &&
-      position.y >= project.position.y &&
-      position.y < project.position.y + project.height,
+  const [task] = await tx
+    .select()
+    .from(taskDetailsTable)
+    .where(eq(taskDetailsTable.nodeId, nodeId));
+
+  const absolutePosition = await getAbsolutePosition(tx, task, position);
+
+  const intersectingProjects = allProjects.filter((project) =>
+    intersects(absolutePosition, project),
   );
 
   if (intersectingProjects.length === 1) {
@@ -89,8 +118,8 @@ async function handleTaskDrag(
       .update(nodesTable)
       .set({
         position: {
-          x: position.x - intersectingProject.position.x,
-          y: position.y - intersectingProject.position.y,
+          x: absolutePosition.x - intersectingProject.position.x,
+          y: absolutePosition.y - intersectingProject.position.y,
         },
       })
       .where(eq(nodesTable.id, nodeId));
@@ -99,26 +128,12 @@ async function handleTaskDrag(
       .set({ projectId: intersectingProject.id })
       .where(eq(taskDetailsTable.nodeId, nodeId));
   } else if (intersectingProjects.length === 0) {
-    const [task] = await tx
-      .select()
-      .from(taskDetailsTable)
-      .where(eq(taskDetailsTable.nodeId, nodeId));
-
     if (task.projectId === null) {
       await simpleMove(tx, nodeId, position);
     } else {
-      const [oldProject] = await tx
-        .select()
-        .from(nodesTable)
-        .where(eq(nodesTable.id, task.projectId));
       await tx
         .update(nodesTable)
-        .set({
-          position: {
-            x: position.x + oldProject.position.x,
-            y: position.y + oldProject.position.y,
-          },
-        })
+        .set({ position: absolutePosition })
         .where(eq(nodesTable.id, nodeId));
       await tx
         .update(taskDetailsTable)
