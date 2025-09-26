@@ -11,7 +11,7 @@ import {
   edgeInsertSchema,
   edgesTable,
 } from './db/schema.js';
-import { eq, inArray } from 'drizzle-orm';
+import { eq, inArray, sql } from 'drizzle-orm';
 import { db, ee, t, publicProcedure } from './trpc.js';
 import z from 'zod';
 import { on } from 'node:events';
@@ -69,6 +69,40 @@ export const appRouter = t.router({
   graph,
 
   createTaskFrom,
+
+  addTaskToProject: publicProcedure
+    .input(
+      z.object({ taskId: z.string().uuid(), projectId: z.string().uuid() }),
+    )
+    .mutation(async ({ input: { taskId, projectId } }) => {
+      await db.transaction(async (tx) => {
+        const projects = await tx
+          .select()
+          .from(nodesTable)
+          .where(eq(nodesTable.id, projectId));
+
+        if (projects.length === 0) throw new Error('Could not find project');
+
+        const [project] = projects;
+
+        await tx
+          .update(nodesTable)
+          .set({
+            position: sql`point(
+              (position[0]::float - ${project.position.x}),
+              (position[1]::float - ${project.position.y})
+            )`,
+          })
+          .where(eq(nodesTable.id, taskId));
+
+        await tx
+          .update(taskDetailsTable)
+          .set({ projectId })
+          .where(eq(taskDetailsTable.nodeId, taskId));
+      });
+      ee.emit('update');
+      return 'done';
+    }),
 
   updateNode: publicProcedure
     .input(z.object({ id: z.string().uuid(), updates: nodesUpdateSchema }))
