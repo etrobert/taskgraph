@@ -3,7 +3,7 @@ import {
   nodesTable,
   taskDetailsTable,
   projectDetailsTable,
-  dependenciesTable,
+  edgesTable,
 } from '../db/schema.js';
 import { db, publicProcedure } from '../trpc.js';
 import { eq, and, getTableColumns } from 'drizzle-orm';
@@ -19,10 +19,7 @@ export const graph = publicProcedure
           ...getTableColumns(taskDetailsTable),
         })
         .from(nodesTable)
-        .innerJoin(
-          taskDetailsTable,
-          eq(nodesTable.id, taskDetailsTable.nodeId),
-        )
+        .innerJoin(taskDetailsTable, eq(nodesTable.id, taskDetailsTable.nodeId))
         .where(
           and(
             eq(nodesTable.organizationId, organizationId),
@@ -51,9 +48,10 @@ export const graph = publicProcedure
       // Dependencies remain unchanged
       db
         .select()
-        .from(dependenciesTable)
-        .where(eq(dependenciesTable.organizationId, organizationId)),
+        .from(edgesTable)
+        .where(eq(nodesTable.organizationId, organizationId)),
     ]);
 
     return { projects, tasks, dependencies };
   });
+
