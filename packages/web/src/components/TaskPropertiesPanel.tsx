@@ -34,7 +34,10 @@ export function TaskPropertiesPanel({
   const [lastKeystroke, setLastKeystroke] = useState(0);
   const [taskName, setTaskName] = useState('');
 
-  const updateTask = useMutation(trpc.updateTask.mutationOptions());
+  const updateNode = useMutation(trpc.updateNode.mutationOptions());
+  const updateTaskDetails = useMutation(
+    trpc.updateTaskDetails.mutationOptions(),
+  );
 
   useEffect(() => {
     if (graph === undefined) return;
@@ -63,7 +66,7 @@ export function TaskPropertiesPanel({
           onChange={(e) => {
             setLastKeystroke(Date.now());
             setTaskName(e.target.value);
-            updateTask.mutate({
+            updateNode.mutate({
               id: selectedTask.id,
               updates: { name: e.target.value },
             });
@@ -73,8 +76,8 @@ export function TaskPropertiesPanel({
         <Select
           value={selectedTask.status || 'pending'}
           onValueChange={(value) =>
-            updateTask.mutate({
-              id: selectedTask.id,
+            updateTaskDetails.mutate({
+              nodeId: selectedTask.id,
               updates: {
                 status: value as TaskNodeData['status'],
               },
@@ -104,15 +107,15 @@ export function TaskPropertiesPanel({
           <Button
             variant="outline"
             onClick={() =>
-              updateTask.mutate({
+              updateNode.mutate({
                 id: selectedTask.id,
                 updates: { archivedAt: null },
               })
             }
-            disabled={updateTask.isPending}
+            disabled={updateNode.isPending}
             className="w-full"
           >
-            {updateTask.isPending ? 'Unarchiving...' : 'Unarchive'}
+            {updateNode.isPending ? 'Unarchiving...' : 'Unarchive'}
           </Button>
         )}
       </SidebarGroupContent>

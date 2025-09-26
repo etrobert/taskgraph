@@ -34,7 +34,10 @@ export function ProjectPropertiesPanel({
   const [lastKeystroke, setLastKeystroke] = useState(0);
   const [projectName, setProjectName] = useState('');
 
-  const updateProject = useMutation(trpc.updateProject.mutationOptions());
+  const updateProjectDetails = useMutation(
+    trpc.updateProjectDetails.mutationOptions(),
+  );
+  const updateNode = useMutation(trpc.updateNode.mutationOptions());
 
   useEffect(() => {
     if (graph === undefined) return;
@@ -65,7 +68,7 @@ export function ProjectPropertiesPanel({
           onChange={(e) => {
             setLastKeystroke(Date.now());
             setProjectName(e.target.value);
-            updateProject.mutate({
+            updateNode.mutate({
               id: selectedProject.id,
               updates: { name: e.target.value },
             });
@@ -75,7 +78,7 @@ export function ProjectPropertiesPanel({
         <Select
           value={selectedProject.status}
           onValueChange={(value: Status) =>
-            updateProject.mutate({
+            updateProjectDetails.mutate({
               id: selectedProject.id,
               updates: { status: value as Status },
             })
@@ -104,15 +107,15 @@ export function ProjectPropertiesPanel({
           <Button
             variant="outline"
             onClick={() =>
-              updateProject.mutate({
+              updateNode.mutate({
                 id: selectedProject.id,
                 updates: { archivedAt: null },
               })
             }
-            disabled={updateProject.isPending}
+            disabled={updateNode.isPending}
             className="w-full"
           >
-            {updateProject.isPending ? 'Unarchiving...' : 'Unarchive'}
+            {updateNode.isPending ? 'Unarchiving...' : 'Unarchive'}
           </Button>
         )}
       </SidebarGroupContent>

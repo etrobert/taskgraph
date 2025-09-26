@@ -1,7 +1,10 @@
-import { publicProcedure } from '../trpc.js';
-import { db, ee } from '../trpc.js';
-import { tasksTable, projectsTable } from '../db/schema.js';
-import { eq, and, isNull } from 'drizzle-orm';
+import { db, ee, publicProcedure } from '../trpc.js';
+import {
+  nodesTable,
+  taskDetailsTable,
+  projectDetailsTable,
+} from '../db/schema.js';
+import { eq, and, isNull, inArray } from 'drizzle-orm';
 import z from 'zod';
 
 export const archiveCompleted = publicProcedure
@@ -9,29 +12,43 @@ export const archiveCompleted = publicProcedure
   .mutation(async ({ input: { organizationId } }) => {
     const now = new Date();
 
-    // Archive completed tasks
-    await db
-      .update(tasksTable)
-      .set({ archivedAt: now })
-      .where(
-        and(
-          eq(tasksTable.organizationId, organizationId),
-          eq(tasksTable.status, 'completed'),
-          isNull(tasksTable.archivedAt),
-        ),
-      );
+    await db.transaction(async (tx) => {
+      const completedTaskNodes = tx
+        .select({ nodeId: taskDetailsTable.nodeId })
+        .from(taskDetailsTable)
+        .where(eq(taskDetailsTable.status, 'completed'))
+        .as('completed_task_nodes');
 
-    // Archive completed projects
-    await db
-      .update(projectsTable)
-      .set({ archivedAt: now })
-      .where(
-        and(
-          eq(projectsTable.organizationId, organizationId),
-          eq(projectsTable.status, 'completed'),
-          isNull(projectsTable.archivedAt),
-        ),
-      );
+      await tx
+        .update(nodesTable)
+        .set({ archivedAt: now })
+        .where(
+          and(
+            eq(nodesTable.organizationId, organizationId),
+            eq(nodesTable.type, 'task'),
+            isNull(nodesTable.archivedAt),
+            inArray(nodesTable.id, completedTaskNodes),
+          ),
+        );
+
+      const completedProjectNodes = tx
+        .select({ nodeId: projectDetailsTable.nodeId })
+        .from(projectDetailsTable)
+        .where(eq(projectDetailsTable.status, 'completed'))
+        .as('completed_project_nodes');
+
+      await tx
+        .update(nodesTable)
+        .set({ archivedAt: now })
+        .where(
+          and(
+            eq(nodesTable.organizationId, organizationId),
+            eq(nodesTable.type, 'project'),
+            isNull(nodesTable.archivedAt),
+            inArray(nodesTable.id, completedProjectNodes),
+          ),
+        );
+    });
 
     ee.emit('update');
     return 'done';

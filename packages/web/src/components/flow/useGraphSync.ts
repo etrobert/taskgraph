@@ -38,11 +38,7 @@ export function useGraphSync(
 
     setNodes(allNodes);
     setEdges(
-      dependencies.map((dependency) => ({
-        id: dependency.id,
-        source: dependency.blockingTaskId,
-        target: dependency.blockedTaskId,
-      })),
+      dependencies.map(({ id, source, target }) => ({ id, source, target })),
     );
   }, [selection.nodes, graph, setNodes, setEdges]);
 

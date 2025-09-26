@@ -1,39 +1,30 @@
 import {
-  tasksTable,
-  tasksUpdateSchema,
-  dependenciesTable,
-  dependenciesInsertSchema,
-  tasksInsertSchema,
   organizationsTable,
-  projectsTable,
-  projectsUpdateSchema,
+  nodesTable,
+  nodesUpdateSchema,
+  taskDetailsTable,
+  taskDetailsUpdateSchema,
+  projectDetailsTable,
+  projectDetailsUpdateSchema,
+  edgeInsertSchema,
+  edgesTable,
 } from './db/schema.js';
-import { eq, inArray } from 'drizzle-orm';
+import { eq, inArray, sql } from 'drizzle-orm';
 import { db, ee, t, publicProcedure } from './trpc.js';
 import z from 'zod';
 import { on } from 'node:events';
 import { createTaskFrom } from './routers/createTaskFrom.js';
 import { createOrganization } from './routers/createOrganization.js';
-import { createProject } from './routers/createProject.js';
 import { resizeProject } from './routers/resizeProject.js';
 import { groupTasks } from './routers/groupTasks.js';
 import { archiveCompleted } from './routers/archiveCompleted.js';
+import { graph } from './routers/graph.js';
 
 export const appRouter = t.router({
   organizations: publicProcedure.query(() =>
     db.select().from(organizationsTable),
   ),
-  getTask: publicProcedure
-    .input(z.object({ id: z.string().uuid() }))
-    .query(async ({ input: { id } }) => {
-      const [task] = await db
-        .select()
-        .from(tasksTable)
-        .where(eq(tasksTable.id, id));
-      return task;
-    }),
   createOrganization,
-  createProject,
   resizeProject,
   groupTasks,
   archiveCompleted,
@@ -44,87 +35,143 @@ export const appRouter = t.router({
       ee.emit('update');
       return 'done';
     }),
-  createTask: publicProcedure
-    .input(tasksInsertSchema.pick({ name: true, organizationId: true }))
-    .mutation(async ({ input: task }) => {
-      await db
-        .insert(tasksTable)
-        .values({ ...task, position: { x: 0, y: 0 }, status: 'pending' });
-      ee.emit('update');
-      return 'done';
-    }),
-  updateTask: publicProcedure
-    .input(z.object({ id: z.string().uuid(), updates: tasksUpdateSchema }))
-    .mutation(async ({ input: { id, updates } }) => {
-      await db.update(tasksTable).set(updates).where(eq(tasksTable.id, id));
-      ee.emit('update');
-      return 'done';
-    }),
 
-  updateProject: publicProcedure
-    .input(z.object({ id: z.string().uuid(), updates: projectsUpdateSchema }))
+  updateProjectDetails: publicProcedure
+    .input(
+      z.object({ id: z.string().uuid(), updates: projectDetailsUpdateSchema }),
+    )
     .mutation(async ({ input: { id, updates } }) => {
       await db
-        .update(projectsTable)
+        .update(projectDetailsTable)
         .set(updates)
-        .where(eq(projectsTable.id, id));
+        .where(eq(projectDetailsTable.nodeId, id));
       ee.emit('update');
       return 'done';
     }),
 
-  createDependency: publicProcedure
-    .input(dependenciesInsertSchema)
-    .mutation(async ({ input: dependency }) => {
-      await db.insert(dependenciesTable).values(dependency);
+  createEdge: publicProcedure
+    .input(edgeInsertSchema)
+    .mutation(async ({ input: edge }) => {
+      await db.insert(edgesTable).values(edge);
       ee.emit('update');
       return 'done';
     }),
 
-  graph: publicProcedure
-    .input(z.object({ organizationId: z.string().uuid() }))
-    .query(async ({ input: { organizationId } }) => {
-      const [projects, tasks, dependencies] = await Promise.all([
-        db
-          .select()
-          .from(projectsTable)
-          .where(eq(projectsTable.organizationId, organizationId)),
-        db
-          .select()
-          .from(tasksTable)
-          .where(eq(tasksTable.organizationId, organizationId)),
-        db
-          .select()
-          .from(dependenciesTable)
-          .where(eq(dependenciesTable.organizationId, organizationId)),
-      ]);
-
-      return { projects, tasks, dependencies };
-    }),
+  graph,
 
   createTaskFrom,
 
-  deleteTasks: publicProcedure
-    .input(z.array(z.string().uuid()))
-    .mutation(async ({ input }) => {
-      await db.delete(tasksTable).where(inArray(tasksTable.id, input));
+  removeTaskFromProject: publicProcedure
+    .input(z.object({ taskId: z.string().uuid() }))
+    .mutation(async ({ input: { taskId } }) => {
+      await db.transaction(async (tx) => {
+        const tasks = await tx
+          .select()
+          .from(taskDetailsTable)
+          .where(eq(taskDetailsTable.nodeId, taskId));
+
+        if (tasks.length === 0) throw new Error('Could not find task');
+
+        const [task] = tasks;
+
+        if (task.projectId === null)
+          throw new Error('Task is not in a project');
+
+        const projects = await tx
+          .select()
+          .from(nodesTable)
+          .where(eq(nodesTable.id, task.projectId));
+
+        if (projects.length === 0) throw new Error('Could not find project');
+
+        const [project] = projects;
+
+        await tx
+          .update(nodesTable)
+          .set({
+            position: sql`point(
+              (position[0]::float + ${project.position.x}),
+              (position[1]::float + ${project.position.y})
+            )`,
+          })
+          .where(eq(nodesTable.id, taskId));
+
+        await tx
+          .update(taskDetailsTable)
+          .set({ projectId: null })
+          .where(eq(taskDetailsTable.nodeId, taskId));
+      });
       ee.emit('update');
       return 'done';
     }),
 
-  deleteProjects: publicProcedure
-    .input(z.array(z.string().uuid()))
-    .mutation(async ({ input }) => {
-      await db.delete(projectsTable).where(inArray(projectsTable.id, input));
+  addTaskToProject: publicProcedure
+    .input(
+      z.object({ taskId: z.string().uuid(), projectId: z.string().uuid() }),
+    )
+    .mutation(async ({ input: { taskId, projectId } }) => {
+      await db.transaction(async (tx) => {
+        const projects = await tx
+          .select()
+          .from(nodesTable)
+          .where(eq(nodesTable.id, projectId));
+
+        if (projects.length === 0) throw new Error('Could not find project');
+
+        const [project] = projects;
+
+        await tx
+          .update(nodesTable)
+          .set({
+            position: sql`point(
+              (position[0]::float - ${project.position.x}),
+              (position[1]::float - ${project.position.y})
+            )`,
+          })
+          .where(eq(nodesTable.id, taskId));
+
+        await tx
+          .update(taskDetailsTable)
+          .set({ projectId })
+          .where(eq(taskDetailsTable.nodeId, taskId));
+      });
       ee.emit('update');
       return 'done';
     }),
 
-  deleteDependencies: publicProcedure
-    .input(z.array(z.string().uuid()))
-    .mutation(async ({ input }) => {
+  updateNode: publicProcedure
+    .input(z.object({ id: z.string().uuid(), updates: nodesUpdateSchema }))
+    .mutation(async ({ input: { id, updates } }) => {
+      await db.update(nodesTable).set(updates).where(eq(nodesTable.id, id));
+      ee.emit('update');
+      return 'done';
+    }),
+
+  updateTaskDetails: publicProcedure
+    .input(
+      z.object({ nodeId: z.string().uuid(), updates: taskDetailsUpdateSchema }),
+    )
+    .mutation(async ({ input: { nodeId, updates } }) => {
       await db
-        .delete(dependenciesTable)
-        .where(inArray(dependenciesTable.id, input));
+        .update(taskDetailsTable)
+        .set(updates)
+        .where(eq(taskDetailsTable.nodeId, nodeId));
+      ee.emit('update');
+      return 'done';
+    }),
+
+  deleteNodes: publicProcedure
+    .input(z.array(z.string().uuid()))
+    .mutation(async ({ input }) => {
+      await db.delete(nodesTable).where(inArray(nodesTable.id, input));
+      ee.emit('update');
+      return 'done';
+    }),
+
+  deleteEdges: publicProcedure
+    .input(z.array(z.string().uuid()))
+    .mutation(async ({ input }) => {
+      await db.delete(edgesTable).where(inArray(edgesTable.id, input));
       ee.emit('update');
       return 'done';
     }),

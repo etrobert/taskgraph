@@ -41,8 +41,6 @@ This file provides guidance for working with the TaskGraph API package.
 - `createOrganization` - Create new organization with default task
 - `deleteOrganization` - Remove organization by ID
 - `createTask` - Add new task to organization
-- `updateTask` - Modify existing task properties
-- `createDependency` - Link tasks with dependency relationships
 - `graph` - Get complete task graph for organization
 - `createTaskFrom` - Create task with dependencies from existing task
 - `deleteTasks` - Remove multiple tasks by IDs

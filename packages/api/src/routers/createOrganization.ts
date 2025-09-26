@@ -1,4 +1,8 @@
-import { organizationsTable, tasksTable } from '../db/schema.js';
+import {
+  nodesTable,
+  organizationsTable,
+  taskDetailsTable,
+} from '../db/schema.js';
 import { db, ee, publicProcedure } from '../trpc.js';
 
 export const createOrganization = publicProcedure.mutation(async () => {
@@ -8,10 +12,18 @@ export const createOrganization = publicProcedure.mutation(async () => {
     .returning();
 
   // Create a default task for the new organization
-  await db.insert(tasksTable).values({
-    organizationId: organization.id,
-    name: 'Welcome to TaskGraph!',
-    position: { x: 0, y: 0 },
+  const [node] = await db
+    .insert(nodesTable)
+    .values({
+      type: 'task',
+      organizationId: organization.id,
+      name: 'Welcome to TaskGraph!',
+      position: { x: 0, y: 0 },
+    })
+    .returning();
+
+  await db.insert(taskDetailsTable).values({
+    nodeId: node.id,
     status: 'pending',
   });
 

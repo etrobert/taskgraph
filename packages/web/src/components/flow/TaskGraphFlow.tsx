@@ -89,7 +89,7 @@ export function TaskGraphFlow() {
 
   const selectionScreenBounds = useScreenNodesBounds(selection.nodes);
 
-  const { onNodeDragStart, onNodeDragStop } = useNodeDrag(nodes);
+  const { onNodeDragStart, onNodeDragStop } = useNodeDrag();
   const { onNodesDelete, onEdgesDelete } = useOnDelete();
 
   const { fitView } = useReactFlow<NodeType>();
