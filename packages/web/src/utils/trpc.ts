@@ -16,7 +16,10 @@ const dev = import.meta.env.DEV;
 
 const wsClient = createWSClient({ url: `${dev ? 'ws' : 'wss'}://${apiUrl}` });
 
-export const queryClient = new QueryClient();
+export const queryClient = new QueryClient({
+  defaultOptions: { queries: { staleTime: 60 * 1000 } },
+});
+
 const trpcClient = createTRPCClient<AppRouter>({
   links: [
     splitLink({
