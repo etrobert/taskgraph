@@ -1,25 +1,15 @@
 import { cn } from '@/lib/utils';
-import { type Node, Handle, Position, type NodeProps } from '@xyflow/react';
+import { type Node, Position, type NodeProps } from '@xyflow/react';
 import { type TaskNodeData } from '@/lib/getTaskNodeFromTask';
 import { getStatusColor, getStatusIcon } from '@/lib/statusHelpers';
+import { FlowHandle } from './flow/FlowHandle';
 
 export type TaskNodeType = Node<TaskNodeData, 'task'>;
 
 export function TaskNode({ data, selected }: NodeProps<TaskNodeType>) {
   return (
     <div className="group">
-      <Handle
-        type="target"
-        position={Position.Left}
-        style={{
-          width: '16px',
-          height: '16px',
-          background: '#fff',
-          border: '2px solid #9ca3af',
-          transition: 'opacity 0.1s',
-        }}
-        className="opacity-0 group-hover:opacity-100"
-      />
+      <FlowHandle type="target" position={Position.Left} />
       <div
         className={cn(
           'rounded-lg border-2 px-4 py-2 shadow-md transition-all duration-200',
@@ -43,18 +33,7 @@ export function TaskNode({ data, selected }: NodeProps<TaskNodeType>) {
           </p>
         )}
       </div>
-      <Handle
-        type="source"
-        position={Position.Right}
-        style={{
-          width: '16px',
-          height: '16px',
-          background: '#fff',
-          border: '2px solid #9ca3af',
-          transition: 'opacity 0.1s',
-        }}
-        className="opacity-0 group-hover:opacity-100"
-      />
+      <FlowHandle type="source" position={Position.Right} />
     </div>
   );
 }
