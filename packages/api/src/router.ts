@@ -1,6 +1,4 @@
 import {
-  tasksTable,
-  tasksUpdateSchema,
   organizationsTable,
   nodesTable,
   nodesUpdateSchema,
@@ -34,13 +32,6 @@ export const appRouter = t.router({
     .input(z.object({ id: z.string().uuid() }))
     .mutation(async ({ input: { id } }) => {
       await db.delete(organizationsTable).where(eq(organizationsTable.id, id));
-      ee.emit('update');
-      return 'done';
-    }),
-  updateTask: publicProcedure
-    .input(z.object({ id: z.string().uuid(), updates: tasksUpdateSchema }))
-    .mutation(async ({ input: { id, updates } }) => {
-      await db.update(tasksTable).set(updates).where(eq(tasksTable.id, id));
       ee.emit('update');
       return 'done';
     }),

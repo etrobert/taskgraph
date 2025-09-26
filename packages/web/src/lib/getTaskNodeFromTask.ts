@@ -1,8 +1,8 @@
 import type { Node } from '@xyflow/react';
-import type { Task } from '../../../api/src/db/schema';
+import type { ExtendedTask } from '../../../api/src/db/schema';
 
 export const getTaskNodeFromTask = (
-  { id, position, projectId, ...data }: Task,
+  { id, position, projectId, ...data }: ExtendedTask,
   selection: { id: string }[],
 ) =>
   ({
