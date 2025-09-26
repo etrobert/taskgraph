@@ -1,8 +1,6 @@
 import {
   tasksTable,
   tasksUpdateSchema,
-  dependenciesTable,
-  dependenciesInsertSchema,
   organizationsTable,
   nodesTable,
   nodesUpdateSchema,
@@ -102,12 +100,10 @@ export const appRouter = t.router({
       return 'done';
     }),
 
-  deleteDependencies: publicProcedure
+  deleteEdges: publicProcedure
     .input(z.array(z.string().uuid()))
     .mutation(async ({ input }) => {
-      await db
-        .delete(dependenciesTable)
-        .where(inArray(dependenciesTable.id, input));
+      await db.delete(edgesTable).where(inArray(edgesTable.id, input));
       ee.emit('update');
       return 'done';
     }),
