@@ -5,7 +5,7 @@ import {
   projectDetailsTable,
   taskDetailsTable,
 } from '../db/schema';
-import { eq, and } from 'drizzle-orm';
+import { eq, and, getTableColumns } from 'drizzle-orm';
 import { TRPCError } from '@trpc/server';
 
 const simpleMove = (
@@ -59,7 +59,10 @@ async function handleTaskDrag(
   position: { x: number; y: number },
 ) {
   const allProjects = await tx
-    .select()
+    .select({
+      ...getTableColumns(nodesTable),
+      ...getTableColumns(projectDetailsTable),
+    })
     .from(nodesTable)
     .innerJoin(
       projectDetailsTable,
@@ -74,10 +77,10 @@ async function handleTaskDrag(
 
   const intersectingProjects = allProjects.filter(
     (project) =>
-      position.x >= project.nodes.position.x &&
-      position.x < project.nodes.position.x + project.project_details.width &&
-      position.y >= project.nodes.position.y &&
-      position.y < project.nodes.position.y + project.project_details.height,
+      position.x >= project.position.x &&
+      position.x < project.position.x + project.width &&
+      position.y >= project.position.y &&
+      position.y < project.position.y + project.height,
   );
 
   if (intersectingProjects.length === 1) {
@@ -86,14 +89,14 @@ async function handleTaskDrag(
       .update(nodesTable)
       .set({
         position: {
-          x: position.x - intersectingProject.nodes.position.x,
-          y: position.y - intersectingProject.nodes.position.y,
+          x: position.x - intersectingProject.position.x,
+          y: position.y - intersectingProject.position.y,
         },
       })
       .where(eq(nodesTable.id, nodeId));
     await tx
       .update(taskDetailsTable)
-      .set({ projectId: intersectingProject.nodes.id })
+      .set({ projectId: intersectingProject.id })
       .where(eq(taskDetailsTable.nodeId, nodeId));
   } else if (intersectingProjects.length === 0) {
     const [task] = await tx
