@@ -53,7 +53,7 @@ export const graph = publicProcedure
         db
           .select()
           .from(edgesTable)
-          .where(eq(nodesTable.organizationId, organizationId)),
+          .where(eq(edgesTable.organizationId, organizationId)),
       ]);
 
       return { projects, tasks, dependencies };
