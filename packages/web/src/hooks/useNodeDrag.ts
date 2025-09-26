@@ -15,7 +15,11 @@ export function useNodeDrag(nodes: NodeType[]) {
   const [nodeDragStartPos, setNodeDragStartPos] = useState({ x: 0, y: 0 });
   const { getIntersectingNodes } = useReactFlow<NodeType>();
   const updateTask = useMutation(trpc.updateTask.mutationOptions());
+  const updateTaskDetails = useMutation(
+    trpc.updateTaskDetails.mutationOptions(),
+  );
   const updateNode = useMutation(trpc.updateNode.mutationOptions());
+  const addTaskToProject = useMutation(trpc.addTaskToProject.mutationOptions());
 
   const handleTaskToProjectAssignment = (
     taskNode: NodeType,
@@ -23,16 +27,7 @@ export function useNodeDrag(nodes: NodeType[]) {
   ) => {
     if (taskNode.parentId === projectNode.id) return false; // Already assigned
 
-    updateTask.mutate({
-      id: taskNode.id,
-      updates: {
-        projectId: projectNode.id,
-        position: {
-          x: taskNode.position.x - projectNode.position.x,
-          y: taskNode.position.y - projectNode.position.y,
-        },
-      },
-    });
+    addTaskToProject.mutate({ taskId: taskNode.id, projectId: projectNode.id });
     return true; // Assignment happened
   };
 
@@ -45,7 +40,10 @@ export function useNodeDrag(nodes: NodeType[]) {
 
     if (!parentProject) {
       console.error('Could not find parent project!');
-      updateTask.mutate({ id: taskNode.id, updates: { projectId: null } });
+      updateTaskDetails.mutate({
+        nodeId: taskNode.id,
+        updates: { projectId: null },
+      });
       return true;
     }
 
