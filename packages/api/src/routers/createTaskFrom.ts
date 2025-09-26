@@ -1,9 +1,5 @@
 import z from 'zod';
-import {
-  dependenciesTable,
-  nodesTable,
-  taskDetailsTable,
-} from '../db/schema.js';
+import { edgesTable, nodesTable, taskDetailsTable } from '../db/schema.js';
 import { db, ee, publicProcedure } from '../trpc.js';
 
 export const createTaskFrom = publicProcedure
@@ -35,20 +31,13 @@ export const createTaskFrom = publicProcedure
           status: 'pending',
         });
 
-        // Create the dependency relationship
-        await tx.insert(dependenciesTable).values(
-          newTaskType === 'blocking'
-            ? {
-                blockedTaskId: from,
-                blockingTaskId: node.id,
-                organizationId,
-              }
-            : {
-                blockedTaskId: node.id,
-                blockingTaskId: from,
-                organizationId,
-              },
-        );
+        await tx
+          .insert(edgesTable)
+          .values(
+            newTaskType === 'blocking'
+              ? { source: node.id, target: from, organizationId }
+              : { source: from, target: node.id, organizationId },
+          );
       });
 
       ee.emit('update');
