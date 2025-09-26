@@ -19,6 +19,7 @@ import { resizeProject } from './routers/resizeProject.js';
 import { groupTasks } from './routers/groupTasks.js';
 import { archiveCompleted } from './routers/archiveCompleted.js';
 import { graph } from './routers/graph.js';
+import { dragNode } from './routers/dragNode.js';
 
 export const appRouter = t.router({
   organizations: publicProcedure.query(() =>
@@ -60,6 +61,8 @@ export const appRouter = t.router({
   graph,
 
   createTaskFrom,
+
+  dragNode,
 
   removeTaskFromProject: publicProcedure
     .input(z.object({ taskId: z.string().uuid() }))

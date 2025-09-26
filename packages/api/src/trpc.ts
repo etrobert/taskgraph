@@ -17,3 +17,8 @@ type Context = Awaited<ReturnType<typeof createContext>>;
 
 export const t = initTRPC.context<Context>().create({ transformer: superjson });
 export const publicProcedure = t.procedure;
+
+export type DatabaseType = typeof db;
+export type TransactionType = Parameters<
+  Parameters<DatabaseType['transaction']>[0]
+>[0];

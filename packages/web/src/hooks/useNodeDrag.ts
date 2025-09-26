@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useReactFlow, type OnNodeDrag } from '@xyflow/react';
+import { type OnNodeDrag } from '@xyflow/react';
 import { useMutation } from '@tanstack/react-query';
 import { trpc } from '../utils/trpc';
 import type { NodeType } from '../components/flow/TaskGraphFlow';
@@ -13,50 +13,7 @@ const squaredDistance = (
 
 export function useNodeDrag() {
   const [nodeDragStartPos, setNodeDragStartPos] = useState({ x: 0, y: 0 });
-  const { getIntersectingNodes } = useReactFlow<NodeType>();
-  const updateNode = useMutation(trpc.updateNode.mutationOptions());
-  const addTaskToProject = useMutation(trpc.addTaskToProject.mutationOptions());
-  const removeTaskFromProject = useMutation(
-    trpc.removeTaskFromProject.mutationOptions(),
-  );
-
-  const handleTaskToProjectAssignment = (
-    taskNode: NodeType,
-    projectNode: NodeType,
-  ) => {
-    if (taskNode.parentId === projectNode.id) return false; // Already assigned
-
-    addTaskToProject.mutate({ taskId: taskNode.id, projectId: projectNode.id });
-    return true; // Assignment happened
-  };
-
-  const handleTaskFromProjectRemoval = (taskNode: NodeType) => {
-    if (taskNode.parentId === undefined) return false; // Not in a project
-
-    removeTaskFromProject.mutate({ taskId: taskNode.id });
-
-    return true; // Removal happened
-  };
-
-  const handleProjectAssignmentChanges = (node: NodeType): boolean => {
-    if (node.type !== 'task') return false;
-
-    const intersectingNodes = getIntersectingNodes(node);
-    const intersectingProjects = intersectingNodes.filter(
-      (n) => n.type === 'project',
-    );
-
-    if (intersectingProjects.length === 1)
-      return handleTaskToProjectAssignment(node, intersectingProjects[0]);
-    else if (intersectingProjects.length === 0)
-      return handleTaskFromProjectRemoval(node);
-
-    return false;
-  };
-
-  const handlePositionUpdate = ({ id, position }: NodeType) => {
-    updateNode.mutate({ id, updates: { position } });
-  };
+  const dragNode = useMutation(trpc.dragNode.mutationOptions());
 
   const onNodeDragStart: OnNodeDrag<NodeType> = (event) => {
     setNodeDragStartPos({ x: event.clientX, y: event.clientY });
@@ -71,13 +28,11 @@ export function useNodeDrag() {
 
     // Handle all dragged nodes (for group drag support)
     for (const draggedNode of nodes) {
-      // Handle project assignment changes first
-      const assignmentChanged = handleProjectAssignmentChanges(draggedNode);
-      // Skip position update if project assignment changed (position was updated there)
-      if (assignmentChanged) continue;
-
-      // Update position for nodes that weren't reassigned to projects
-      handlePositionUpdate(draggedNode);
+      dragNode.mutate({
+        organizationId: draggedNode.data.organizationId,
+        nodeId: draggedNode.id,
+        position: draggedNode.position,
+      });
     }
   };
 
