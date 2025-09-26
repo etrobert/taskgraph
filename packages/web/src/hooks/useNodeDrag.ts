@@ -11,15 +11,14 @@ const squaredDistance = (
   (point2.y - point1.y) * (point2.y - point1.y) +
   (point2.x - point1.x) * (point2.x - point1.x);
 
-export function useNodeDrag(nodes: NodeType[]) {
+export function useNodeDrag() {
   const [nodeDragStartPos, setNodeDragStartPos] = useState({ x: 0, y: 0 });
   const { getIntersectingNodes } = useReactFlow<NodeType>();
-  const updateTask = useMutation(trpc.updateTask.mutationOptions());
-  const updateTaskDetails = useMutation(
-    trpc.updateTaskDetails.mutationOptions(),
-  );
   const updateNode = useMutation(trpc.updateNode.mutationOptions());
   const addTaskToProject = useMutation(trpc.addTaskToProject.mutationOptions());
+  const removeTaskFromProject = useMutation(
+    trpc.removeTaskFromProject.mutationOptions(),
+  );
 
   const handleTaskToProjectAssignment = (
     taskNode: NodeType,
@@ -34,29 +33,7 @@ export function useNodeDrag(nodes: NodeType[]) {
   const handleTaskFromProjectRemoval = (taskNode: NodeType) => {
     if (taskNode.parentId === undefined) return false; // Not in a project
 
-    const parentProject = nodes.find(
-      (n) => n.id === taskNode.parentId && n.type === 'project',
-    );
-
-    if (!parentProject) {
-      console.error('Could not find parent project!');
-      updateTaskDetails.mutate({
-        nodeId: taskNode.id,
-        updates: { projectId: null },
-      });
-      return true;
-    }
-
-    updateTask.mutate({
-      id: taskNode.id,
-      updates: {
-        projectId: null,
-        position: {
-          x: taskNode.position.x + parentProject.position.x,
-          y: taskNode.position.y + parentProject.position.y,
-        },
-      },
-    });
+    removeTaskFromProject.mutate({ taskId: taskNode.id });
 
     return true; // Removal happened
   };

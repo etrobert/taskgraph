@@ -70,6 +70,50 @@ export const appRouter = t.router({
 
   createTaskFrom,
 
+  removeTaskFromProject: publicProcedure
+    .input(z.object({ taskId: z.string().uuid() }))
+    .mutation(async ({ input: { taskId } }) => {
+      await db.transaction(async (tx) => {
+        const tasks = await tx
+          .select()
+          .from(taskDetailsTable)
+          .where(eq(taskDetailsTable.nodeId, taskId));
+
+        if (tasks.length === 0) throw new Error('Could not find task');
+
+        const [task] = tasks;
+
+        if (task.projectId === null)
+          throw new Error('Task is not in a project');
+
+        const projects = await tx
+          .select()
+          .from(nodesTable)
+          .where(eq(nodesTable.id, task.projectId));
+
+        if (projects.length === 0) throw new Error('Could not find project');
+
+        const [project] = projects;
+
+        await tx
+          .update(nodesTable)
+          .set({
+            position: sql`point(
+              (position[0]::float + ${project.position.x}),
+              (position[1]::float + ${project.position.y})
+            )`,
+          })
+          .where(eq(nodesTable.id, taskId));
+
+        await tx
+          .update(taskDetailsTable)
+          .set({ projectId: null })
+          .where(eq(taskDetailsTable.nodeId, taskId));
+      });
+      ee.emit('update');
+      return 'done';
+    }),
+
   addTaskToProject: publicProcedure
     .input(
       z.object({ taskId: z.string().uuid(), projectId: z.string().uuid() }),
