@@ -69,25 +69,6 @@ export const projectDetailsTable = pgTable('project_details', {
   status: statusEnum().notNull().default('pending'),
 });
 
-export const projectsTable = pgTable('projects', {
-  id: uuid().primaryKey().defaultRandom(),
-  organizationId: uuid()
-    .notNull()
-    .references(() => organizationsTable.id, { onDelete: 'cascade' }),
-  name: varchar({ length: 255 }).notNull().default('New Project'),
-  position: point({ mode: 'xy' }).notNull(),
-  width: integer().notNull().default(250),
-  height: integer().notNull().default(200),
-  status: statusEnum().notNull().default('pending'),
-  createdAt: timestamp().notNull().defaultNow(),
-  archivedAt: timestamp(),
-});
-
-// Existing schemas
-export const projectsSelectSchema = createSelectSchema(projectsTable);
-export const projectsUpdateSchema = createUpdateSchema(projectsTable);
-export const projectsInsertSchema = createInsertSchema(projectsTable);
-
 // New node schemas
 export const nodesSelectSchema = createSelectSchema(nodesTable);
 export const nodesUpdateSchema = createUpdateSchema(nodesTable);
@@ -100,12 +81,10 @@ export const projectDetailsInsertSchema =
   createInsertSchema(projectDetailsTable);
 export const edgeInsertSchema = createInsertSchema(edgesTable);
 
-// Existing types
-export type Project = typeof projectsTable.$inferSelect;
-
 // New types
 export type Node = typeof nodesTable.$inferSelect;
 export type TaskDetails = typeof taskDetailsTable.$inferSelect;
 export type ProjectDetails = typeof projectDetailsTable.$inferSelect;
 
 export type ExtendedTask = Node & TaskDetails;
+export type ExtendedProject = Node & ProjectDetails;

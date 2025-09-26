@@ -1,7 +1,7 @@
-import type { Project } from '../../../api/src/db/schema';
+import type { ExtendedProject } from '../../../api/src/db/schema';
 
 export const getProjectNodeFromProject = (
-  { id, position, width, height, ...data }: Project,
+  { id, position, width, height, ...data }: ExtendedProject,
   selection: { id: string }[],
 ) =>
   ({
