@@ -39,6 +39,7 @@ export function TaskPropertiesPanel({
 
   const [lastKeystroke, setLastKeystroke] = useState(0);
   const [taskName, setTaskName] = useState('');
+  const [taskDescription, setTaskDescription] = useState('');
 
   const updateNode = useMutation(trpc.updateNode.mutationOptions());
   const updateTaskDetails = useMutation(
@@ -51,8 +52,10 @@ export function TaskPropertiesPanel({
     const selectedTask = graph.tasks.find(
       (task) => task.id === selectedNode.id,
     );
-    if (selectedTask && Date.now() - lastKeystroke >= 1000)
+    if (selectedTask && Date.now() - lastKeystroke >= 1000) {
       setTaskName(selectedTask.name);
+      setTaskDescription(selectedTask.description ?? '');
+    }
   }, [graph, lastKeystroke, selectedNode]);
 
   if (graph === undefined) return null;
@@ -102,6 +105,21 @@ export function TaskPropertiesPanel({
                 <SelectItem value="completed">Completed</SelectItem>
               </SelectContent>
             </Select>
+
+            <Label htmlFor="task-description">Description</Label>
+            <textarea
+              id="task-description"
+              value={taskDescription}
+              onChange={(e) => {
+                setLastKeystroke(Date.now());
+                setTaskDescription(e.target.value);
+                updateTaskDetails.mutate({
+                  nodeId: selectedTask.id,
+                  updates: { description: e.target.value },
+                });
+              }}
+              className="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive min-h-[6rem] w-full min-w-0 rounded-md border bg-transparent px-3 py-2 text-base shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+            />
 
             {selectedTask.archivedAt && (
               <>

@@ -37,6 +37,11 @@ export function TaskNode({ data, selected }: NodeProps<TaskNodeType>) {
           </span>
           {data.archivedAt && '📁'}
         </div>
+        {data.description && (
+          <p className="text-muted-foreground mt-1 max-w-[180px] overflow-hidden text-xs text-ellipsis whitespace-nowrap">
+            {data.description}
+          </p>
+        )}
       </div>
       <Handle
         type="source"
