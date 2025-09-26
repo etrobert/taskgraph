@@ -2,9 +2,9 @@ import z from 'zod';
 import { db, ee, publicProcedure, type TransactionType } from '../trpc.js';
 import {
   nodesTable,
-  Point,
+  type Point,
   projectDetailsTable,
-  TaskDetails,
+  type TaskDetails,
   taskDetailsTable,
 } from '../db/schema.js';
 import { eq, and, getTableColumns } from 'drizzle-orm';
