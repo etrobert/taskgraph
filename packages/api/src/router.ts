@@ -21,7 +21,6 @@ import { resizeProject } from './routers/resizeProject.js';
 import { groupTasks } from './routers/groupTasks.js';
 import { archiveCompleted } from './routers/archiveCompleted.js';
 import { graph } from './routers/graph.js';
-import { migrate } from './routers/migration.js';
 
 export const appRouter = t.router({
   organizations: publicProcedure.query(() =>
@@ -111,8 +110,6 @@ export const appRouter = t.router({
   onTasksChange: publicProcedure.subscription(async function* ({ signal }) {
     for await (const _ of on(ee, 'update', { signal })) yield 'update';
   }),
-
-  migrate,
 });
 
 export type AppRouter = typeof appRouter;

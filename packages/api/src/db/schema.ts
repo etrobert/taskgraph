@@ -82,20 +82,6 @@ export const tasksTable = pgTable('tasks', {
   archivedAt: timestamp(),
 });
 
-export const dependenciesTable = pgTable('dependencies', {
-  id: uuid().primaryKey().defaultRandom(),
-  organizationId: uuid()
-    .notNull()
-    .references(() => organizationsTable.id, { onDelete: 'cascade' }),
-  blockingTaskId: uuid()
-    .notNull()
-    .references(() => tasksTable.id, { onDelete: 'cascade' }),
-  blockedTaskId: uuid()
-    .notNull()
-    .references(() => tasksTable.id, { onDelete: 'cascade' }),
-  createdAt: timestamp().notNull().defaultNow(),
-});
-
 export const projectsTable = pgTable('projects', {
   id: uuid().primaryKey().defaultRandom(),
   organizationId: uuid()
@@ -114,7 +100,6 @@ export const projectsTable = pgTable('projects', {
 export const tasksSelectSchema = createSelectSchema(tasksTable);
 export const tasksUpdateSchema = createUpdateSchema(tasksTable);
 export const tasksInsertSchema = createInsertSchema(tasksTable);
-export const dependenciesInsertSchema = createInsertSchema(dependenciesTable);
 export const projectsSelectSchema = createSelectSchema(projectsTable);
 export const projectsUpdateSchema = createUpdateSchema(projectsTable);
 export const projectsInsertSchema = createInsertSchema(projectsTable);
