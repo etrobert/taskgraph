@@ -11,29 +11,26 @@ const squaredDistance = (
   (point2.y - point1.y) * (point2.y - point1.y) +
   (point2.x - point1.x) * (point2.x - point1.x);
 
-export function useNodeDrag() {
+export function useNodeDrag(organizationId: string | undefined) {
   const [nodeDragStartPos, setNodeDragStartPos] = useState({ x: 0, y: 0 });
-  const dragNode = useMutation(trpc.dragNode.mutationOptions());
+  const dragNodes = useMutation(trpc.dragNodes.mutationOptions());
 
   const onNodeDragStart: OnNodeDrag<NodeType> = (event) => {
     setNodeDragStartPos({ x: event.clientX, y: event.clientY });
   };
 
   const onNodeDragStop: OnNodeDrag<NodeType> = (event, _, nodes) => {
+    if (!organizationId) return;
     // Only update position if it was a significant drag (not just a click)
     const cursorPos = { x: event.clientX, y: event.clientY };
     const wasDraggedFar = squaredDistance(nodeDragStartPos, cursorPos) >= 200;
 
     if (!wasDraggedFar) return;
 
-    // Handle all dragged nodes (for group drag support)
-    for (const draggedNode of nodes) {
-      dragNode.mutate({
-        organizationId: draggedNode.data.organizationId,
-        nodeId: draggedNode.id,
-        position: draggedNode.position,
-      });
-    }
+    dragNodes.mutate({
+      organizationId,
+      nodes: nodes.map(({ id, position }) => ({ nodeId: id, position })),
+    });
   };
 
   return { onNodeDragStart, onNodeDragStop };

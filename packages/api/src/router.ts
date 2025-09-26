@@ -9,7 +9,7 @@ import {
   edgeInsertSchema,
   edgesTable,
 } from './db/schema.js';
-import { eq, inArray, sql } from 'drizzle-orm';
+import { eq, inArray } from 'drizzle-orm';
 import { db, ee, t, publicProcedure } from './trpc.js';
 import z from 'zod';
 import { on } from 'node:events';
@@ -19,7 +19,7 @@ import { resizeProject } from './routers/resizeProject.js';
 import { groupTasks } from './routers/groupTasks.js';
 import { archiveCompleted } from './routers/archiveCompleted.js';
 import { graph } from './routers/graph.js';
-import { dragNode } from './routers/dragNode.js';
+import { dragNodes } from './routers/dragNodes.js';
 
 export const appRouter = t.router({
   organizations: publicProcedure.query(() =>
@@ -62,7 +62,7 @@ export const appRouter = t.router({
 
   createTaskFrom,
 
-  dragNode,
+  dragNodes,
 
   updateNode: publicProcedure
     .input(z.object({ id: z.string().uuid(), updates: nodesUpdateSchema }))

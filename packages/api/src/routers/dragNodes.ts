@@ -1,5 +1,5 @@
 import z from 'zod';
-import { db, ee, publicProcedure, TransactionType } from '../trpc';
+import { db, ee, publicProcedure, type TransactionType } from '../trpc';
 import {
   nodesTable,
   projectDetailsTable,
@@ -15,31 +15,37 @@ const simpleMove = (
 ) => tx.update(nodesTable).set({ position }).where(eq(nodesTable.id, nodeId));
 
 // TODO: batch multiple node drag
-export const dragNode = publicProcedure
+export const dragNodes = publicProcedure
   .input(
     z.object({
-      nodeId: z.string().uuid(),
       organizationId: z.string().uuid(),
-      position: z.object({ x: z.number(), y: z.number() }),
+      nodes: z.array(
+        z.object({
+          nodeId: z.string().uuid(),
+          position: z.object({ x: z.number(), y: z.number() }),
+        }),
+      ),
     }),
   )
-  .mutation(async ({ input: { organizationId, nodeId, position } }) => {
+  .mutation(async ({ input: { organizationId, nodes } }) => {
     await db.transaction(async (tx) => {
-      const nodes = await tx
-        .select()
-        .from(nodesTable)
-        .where(eq(nodesTable.id, nodeId));
+      for (const { nodeId, position } of nodes) {
+        const nodes = await tx
+          .select()
+          .from(nodesTable)
+          .where(eq(nodesTable.id, nodeId));
 
-      const node = nodes.at(0);
+        const node = nodes.at(0);
 
-      if (node === undefined)
-        throw new TRPCError({
-          code: 'BAD_REQUEST',
-          message: 'There is no such node',
-        });
+        if (node === undefined)
+          throw new TRPCError({
+            code: 'BAD_REQUEST',
+            message: 'There is no such node',
+          });
 
-      if (node.type === 'project') await simpleMove(tx, nodeId, position);
-      else await handleTaskDrag(tx, organizationId, nodeId, position);
+        if (node.type === 'project') await simpleMove(tx, nodeId, position);
+        else await handleTaskDrag(tx, organizationId, nodeId, position);
+      }
     });
 
     ee.emit('update');
