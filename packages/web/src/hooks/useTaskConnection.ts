@@ -13,16 +13,13 @@ export function useTaskConnection(organizationId: string | undefined) {
   const connectingHandleType = useRef<'source' | 'target'>(null);
   const { screenToFlowPosition } = useReactFlow();
 
-  const createDependency = useMutation(trpc.createDependency.mutationOptions());
+  const createEdge = useMutation(trpc.createEdge.mutationOptions());
 
   const onConnect: OnConnect = (connection) => {
     if (organizationId === undefined) return;
-    if (connection.source === null || connection.target === null) return;
-    createDependency.mutate({
-      organizationId,
-      blockingTaskId: connection.source,
-      blockedTaskId: connection.target,
-    });
+    const { source, target } = connection;
+    if (source === null || target === null) return;
+    createEdge.mutate({ organizationId, source, target });
   };
 
   const onConnectStart: OnConnectStart = (_, { nodeId, handleType }) => {

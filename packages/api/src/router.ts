@@ -10,6 +10,8 @@ import {
   taskDetailsUpdateSchema,
   projectDetailsTable,
   projectDetailsUpdateSchema,
+  edgeInsertSchema,
+  edgesTable,
 } from './db/schema.js';
 import { eq, inArray } from 'drizzle-orm';
 import { db, ee, t, publicProcedure } from './trpc.js';
@@ -59,10 +61,10 @@ export const appRouter = t.router({
       return 'done';
     }),
 
-  createDependency: publicProcedure
-    .input(dependenciesInsertSchema)
-    .mutation(async ({ input: dependency }) => {
-      await db.insert(dependenciesTable).values(dependency);
+  createEdge: publicProcedure
+    .input(edgeInsertSchema)
+    .mutation(async ({ input: edge }) => {
+      await db.insert(edgesTable).values(edge);
       ee.emit('update');
       return 'done';
     }),

@@ -129,6 +129,7 @@ export const projectDetailsUpdateSchema =
   createUpdateSchema(projectDetailsTable);
 export const projectDetailsInsertSchema =
   createInsertSchema(projectDetailsTable);
+export const edgeInsertSchema = createInsertSchema(edgesTable);
 
 // Existing types
 export type Task = typeof tasksTable.$inferSelect;
