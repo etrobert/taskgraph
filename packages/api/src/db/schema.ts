@@ -38,6 +38,20 @@ export const nodesTable = pgTable('nodes', {
   archivedAt: timestamp(),
 });
 
+export const edgesTable = pgTable('edges', {
+  id: uuid().primaryKey().defaultRandom(),
+  organizationId: uuid()
+    .notNull()
+    .references(() => organizationsTable.id, { onDelete: 'cascade' }),
+  source: uuid()
+    .notNull()
+    .references(() => nodesTable.id, { onDelete: 'cascade' }),
+  target: uuid()
+    .notNull()
+    .references(() => nodesTable.id, { onDelete: 'cascade' }),
+  createdAt: timestamp().notNull().defaultNow(),
+});
+
 export const taskDetailsTable = pgTable('task_details', {
   nodeId: uuid()
     .primaryKey()
@@ -111,8 +125,10 @@ export const nodesUpdateSchema = createUpdateSchema(nodesTable);
 export const nodesInsertSchema = createInsertSchema(nodesTable);
 export const taskDetailsUpdateSchema = createUpdateSchema(taskDetailsTable);
 export const taskDetailsInsertSchema = createInsertSchema(taskDetailsTable);
-export const projectDetailsUpdateSchema = createUpdateSchema(projectDetailsTable);
-export const projectDetailsInsertSchema = createInsertSchema(projectDetailsTable);
+export const projectDetailsUpdateSchema =
+  createUpdateSchema(projectDetailsTable);
+export const projectDetailsInsertSchema =
+  createInsertSchema(projectDetailsTable);
 
 // Existing types
 export type Task = typeof tasksTable.$inferSelect;
