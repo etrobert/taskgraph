@@ -1,11 +1,6 @@
 import { type OnSelectionChangeParams } from '@xyflow/react';
 import { type CSSProperties } from 'react';
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarHeader,
-  SidebarFooter,
-} from './ui/sidebar';
+import { Sidebar, SidebarContent, SidebarHeader } from './ui/sidebar';
 import type { NodeType } from './flow/TaskGraphFlow';
 import { TaskPropertiesPanel } from './TaskPropertiesPanel';
 import { ProjectPropertiesPanel } from './ProjectPropertiesPanel';
@@ -17,15 +12,25 @@ interface PropertiesPanelProps {
 function PropertiesPanelContent({ selection }: PropertiesPanelProps) {
   if (selection.nodes.length === 0)
     return (
-      <p className="text-muted-foreground text-sm">
-        Select a node to view its properties
-      </p>
+      <>
+        <SidebarHeader>Properties</SidebarHeader>
+        <SidebarContent>
+          <p className="text-muted-foreground text-sm">
+            Select a node to view its properties
+          </p>
+        </SidebarContent>
+      </>
     );
   if (selection.nodes.length > 1)
     return (
-      <p className="text-muted-foreground text-sm">
-        {selection.nodes.length} nodes selected
-      </p>
+      <>
+        <SidebarHeader>Properties</SidebarHeader>
+        <SidebarContent>
+          <p className="text-muted-foreground text-sm">
+            {selection.nodes.length} nodes selected
+          </p>
+        </SidebarContent>
+      </>
     );
 
   const selectedNode = selection.nodes[0];
@@ -38,7 +43,6 @@ function PropertiesPanelContent({ selection }: PropertiesPanelProps) {
 }
 
 export function PropertiesPanel({ selection }: PropertiesPanelProps) {
-  const selectedNode = selection.nodes.at(0);
   return (
     <Sidebar
       collapsible="none"
@@ -46,19 +50,7 @@ export function PropertiesPanel({ selection }: PropertiesPanelProps) {
       style={{ '--sidebar-width': '20rem' } as CSSProperties}
       className="border-l p-3"
     >
-      <SidebarHeader>
-        <h2 className="text-lg font-semibold">Properties</h2>
-      </SidebarHeader>
-      <SidebarContent>
-        <PropertiesPanelContent selection={selection} />
-      </SidebarContent>
-      <SidebarFooter>
-        {selectedNode && (
-          <div className="text-muted-foreground font-mono text-xs">
-            {selectedNode.type}: {selectedNode.id.slice(0, 25)}...
-          </div>
-        )}
-      </SidebarFooter>
+      <PropertiesPanelContent selection={selection} />
     </Sidebar>
   );
 }
