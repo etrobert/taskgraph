@@ -7,7 +7,7 @@ import {
   type TaskDetails,
   taskDetailsTable,
 } from '../db/schema.js';
-import { eq, and, getTableColumns } from 'drizzle-orm';
+import { eq, and, getTableColumns, isNull } from 'drizzle-orm';
 import { TRPCError } from '@trpc/server';
 
 const simpleMove = (tx: TransactionType, nodeId: string, position: Point) =>
@@ -97,6 +97,7 @@ async function handleTaskDrag(
     .where(
       and(
         eq(nodesTable.organizationId, organizationId),
+        isNull(nodesTable.archivedAt),
         eq(nodesTable.type, 'project'),
       ),
     );
