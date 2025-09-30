@@ -102,7 +102,10 @@ export const appRouter = t.router({
     }),
 
   onTasksChange: publicProcedure.subscription(async function* ({ signal }) {
-    for await (const _ of on(ee, 'update', { signal })) yield 'update';
+    for await (const updateArgs of on(ee, 'update', { signal })) {
+      void updateArgs;
+      yield 'update';
+    }
   }),
 });
 

@@ -12,7 +12,7 @@ export const db = drizzle({
 export const ee = new EventEmitter();
 
 // created for each request
-export const createContext = ({}) => ({}); // no context
+export const createContext = () => ({}); // no context
 type Context = Awaited<ReturnType<typeof createContext>>;
 
 export const t = initTRPC.context<Context>().create({ transformer: superjson });
