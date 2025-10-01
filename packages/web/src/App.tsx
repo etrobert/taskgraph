@@ -16,8 +16,7 @@ import superjson from 'superjson';
 import { requireEnv } from './utils/requireEnv';
 import { createWSClient } from '@trpc/client';
 import type { AppRouter } from '../../api/src/index';
-import { SignedIn, SignedOut } from '@clerk/clerk-react';
-import { AuthScreen } from './components/auth/AuthScreen';
+import { SignedIn, RedirectToSignIn, SignedOut } from '@clerk/clerk-react';
 
 const apiUrl = requireEnv('VITE_API_URL');
 const dev = import.meta.env.DEV;
@@ -62,9 +61,6 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <TRPCProvider trpcClient={trpcClient} queryClient={queryClient}>
-        <SignedOut>
-          <AuthScreen />
-        </SignedOut>
         <SignedIn>
           <SidebarProvider>
             <ReactFlowProvider>
@@ -74,6 +70,9 @@ function App() {
             </ReactFlowProvider>
           </SidebarProvider>
         </SignedIn>
+        <SignedOut>
+          <RedirectToSignIn />
+        </SignedOut>
       </TRPCProvider>
     </QueryClientProvider>
   );
