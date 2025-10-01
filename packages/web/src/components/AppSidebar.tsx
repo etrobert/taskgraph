@@ -23,6 +23,12 @@ import { Building2, Plus, MoreHorizontal } from 'lucide-react';
 import { useOrganizationId } from '../hooks/useOrganizationId';
 import { useState } from 'react';
 import { OrganizationEditDialog } from './OrganizationEditDialog';
+import {
+  SignedIn,
+  SignedOut,
+  SignInButton,
+  UserButton,
+} from '@clerk/clerk-react';
 
 export function AppSidebar() {
   const trpc = useTRPC();
@@ -61,6 +67,12 @@ export function AppSidebar() {
         <div className="flex items-center gap-2 px-4 py-2">
           <SidebarTrigger />
           <h1 className="text-lg font-semibold">TaskGraph</h1>
+          <SignedOut>
+            <SignInButton />
+          </SignedOut>
+          <SignedIn>
+            <UserButton />
+          </SignedIn>
         </div>
       </SidebarHeader>
       <SidebarContent>
