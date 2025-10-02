@@ -8,7 +8,7 @@ import { clerkMiddleware } from '@clerk/express';
 import * as trpcExpress from '@trpc/server/adapters/express';
 
 import 'dotenv/config';
-import { createContext } from './trpc.js';
+import { createContext, createWSContext } from './trpc.js';
 import { appRouter } from './router.js';
 
 export type AppRouter = typeof appRouter;
@@ -70,7 +70,7 @@ const wss = new WebSocketServer({ server });
 const handler = applyWSSHandler({
   wss,
   router: appRouter,
-  createContext,
+  createContext: createWSContext,
   // Enable heartbeat messages to keep connection open
   keepAlive: {
     enabled: true,

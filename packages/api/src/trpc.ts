@@ -5,7 +5,6 @@ import superjson from 'superjson';
 import { requireEnv } from './requireEnv.js';
 import type { CreateExpressContextOptions } from '@trpc/server/adapters/express';
 import { getAuth } from '@clerk/express';
-import type { CreateWSSContextFnOptions } from '@trpc/server/adapters/ws';
 
 export const db = drizzle({
   connection: requireEnv('DATABASE_URL'),
@@ -14,28 +13,21 @@ export const db = drizzle({
 
 export const ee = new EventEmitter();
 
-function isExpress(
-  opts: CreateExpressContextOptions | CreateWSSContextFnOptions,
-): opts is CreateExpressContextOptions {
-  return 'res' in opts; // only Express has `res`
-}
-
 // created for each request
-export const createContext = (
-  opts: CreateExpressContextOptions | CreateWSSContextFnOptions,
-) => {
-  if (isExpress(opts)) {
-    const auth = getAuth(opts.req);
+export const createContext = (opts: CreateExpressContextOptions) => {
+  const auth = getAuth(opts.req);
 
-    return {
-      userId: auth.userId,
-      sessionId: auth.sessionId,
-    };
-  }
-  return {};
+  return {
+    userId: auth.userId,
+    sessionId: auth.sessionId,
+  };
 };
 
-type Context = Awaited<ReturnType<typeof createContext>>;
+export const createWSContext = () => ({});
+
+type Context = Awaited<
+  ReturnType<typeof createContext> | ReturnType<typeof createWSContext>
+>;
 
 export const t = initTRPC.context<Context>().create({ transformer: superjson });
 export const publicProcedure = t.procedure;
