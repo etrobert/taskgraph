@@ -50,12 +50,17 @@ function AppContent() {
     // For now, WebSocket connections are not authenticated
     const wsClient = createWSClient({
       url: `${dev ? 'ws' : 'wss'}://${apiUrl}`,
+      onOpen: () => console.log('🟢 WS Connected'),
+      onClose: (cause) => console.log('🔴 WS Disconnected', cause),
     });
     return createTRPCClient<AppRouter>({
       links: [
         splitLink({
           condition: (op) => op.type === 'subscription',
-          true: wsLink({ client: wsClient, transformer: superjson }),
+          true: wsLink({
+            client: wsClient,
+            transformer: superjson,
+          }),
           false: httpBatchLink({
             url: `${dev ? 'http' : 'https'}://${apiUrl}/trpc`,
             transformer: superjson,
