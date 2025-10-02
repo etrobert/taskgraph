@@ -16,7 +16,12 @@ import superjson from 'superjson';
 import { requireEnv } from './utils/requireEnv';
 import { createWSClient } from '@trpc/client';
 import type { AppRouter } from '../../api/src/index';
-import { SignedIn, RedirectToSignIn, SignedOut } from '@clerk/clerk-react';
+import {
+  SignedIn,
+  RedirectToSignIn,
+  SignedOut,
+  useAuth,
+} from '@clerk/clerk-react';
 
 const apiUrl = requireEnv('VITE_API_URL');
 const dev = import.meta.env.DEV;
@@ -38,9 +43,11 @@ function getQueryClient() {
   }
 }
 
-function App() {
+function AppContent() {
+  const { getToken } = useAuth();
   const queryClient = getQueryClient();
   const [trpcClient] = useState(() => {
+    // For now, WebSocket connections are not authenticated
     const wsClient = createWSClient({
       url: `${dev ? 'ws' : 'wss'}://${apiUrl}`,
     });
@@ -52,6 +59,10 @@ function App() {
           false: httpBatchLink({
             url: `${dev ? 'http' : 'https'}://${apiUrl}/trpc`,
             transformer: superjson,
+            headers: async () => {
+              const token = await getToken();
+              return token ? { Authorization: `Bearer ${token}` } : {};
+            },
           }),
         }),
       ],
@@ -59,21 +70,29 @@ function App() {
   });
 
   return (
+    <TRPCProvider trpcClient={trpcClient} queryClient={queryClient}>
+      <SidebarProvider>
+        <ReactFlowProvider>
+          <AppSidebar />
+          <TaskGraphFlow />
+          <SidebarTrigger className="absolute top-2 left-2" />
+        </ReactFlowProvider>
+      </SidebarProvider>
+    </TRPCProvider>
+  );
+}
+
+function App() {
+  const queryClient = getQueryClient();
+
+  return (
     <QueryClientProvider client={queryClient}>
-      <TRPCProvider trpcClient={trpcClient} queryClient={queryClient}>
-        <SignedIn>
-          <SidebarProvider>
-            <ReactFlowProvider>
-              <AppSidebar />
-              <TaskGraphFlow />
-              <SidebarTrigger className="absolute top-2 left-2" />
-            </ReactFlowProvider>
-          </SidebarProvider>
-        </SignedIn>
-        <SignedOut>
-          <RedirectToSignIn />
-        </SignedOut>
-      </TRPCProvider>
+      <SignedIn>
+        <AppContent />
+      </SignedIn>
+      <SignedOut>
+        <RedirectToSignIn />
+      </SignedOut>
     </QueryClientProvider>
   );
 }

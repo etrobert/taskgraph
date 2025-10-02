@@ -3,6 +3,7 @@ import cors from 'cors';
 import { createServer } from 'http';
 import { WebSocketServer } from 'ws';
 import { applyWSSHandler } from '@trpc/server/adapters/ws';
+import { clerkMiddleware } from '@clerk/express';
 
 import * as trpcExpress from '@trpc/server/adapters/express';
 
@@ -32,6 +33,9 @@ app.use((req, res, next) => {
 
 app.use(cors());
 app.use(express.json());
+
+// Clerk authentication middleware
+app.use(clerkMiddleware());
 
 app.use(
   '/trpc',
