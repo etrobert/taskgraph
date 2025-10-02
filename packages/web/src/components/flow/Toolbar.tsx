@@ -1,6 +1,6 @@
 import { Button } from '../ui/button';
 import { useMutation } from '@tanstack/react-query';
-import { trpc } from '../../utils/trpc';
+import { useTRPC } from '../../utils/trpc';
 import type { NodeType } from './TaskGraphFlow';
 
 interface ToolbarProps {
@@ -20,6 +20,7 @@ export function Toolbar({
   showArchived,
   onToggleShowArchived,
 }: ToolbarProps) {
+  const trpc = useTRPC();
   const archiveCompletedMutation = useMutation(
     trpc.archiveCompleted.mutationOptions(),
   );

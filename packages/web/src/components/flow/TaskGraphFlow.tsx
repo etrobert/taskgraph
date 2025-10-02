@@ -15,7 +15,8 @@ import { ProjectNode, type ProjectNodeType } from '../ProjectNode';
 import { PropertiesPanel } from '../PropertiesPanel';
 import { useTaskConnection } from '../../hooks/useTaskConnection';
 import { useZoomShortcuts } from '../../hooks/useZoomShortcuts';
-import { queryClient, trpc } from '../../utils/trpc';
+import { useTRPC } from '../../utils/trpc';
+import { useQueryClient, useMutation } from '@tanstack/react-query';
 import { useSubscription } from '@trpc/tanstack-react-query';
 import { useOrganizationId } from '../../hooks/useOrganizationId';
 import { Button } from '../ui/button';
@@ -23,7 +24,6 @@ import { useMoving } from './useMoving';
 import { useGraphSync } from './useGraphSync';
 import { useNodeDrag } from '../../hooks/useNodeDrag';
 import { useOnDelete } from '../../hooks/useOnDelete';
-import { useMutation } from '@tanstack/react-query';
 import { applyDagreLayout } from '../../lib/dagreLayout';
 import { Toolbar } from './Toolbar';
 
@@ -49,6 +49,9 @@ function useScreenNodesBounds(nodes: NodeType[]) {
 }
 
 export function TaskGraphFlow() {
+  const trpc = useTRPC();
+  const queryClient = useQueryClient();
+
   const [selection, setSelection] = useState<{
     nodes: NodeType[];
     edges: Edge[];

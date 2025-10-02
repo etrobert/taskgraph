@@ -5,10 +5,11 @@ import {
   type OnConnectStart,
   type OnConnect,
 } from '@xyflow/react';
-import { trpc } from '../utils/trpc';
+import { useTRPC } from '../utils/trpc';
 import { useMutation } from '@tanstack/react-query';
 
 export function useTaskConnection(organizationId: string | undefined) {
+  const trpc = useTRPC();
   const connectingNodeId = useRef<string>(null);
   const connectingHandleType = useRef<'source' | 'target'>(null);
   const { screenToFlowPosition } = useReactFlow();

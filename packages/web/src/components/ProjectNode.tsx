@@ -1,6 +1,11 @@
-import { trpc } from '@/utils/trpc';
+import { useTRPC } from '@/utils/trpc';
 import { useMutation } from '@tanstack/react-query';
-import { NodeResizer, Position, type Node, type NodeProps } from '@xyflow/react';
+import {
+  NodeResizer,
+  Position,
+  type Node,
+  type NodeProps,
+} from '@xyflow/react';
 import { cn } from '@/lib/utils';
 import {
   getStatusColor,
@@ -17,6 +22,7 @@ export function ProjectNode({
   selected,
   data: { name, status, archivedAt },
 }: NodeProps<ProjectNodeType>) {
+  const trpc = useTRPC();
   const resizeProject = useMutation(trpc.resizeProject.mutationOptions());
   const updateProjectDetails = useMutation(
     trpc.updateProjectDetails.mutationOptions(),

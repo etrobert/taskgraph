@@ -10,12 +10,13 @@ import {
   SidebarGroupContent,
   SidebarGroupLabel,
 } from '@/components/ui/sidebar';
-import { trpc } from '@/utils/trpc';
+import { useTRPC } from '@/utils/trpc';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { Building2, Plus } from 'lucide-react';
 import { useOrganizationId } from '../hooks/useOrganizationId';
 
 export function AppSidebar() {
+  const trpc = useTRPC();
   const organizations = useQuery(trpc.organizations.queryOptions());
   const currentOrgId = useOrganizationId();
 

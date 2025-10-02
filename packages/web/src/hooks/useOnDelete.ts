@@ -1,8 +1,9 @@
 import { useMutation } from '@tanstack/react-query';
 import type { OnNodesDelete, OnEdgesDelete } from '@xyflow/react';
-import { trpc } from '../utils/trpc';
+import { useTRPC } from '../utils/trpc';
 
 export const useOnDelete = () => {
+  const trpc = useTRPC();
   const deleteNodes = useMutation(trpc.deleteNodes.mutationOptions());
   const deleteEdges = useMutation(trpc.deleteEdges.mutationOptions());
 

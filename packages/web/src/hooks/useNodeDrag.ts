@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { type OnNodeDrag } from '@xyflow/react';
 import { useMutation } from '@tanstack/react-query';
-import { trpc } from '../utils/trpc';
+import { useTRPC } from '../utils/trpc';
 import type { NodeType } from '../components/flow/TaskGraphFlow';
 
 const squaredDistance = (
@@ -12,6 +12,7 @@ const squaredDistance = (
   (point2.x - point1.x) * (point2.x - point1.x);
 
 export function useNodeDrag(organizationId: string | undefined) {
+  const trpc = useTRPC();
   const [nodeDragStartPos, setNodeDragStartPos] = useState({ x: 0, y: 0 });
   const dragNodes = useMutation(trpc.dragNodes.mutationOptions());
 

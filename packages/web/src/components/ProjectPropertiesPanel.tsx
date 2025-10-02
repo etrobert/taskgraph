@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { trpc } from '../utils/trpc';
+import { useTRPC } from '../utils/trpc';
 import { useEffect, useState } from 'react';
 import { Input } from './ui/input';
 import { useOrganizationId } from '@/hooks/useOrganizationId';
@@ -29,6 +29,7 @@ interface ProjectPropertiesPanelProps {
 export function ProjectPropertiesPanel({
   selectedNode,
 }: ProjectPropertiesPanelProps) {
+  const trpc = useTRPC();
   const organizationId = useOrganizationId();
   const { data: graph } = useQuery(
     trpc.graph.queryOptions(

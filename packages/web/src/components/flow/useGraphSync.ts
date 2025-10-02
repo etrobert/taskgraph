@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { trpc } from '../../utils/trpc';
+import { useTRPC } from '../../utils/trpc';
 import { getTaskNodeFromTask } from '@/lib/getTaskNodeFromTask';
 import type { NodeType } from './TaskGraphFlow';
 import type { Edge } from '@xyflow/react';
@@ -12,6 +12,7 @@ export function useGraphSync(
   setNodes: (nodes: NodeType[]) => void,
   setEdges: (edges: Edge[]) => void,
 ) {
+  const trpc = useTRPC();
   const { data: graph } = useQuery(
     trpc.graph.queryOptions(
       { organizationId: organizationId! },
