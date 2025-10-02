@@ -43,22 +43,38 @@ function getQueryClient() {
   }
 }
 
+let wsClient: ReturnType<typeof makeWSClient> | undefined = undefined;
+
+function makeWSClient() {
+  // For now, WebSocket connections are not authenticated
+  return createWSClient({
+    url: `${dev ? 'ws' : 'wss'}://${apiUrl}`,
+    onOpen: () => console.log('🟢 WS Connected'),
+    onClose: (cause) => console.log('🔴 WS Disconnected', cause),
+  });
+}
+
+// Singleton seems useless but trying hard to debug
+function getWSClient() {
+  if (typeof window === 'undefined') {
+    return makeWSClient();
+  } else {
+    if (!wsClient) wsClient = makeWSClient();
+    return wsClient;
+  }
+}
+
 function AppContent() {
   const { getToken } = useAuth();
   const queryClient = getQueryClient();
+
   const [trpcClient] = useState(() => {
-    // For now, WebSocket connections are not authenticated
-    const wsClient = createWSClient({
-      url: `${dev ? 'ws' : 'wss'}://${apiUrl}`,
-      onOpen: () => console.log('🟢 WS Connected'),
-      onClose: (cause) => console.log('🔴 WS Disconnected', cause),
-    });
     return createTRPCClient<AppRouter>({
       links: [
         splitLink({
           condition: (op) => op.type === 'subscription',
           true: wsLink({
-            client: wsClient,
+            client: getWSClient(),
             transformer: superjson,
           }),
           false: httpBatchLink({
