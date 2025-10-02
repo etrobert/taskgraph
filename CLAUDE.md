@@ -8,6 +8,8 @@ code in this repository.
 - ALWAYS run `npm run format` after making changes
 - ALWAYS run `npm run lint` and `npm run build` after making a set of changes to
   ensure that it works.
+- NEVER use `as any`
+- NEVER use `as unknown as T`
 
 ## Project Structure
 
@@ -19,6 +21,7 @@ TaskGraph is a monorepo with two packages:
 ## Development Commands
 
 ### Root Level Commands
+
 - `npm run dev:web` - Start web development server
 - `npm run dev:api` - Start API development server
 - `npm run build` - Build both packages
@@ -28,6 +31,7 @@ TaskGraph is a monorepo with two packages:
 - `npm run format:check` - Check formatting in all packages
 
 ### Web Package Commands (packages/web)
+
 - `npm run dev` - Start Vite development server with hot reload
 - `npm run build` - Build for production (TypeScript compilation + Vite build)
 - `npm run lint` - Run ESLint on all files
@@ -35,12 +39,14 @@ TaskGraph is a monorepo with two packages:
 - `npm run start` - Preview production build locally
 
 ### API Package Commands (packages/api)
+
 - `npm run dev` - Start API development server with hot reload
 - `npm run build` - Compile TypeScript to JavaScript
 - `npm run start` - Start production API server
 - `npm run lint` - Run ESLint on all files
 - `npm run format` - Format code with Prettier
-- `npm run cli [command]` - Run tRPC CLI commands (e.g., `npm run cli organizations`)
+- `npm run cli [command]` - Run tRPC CLI commands (e.g.,
+  `npm run cli organizations`)
 - `./cli.ts [command]` - Direct execution of tRPC CLI
 
 ## Architecture Overview
@@ -53,8 +59,10 @@ relationships.
 
 Each package has its own CLAUDE.md file with detailed technical information:
 
-- **packages/api/CLAUDE.md**: API server architecture, database schema, tRPC routes, CLI usage
-- **packages/web/CLAUDE.md**: React Flow integration, component architecture, styling, state management
+- **packages/api/CLAUDE.md**: API server architecture, database schema, tRPC
+  routes, CLI usage
+- **packages/web/CLAUDE.md**: React Flow integration, component architecture,
+  styling, state management
 
 ## High-Level Architecture
 
