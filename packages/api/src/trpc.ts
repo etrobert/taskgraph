@@ -1,4 +1,4 @@
-import { initTRPC, TRPCError } from '@trpc/server';
+import { initTRPC } from '@trpc/server';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import EventEmitter from 'node:events';
 import superjson from 'superjson';
