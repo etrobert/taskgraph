@@ -113,6 +113,7 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
       <OrganizationEditDialog
+        key={editingOrg?.id}
         open={editDialogOpen}
         onOpenChange={setEditDialogOpen}
         organization={editingOrg}

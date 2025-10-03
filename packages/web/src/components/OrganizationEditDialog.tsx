@@ -11,7 +11,7 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { useTRPC } from '@/utils/trpc';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useState, useEffect, type FormEvent } from 'react';
+import { useState, type FormEvent } from 'react';
 
 interface OrganizationEditDialogProps {
   open: boolean;
@@ -26,7 +26,7 @@ export function OrganizationEditDialog({
 }: OrganizationEditDialogProps) {
   const trpc = useTRPC();
   const queryClient = useQueryClient();
-  const [name, setName] = useState('');
+  const [name, setName] = useState(organization?.name ?? '');
 
   const updateOrganization = useMutation(
     trpc.updateOrganization.mutationOptions({
@@ -36,10 +36,6 @@ export function OrganizationEditDialog({
       },
     }),
   );
-
-  useEffect(() => {
-    if (organization) setName(organization.name);
-  }, [organization]);
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
