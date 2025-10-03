@@ -28,12 +28,14 @@ import {
   SignedOut,
   SignInButton,
   UserButton,
+  useUser,
 } from '@clerk/clerk-react';
 
 export function AppSidebar() {
   const trpc = useTRPC();
   const organizations = useQuery(trpc.organizations.queryOptions());
   const currentOrgId = useOrganizationId();
+  const { user } = useUser();
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [editingOrg, setEditingOrg] = useState<{
     id: string;
@@ -89,22 +91,24 @@ export function AppSidebar() {
                     <Building2 size={16} />
                     <span>{organization.name}</span>
                   </SidebarMenuButton>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <SidebarMenuAction>
-                        <MoreHorizontal />
-                      </SidebarMenuAction>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent side="right" align="start">
-                      <DropdownMenuItem
-                        onClick={() =>
-                          handleOpenEdit(organization.id, organization.name)
-                        }
-                      >
-                        <span>Edit</span>
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                  {user?.id === organization.ownerId && (
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <SidebarMenuAction>
+                          <MoreHorizontal />
+                        </SidebarMenuAction>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent side="right" align="start">
+                        <DropdownMenuItem
+                          onClick={() =>
+                            handleOpenEdit(organization.id, organization.name)
+                          }
+                        >
+                          <span>Edit</span>
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  )}
                 </SidebarMenuItem>
               ))}
               <SidebarMenuItem>
