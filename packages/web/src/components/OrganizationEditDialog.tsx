@@ -41,7 +41,7 @@ export function OrganizationEditDialog({
     event.preventDefault();
     if (organization && name.trim()) {
       updateOrganization.mutate({
-        id: organization.id,
+        organizationId: organization.id,
         updates: { name: name.trim() },
       });
     }

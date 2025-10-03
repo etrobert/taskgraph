@@ -11,7 +11,13 @@ import {
   organizationsUpdateSchema,
 } from './db/schema.js';
 import { eq, inArray } from 'drizzle-orm';
-import { db, ee, t, publicProcedure } from './trpc.js';
+import {
+  db,
+  ee,
+  t,
+  publicProcedure,
+  organizationOwnerProcedure,
+} from './trpc.js';
 import z from 'zod';
 import { on } from 'node:events';
 import { createTaskFrom } from './routers/createTaskFrom.js';
@@ -30,21 +36,23 @@ export const appRouter = t.router({
   resizeProject,
   groupTasks,
   archiveCompleted,
-  deleteOrganization: publicProcedure
-    .input(z.object({ id: z.string().uuid() }))
-    .mutation(async ({ input: { id } }) => {
-      await db.delete(organizationsTable).where(eq(organizationsTable.id, id));
+  deleteOrganization: organizationOwnerProcedure.mutation(
+    async ({ input: { organizationId } }) => {
+      await db
+        .delete(organizationsTable)
+        .where(eq(organizationsTable.id, organizationId));
       ee.emit('update');
       return 'done';
-    }),
+    },
+  ),
 
-  updateOrganization: publicProcedure
-    .input(z.object({ id: z.string().uuid(), updates: organizationsUpdateSchema }))
-    .mutation(async ({ input: { id, updates } }) => {
+  updateOrganization: organizationOwnerProcedure
+    .input(z.object({ updates: organizationsUpdateSchema }))
+    .mutation(async ({ input: { updates }, ctx }) => {
       await db
         .update(organizationsTable)
         .set(updates)
-        .where(eq(organizationsTable.id, id));
+        .where(eq(organizationsTable.id, ctx.organization.id));
       ee.emit('update');
       return 'done';
     }),
