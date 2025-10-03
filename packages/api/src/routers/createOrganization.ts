@@ -8,7 +8,7 @@ import { db, ee, publicProcedure } from '../trpc.js';
 export const createOrganization = publicProcedure.mutation(async () => {
   const [organization] = await db
     .insert(organizationsTable)
-    .values({})
+    .values({ name: 'New Organization' })
     .returning();
 
   // Create a default task for the new organization
