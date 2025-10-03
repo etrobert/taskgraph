@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cat:*)",
+      "Bash(cp:*)",
+      "Bash(npx drizzle-kit:*)",
+      "Bash(npm run build:*)",
+      "Bash(npm update:*)",
+      "Bash(npm run lint)",
+      "WebFetch(domain:trpc.io)",
+      "WebFetch(domain:ui.shadcn.com)"
+    ],
+    "deny": []
+  }
+}
