@@ -5,20 +5,34 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarMenuAction,
   SidebarTrigger,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
 } from '@/components/ui/sidebar';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { useTRPC } from '@/utils/trpc';
 import { useQuery, useMutation } from '@tanstack/react-query';
-import { Building2, Plus } from 'lucide-react';
+import { Building2, Plus, MoreHorizontal } from 'lucide-react';
 import { useOrganizationId } from '../hooks/useOrganizationId';
+import { useState } from 'react';
+import { OrganizationEditDialog } from './OrganizationEditDialog';
 
 export function AppSidebar() {
   const trpc = useTRPC();
   const organizations = useQuery(trpc.organizations.queryOptions());
   const currentOrgId = useOrganizationId();
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [editingOrg, setEditingOrg] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
 
   const createOrganization = useMutation(
     trpc.createOrganization.mutationOptions({
@@ -34,6 +48,11 @@ export function AppSidebar() {
     const url = new URL(window.location.href);
     url.searchParams.set('org', orgId);
     window.location.href = url.toString();
+  };
+
+  const handleOpenEdit = (id: string, name: string) => {
+    setEditingOrg({ id, name });
+    setEditDialogOpen(true);
   };
 
   return (
@@ -56,8 +75,24 @@ export function AppSidebar() {
                     isActive={currentOrgId === organization.id}
                   >
                     <Building2 size={16} />
-                    <span>Org {organization.id.slice(0, 8)}...</span>
+                    <span>{organization.name}</span>
                   </SidebarMenuButton>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <SidebarMenuAction>
+                        <MoreHorizontal />
+                      </SidebarMenuAction>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent side="right" align="start">
+                      <DropdownMenuItem
+                        onClick={() =>
+                          handleOpenEdit(organization.id, organization.name)
+                        }
+                      >
+                        <span>Edit</span>
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </SidebarMenuItem>
               ))}
               <SidebarMenuItem>
@@ -77,6 +112,11 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+      <OrganizationEditDialog
+        open={editDialogOpen}
+        onOpenChange={setEditDialogOpen}
+        organization={editingOrg}
+      />
     </Sidebar>
   );
 }
