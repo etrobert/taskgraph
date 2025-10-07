@@ -9,6 +9,13 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { useTRPC } from '@/utils/trpc';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState, type FormEvent } from 'react';
@@ -16,7 +23,11 @@ import { useState, type FormEvent } from 'react';
 interface OrganizationEditDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  organization: { id: string; name: string } | null;
+  organization: {
+    id: string;
+    name: string;
+    visibility: 'public' | 'private';
+  } | null;
 }
 
 export function OrganizationEditDialog({
@@ -27,6 +38,9 @@ export function OrganizationEditDialog({
   const trpc = useTRPC();
   const queryClient = useQueryClient();
   const [name, setName] = useState(organization?.name ?? '');
+  const [visibility, setVisibility] = useState<'public' | 'private'>(
+    organization?.visibility ?? 'public',
+  );
 
   const updateOrganization = useMutation(
     trpc.updateOrganization.mutationOptions({
@@ -42,7 +56,7 @@ export function OrganizationEditDialog({
     if (organization && name.trim()) {
       updateOrganization.mutate({
         organizationId: organization.id,
-        updates: { name: name.trim() },
+        updates: { name: name.trim(), visibility },
       });
     }
   };
@@ -61,6 +75,23 @@ export function OrganizationEditDialog({
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
+          </Label>
+          <Label>
+            Visibility
+            <Select
+              value={visibility}
+              onValueChange={(value) =>
+                setVisibility(value as 'public' | 'private')
+              }
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="public">Public</SelectItem>
+                <SelectItem value="private">Private</SelectItem>
+              </SelectContent>
+            </Select>
           </Label>
           <DialogFooter>
             <DialogClose asChild>

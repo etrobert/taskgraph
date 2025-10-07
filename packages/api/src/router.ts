@@ -10,7 +10,7 @@ import {
   edgesTable,
   organizationsUpdateSchema,
 } from './db/schema.js';
-import { eq, inArray } from 'drizzle-orm';
+import { eq, inArray, or } from 'drizzle-orm';
 import {
   db,
   ee,
@@ -29,9 +29,19 @@ import { graph } from './routers/graph.js';
 import { dragNodes } from './routers/dragNodes.js';
 
 export const appRouter = t.router({
-  organizations: publicProcedure.query(() =>
-    db.select().from(organizationsTable),
-  ),
+  organizations: publicProcedure.query(async ({ ctx }) => {
+    const userId = ctx.auth?.userId;
+
+    return db
+      .select()
+      .from(organizationsTable)
+      .where(
+        or(
+          eq(organizationsTable.visibility, 'public'),
+          userId ? eq(organizationsTable.ownerId, userId) : undefined,
+        ),
+      );
+  }),
   createOrganization,
   resizeProject,
   groupTasks,

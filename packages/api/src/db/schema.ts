@@ -22,10 +22,13 @@ export const statusEnum = pgEnum('status', [
 
 export const nodeTypeEnum = pgEnum('node_type', ['task', 'project']);
 
+export const visibilityEnum = pgEnum('visibility', ['public', 'private']);
+
 export const organizationsTable = pgTable('organizations', {
   id: uuid().primaryKey().defaultRandom(),
   name: varchar({ length: 255 }).notNull().default('New Organization'),
   ownerId: varchar({ length: 255 }).notNull(),
+  visibility: visibilityEnum().notNull().default('public'),
   createdAt: timestamp().notNull().defaultNow(),
 });
 

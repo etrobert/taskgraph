@@ -40,6 +40,7 @@ export function AppSidebar() {
   const [editingOrg, setEditingOrg] = useState<{
     id: string;
     name: string;
+    visibility: 'public' | 'private';
   } | null>(null);
 
   const createOrganization = useMutation(
@@ -58,8 +59,12 @@ export function AppSidebar() {
     window.location.href = url.toString();
   };
 
-  const handleOpenEdit = (id: string, name: string) => {
-    setEditingOrg({ id, name });
+  const handleOpenEdit = (
+    id: string,
+    name: string,
+    visibility: 'public' | 'private',
+  ) => {
+    setEditingOrg({ id, name, visibility });
     setEditDialogOpen(true);
   };
 
@@ -101,7 +106,11 @@ export function AppSidebar() {
                       <DropdownMenuContent side="right" align="start">
                         <DropdownMenuItem
                           onClick={() =>
-                            handleOpenEdit(organization.id, organization.name)
+                            handleOpenEdit(
+                              organization.id,
+                              organization.name,
+                              organization.visibility,
+                            )
                           }
                         >
                           <span>Edit</span>
