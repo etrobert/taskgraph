@@ -1,4 +1,4 @@
-import type { ExtendedProject } from '../../../api/src/db/schema';
+import type { ExtendedProject } from 'api/src/db/schema';
 
 export const getProjectNodeFromProject = (
   { id, position, width, height, ...data }: ExtendedProject,

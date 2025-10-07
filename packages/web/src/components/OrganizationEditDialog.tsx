@@ -19,7 +19,7 @@ import {
 import { useTRPC } from '@/utils/trpc';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState, type FormEvent } from 'react';
-import type { Organization } from '../../../api/src/db/schema';
+import type { Organization } from 'api/db/schema';
 
 interface OrganizationEditDialogProps {
   open: boolean;

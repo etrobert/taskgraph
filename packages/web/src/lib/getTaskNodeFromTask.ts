@@ -1,5 +1,5 @@
 import type { Node } from '@xyflow/react';
-import type { ExtendedTask } from '../../../api/src/db/schema';
+import type { ExtendedTask } from 'api/src/db/schema';
 
 export const getTaskNodeFromTask = (
   { id, position, projectId, ...data }: ExtendedTask,

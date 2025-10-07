@@ -30,7 +30,7 @@ import {
   UserButton,
   useUser,
 } from '@clerk/clerk-react';
-import type { Organization } from '../../../api/src/db/schema';
+import type { Organization } from 'api/db/schema';
 
 export function AppSidebar() {
   const trpc = useTRPC();
