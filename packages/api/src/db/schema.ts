@@ -76,7 +76,6 @@ export const projectDetailsTable = pgTable('project_details', {
   status: statusEnum().notNull().default('pending'),
 });
 
-// New node schemas
 export const nodesSelectSchema = createSelectSchema(nodesTable);
 export const nodesUpdateSchema = createUpdateSchema(nodesTable);
 export const nodesInsertSchema = createInsertSchema(nodesTable);
@@ -89,7 +88,7 @@ export const projectDetailsInsertSchema =
 export const edgeInsertSchema = createInsertSchema(edgesTable);
 export const organizationsUpdateSchema = createUpdateSchema(organizationsTable);
 
-// New types
+export type Organization = typeof organizationsTable.$inferSelect;
 export type Node = typeof nodesTable.$inferSelect;
 export type TaskDetails = typeof taskDetailsTable.$inferSelect;
 export type ProjectDetails = typeof projectDetailsTable.$inferSelect;

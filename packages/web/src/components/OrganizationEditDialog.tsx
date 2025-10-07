@@ -19,15 +19,12 @@ import {
 import { useTRPC } from '@/utils/trpc';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState, type FormEvent } from 'react';
+import type { Organization } from '../../../api/src/db/schema';
 
 interface OrganizationEditDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  organization: {
-    id: string;
-    name: string;
-    visibility: 'public' | 'private';
-  } | null;
+  organization: Organization | null;
 }
 
 export function OrganizationEditDialog({

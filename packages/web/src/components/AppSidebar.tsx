@@ -30,6 +30,7 @@ import {
   UserButton,
   useUser,
 } from '@clerk/clerk-react';
+import type { Organization } from '../../../api/src/db/schema';
 
 export function AppSidebar() {
   const trpc = useTRPC();
@@ -37,11 +38,7 @@ export function AppSidebar() {
   const currentOrgId = useOrganizationId();
   const { user } = useUser();
   const [editDialogOpen, setEditDialogOpen] = useState(false);
-  const [editingOrg, setEditingOrg] = useState<{
-    id: string;
-    name: string;
-    visibility: 'public' | 'private';
-  } | null>(null);
+  const [editingOrg, setEditingOrg] = useState<Organization | null>(null);
 
   const createOrganization = useMutation(
     trpc.createOrganization.mutationOptions({
@@ -59,12 +56,8 @@ export function AppSidebar() {
     window.location.href = url.toString();
   };
 
-  const handleOpenEdit = (
-    id: string,
-    name: string,
-    visibility: 'public' | 'private',
-  ) => {
-    setEditingOrg({ id, name, visibility });
+  const handleOpenEdit = (org: Organization) => {
+    setEditingOrg(org);
     setEditDialogOpen(true);
   };
 
@@ -105,13 +98,7 @@ export function AppSidebar() {
                       </DropdownMenuTrigger>
                       <DropdownMenuContent side="right" align="start">
                         <DropdownMenuItem
-                          onClick={() =>
-                            handleOpenEdit(
-                              organization.id,
-                              organization.name,
-                              organization.visibility,
-                            )
-                          }
+                          onClick={() => handleOpenEdit(organization)}
                         >
                           <span>Edit</span>
                         </DropdownMenuItem>
