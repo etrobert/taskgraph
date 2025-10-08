@@ -1,3 +1,5 @@
+// See https://github.com/eslint/eslint/discussions/16960
+
 import js from "@eslint/js";
 import globals from "globals";
 import reactHooks from "eslint-plugin-react-hooks";
