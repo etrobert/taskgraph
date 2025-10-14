@@ -5,11 +5,10 @@ import {
   type Edge,
   ReactFlow,
   useReactFlow,
-  useViewport,
   type OnSelectionChangeFunc,
   Background,
 } from '@xyflow/react';
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import { TaskNode, type TaskNodeType } from '../TaskNode';
 import { ProjectNode, type ProjectNodeType } from '../ProjectNode';
 import { PropertiesPanel } from '../PropertiesPanel';
@@ -26,6 +25,8 @@ import { useNodeDrag } from '../../hooks/useNodeDrag';
 import { useOnDelete } from '../../hooks/useOnDelete';
 import { applyDagreLayout } from '../../lib/dagreLayout';
 import { Toolbar } from './Toolbar';
+import { usePageTitle } from '../../hooks/usePageTitle';
+import { useScreenNodesBounds } from '../../hooks/useScreenNodesBounds';
 
 const nodeTypes = {
   task: TaskNode,
@@ -33,20 +34,6 @@ const nodeTypes = {
 };
 
 export type NodeType = TaskNodeType | ProjectNodeType;
-
-function useScreenNodesBounds(nodes: NodeType[]) {
-  const { getNodesBounds, flowToScreenPosition } = useReactFlow<NodeType>();
-
-  const viewport = useViewport();
-
-  return useMemo(() => {
-    const { width, height, ...flowPos } = getNodesBounds(nodes);
-    const pos = flowToScreenPosition(flowPos);
-    const { zoom } = viewport;
-    const size = { width: width * zoom, height: height * zoom };
-    return { ...pos, ...size };
-  }, [flowToScreenPosition, getNodesBounds, nodes, viewport]);
-}
 
 export function TaskGraphFlow() {
   const trpc = useTRPC();
@@ -66,6 +53,7 @@ export function TaskGraphFlow() {
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
 
   const organizationId = useOrganizationId();
+  usePageTitle();
 
   // Compute display nodes based on view mode
   const nodes = isComputedView
