@@ -30,7 +30,9 @@ export function useTaskConnection(organizationId: string | undefined) {
 
   const createTaskFrom = useMutation(trpc.createTaskFrom.mutationOptions());
 
-  const onConnectEnd: OnConnectEnd = (event) => {
+  const onConnectEnd: OnConnectEnd = (event, connectionState) => {
+    // If we're forming a valid connection we don't need to create a new task
+    if (connectionState.isValid) return;
     if (organizationId === undefined) return;
     if (
       connectingNodeId.current === null ||
