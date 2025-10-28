@@ -20,7 +20,7 @@ import {
 } from './ui/select';
 import { Button } from './ui/button';
 import type { ProjectNodeType } from './ProjectNode';
-import type { Status } from 'api/db/schema';
+import { statusValues, type Status } from 'api/db/schema';
 
 interface ProjectPropertiesPanelProps {
   selectedNode: ProjectNodeType;
@@ -94,13 +94,19 @@ export function ProjectPropertiesPanel({
                 })
               }
             >
-              <SelectTrigger className="w-full">
+              <SelectTrigger className="w-full capitalize">
                 <SelectValue placeholder="Select status" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="pending">Pending</SelectItem>
-                <SelectItem value="in progress">In Progress</SelectItem>
-                <SelectItem value="completed">Completed</SelectItem>
+                {statusValues.map((status) => (
+                  <SelectItem
+                    key={status}
+                    value={status}
+                    className="capitalize"
+                  >
+                    {status}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
 

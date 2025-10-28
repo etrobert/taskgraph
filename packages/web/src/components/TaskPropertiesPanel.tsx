@@ -98,7 +98,7 @@ export function TaskPropertiesPanel({
                 })
               }
             >
-              <SelectTrigger className="w-full">
+              <SelectTrigger className="w-full capitalize">
                 <SelectValue placeholder="Select status" />
               </SelectTrigger>
               <SelectContent>
