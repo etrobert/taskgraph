@@ -15,11 +15,14 @@ import {
   createUpdateSchema,
 } from 'drizzle-zod';
 
-export const statusEnum = pgEnum('status', [
+export const statusValues = [
   'pending',
   'in progress',
+  'in review',
   'completed',
-]);
+] as const;
+export const statusEnum = pgEnum('status', statusValues);
+export type Status = (typeof statusValues)[number];
 
 export const nodeTypeEnum = pgEnum('node_type', ['task', 'project']);
 

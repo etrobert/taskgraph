@@ -20,7 +20,7 @@ import {
 } from './ui/select';
 import { Button } from './ui/button';
 import type { ProjectNodeType } from './ProjectNode';
-import type { Status } from '@/lib/statusHelpers';
+import type { Status } from 'api/db/schema';
 
 interface ProjectPropertiesPanelProps {
   selectedNode: ProjectNodeType;

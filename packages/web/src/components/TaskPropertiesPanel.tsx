@@ -21,6 +21,7 @@ import {
 import { Button } from './ui/button';
 import type { TaskNodeData } from '@/lib/getTaskNodeFromTask';
 import type { TaskNodeType } from './TaskNode';
+import { statusValues } from 'api/db/schema';
 
 interface TaskPropertiesPanelProps {
   selectedNode: TaskNodeType;
@@ -101,9 +102,15 @@ export function TaskPropertiesPanel({
                 <SelectValue placeholder="Select status" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="pending">Pending</SelectItem>
-                <SelectItem value="in progress">In Progress</SelectItem>
-                <SelectItem value="completed">Completed</SelectItem>
+                {statusValues.map((status) => (
+                  <SelectItem
+                    key={status}
+                    value={status}
+                    className="capitalize"
+                  >
+                    {status}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
 
