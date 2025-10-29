@@ -4,6 +4,7 @@ import {
   taskDetailsTable,
   projectDetailsTable,
   edgesTable,
+  usersTable,
 } from '../db/schema.js';
 import { db, publicProcedure } from '../trpc.js';
 import { eq, and, getTableColumns } from 'drizzle-orm';
@@ -13,17 +14,26 @@ export const graph = publicProcedure
   .query(async ({ input: { organizationId } }) => {
     try {
       const [tasks, projects, dependencies] = await Promise.all([
-        // Get task nodes with their task details
+        // Get task nodes with their task details and assigned user
         db
           .select({
             ...getTableColumns(nodesTable),
             ...getTableColumns(taskDetailsTable),
+            // TODO: do not list the columns manually
+            assignee: {
+              id: usersTable.id,
+              name: usersTable.name,
+              email: usersTable.email,
+              imageUrl: usersTable.imageUrl,
+              createdAt: usersTable.createdAt,
+            },
           })
           .from(nodesTable)
           .innerJoin(
             taskDetailsTable,
             eq(nodesTable.id, taskDetailsTable.nodeId),
           )
+          .leftJoin(usersTable, eq(taskDetailsTable.assignedTo, usersTable.id))
           .where(
             and(
               eq(nodesTable.organizationId, organizationId),

@@ -28,6 +28,14 @@ export const nodeTypeEnum = pgEnum('node_type', ['task', 'project']);
 
 export const visibilityEnum = pgEnum('visibility', ['public', 'private']);
 
+export const usersTable = pgTable('users', {
+  id: varchar({ length: 255 }).primaryKey(), // Clerk user ID
+  email: varchar({ length: 255 }).notNull(),
+  name: varchar({ length: 255 }),
+  imageUrl: varchar({ length: 500 }),
+  createdAt: timestamp().notNull().defaultNow(),
+});
+
 export const organizationsTable = pgTable('organizations', {
   id: uuid().primaryKey().defaultRandom(),
   name: varchar({ length: 255 }).notNull().default('New Organization'),
@@ -69,6 +77,9 @@ export const taskDetailsTable = pgTable('task_details', {
   status: statusEnum().notNull(),
   projectId: uuid().references(() => nodesTable.id, { onDelete: 'set null' }),
   description: text(),
+  assignedTo: varchar({ length: 255 }).references(() => usersTable.id, {
+    onDelete: 'set null',
+  }),
 });
 
 export const projectDetailsTable = pgTable('project_details', {
@@ -91,13 +102,18 @@ export const projectDetailsInsertSchema =
   createInsertSchema(projectDetailsTable);
 export const edgeInsertSchema = createInsertSchema(edgesTable);
 export const organizationsUpdateSchema = createUpdateSchema(organizationsTable);
+export const usersInsertSchema = createInsertSchema(usersTable);
 
 export type Organization = typeof organizationsTable.$inferSelect;
 export type Node = typeof nodesTable.$inferSelect;
 export type TaskDetails = typeof taskDetailsTable.$inferSelect;
 export type ProjectDetails = typeof projectDetailsTable.$inferSelect;
+export type User = typeof usersTable.$inferSelect;
 
-export type ExtendedTask = Node & TaskDetails;
+export type ExtendedTask = Node &
+  TaskDetails & {
+    assignee: User | null;
+  };
 export type ExtendedProject = Node & ProjectDetails;
 
 export type Point = { x: number; y: number };

@@ -26,6 +26,21 @@ export function TaskNode({ data, selected }: NodeProps<TaskNodeType>) {
             {data.name}
           </span>
           {data.archivedAt && '📁'}
+          {data.assignee && (
+            <div
+              className="bg-primary text-primary-foreground ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-semibold"
+              title={`Assigned to ${data.assignee.name || data.assignee.email}`}
+            >
+              {data.assignee.name
+                ? data.assignee.name
+                    .split(' ')
+                    .map((n) => n[0])
+                    .join('')
+                    .toUpperCase()
+                    .slice(0, 2)
+                : data.assignee.email[0].toUpperCase()}
+            </div>
+          )}
         </div>
         {data.description && (
           <p className="text-muted-foreground mt-1 max-w-[180px] overflow-hidden text-xs text-ellipsis whitespace-nowrap">

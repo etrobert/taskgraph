@@ -3,7 +3,6 @@
     "allow": [
       "Bash(cat:*)",
       "Bash(cp:*)",
-      "Bash(npx drizzle-kit:*)",
       "Bash(npm run build:*)",
       "Bash(npm update:*)",
       "Bash(npm run lint)",

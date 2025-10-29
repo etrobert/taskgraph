@@ -38,6 +38,7 @@ export function TaskPropertiesPanel({
       { enabled: !!organizationId },
     ),
   );
+  const { data: users } = useQuery(trpc.users.queryOptions());
 
   const [lastKeystroke, setLastKeystroke] = useState(0);
   const [taskName, setTaskName] = useState('');
@@ -109,6 +110,31 @@ export function TaskPropertiesPanel({
                     className="capitalize"
                   >
                     {status}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            <Label>Assigned To</Label>
+            <Select
+              value={selectedTask.assignedTo ?? 'unassigned'}
+              onValueChange={(value) =>
+                updateTaskDetails.mutate({
+                  nodeId: selectedTask.id,
+                  updates: {
+                    assignedTo: value === 'unassigned' ? null : value,
+                  },
+                })
+              }
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select assignee" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="unassigned">Unassigned</SelectItem>
+                {users?.map((user) => (
+                  <SelectItem key={user.id} value={user.id}>
+                    {user.name || user.email}
                   </SelectItem>
                 ))}
               </SelectContent>

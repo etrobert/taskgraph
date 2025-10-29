@@ -9,6 +9,8 @@ import {
   edgeInsertSchema,
   edgesTable,
   organizationsUpdateSchema,
+  usersTable,
+  usersInsertSchema,
 } from './db/schema.js';
 import { eq, inArray, or } from 'drizzle-orm';
 import {
@@ -17,6 +19,7 @@ import {
   t,
   publicProcedure,
   organizationOwnerProcedure,
+  authenticatedProcedure,
 } from './trpc.js';
 import z from 'zod';
 import { on } from 'node:events';
@@ -29,6 +32,27 @@ import { graph } from './routers/graph.js';
 import { dragNodes } from './routers/dragNodes.js';
 
 export const appRouter = t.router({
+  syncUser: authenticatedProcedure
+    .input(usersInsertSchema.partial().required({ id: true, email: true }))
+    .mutation(async ({ input }) => {
+      await db
+        .insert(usersTable)
+        .values(input)
+        .onConflictDoUpdate({
+          target: usersTable.id,
+          set: {
+            email: input.email,
+            name: input.name,
+            imageUrl: input.imageUrl,
+          },
+        });
+      return 'done';
+    }),
+
+  users: publicProcedure.query(async () => {
+    return db.select().from(usersTable);
+  }),
+
   organizations: publicProcedure.query(async ({ ctx }) => {
     const userId = ctx.auth?.userId;
 
