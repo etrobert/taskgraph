@@ -123,8 +123,6 @@ export function TaskGraphFlow() {
 
   const spacePressed = useKeyPress('Space');
 
-  console.log(spacePressed);
-
   return (
     <div style={{ width: '100vw', height: '100vh', display: 'flex' }}>
       <div style={{ flex: 1, height: '100vh' }}>
