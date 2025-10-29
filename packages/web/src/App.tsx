@@ -1,8 +1,12 @@
 import { ReactFlowProvider } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { TaskGraphFlow } from './components/flow/TaskGraphFlow';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { TRPCProvider } from './utils/trpc';
+import {
+  QueryClient,
+  QueryClientProvider,
+  useMutation,
+} from '@tanstack/react-query';
+import { TRPCProvider, useTRPC } from './utils/trpc';
 import { SidebarProvider, SidebarTrigger } from './components/ui/sidebar';
 import { AppSidebar } from './components/AppSidebar';
 import {
@@ -11,7 +15,7 @@ import {
   splitLink,
   wsLink,
 } from '@trpc/client';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import superjson from 'superjson';
 import { requireEnv } from './utils/requireEnv';
 import { createWSClient } from '@trpc/client';
@@ -21,6 +25,7 @@ import {
   RedirectToSignIn,
   SignedOut,
   useAuth,
+  useUser,
 } from '@clerk/clerk-react';
 
 const apiUrl = requireEnv('VITE_API_URL');
@@ -41,6 +46,28 @@ function getQueryClient() {
     if (!browserQueryClient) browserQueryClient = makeQueryClient();
     return browserQueryClient;
   }
+}
+
+function UserSync() {
+  const { user } = useUser();
+  const trpc = useTRPC();
+  const syncUser = useMutation(trpc.syncUser.mutationOptions());
+  const hasSynced = useRef(false);
+
+  useEffect(() => {
+    if (!user || !user.primaryEmailAddress?.emailAddress || hasSynced.current)
+      return;
+
+    hasSynced.current = true;
+    syncUser.mutate({
+      id: user.id,
+      email: user.primaryEmailAddress.emailAddress,
+      name: user.fullName,
+      imageUrl: user.imageUrl,
+    });
+  }, [user, syncUser]);
+
+  return null;
 }
 
 function AppContent() {
@@ -76,6 +103,7 @@ function AppContent() {
 
   return (
     <TRPCProvider trpcClient={trpcClient} queryClient={queryClient}>
+      <UserSync />
       <SidebarProvider>
         <ReactFlowProvider>
           <AppSidebar />
