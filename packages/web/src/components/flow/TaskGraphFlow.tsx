@@ -7,6 +7,7 @@ import {
   useReactFlow,
   type OnSelectionChangeFunc,
   Background,
+  useKeyPress,
 } from '@xyflow/react';
 import { useState } from 'react';
 import { TaskNode, type TaskNodeType } from '../TaskNode';
@@ -120,6 +121,10 @@ export function TaskGraphFlow() {
     });
   };
 
+  const spacePressed = useKeyPress('Space');
+
+  console.log(spacePressed);
+
   return (
     <div style={{ width: '100vw', height: '100vh', display: 'flex' }}>
       <div style={{ flex: 1, height: '100vh' }}>
@@ -140,7 +145,7 @@ export function TaskGraphFlow() {
           onEdgesDelete={onEdgesDelete}
           multiSelectionKeyCode="Shift"
           minZoom={0.1}
-          nodesDraggable={!isComputedView}
+          nodesDraggable={!isComputedView && !spacePressed}
           defaultEdgeOptions={{
             markerEnd: { type: MarkerType.ArrowClosed, width: 30, height: 30 },
           }}
