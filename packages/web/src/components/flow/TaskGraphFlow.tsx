@@ -146,6 +146,7 @@ export function TaskGraphFlow() {
           }}
           fitView={true}
           proOptions={{ hideAttribution: true }}
+          panOnScroll
         >
           {isComputedView && (
             <>
