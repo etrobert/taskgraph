@@ -13,12 +13,14 @@ export const graph = publicProcedure
   .input(z.object({ organizationId: z.string().uuid() }))
   .query(async ({ input: { organizationId } }) => {
     try {
-      const [tasks, projects, dependencies] = await Promise.all([
+      const [tasksRaw, projects, dependencies] = await Promise.all([
         // Get task nodes with their task details and assigned user
         db
           .select({
             ...getTableColumns(nodesTable),
             ...getTableColumns(taskDetailsTable),
+            nodeUpdatedAt: nodesTable.updatedAt,
+            taskDetailsUpdatedAt: taskDetailsTable.updatedAt,
             // TODO: do not list the columns manually
             assignee: {
               id: usersTable.id,
@@ -65,6 +67,17 @@ export const graph = publicProcedure
           .from(edgesTable)
           .where(eq(edgesTable.organizationId, organizationId)),
       ]);
+
+      // Aggregate updatedAt to use the most recent between nodes and taskDetails
+      const tasks = tasksRaw.map(
+        ({ taskDetailsUpdatedAt, nodeUpdatedAt, ...task }) => ({
+          ...task,
+          updatedAt:
+            taskDetailsUpdatedAt > nodeUpdatedAt
+              ? taskDetailsUpdatedAt
+              : nodeUpdatedAt,
+        }),
+      );
 
       return { projects, tasks, dependencies };
     } catch (e) {

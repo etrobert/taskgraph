@@ -6,7 +6,22 @@ import { FlowHandle } from './flow/FlowHandle';
 
 export type TaskNodeType = Node<TaskNodeData, 'task'>;
 
+const second = 1000;
+const minute = 60 * second;
+const hour = 60 * minute;
+const day = 24 * hour;
+
+function getStaleIndicator(updatedAt: Date) {
+  const daysSinceUpdate = (Date.now() - updatedAt.getTime()) / day;
+
+  if (daysSinceUpdate >= 14) return '🐌';
+  if (daysSinceUpdate >= 7) return '⏲️';
+  return null;
+}
+
 export function TaskNode({ data, selected }: NodeProps<TaskNodeType>) {
+  const staleIndicator = getStaleIndicator(data.updatedAt);
+
   return (
     <div className="group">
       <FlowHandle type="target" position={Position.Left} />
@@ -25,6 +40,7 @@ export function TaskNode({ data, selected }: NodeProps<TaskNodeType>) {
           <span className="cursor-pointer truncate font-medium select-none">
             {data.name}
           </span>
+          {staleIndicator}
           {data.archivedAt && '📁'}
           {data.assignee && (
             <div

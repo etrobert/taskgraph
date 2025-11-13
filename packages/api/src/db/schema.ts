@@ -53,6 +53,10 @@ export const nodesTable = pgTable('nodes', {
   name: varchar({ length: 255 }).notNull(),
   position: point({ mode: 'xy' }).notNull(),
   createdAt: timestamp().notNull().defaultNow(),
+  updatedAt: timestamp()
+    .notNull()
+    .defaultNow()
+    .$onUpdate(() => new Date()),
   archivedAt: timestamp(),
 });
 
@@ -80,6 +84,10 @@ export const taskDetailsTable = pgTable('task_details', {
   assignedTo: varchar({ length: 255 }).references(() => usersTable.id, {
     onDelete: 'set null',
   }),
+  updatedAt: timestamp()
+    .notNull()
+    .defaultNow()
+    .$onUpdate(() => new Date()),
 });
 
 export const projectDetailsTable = pgTable('project_details', {
