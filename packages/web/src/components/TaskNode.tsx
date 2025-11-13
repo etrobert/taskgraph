@@ -14,9 +14,13 @@ const day = 24 * hour;
 function getStaleIndicator(updatedAt: Date) {
   const daysSinceUpdate = (Date.now() - updatedAt.getTime()) / day;
 
-  if (daysSinceUpdate >= 14) return '🐌';
-  if (daysSinceUpdate >= 7) return '⏲️';
-  return null;
+  if (daysSinceUpdate < 7) return null;
+
+  return (
+    <span title={`Last udpated ${Math.floor(daysSinceUpdate)} days ago`}>
+      {daysSinceUpdate >= 14 ? '🐌' : '⏲️'}
+    </span>
+  );
 }
 
 export function TaskNode({ data, selected }: NodeProps<TaskNodeType>) {
