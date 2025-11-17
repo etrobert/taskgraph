@@ -6,10 +6,12 @@ import {
   type OnConnect,
 } from '@xyflow/react';
 import { useTRPC } from '../utils/trpc';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useStoreApi } from '@xyflow/react';
 
 export function useTaskConnection(organizationId: string | undefined) {
   const trpc = useTRPC();
+  const queryClient = useQueryClient();
   const connectingNodeId = useRef<string>(null);
   const connectingHandleType = useRef<'source' | 'target'>(null);
   const { screenToFlowPosition, getIntersectingNodes } = useReactFlow();
@@ -28,7 +30,27 @@ export function useTaskConnection(organizationId: string | undefined) {
     connectingHandleType.current = handleType;
   };
 
-  const createTaskFrom = useMutation(trpc.createTaskFrom.mutationOptions());
+  const store = useStoreApi();
+  const { addSelectedNodes } = store.getState();
+
+  const createTaskFrom = useMutation(
+    trpc.createTaskFrom.mutationOptions({
+      onSuccess: ({ task, edge }) => {
+        queryClient.setQueryData(
+          trpc.graph.queryKey(),
+          (graph) =>
+            graph && {
+              ...graph,
+              tasks: [...graph.tasks, task],
+              dependencies: [...graph.dependencies, edge],
+            },
+        );
+        // TODO: Fix timeout value
+        // This should be timeout 0 but for some reason it does not work
+        setTimeout(() => addSelectedNodes([task.id]), 200);
+      },
+    }),
+  );
 
   const onConnectEnd: OnConnectEnd = (event, connectionState) => {
     // If we're forming a valid connection we don't need to create a new task

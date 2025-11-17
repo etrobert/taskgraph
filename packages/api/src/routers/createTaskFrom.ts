@@ -1,5 +1,10 @@
 import z from 'zod';
-import { edgesTable, nodesTable, taskDetailsTable } from '../db/schema.js';
+import {
+  edgesTable,
+  type ExtendedTask,
+  nodesTable,
+  taskDetailsTable,
+} from '../db/schema.js';
 import { db, ee, publicProcedure } from '../trpc.js';
 import { eq } from 'drizzle-orm';
 import { TRPCError } from '@trpc/server';
@@ -18,7 +23,7 @@ export const createTaskFrom = publicProcedure
     async ({
       input: { from, position, organizationId, newTaskType, projectId },
     }) => {
-      await db.transaction(async (tx) => {
+      const result = await db.transaction(async (tx) => {
         // TODO: Extract in helper
         async function getPosition() {
           if (projectId === undefined) return position;
@@ -53,22 +58,37 @@ export const createTaskFrom = publicProcedure
           .returning();
 
         // Create the task-specific details
-        await tx.insert(taskDetailsTable).values({
-          nodeId: node.id,
-          status: 'pending',
-          projectId,
-        });
+        const [taskDetails] = await tx
+          .insert(taskDetailsTable)
+          .values({
+            nodeId: node.id,
+            status: 'pending',
+            projectId,
+          })
+          .returning();
 
-        await tx
+        const [edge] = await tx
           .insert(edgesTable)
           .values(
             newTaskType === 'blocking'
               ? { source: node.id, target: from, organizationId }
               : { source: from, target: node.id, organizationId },
-          );
+          )
+          .returning();
+
+        // TODO: make uniform how we merge node and task details
+        // Right now graph.ts and this file does it differently
+        // Because of that there are impl differences like updatedAt logic
+        const task = {
+          ...node,
+          ...taskDetails,
+          assignee: null,
+        } satisfies ExtendedTask;
+
+        return { edge, task };
       });
 
       ee.emit('update');
-      return 'done';
+      return result;
     },
   );
