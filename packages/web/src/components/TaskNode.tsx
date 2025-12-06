@@ -44,7 +44,7 @@ export function TaskNode({ data, selected }: NodeProps<TaskNodeType>) {
           <span className="cursor-pointer truncate font-medium select-none">
             {data.name}
           </span>
-          {staleIndicator}
+          {data.status !== 'completed' && staleIndicator}
           {data.archivedAt && '📁'}
           {data.assignee && (
             <div
