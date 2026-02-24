@@ -4,9 +4,9 @@ import { eq } from 'drizzle-orm';
 import EventEmitter from 'node:events';
 import superjson from 'superjson';
 import { requireEnv } from './requireEnv.js';
+import type { CreateExpressContextOptions } from '@trpc/server/adapters/express';
 import z from 'zod';
 import { organizationsTable } from './db/schema.js';
-import { CreateExpressContextOptions } from '@trpc/server/adapters/express';
 
 export const db = drizzle({
   connection: requireEnv('DATABASE_URL'),
