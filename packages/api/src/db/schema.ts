@@ -30,7 +30,7 @@ export const visibilityEnum = pgEnum('visibility', ['public', 'private']);
 
 export const usersTable = pgTable('users', {
   id: varchar({ length: 255 }).primaryKey(),
-  email: varchar({ length: 255 }).notNull(),
+  email: varchar({ length: 255 }).unique().notNull(),
   name: varchar({ length: 255 }),
   imageUrl: varchar({ length: 500 }),
   createdAt: timestamp().notNull().defaultNow(),
