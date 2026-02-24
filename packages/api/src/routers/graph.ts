@@ -26,7 +26,6 @@ export const graph = publicProcedure
               id: usersTable.id,
               name: usersTable.name,
               email: usersTable.email,
-              imageUrl: usersTable.imageUrl,
               createdAt: usersTable.createdAt,
             },
           })

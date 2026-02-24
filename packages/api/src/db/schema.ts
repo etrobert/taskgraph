@@ -32,7 +32,6 @@ export const usersTable = pgTable('users', {
   id: uuid().primaryKey().defaultRandom(),
   email: varchar({ length: 255 }).unique().notNull(),
   name: varchar({ length: 255 }),
-  imageUrl: varchar({ length: 500 }),
   createdAt: timestamp().notNull().defaultNow(),
 });
 
