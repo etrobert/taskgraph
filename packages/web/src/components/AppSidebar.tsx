@@ -32,6 +32,9 @@ export function AppSidebar() {
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [editingOrg, setEditingOrg] = useState<Organization | null>(null);
 
+  // TODO: Fix
+  const user = { id: 'myuser' };
+
   const createOrganization = useMutation(
     trpc.createOrganization.mutationOptions({
       onSuccess: (newOrg) => {
@@ -75,20 +78,22 @@ export function AppSidebar() {
                     <Building2 size={16} />
                     <span>{organization.name}</span>
                   </SidebarMenuButton>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <SidebarMenuAction>
-                        <MoreHorizontal />
-                      </SidebarMenuAction>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent side="right" align="start">
-                      <DropdownMenuItem
-                        onClick={() => handleOpenEdit(organization)}
-                      >
-                        <span>Edit</span>
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                  {user?.id === organization.ownerId && (
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <SidebarMenuAction>
+                          <MoreHorizontal />
+                        </SidebarMenuAction>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent side="right" align="start">
+                        <DropdownMenuItem
+                          onClick={() => handleOpenEdit(organization)}
+                        >
+                          <span>Edit</span>
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  )}
                 </SidebarMenuItem>
               ))}
               <SidebarMenuItem>
