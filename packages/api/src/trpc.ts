@@ -16,7 +16,7 @@ export const ee = new EventEmitter();
 
 // created for each request
 export const createContext = () => ({
-  auth: { userId: 'guest' },
+  auth: null,
 });
 
 export const createWSContext = () => ({ auth: { userId: 'guest' } });
@@ -29,7 +29,11 @@ export const t = initTRPC.context<Context>().create({ transformer: superjson });
 export const publicProcedure = t.procedure;
 
 export const authenticatedProcedure = t.procedure.use(async (opts) => {
-  return opts.next({ ctx: { auth: opts.ctx.auth } });
+  const { ctx } = opts;
+  if (ctx.auth === null || !ctx.auth.userId)
+    throw new TRPCError({ code: 'UNAUTHORIZED' });
+
+  return opts.next({ ctx: { auth: ctx.auth } });
 });
 
 export const organizationOwnerProcedure = authenticatedProcedure
