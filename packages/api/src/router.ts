@@ -36,7 +36,6 @@ export const appRouter = t.router({
       z.object({ name: z.string(), password: z.string(), email: z.string() }),
     )
     .mutation(async ({ input: { name, password, email } }) => {
-      // TODO: Make the name mandatory in db
       await db.insert(usersTable).values({ email, name });
       // TODO: Check wether it'd be smart to create a session already
       return 'done';
