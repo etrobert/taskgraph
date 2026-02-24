@@ -10,7 +10,6 @@ import {
   edgesTable,
   organizationsUpdateSchema,
   usersTable,
-  usersInsertSchema,
 } from './db/schema.js';
 import { eq, inArray, or } from 'drizzle-orm';
 import {
@@ -32,23 +31,6 @@ import { graph } from './routers/graph.js';
 import { dragNodes } from './routers/dragNodes.js';
 
 export const appRouter = t.router({
-  syncUser: authenticatedProcedure
-    .input(usersInsertSchema.partial().required({ id: true, email: true }))
-    .mutation(async ({ input }) => {
-      await db
-        .insert(usersTable)
-        .values(input)
-        .onConflictDoUpdate({
-          target: usersTable.id,
-          set: {
-            email: input.email,
-            name: input.name,
-            imageUrl: input.imageUrl,
-          },
-        });
-      return 'done';
-    }),
-
   users: authenticatedProcedure.query(() => db.select().from(usersTable)),
 
   organizations: publicProcedure.query(async ({ ctx }) => {
