@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { TRPCProvider } from './utils/trpc';
 import { SidebarProvider, SidebarTrigger } from './components/ui/sidebar';
 import { AppSidebar } from './components/AppSidebar';
+import { SignupScreen } from './components/SignupScreen';
 import {
   createTRPCClient,
   httpBatchLink,
@@ -78,10 +79,11 @@ function AppContent() {
 
 function App() {
   const queryClient = getQueryClient();
+  const showSignup = true; // TODO: Implement
 
   return (
     <QueryClientProvider client={queryClient}>
-      <AppContent />
+      {showSignup ? <SignupScreen /> : <AppContent />}
     </QueryClientProvider>
   );
 }
