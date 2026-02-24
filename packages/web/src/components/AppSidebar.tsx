@@ -59,7 +59,7 @@ export function AppSidebar() {
         <div className="flex items-center gap-2 px-4 py-2">
           <SidebarTrigger />
           <h1 className="text-lg font-semibold">TaskGraph</h1>
-          <span className="text-xs text-muted-foreground">Guest</span>
+          <span className="text-muted-foreground text-xs">Guest</span>
         </div>
       </SidebarHeader>
       <SidebarContent>

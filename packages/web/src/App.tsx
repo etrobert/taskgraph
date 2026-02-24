@@ -1,11 +1,8 @@
 import { ReactFlowProvider } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { TaskGraphFlow } from './components/flow/TaskGraphFlow';
-import {
-  QueryClient,
-  QueryClientProvider,
-} from '@tanstack/react-query';
-import { TRPCProvider, useTRPC } from './utils/trpc';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { TRPCProvider } from './utils/trpc';
 import { SidebarProvider, SidebarTrigger } from './components/ui/sidebar';
 import { AppSidebar } from './components/AppSidebar';
 import {

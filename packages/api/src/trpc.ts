@@ -4,7 +4,6 @@ import { eq } from 'drizzle-orm';
 import EventEmitter from 'node:events';
 import superjson from 'superjson';
 import { requireEnv } from './requireEnv.js';
-import type { CreateExpressContextOptions } from '@trpc/server/adapters/express';
 import z from 'zod';
 import { organizationsTable } from './db/schema.js';
 
@@ -16,11 +15,11 @@ export const db = drizzle({
 export const ee = new EventEmitter();
 
 // created for each request
-export const createContext = (_opts: CreateExpressContextOptions) => ({
-  auth: null,
+export const createContext = () => ({
+  auth: { userId: 'guest' },
 });
 
-export const createWSContext = () => ({ auth: null });
+export const createWSContext = () => ({ auth: { userId: 'guest' } });
 
 type Context = Awaited<
   ReturnType<typeof createContext> | ReturnType<typeof createWSContext>
@@ -30,10 +29,10 @@ export const t = initTRPC.context<Context>().create({ transformer: superjson });
 export const publicProcedure = t.procedure;
 
 export const authenticatedProcedure = t.procedure.use(async (opts) => {
-  return opts.next({ ctx: { auth: null } });
+  return opts.next({ ctx: { auth: opts.ctx.auth } });
 });
 
-export const organizationOwnerProcedure = publicProcedure
+export const organizationOwnerProcedure = authenticatedProcedure
   .input(z.object({ organizationId: z.string().uuid() }))
   .use(async (opts) => {
     const { ctx, input } = opts;
