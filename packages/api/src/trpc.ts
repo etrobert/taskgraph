@@ -5,7 +5,6 @@ import EventEmitter from 'node:events';
 import superjson from 'superjson';
 import { requireEnv } from './requireEnv.js';
 import type { CreateExpressContextOptions } from '@trpc/server/adapters/express';
-import { getAuth } from '@clerk/express';
 import z from 'zod';
 import { organizationsTable } from './db/schema.js';
 
@@ -15,6 +14,14 @@ export const db = drizzle({
 });
 
 export const ee = new EventEmitter();
+
+const getAuth = (
+  // @ts-expect-error - we will implement this later
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  req: CreateExpressContextOptions['req'],
+): { userId: string } | null => {
+  return null;
+};
 
 // created for each request
 export const createContext = (opts: CreateExpressContextOptions) => ({

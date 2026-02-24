@@ -23,20 +23,13 @@ import { Building2, Plus, MoreHorizontal } from 'lucide-react';
 import { useOrganizationId } from '../hooks/useOrganizationId';
 import { useState } from 'react';
 import { OrganizationEditDialog } from './OrganizationEditDialog';
-import {
-  SignedIn,
-  SignedOut,
-  SignInButton,
-  UserButton,
-  useUser,
-} from '@clerk/clerk-react';
 import type { Organization } from 'api/db/schema';
 
 export function AppSidebar() {
   const trpc = useTRPC();
   const organizations = useQuery(trpc.organizations.queryOptions());
   const currentOrgId = useOrganizationId();
-  const { user } = useUser();
+  const user = null as { id: string } | null; // TODO: Fix
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [editingOrg, setEditingOrg] = useState<Organization | null>(null);
 
@@ -67,12 +60,7 @@ export function AppSidebar() {
         <div className="flex items-center gap-2 px-4 py-2">
           <SidebarTrigger />
           <h1 className="text-lg font-semibold">TaskGraph</h1>
-          <SignedOut>
-            <SignInButton />
-          </SignedOut>
-          <SignedIn>
-            <UserButton />
-          </SignedIn>
+          {user === null ? <button>Sign in</button> : <button>User</button>}
         </div>
       </SidebarHeader>
       <SidebarContent>

@@ -29,7 +29,7 @@ export const nodeTypeEnum = pgEnum('node_type', ['task', 'project']);
 export const visibilityEnum = pgEnum('visibility', ['public', 'private']);
 
 export const usersTable = pgTable('users', {
-  id: varchar({ length: 255 }).primaryKey(), // Clerk user ID
+  id: varchar({ length: 255 }).primaryKey(),
   email: varchar({ length: 255 }).notNull(),
   name: varchar({ length: 255 }),
   imageUrl: varchar({ length: 500 }),
