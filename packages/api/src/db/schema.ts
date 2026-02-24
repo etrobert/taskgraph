@@ -39,7 +39,9 @@ export const usersTable = pgTable('users', {
 export const organizationsTable = pgTable('organizations', {
   id: uuid().primaryKey().defaultRandom(),
   name: varchar({ length: 255 }).notNull().default('New Organization'),
-  ownerId: uuid().notNull(),
+  ownerId: uuid()
+    .notNull()
+    .references(() => usersTable.id),
   visibility: visibilityEnum().notNull().default('public'),
   createdAt: timestamp().notNull().defaultNow(),
 });
