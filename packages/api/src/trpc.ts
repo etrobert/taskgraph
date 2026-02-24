@@ -5,7 +5,6 @@ import EventEmitter from 'node:events';
 import superjson from 'superjson';
 import { requireEnv } from './requireEnv.js';
 import type { CreateExpressContextOptions } from '@trpc/server/adapters/express';
-import { getAuth } from '@clerk/express';
 import z from 'zod';
 import { organizationsTable } from './db/schema.js';
 
@@ -17,8 +16,8 @@ export const db = drizzle({
 export const ee = new EventEmitter();
 
 // created for each request
-export const createContext = (opts: CreateExpressContextOptions) => ({
-  auth: getAuth(opts.req),
+export const createContext = (_opts: CreateExpressContextOptions) => ({
+  auth: null,
 });
 
 export const createWSContext = () => ({ auth: null });
@@ -31,14 +30,10 @@ export const t = initTRPC.context<Context>().create({ transformer: superjson });
 export const publicProcedure = t.procedure;
 
 export const authenticatedProcedure = t.procedure.use(async (opts) => {
-  const { ctx } = opts;
-  if (ctx.auth === null || !ctx.auth.userId)
-    throw new TRPCError({ code: 'UNAUTHORIZED' });
-
-  return opts.next({ ctx: { auth: ctx.auth } });
+  return opts.next({ ctx: { auth: null } });
 });
 
-export const organizationOwnerProcedure = authenticatedProcedure
+export const organizationOwnerProcedure = publicProcedure
   .input(z.object({ organizationId: z.string().uuid() }))
   .use(async (opts) => {
     const { ctx, input } = opts;
@@ -54,13 +49,7 @@ export const organizationOwnerProcedure = authenticatedProcedure
         message: 'Organization not found',
       });
 
-    if (organization.ownerId !== ctx.auth.userId)
-      throw new TRPCError({
-        code: 'FORBIDDEN',
-        message: 'Only the organization owner can perform this action',
-      });
-
-    return opts.next({ ctx: { auth: ctx.auth, organization } });
+    return opts.next({ ctx: { ...ctx, organization } });
   });
 
 export type DatabaseType = typeof db;
