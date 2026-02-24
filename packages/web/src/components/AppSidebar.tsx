@@ -33,7 +33,7 @@ export function AppSidebar() {
   const [editingOrg, setEditingOrg] = useState<Organization | null>(null);
 
   // TODO: Fix
-  const user = { id: 'myuser' };
+  const user = null as { id: string } | null;
 
   const createOrganization = useMutation(
     trpc.createOrganization.mutationOptions({
