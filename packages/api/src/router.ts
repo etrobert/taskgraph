@@ -31,6 +31,17 @@ import { graph } from './routers/graph.js';
 import { dragNodes } from './routers/dragNodes.js';
 
 export const appRouter = t.router({
+  signup: publicProcedure
+    .input(
+      z.object({ name: z.string(), password: z.string(), email: z.string() }),
+    )
+    .mutation(async ({ input: { name, password, email } }) => {
+      // TODO: Make the name mandatory in db
+      await db.insert(usersTable).values({ email, name });
+      // TODO: Check wether it'd be smart to create a session already
+      return 'done';
+    }),
+
   users: authenticatedProcedure.query(() => db.select().from(usersTable)),
 
   organizations: publicProcedure.query(async ({ ctx }) => {
