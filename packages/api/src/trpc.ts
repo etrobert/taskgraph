@@ -61,7 +61,13 @@ export const organizationOwnerProcedure = authenticatedProcedure
         message: 'Organization not found',
       });
 
-    return opts.next({ ctx: { ...ctx, organization } });
+    if (organization.ownerId !== ctx.auth.userId)
+      throw new TRPCError({
+        code: 'FORBIDDEN',
+        message: 'Only the organization owner can perform this action',
+      });
+
+    return opts.next({ ctx: { auth: ctx.auth, organization } });
   });
 
 export type DatabaseType = typeof db;
