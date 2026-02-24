@@ -3,6 +3,8 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
 import { cn } from '@/lib/utils';
+import { useTRPC } from '@/utils/trpc';
+import { useMutation } from '@tanstack/react-query';
 
 // TODO: Use shadcn card
 function FullScreenCard({
@@ -28,9 +30,13 @@ export function SignupScreen() {
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
 
+  const trpc = useTRPC();
+
+  const signup = useMutation(trpc.signup.mutationOptions());
+
   const onSubmit: FormEventHandler = (event) => {
     event.preventDefault();
-    // TODO: Perform account creation
+    signup.mutate({ email, name, password });
   };
 
   return (

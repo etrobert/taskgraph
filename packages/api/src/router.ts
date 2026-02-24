@@ -29,6 +29,7 @@ import { groupTasks } from './routers/groupTasks.js';
 import { archiveCompleted } from './routers/archiveCompleted.js';
 import { graph } from './routers/graph.js';
 import { dragNodes } from './routers/dragNodes.js';
+import argon2 from 'argon2';
 
 export const appRouter = t.router({
   signup: publicProcedure
@@ -36,7 +37,10 @@ export const appRouter = t.router({
       z.object({ name: z.string(), password: z.string(), email: z.string() }),
     )
     .mutation(async ({ input: { name, password, email } }) => {
-      await db.insert(usersTable).values({ email, name });
+      const passwordHash = await argon2.hash(password, {
+        type: argon2.argon2id,
+      });
+      await db.insert(usersTable).values({ email, name, passwordHash });
       // TODO: Check wether it'd be smart to create a session already
       return 'done';
     }),

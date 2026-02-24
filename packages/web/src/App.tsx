@@ -63,27 +63,31 @@ function AppContent() {
       ],
     });
   });
+  const showSignup = true; // TODO: Implement
 
   return (
     <TRPCProvider trpcClient={trpcClient} queryClient={queryClient}>
-      <SidebarProvider>
-        <ReactFlowProvider>
-          <AppSidebar />
-          <TaskGraphFlow />
-          <SidebarTrigger className="absolute top-2 left-2" />
-        </ReactFlowProvider>
-      </SidebarProvider>
+      {showSignup ? (
+        <SignupScreen />
+      ) : (
+        <SidebarProvider>
+          <ReactFlowProvider>
+            <AppSidebar />
+            <TaskGraphFlow />
+            <SidebarTrigger className="absolute top-2 left-2" />
+          </ReactFlowProvider>
+        </SidebarProvider>
+      )}
     </TRPCProvider>
   );
 }
 
 function App() {
   const queryClient = getQueryClient();
-  const showSignup = true; // TODO: Implement
 
   return (
     <QueryClientProvider client={queryClient}>
-      {showSignup ? <SignupScreen /> : <AppContent />}
+      <AppContent />
     </QueryClientProvider>
   );
 }
