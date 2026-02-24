@@ -62,6 +62,7 @@ export function AppSidebar() {
         <div className="flex items-center gap-2 px-4 py-2">
           <SidebarTrigger />
           <h1 className="text-lg font-semibold">TaskGraph</h1>
+          {user === null ? <button>Sign in</button> : <button>User</button>}
         </div>
       </SidebarHeader>
       <SidebarContent>
