@@ -29,11 +29,9 @@ export function AppSidebar() {
   const trpc = useTRPC();
   const organizations = useQuery(trpc.organizations.queryOptions());
   const currentOrgId = useOrganizationId();
+  const user = null as { id: string } | null; // TODO: Fix
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [editingOrg, setEditingOrg] = useState<Organization | null>(null);
-
-  // TODO: Fix
-  const user = null as { id: string } | null;
 
   const createOrganization = useMutation(
     trpc.createOrganization.mutationOptions({
