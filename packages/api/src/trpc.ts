@@ -6,7 +6,7 @@ import superjson from 'superjson';
 import { requireEnv } from './requireEnv.js';
 import type { CreateExpressContextOptions } from '@trpc/server/adapters/express';
 import z from 'zod';
-import { organizationsTable, sessionsTable } from './db/schema.js';
+import { organizationsTable, sessionsTable, usersTable } from './db/schema.js';
 
 export const db = drizzle({
   connection: requireEnv('DATABASE_URL'),
@@ -26,23 +26,26 @@ function getCookie(req: CreateExpressContextOptions['req'], name: string) {
   return null;
 }
 
-const getAuth = async (
-  req: CreateExpressContextOptions['req'],
-): Promise<{ userId: string } | null> => {
+const getAuth = async (req: CreateExpressContextOptions['req']) => {
   const token = getCookie(req, 'session');
   if (!token) return null;
 
-  const sessionResponse = await db
-    .select({ userId: sessionsTable.userId })
+  const userResponse = await db
+    .select({
+      id: usersTable.id,
+      email: usersTable.email,
+      name: usersTable.name,
+    })
     .from(sessionsTable)
+    .innerJoin(usersTable, eq(usersTable.id, sessionsTable.userId))
     .where(
       and(eq(sessionsTable.id, token), gt(sessionsTable.expiresAt, new Date())),
     );
 
-  const session = sessionResponse.at(0);
+  const user = userResponse.at(0);
 
-  if (!session) return null;
-  return { userId: session.userId };
+  if (!user) return null;
+  return { user };
 };
 
 // created for each request
@@ -62,8 +65,7 @@ export const publicProcedure = t.procedure;
 
 export const authenticatedProcedure = t.procedure.use(async (opts) => {
   const { ctx } = opts;
-  if (ctx.auth === null || !ctx.auth.userId)
-    throw new TRPCError({ code: 'UNAUTHORIZED' });
+  if (ctx.auth === null) throw new TRPCError({ code: 'UNAUTHORIZED' });
 
   return opts.next({ ctx: { auth: ctx.auth } });
 });
@@ -84,7 +86,7 @@ export const organizationOwnerProcedure = authenticatedProcedure
         message: 'Organization not found',
       });
 
-    if (organization.ownerId !== ctx.auth.userId)
+    if (organization.ownerId !== ctx.auth.user.id)
       throw new TRPCError({
         code: 'FORBIDDEN',
         message: 'Only the organization owner can perform this action',

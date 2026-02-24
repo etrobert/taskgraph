@@ -89,7 +89,7 @@ export const appRouter = t.router({
   users: authenticatedProcedure.query(() => db.select().from(usersTable)),
 
   organizations: publicProcedure.query(async ({ ctx }) => {
-    const userId = ctx.auth?.userId;
+    const userId = ctx.auth?.user.id;
 
     return db
       .select()

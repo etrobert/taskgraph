@@ -125,7 +125,8 @@ export type Organization = typeof organizationsTable.$inferSelect;
 export type Node = typeof nodesTable.$inferSelect;
 export type TaskDetails = typeof taskDetailsTable.$inferSelect;
 export type ProjectDetails = typeof projectDetailsTable.$inferSelect;
-export type User = typeof usersTable.$inferSelect;
+// TODO: Make sure we don't accidentally leak the password hash anywhere
+export type User = Omit<typeof usersTable.$inferSelect, 'passwordHash'>;
 
 export type ExtendedTask = Node &
   TaskDetails & {
