@@ -29,7 +29,7 @@ export const nodeTypeEnum = pgEnum('node_type', ['task', 'project']);
 export const visibilityEnum = pgEnum('visibility', ['public', 'private']);
 
 export const usersTable = pgTable('users', {
-  id: varchar({ length: 255 }).primaryKey(),
+  id: uuid().primaryKey().defaultRandom(),
   email: varchar({ length: 255 }).unique().notNull(),
   name: varchar({ length: 255 }),
   imageUrl: varchar({ length: 500 }),
@@ -39,7 +39,7 @@ export const usersTable = pgTable('users', {
 export const organizationsTable = pgTable('organizations', {
   id: uuid().primaryKey().defaultRandom(),
   name: varchar({ length: 255 }).notNull().default('New Organization'),
-  ownerId: varchar({ length: 255 }).notNull(),
+  ownerId: uuid().notNull(),
   visibility: visibilityEnum().notNull().default('public'),
   createdAt: timestamp().notNull().defaultNow(),
 });
@@ -81,9 +81,7 @@ export const taskDetailsTable = pgTable('task_details', {
   status: statusEnum().notNull(),
   projectId: uuid().references(() => nodesTable.id, { onDelete: 'set null' }),
   description: text(),
-  assignedTo: varchar({ length: 255 }).references(() => usersTable.id, {
-    onDelete: 'set null',
-  }),
+  assignedTo: uuid().references(() => usersTable.id, { onDelete: 'set null' }),
   updatedAt: timestamp()
     .notNull()
     .defaultNow()
