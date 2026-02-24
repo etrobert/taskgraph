@@ -30,7 +30,8 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(cors());
+const webOrigin = process.env.WEB_ORIGIN ?? 'http://localhost:5173';
+app.use(cors({ origin: webOrigin, credentials: true }));
 app.use(express.json());
 
 app.use(

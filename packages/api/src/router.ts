@@ -10,6 +10,7 @@ import {
   edgesTable,
   organizationsUpdateSchema,
   usersTable,
+  sessionsTable,
 } from './db/schema.js';
 import { eq, inArray, or } from 'drizzle-orm';
 import {
@@ -20,6 +21,7 @@ import {
   organizationOwnerProcedure,
   authenticatedProcedure,
 } from './trpc.js';
+import { TRPCError } from '@trpc/server';
 import z from 'zod';
 import { on } from 'node:events';
 import { createTaskFrom } from './routers/createTaskFrom.js';
@@ -44,6 +46,45 @@ export const appRouter = t.router({
       // TODO: Check wether it'd be smart to create a session already
       return 'done';
     }),
+
+  login: publicProcedure
+    .input(z.object({ email: z.string(), password: z.string() }))
+    .mutation(async ({ input: { email, password }, ctx: { res } }) => {
+      if (res === null) throw new Error('unexpected null res');
+
+      const userResponse = await db
+        .select({
+          id: usersTable.id,
+          passwordHash: usersTable.passwordHash,
+        })
+        .from(usersTable)
+        .where(eq(usersTable.email, email));
+
+      const user = userResponse.at(0);
+
+      if (!user || !user.passwordHash)
+        throw new TRPCError({ code: 'UNAUTHORIZED' });
+
+      const ok = await argon2.verify(user.passwordHash, password);
+      if (!ok) throw new TRPCError({ code: 'UNAUTHORIZED' });
+
+      const expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 24 * 30);
+      const [session] = await db
+        .insert(sessionsTable)
+        .values({ userId: user.id, expiresAt })
+        .returning({ id: sessionsTable.id });
+
+      res.cookie('session', session.id, {
+        httpOnly: true,
+        sameSite: 'lax',
+        secure: process.env.NODE_ENV === 'production',
+        expires: expiresAt,
+      });
+
+      return 'done';
+    }),
+
+  me: publicProcedure.query(async ({ ctx: { auth } }) => auth),
 
   users: authenticatedProcedure.query(() => db.select().from(usersTable)),
 

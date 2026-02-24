@@ -36,6 +36,15 @@ export const usersTable = pgTable('users', {
   createdAt: timestamp().notNull().defaultNow(),
 });
 
+export const sessionsTable = pgTable('sessions', {
+  id: uuid().primaryKey().defaultRandom(),
+  userId: uuid()
+    .notNull()
+    .references(() => usersTable.id, { onDelete: 'cascade' }),
+  expiresAt: timestamp().notNull(),
+  createdAt: timestamp().notNull().defaultNow(),
+});
+
 export const organizationsTable = pgTable('organizations', {
   id: uuid().primaryKey().defaultRandom(),
   name: varchar({ length: 255 }).notNull().default('New Organization'),

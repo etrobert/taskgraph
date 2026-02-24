@@ -1,12 +1,12 @@
 import { initTRPC, TRPCError } from '@trpc/server';
 import { drizzle } from 'drizzle-orm/node-postgres';
-import { eq } from 'drizzle-orm';
+import { and, eq, gt } from 'drizzle-orm';
 import EventEmitter from 'node:events';
 import superjson from 'superjson';
 import { requireEnv } from './requireEnv.js';
 import type { CreateExpressContextOptions } from '@trpc/server/adapters/express';
 import z from 'zod';
-import { organizationsTable } from './db/schema.js';
+import { organizationsTable, sessionsTable } from './db/schema.js';
 
 export const db = drizzle({
   connection: requireEnv('DATABASE_URL'),
@@ -15,20 +15,43 @@ export const db = drizzle({
 
 export const ee = new EventEmitter();
 
-const getAuth = (
-  // @ts-expect-error - we will implement this later
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  req: CreateExpressContextOptions['req'],
-): { userId: string } | null => {
+function getCookie(req: CreateExpressContextOptions['req'], name: string) {
+  const header = req.headers.cookie;
+  if (!header) return null;
+  const parts = header.split(';');
+  for (const part of parts) {
+    const [key, ...rest] = part.trim().split('=');
+    if (key === name) return decodeURIComponent(rest.join('='));
+  }
   return null;
+}
+
+const getAuth = async (
+  req: CreateExpressContextOptions['req'],
+): Promise<{ userId: string } | null> => {
+  const token = getCookie(req, 'session');
+  if (!token) return null;
+
+  const sessionResponse = await db
+    .select({ userId: sessionsTable.userId })
+    .from(sessionsTable)
+    .where(
+      and(eq(sessionsTable.id, token), gt(sessionsTable.expiresAt, new Date())),
+    );
+
+  const session = sessionResponse.at(0);
+
+  if (!session) return null;
+  return { userId: session.userId };
 };
 
 // created for each request
-export const createContext = (opts: CreateExpressContextOptions) => ({
-  auth: getAuth(opts.req),
+export const createContext = async (opts: CreateExpressContextOptions) => ({
+  auth: await getAuth(opts.req),
+  res: opts.res,
 });
 
-export const createWSContext = () => ({ auth: null });
+export const createWSContext = () => ({ auth: null, res: null });
 
 type Context = Awaited<
   ReturnType<typeof createContext> | ReturnType<typeof createWSContext>
