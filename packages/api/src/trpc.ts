@@ -6,6 +6,7 @@ import superjson from 'superjson';
 import { requireEnv } from './requireEnv.js';
 import z from 'zod';
 import { organizationsTable } from './db/schema.js';
+import { CreateExpressContextOptions } from '@trpc/server/adapters/express';
 
 export const db = drizzle({
   connection: requireEnv('DATABASE_URL'),
@@ -14,12 +15,20 @@ export const db = drizzle({
 
 export const ee = new EventEmitter();
 
+const getAuth = (
+  // @ts-expect-error - we will implement this later
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  req: CreateExpressContextOptions['req'],
+): { userId: string } | null => {
+  return null;
+};
+
 // created for each request
-export const createContext = () => ({
-  auth: null,
+export const createContext = (opts: CreateExpressContextOptions) => ({
+  auth: getAuth(opts.req),
 });
 
-export const createWSContext = () => ({ auth: { userId: 'guest' } });
+export const createWSContext = () => ({ auth: null });
 
 type Context = Awaited<
   ReturnType<typeof createContext> | ReturnType<typeof createWSContext>
