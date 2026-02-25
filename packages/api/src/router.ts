@@ -39,6 +39,7 @@ const hashPassword = (password: string) =>
   });
 
 export const appRouter = t.router({
+  // TODO: Require min length for password
   signup: publicProcedure
     .input(
       z.object({ name: z.string(), password: z.string(), email: z.string() }),
