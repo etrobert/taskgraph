@@ -90,10 +90,11 @@ export const appRouter = t.router({
         .values({ userId: user.id, expiresAt })
         .returning({ id: sessionsTable.id });
 
+      const isProd = process.env.NODE_ENV === 'production';
       res.cookie('session', session.id, {
         httpOnly: true,
-        sameSite: 'lax',
-        secure: process.env.NODE_ENV === 'production',
+        sameSite: isProd ? 'none' : 'lax',
+        secure: isProd,
         expires: expiresAt,
       });
 
