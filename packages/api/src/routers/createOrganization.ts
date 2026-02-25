@@ -9,7 +9,7 @@ export const createOrganization = authenticatedProcedure.mutation(
   async ({ ctx: { auth } }) => {
     const [organization] = await db
       .insert(organizationsTable)
-      .values({ name: 'New Organization', ownerId: auth.userId })
+      .values({ name: 'New Organization', ownerId: auth.user.id })
       .returning();
 
     // Create a default task for the new organization

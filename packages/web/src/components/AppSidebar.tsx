@@ -29,7 +29,7 @@ export function AppSidebar() {
   const trpc = useTRPC();
   const organizations = useQuery(trpc.organizations.queryOptions());
   const currentOrgId = useOrganizationId();
-  const user = null as { id: string } | null; // TODO: Fix
+  const session = useQuery(trpc.me.queryOptions());
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [editingOrg, setEditingOrg] = useState<Organization | null>(null);
 
@@ -60,7 +60,11 @@ export function AppSidebar() {
         <div className="flex items-center gap-2 px-4 py-2">
           <SidebarTrigger />
           <h1 className="text-lg font-semibold">TaskGraph</h1>
-          {user === null ? <button>Sign in</button> : <button>User</button>}
+          {session.data?.user ? (
+            <button>{session.data.user.name}</button>
+          ) : (
+            <button>Sign in</button>
+          )}
         </div>
       </SidebarHeader>
       <SidebarContent>
@@ -77,7 +81,7 @@ export function AppSidebar() {
                     <Building2 size={16} />
                     <span>{organization.name}</span>
                   </SidebarMenuButton>
-                  {user?.id === organization.ownerId && (
+                  {session.data?.user?.id === organization.ownerId && (
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <SidebarMenuAction>

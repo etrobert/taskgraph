@@ -31,7 +31,17 @@ export const visibilityEnum = pgEnum('visibility', ['public', 'private']);
 export const usersTable = pgTable('users', {
   id: uuid().primaryKey().defaultRandom(),
   email: varchar({ length: 255 }).unique().notNull(),
+  passwordHash: varchar({ length: 255 }),
   name: varchar({ length: 255 }).notNull(),
+  createdAt: timestamp().notNull().defaultNow(),
+});
+
+export const sessionsTable = pgTable('sessions', {
+  id: uuid().primaryKey().defaultRandom(),
+  userId: uuid()
+    .notNull()
+    .references(() => usersTable.id, { onDelete: 'cascade' }),
+  expiresAt: timestamp().notNull(),
   createdAt: timestamp().notNull().defaultNow(),
 });
 
@@ -115,7 +125,8 @@ export type Organization = typeof organizationsTable.$inferSelect;
 export type Node = typeof nodesTable.$inferSelect;
 export type TaskDetails = typeof taskDetailsTable.$inferSelect;
 export type ProjectDetails = typeof projectDetailsTable.$inferSelect;
-export type User = typeof usersTable.$inferSelect;
+// TODO: Make sure we don't accidentally leak the password hash anywhere
+export type User = Omit<typeof usersTable.$inferSelect, 'passwordHash'>;
 
 export type ExtendedTask = Node &
   TaskDetails & {

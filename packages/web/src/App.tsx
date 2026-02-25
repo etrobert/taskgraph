@@ -1,10 +1,16 @@
 import { ReactFlowProvider } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { TaskGraphFlow } from './components/flow/TaskGraphFlow';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { TRPCProvider } from './utils/trpc';
+import {
+  QueryClient,
+  QueryClientProvider,
+  useQuery,
+} from '@tanstack/react-query';
+import { TRPCProvider, useTRPC } from './utils/trpc';
 import { SidebarProvider, SidebarTrigger } from './components/ui/sidebar';
 import { AppSidebar } from './components/AppSidebar';
+import { SignupScreen } from './components/SignupScreen';
+import { LoginScreen } from './components/LoginScreen';
 import {
   createTRPCClient,
   httpBatchLink,
@@ -37,7 +43,7 @@ function getQueryClient() {
   }
 }
 
-function AppContent() {
+function TrpcWrapper() {
   const queryClient = getQueryClient();
   const [trpcClient] = useState(() => {
     // For now, WebSocket connections are not authenticated
@@ -57,6 +63,9 @@ function AppContent() {
           false: httpBatchLink({
             url: `${dev ? 'http' : 'https'}://${apiUrl}/trpc`,
             transformer: superjson,
+            fetch(url, options) {
+              return fetch(url, { ...options, credentials: 'include' });
+            },
           }),
         }),
       ],
@@ -65,14 +74,30 @@ function AppContent() {
 
   return (
     <TRPCProvider trpcClient={trpcClient} queryClient={queryClient}>
-      <SidebarProvider>
-        <ReactFlowProvider>
-          <AppSidebar />
-          <TaskGraphFlow />
-          <SidebarTrigger className="absolute top-2 left-2" />
-        </ReactFlowProvider>
-      </SidebarProvider>
+      <AppContent />
     </TRPCProvider>
+  );
+}
+
+function AppContent() {
+  const trpc = useTRPC();
+  const me = useQuery(trpc.me.queryOptions());
+  const showSignup = false; // TODO: Implement
+
+  if (me.isLoading) return <div>Loading...</div>;
+  if (me.error) return <div>Error: {me.error.message}</div>;
+
+  // Not logged in
+  if (me.data === null) return showSignup ? <SignupScreen /> : <LoginScreen />;
+
+  return (
+    <SidebarProvider>
+      <ReactFlowProvider>
+        <AppSidebar />
+        <TaskGraphFlow />
+        <SidebarTrigger className="absolute top-2 left-2" />
+      </ReactFlowProvider>
+    </SidebarProvider>
   );
 }
 
@@ -81,7 +106,7 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <AppContent />
+      <TrpcWrapper />
     </QueryClientProvider>
   );
 }
