@@ -11,6 +11,7 @@ import {
   organizationsUpdateSchema,
   usersTable,
   sessionsTable,
+  usersInsertSchema,
 } from './db/schema.js';
 import { eq, inArray, or } from 'drizzle-orm';
 import {
@@ -33,17 +34,33 @@ import { graph } from './routers/graph.js';
 import { dragNodes } from './routers/dragNodes.js';
 import argon2 from 'argon2';
 
+const hashPassword = (password: string) =>
+  argon2.hash(password, {
+    type: argon2.argon2id,
+  });
+
 export const appRouter = t.router({
   signup: publicProcedure
     .input(
       z.object({ name: z.string(), password: z.string(), email: z.string() }),
     )
     .mutation(async ({ input: { name, password, email } }) => {
-      const passwordHash = await argon2.hash(password, {
-        type: argon2.argon2id,
-      });
+      const passwordHash = await hashPassword(password);
       await db.insert(usersTable).values({ email, name, passwordHash });
       // TODO: Check wether it'd be smart to create a session already
+      return 'done';
+    }),
+
+  // TODO: Make safe
+  // TODO: Error when there are no matching users
+  assignPassword: publicProcedure
+    .input(z.object({ email: z.string(), password: z.string() }))
+    .mutation(async ({ input: { email, password } }) => {
+      await db
+        .update(usersTable)
+        .set({ passwordHash: await hashPassword(password) })
+        .where(eq(usersTable.email, email));
+
       return 'done';
     }),
 
