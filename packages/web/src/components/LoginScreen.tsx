@@ -4,7 +4,7 @@ import { Input } from './ui/input';
 import { Label } from './ui/label';
 import { cn } from '@/lib/utils';
 import { useTRPC } from '@/utils/trpc';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 
 // TODO: Use shadcn card
 function FullScreenCard({
@@ -31,10 +31,6 @@ export function LoginScreen() {
 
   const trpc = useTRPC();
   const login = useMutation(trpc.login.mutationOptions());
-
-  const me = useQuery(trpc.me.queryOptions());
-
-  console.log('me', me.data);
 
   const onSubmit: FormEventHandler = (event) => {
     event.preventDefault();
