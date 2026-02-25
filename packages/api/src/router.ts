@@ -11,7 +11,6 @@ import {
   organizationsUpdateSchema,
   usersTable,
   sessionsTable,
-  usersInsertSchema,
 } from './db/schema.js';
 import { eq, inArray, or } from 'drizzle-orm';
 import {
