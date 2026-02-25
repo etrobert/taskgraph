@@ -38,6 +38,20 @@ const hashPassword = (password: string) =>
     type: argon2.argon2id,
   });
 
+const adminRouter = t.router({
+  // TODO: Error when there are no matching users
+  assignPassword: publicProcedure
+    .input(z.object({ email: z.string(), password: z.string() }))
+    .mutation(async ({ input: { email, password } }) => {
+      await db
+        .update(usersTable)
+        .set({ passwordHash: await hashPassword(password) })
+        .where(eq(usersTable.email, email));
+
+      return 'done';
+    }),
+});
+
 export const appRouter = t.router({
   // TODO: Require min length for password
   signup: publicProcedure
@@ -48,19 +62,6 @@ export const appRouter = t.router({
       const passwordHash = await hashPassword(password);
       await db.insert(usersTable).values({ email, name, passwordHash });
       // TODO: Check wether it'd be smart to create a session already
-      return 'done';
-    }),
-
-  // TODO: Make safe
-  // TODO: Error when there are no matching users
-  assignPassword: publicProcedure
-    .input(z.object({ email: z.string(), password: z.string() }))
-    .mutation(async ({ input: { email, password } }) => {
-      await db
-        .update(usersTable)
-        .set({ passwordHash: await hashPassword(password) })
-        .where(eq(usersTable.email, email));
-
       return 'done';
     }),
 
@@ -214,6 +215,8 @@ export const appRouter = t.router({
       yield 'update';
     }
   }),
+
+  ...(process.env.NODE_ENV === 'development' ? { admin: adminRouter } : {}),
 });
 
 export type AppRouter = typeof appRouter;
