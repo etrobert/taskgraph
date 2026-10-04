@@ -6,7 +6,7 @@ export function useCreateOrganization() {
   return useMutation(
     trpc.createOrganization.mutationOptions({
       onSuccess: (organization) => {
-        window.location.search = `?org=${organization.id}`;
+        window.location.assign(`?org=${organization.id}`);
       },
     }),
   );

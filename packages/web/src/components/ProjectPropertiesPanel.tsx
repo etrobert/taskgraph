@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useTRPC } from '../utils/trpc';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Input } from './ui/input';
 import { useOrganizationId } from '@/hooks/useOrganizationId';
 import {
@@ -38,24 +38,12 @@ export function ProjectPropertiesPanel({
     ),
   );
 
-  const [lastKeystroke, setLastKeystroke] = useState(0);
-  const [projectName, setProjectName] = useState('');
+  const [draftName, setDraftName] = useState<string>();
 
   const updateProjectDetails = useMutation(
     trpc.updateProjectDetails.mutationOptions(),
   );
   const updateNode = useMutation(trpc.updateNode.mutationOptions());
-
-  useEffect(() => {
-    if (graph === undefined) return;
-
-    const selectedProject = graph.projects.find(
-      (project) => project.id === selectedNode.id,
-    );
-    if (selectedProject && Date.now() - lastKeystroke >= 1000) {
-      setProjectName(selectedProject.name);
-    }
-  }, [graph, lastKeystroke, selectedNode]);
 
   if (graph === undefined) return null;
 
@@ -74,15 +62,15 @@ export function ProjectPropertiesPanel({
             <Input
               id="project-name"
               type="text"
-              value={projectName}
+              value={draftName ?? selectedProject.name}
               onChange={(e) => {
-                setLastKeystroke(Date.now());
-                setProjectName(e.target.value);
+                setDraftName(e.target.value);
                 updateNode.mutate({
                   id: selectedProject.id,
                   updates: { name: e.target.value },
                 });
               }}
+              onBlur={() => setDraftName(undefined)}
             />
             <Label htmlFor="project-status">Status</Label>
             <Select

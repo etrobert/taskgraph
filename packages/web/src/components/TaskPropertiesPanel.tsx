@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useTRPC } from '../utils/trpc';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Input } from './ui/input';
 import { useOrganizationId } from '@/hooks/useOrganizationId';
 import {
@@ -46,26 +46,13 @@ export function TaskPropertiesPanel({
     ),
   );
 
-  const [lastKeystroke, setLastKeystroke] = useState(0);
-  const [taskName, setTaskName] = useState('');
-  const [taskDescription, setTaskDescription] = useState('');
+  const [draftName, setDraftName] = useState<string>();
+  const [draftDescription, setDraftDescription] = useState<string>();
 
   const updateNode = useMutation(trpc.updateNode.mutationOptions());
   const updateTaskDetails = useMutation(
     trpc.updateTaskDetails.mutationOptions(),
   );
-
-  useEffect(() => {
-    if (graph === undefined) return;
-
-    const selectedTask = graph.tasks.find(
-      (task) => task.id === selectedNode.id,
-    );
-    if (selectedTask && Date.now() - lastKeystroke >= 1000) {
-      setTaskName(selectedTask.name);
-      setTaskDescription(selectedTask.description ?? '');
-    }
-  }, [graph, lastKeystroke, selectedNode]);
 
   if (graph === undefined) return null;
 
@@ -83,15 +70,15 @@ export function TaskPropertiesPanel({
             <Input
               id="task-name"
               type="text"
-              value={taskName}
+              value={draftName ?? selectedTask.name}
               onChange={(e) => {
-                setLastKeystroke(Date.now());
-                setTaskName(e.target.value);
+                setDraftName(e.target.value);
                 updateNode.mutate({
                   id: selectedTask.id,
                   updates: { name: e.target.value },
                 });
               }}
+              onBlur={() => setDraftName(undefined)}
             />
             <Label>Status</Label>
             <Select
@@ -149,15 +136,15 @@ export function TaskPropertiesPanel({
             <Label htmlFor="task-description">Description</Label>
             <textarea
               id="task-description"
-              value={taskDescription}
+              value={draftDescription ?? selectedTask.description ?? ''}
               onChange={(e) => {
-                setLastKeystroke(Date.now());
-                setTaskDescription(e.target.value);
+                setDraftDescription(e.target.value);
                 updateTaskDetails.mutate({
                   nodeId: selectedTask.id,
                   updates: { description: e.target.value },
                 });
               }}
+              onBlur={() => setDraftDescription(undefined)}
               className="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive min-h-[6rem] w-full min-w-0 rounded-md border bg-transparent px-3 py-2 text-base shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
             />
 

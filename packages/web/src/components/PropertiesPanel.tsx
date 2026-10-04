@@ -36,10 +36,17 @@ function PropertiesPanelContent({ selection }: PropertiesPanelProps) {
   const selectedNode = selection.nodes[0];
 
   if (selectedNode.type === 'task')
-    return <TaskPropertiesPanel selectedNode={selectedNode} />;
+    return (
+      <TaskPropertiesPanel key={selectedNode.id} selectedNode={selectedNode} />
+    );
 
   if (selectedNode?.type === 'project')
-    return <ProjectPropertiesPanel selectedNode={selectedNode} />;
+    return (
+      <ProjectPropertiesPanel
+        key={selectedNode.id}
+        selectedNode={selectedNode}
+      />
+    );
 }
 
 export function PropertiesPanel({ selection }: PropertiesPanelProps) {
