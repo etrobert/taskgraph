@@ -33,13 +33,9 @@
             runHook preInstall
             npm prune --omit=dev
             app=$out/libexec/taskgraph
-            mkdir -p $app/packages/api $app/packages/web
+            mkdir -p $app/packages/web
             cp -r node_modules package.json $app/
-            cp -r packages/api/dist packages/api/drizzle packages/api/package.json $app/packages/api/
-            # npm creates it only for deps that cannot be hoisted to the root
-            if [ -d packages/api/node_modules ]; then
-              cp -r packages/api/node_modules $app/packages/api/
-            fi
+            cp -r packages/api $app/packages/
             cp -r packages/web/dist $app/packages/web/
             makeWrapper ${pkgs.nodejs}/bin/node $out/bin/taskgraph \
               --add-flags $app/packages/api/dist/index.js \
