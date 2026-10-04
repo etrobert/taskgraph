@@ -11,20 +11,26 @@ const squaredDistance = (
   (point2.y - point1.y) * (point2.y - point1.y) +
   (point2.x - point1.x) * (point2.x - point1.x);
 
+const pointer = (event: MouseEvent | TouchEvent) => {
+  const { clientX, clientY } =
+    'changedTouches' in event ? event.changedTouches[0] : event;
+  return { x: clientX, y: clientY };
+};
+
 export function useNodeDrag(organizationId: string | undefined) {
   const trpc = useTRPC();
   const [nodeDragStartPos, setNodeDragStartPos] = useState({ x: 0, y: 0 });
   const dragNodes = useMutation(trpc.dragNodes.mutationOptions());
 
   const onNodeDragStart: OnNodeDrag<NodeType> = (event) => {
-    setNodeDragStartPos({ x: event.clientX, y: event.clientY });
+    setNodeDragStartPos(pointer(event));
   };
 
   const onNodeDragStop: OnNodeDrag<NodeType> = (event, _, nodes) => {
     if (!organizationId) return;
     // Only update position if it was a significant drag (not just a click)
-    const cursorPos = { x: event.clientX, y: event.clientY };
-    const wasDraggedFar = squaredDistance(nodeDragStartPos, cursorPos) >= 200;
+    const wasDraggedFar =
+      squaredDistance(nodeDragStartPos, pointer(event)) >= 200;
 
     if (!wasDraggedFar) return;
 
