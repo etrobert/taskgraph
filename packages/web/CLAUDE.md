@@ -12,7 +12,8 @@ This file provides guidance for working with the TaskGraph web frontend package.
 - `npm run build` - Build for production (TypeScript compilation + Vite build)
 - `npm run lint` - Run ESLint on all files
 - `npm run format` - Format code with Prettier (includes Tailwind class sorting)
-- `npm run start` - Preview production build locally
+
+`npm run dev` proxies `/trpc` to the API on port 3001.
 
 ## Technology Stack
 

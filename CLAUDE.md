@@ -27,6 +27,7 @@ TaskGraph is a monorepo with two packages:
 - `npm run build` - Build both packages
 - `npm run build:web` - Build web package only
 - `npm run build:api` - Build API package only
+- `npm run start` - Serve the API and the built web app from one process
 - `npm run format` - Format code in all packages
 - `npm run format:check` - Check formatting in all packages
 
@@ -36,18 +37,25 @@ TaskGraph is a monorepo with two packages:
 - `npm run build` - Build for production (TypeScript compilation + Vite build)
 - `npm run lint` - Run ESLint on all files
 - `npm run format` - Format code with Prettier (includes Tailwind class sorting)
-- `npm run start` - Preview production build locally
 
 ### API Package Commands (packages/api)
 
 - `npm run dev` - Start API development server with hot reload
 - `npm run build` - Compile TypeScript to JavaScript
-- `npm run start` - Start production API server
+- `npm run start` - Start production server
 - `npm run lint` - Run ESLint on all files
 - `npm run format` - Format code with Prettier
+- `npm run db:generate` - Write a migration after changing `src/db/schema.ts`;
+  the server applies pending migrations at startup
 - `npm run cli [command]` - Run tRPC CLI commands (e.g.,
   `npm run cli organizations`)
 - `./cli.ts [command]` - Direct execution of tRPC CLI
+
+## Deployment
+
+`flake.nix` packages the server with the built web app, and `module.nix`
+(`nixosModules.default`) runs it against a local PostgreSQL. `etrobert/setup`
+imports the module on tower.
 
 ## Architecture Overview
 

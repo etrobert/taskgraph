@@ -6,7 +6,7 @@ This file provides guidance for working with the TaskGraph API package.
 
 - `npm run dev` - Start API development server with hot reload
 - `npm run build` - Compile TypeScript to JavaScript
-- `npm run start` - Start production API server
+- `npm run start` - Start production server, also serving `../web/dist`
 - `npm run lint` - Run ESLint on all files
 - `npm run format` - Format code with Prettier
 - `npm run cli [command]` - Run tRPC CLI commands (e.g., `npm run cli organizations`)
@@ -17,7 +17,6 @@ This file provides guidance for working with the TaskGraph API package.
 - **tRPC**: Type-safe API with automatic client generation
 - **PostgreSQL**: Primary database with Drizzle ORM
 - **Express**: HTTP server with WebSocket support for real-time updates
-- **Railway**: Database hosting
 - **Zod**: Runtime type validation
 
 ## Key Features
