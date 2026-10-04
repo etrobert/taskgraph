@@ -17,10 +17,10 @@ const simpleMove = (tx: TransactionType, nodeId: string, position: Point) =>
 export const dragNodes = publicProcedure
   .input(
     z.object({
-      organizationId: z.string().uuid(),
+      organizationId: z.uuid(),
       nodes: z.array(
         z.object({
-          nodeId: z.string().uuid(),
+          nodeId: z.uuid(),
           position: z.object({ x: z.number(), y: z.number() }),
         }),
       ),

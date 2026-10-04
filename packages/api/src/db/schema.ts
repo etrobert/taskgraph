@@ -9,7 +9,6 @@ import {
   timestamp,
   text,
 } from 'drizzle-orm/pg-core';
-// See https://github.com/drizzle-team/drizzle-orm/issues/4803
 import {
   createInsertSchema,
   createSelectSchema,
