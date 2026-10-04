@@ -19,7 +19,9 @@ export default defineConfig({
       api: path.resolve(__dirname, '../api/src'),
     },
   },
-  preview: {
-    allowedHosts: ['graph.etiennerobert.com'],
+  server: {
+    proxy: {
+      '/trpc': { target: 'http://localhost:3001', ws: true },
+    },
   },
 });

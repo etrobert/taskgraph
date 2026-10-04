@@ -1,16 +1,23 @@
 import express from 'express';
-import cors from 'cors';
 import { createServer } from 'http';
+import { fileURLToPath } from 'node:url';
 import { WebSocketServer } from 'ws';
 import { applyWSSHandler } from '@trpc/server/adapters/ws';
+import { migrate } from 'drizzle-orm/node-postgres/migrator';
 
 import * as trpcExpress from '@trpc/server/adapters/express';
 
 import 'dotenv/config';
-import { createContext, createWSContext } from './trpc.js';
+import { createContext, createWSContext, db } from './trpc.js';
 import { appRouter } from './router.js';
 
 export type AppRouter = typeof appRouter;
+
+// Resolved from this file so src/ under tsx and dist/ under node agree.
+const migrationsFolder = fileURLToPath(new URL('../drizzle', import.meta.url));
+const webDist = fileURLToPath(new URL('../../web/dist', import.meta.url));
+
+await migrate(db, { migrationsFolder });
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -30,8 +37,6 @@ app.use((req, res, next) => {
   next();
 });
 
-const webOrigin = process.env.WEB_ORIGIN ?? 'http://localhost:5173';
-app.use(cors({ origin: webOrigin, credentials: true }));
 app.use(express.json());
 
 app.use(
@@ -57,6 +62,9 @@ app.use('/panel', async (_, res) => {
     }),
   );
 });
+
+app.use(express.static(webDist));
+app.get('*', (_, res) => res.sendFile(`${webDist}/index.html`));
 
 // Create HTTP server
 const server = createServer(app);

@@ -10,12 +10,12 @@
     "lint": "eslint src/",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "cli": "NODE_ENV=development tsx cli.ts"
+    "cli": "NODE_ENV=development tsx cli.ts",
+    "db:generate": "drizzle-kit generate"
   },
   "dependencies": {
     "@trpc/server": "^11.5.1",
     "argon2": "^0.44.0",
-    "cors": "^2.8.6",
     "dotenv": "^17.2.2",
     "drizzle-orm": "^0.45.1",
     "drizzle-zod": "^0.6.1",
@@ -28,7 +28,6 @@
     "zod": "^3.25.76"
   },
   "devDependencies": {
-    "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
     "@types/node": "^22.9.1",
     "@types/pg": "^8.15.5",

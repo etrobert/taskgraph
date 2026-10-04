@@ -19,12 +19,8 @@ import {
 } from '@trpc/client';
 import { useState } from 'react';
 import superjson from 'superjson';
-import { requireEnv } from './utils/requireEnv';
 import { createWSClient } from '@trpc/client';
 import type { AppRouter } from 'api/src/index';
-
-const apiUrl = requireEnv('VITE_API_URL');
-const dev = import.meta.env.DEV;
 
 function makeQueryClient() {
   return new QueryClient({
@@ -48,7 +44,7 @@ function TrpcWrapper() {
   const [trpcClient] = useState(() => {
     // For now, WebSocket connections are not authenticated
     const wsClient = createWSClient({
-      url: `${dev ? 'ws' : 'wss'}://${apiUrl}`,
+      url: `${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.host}/trpc`,
       onOpen: () => console.log('🟢 WS Connected'),
       onClose: (cause) => console.log('🔴 WS Disconnected', cause),
     });
@@ -61,11 +57,8 @@ function TrpcWrapper() {
             transformer: superjson,
           }),
           false: httpBatchLink({
-            url: `${dev ? 'http' : 'https'}://${apiUrl}/trpc`,
+            url: '/trpc',
             transformer: superjson,
-            fetch(url, options) {
-              return fetch(url, { ...options, credentials: 'include' });
-            },
           }),
         }),
       ],

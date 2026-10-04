@@ -48,11 +48,10 @@ export const login = publicProcedure
       .values({ userId: user.id, expiresAt })
       .returning({ id: sessionsTable.id });
 
-    const isProd = process.env.NODE_ENV === 'production';
     res.cookie('session', session.id, {
       httpOnly: true,
-      sameSite: isProd ? 'none' : 'lax',
-      secure: isProd,
+      sameSite: 'lax',
+      secure: process.env.NODE_ENV === 'production',
       expires: expiresAt,
     });
 
