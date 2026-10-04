@@ -2,34 +2,37 @@ import {
   nodesTable,
   organizationsTable,
   taskDetailsTable,
+  usersTable,
 } from '../db/schema.js';
-import { db, ee, authenticatedProcedure } from '../trpc.js';
+import { db, ee, publicProcedure } from '../trpc.js';
 
-export const createOrganization = authenticatedProcedure.mutation(
-  async ({ ctx: { auth } }) => {
-    const [organization] = await db
-      .insert(organizationsTable)
-      .values({ name: 'New Organization', ownerId: auth.user.id })
-      .returning();
+export const createOrganization = publicProcedure.mutation(async () => {
+  const [organization] = await db
+    .insert(organizationsTable)
+    .values({ name: 'New Organization' })
+    .returning();
 
-    // Create a default task for the new organization
-    const [node] = await db
-      .insert(nodesTable)
-      .values({
-        type: 'task',
-        organizationId: organization.id,
-        name: 'Welcome to TaskGraph!',
-        position: { x: 0, y: 0 },
-      })
-      .returning();
+  await db
+    .insert(usersTable)
+    .values({ organizationId: organization.id, name: 'Claude', isAi: true });
 
-    await db.insert(taskDetailsTable).values({
-      nodeId: node.id,
-      status: 'pending',
-    });
+  // Create a default task for the new organization
+  const [node] = await db
+    .insert(nodesTable)
+    .values({
+      type: 'task',
+      organizationId: organization.id,
+      name: 'Welcome to TaskGraph!',
+      position: { x: 0, y: 0 },
+    })
+    .returning();
 
-    ee.emit('update');
+  await db.insert(taskDetailsTable).values({
+    nodeId: node.id,
+    status: 'pending',
+  });
 
-    return organization;
-  },
-);
+  ee.emit('update');
+
+  return organization;
+});

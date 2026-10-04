@@ -1,4 +1,5 @@
 import {
+  boolean,
   pgEnum,
   pgTable,
   point,
@@ -26,32 +27,20 @@ export type Status = (typeof statusValues)[number];
 
 export const nodeTypeEnum = pgEnum('node_type', ['task', 'project']);
 
-export const visibilityEnum = pgEnum('visibility', ['public', 'private']);
-
-export const usersTable = pgTable('users', {
-  id: uuid().primaryKey().defaultRandom(),
-  email: varchar({ length: 255 }).unique().notNull(),
-  passwordHash: varchar({ length: 255 }),
-  name: varchar({ length: 255 }).notNull(),
-  createdAt: timestamp().notNull().defaultNow(),
-});
-
-export const sessionsTable = pgTable('sessions', {
-  id: uuid().primaryKey().defaultRandom(),
-  userId: uuid()
-    .notNull()
-    .references(() => usersTable.id, { onDelete: 'cascade' }),
-  expiresAt: timestamp().notNull(),
-  createdAt: timestamp().notNull().defaultNow(),
-});
-
+// The id is the secret: whoever has the link can read and edit.
 export const organizationsTable = pgTable('organizations', {
   id: uuid().primaryKey().defaultRandom(),
   name: varchar({ length: 255 }).notNull().default('New Organization'),
-  ownerId: uuid()
+  createdAt: timestamp().notNull().defaultNow(),
+});
+
+export const usersTable = pgTable('users', {
+  id: uuid().primaryKey().defaultRandom(),
+  organizationId: uuid()
     .notNull()
-    .references(() => usersTable.id),
-  visibility: visibilityEnum().notNull().default('public'),
+    .references(() => organizationsTable.id, { onDelete: 'cascade' }),
+  name: varchar({ length: 255 }).notNull(),
+  isAi: boolean().notNull().default(false),
   createdAt: timestamp().notNull().defaultNow(),
 });
 
@@ -119,14 +108,12 @@ export const projectDetailsInsertSchema =
   createInsertSchema(projectDetailsTable);
 export const edgeInsertSchema = createInsertSchema(edgesTable);
 export const organizationsUpdateSchema = createUpdateSchema(organizationsTable);
-export const usersInsertSchema = createInsertSchema(usersTable);
 
 export type Organization = typeof organizationsTable.$inferSelect;
 export type Node = typeof nodesTable.$inferSelect;
 export type TaskDetails = typeof taskDetailsTable.$inferSelect;
 export type ProjectDetails = typeof projectDetailsTable.$inferSelect;
-// TODO: Make sure we don't accidentally leak the password hash anywhere
-export type User = Omit<typeof usersTable.$inferSelect, 'passwordHash'>;
+export type User = typeof usersTable.$inferSelect;
 
 export type ExtendedTask = Node &
   TaskDetails & {

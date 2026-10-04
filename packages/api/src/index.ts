@@ -8,7 +8,7 @@ import { migrate } from 'drizzle-orm/node-postgres/migrator';
 import * as trpcExpress from '@trpc/server/adapters/express';
 
 import 'dotenv/config';
-import { createContext, createWSContext, db } from './trpc.js';
+import { db } from './trpc.js';
 import { appRouter } from './router.js';
 
 export type AppRouter = typeof appRouter;
@@ -39,10 +39,7 @@ app.use((req, res, next) => {
 
 app.use(express.json());
 
-app.use(
-  '/trpc',
-  trpcExpress.createExpressMiddleware({ router: appRouter, createContext }),
-);
+app.use('/trpc', trpcExpress.createExpressMiddleware({ router: appRouter }));
 
 app.use('/panel', async (_, res) => {
   if (process.env.NODE_ENV !== 'development')
@@ -75,7 +72,6 @@ const wss = new WebSocketServer({ server });
 const handler = applyWSSHandler({
   wss,
   router: appRouter,
-  createContext: createWSContext,
   // Enable heartbeat messages to keep connection open
   keepAlive: {
     enabled: true,

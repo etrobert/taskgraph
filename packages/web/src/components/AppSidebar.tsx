@@ -17,37 +17,26 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { useTRPC } from '@/utils/trpc';
-import { useQuery, useMutation } from '@tanstack/react-query';
 import { Building2, Plus, MoreHorizontal } from 'lucide-react';
 import { useOrganizationId } from '../hooks/useOrganizationId';
+import { useKnownOrganizations } from '../hooks/useKnownOrganizations';
+import { useCreateOrganization } from '../hooks/useCreateOrganization';
 import { useState } from 'react';
 import { OrganizationEditDialog } from './OrganizationEditDialog';
-import type { Organization } from 'api/db/schema';
+import { Button } from './ui/button';
+import type { Organization, User } from 'api/db/schema';
 
-export function AppSidebar() {
-  const trpc = useTRPC();
-  const organizations = useQuery(trpc.organizations.queryOptions());
+interface AppSidebarProps {
+  currentUser: User;
+  onSwitchUser: () => void;
+}
+
+export function AppSidebar({ currentUser, onSwitchUser }: AppSidebarProps) {
+  const organizations = useKnownOrganizations();
   const currentOrgId = useOrganizationId();
-  const session = useQuery(trpc.me.queryOptions());
+  const createOrganization = useCreateOrganization();
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [editingOrg, setEditingOrg] = useState<Organization | null>(null);
-
-  const createOrganization = useMutation(
-    trpc.createOrganization.mutationOptions({
-      onSuccess: (newOrg) => {
-        const url = new URL(window.location.href);
-        url.searchParams.set('org', newOrg.id);
-        window.location.href = url.toString();
-      },
-    }),
-  );
-
-  const handleOrgSwitch = (orgId: string) => {
-    const url = new URL(window.location.href);
-    url.searchParams.set('org', orgId);
-    window.location.href = url.toString();
-  };
 
   const handleOpenEdit = (org: Organization) => {
     setEditingOrg(org);
@@ -60,11 +49,12 @@ export function AppSidebar() {
         <div className="flex items-center gap-2 px-4 py-2">
           <SidebarTrigger />
           <h1 className="text-lg font-semibold">TaskGraph</h1>
-          {session.data?.user ? (
-            <button>{session.data.user.name}</button>
-          ) : (
-            <button>Sign in</button>
-          )}
+        </div>
+        <div className="flex items-center justify-between gap-2 px-4">
+          <span className="truncate text-sm">{currentUser.name}</span>
+          <Button variant="ghost" size="sm" onClick={onSwitchUser}>
+            Switch
+          </Button>
         </div>
       </SidebarHeader>
       <SidebarContent>
@@ -75,28 +65,28 @@ export function AppSidebar() {
               {organizations.data?.map((organization) => (
                 <SidebarMenuItem key={organization.id}>
                   <SidebarMenuButton
-                    onClick={() => handleOrgSwitch(organization.id)}
+                    asChild
                     isActive={currentOrgId === organization.id}
                   >
-                    <Building2 size={16} />
-                    <span>{organization.name}</span>
+                    <a href={`?org=${organization.id}`}>
+                      <Building2 size={16} />
+                      <span>{organization.name}</span>
+                    </a>
                   </SidebarMenuButton>
-                  {session.data?.user?.id === organization.ownerId && (
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <SidebarMenuAction>
-                          <MoreHorizontal />
-                        </SidebarMenuAction>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent side="right" align="start">
-                        <DropdownMenuItem
-                          onClick={() => handleOpenEdit(organization)}
-                        >
-                          <span>Edit</span>
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  )}
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <SidebarMenuAction>
+                        <MoreHorizontal />
+                      </SidebarMenuAction>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent side="right" align="start">
+                      <DropdownMenuItem
+                        onClick={() => handleOpenEdit(organization)}
+                      >
+                        <span>Edit</span>
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </SidebarMenuItem>
               ))}
               <SidebarMenuItem>

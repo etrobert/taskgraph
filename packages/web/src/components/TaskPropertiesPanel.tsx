@@ -39,7 +39,12 @@ export function TaskPropertiesPanel({
       { enabled: !!organizationId },
     ),
   );
-  const { data: users } = useQuery(trpc.users.queryOptions());
+  const { data: users } = useQuery(
+    trpc.users.queryOptions(
+      { organizationId: organizationId! },
+      { enabled: !!organizationId },
+    ),
+  );
 
   const [lastKeystroke, setLastKeystroke] = useState(0);
   const [taskName, setTaskName] = useState('');
@@ -135,7 +140,7 @@ export function TaskPropertiesPanel({
                 <SelectItem value="unassigned">Unassigned</SelectItem>
                 {users?.map((user) => (
                   <SelectItem key={user.id} value={user.id}>
-                    {user.name || user.email}
+                    {user.isAi ? `🤖 ${user.name}` : user.name}
                   </SelectItem>
                 ))}
               </SelectContent>

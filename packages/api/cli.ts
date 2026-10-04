@@ -4,7 +4,4 @@ import { createCli } from 'trpc-cli';
 import { appRouter } from './src/router.js';
 
 // Create and run the CLI
-createCli({
-  router: appRouter,
-  context: { auth: null, res: null },
-}).run();
+createCli({ router: appRouter }).run();

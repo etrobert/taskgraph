@@ -49,16 +49,16 @@ export function TaskNode({ data, selected }: NodeProps<TaskNodeType>) {
           {data.assignee && (
             <div
               className="bg-primary text-primary-foreground ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-semibold"
-              title={`Assigned to ${data.assignee.name || data.assignee.email}`}
+              title={`Assigned to ${data.assignee.name}`}
             >
-              {data.assignee.name
-                ? data.assignee.name
+              {data.assignee.isAi
+                ? '🤖'
+                : data.assignee.name
                     .split(' ')
                     .map((n) => n[0])
                     .join('')
                     .toUpperCase()
-                    .slice(0, 2)
-                : data.assignee.email[0].toUpperCase()}
+                    .slice(0, 2)}
             </div>
           )}
         </div>
