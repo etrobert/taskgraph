@@ -3,7 +3,7 @@ import { publicProcedure } from '../trpc.js';
 import { requireEnv } from '../requireEnv.js';
 
 const pullRequestUrlPattern =
-  /^https:\/\/github\.com\/([^/]+)\/([^/]+)\/pull\/(\d+)/;
+  /^https:\/\/(?:www\.)?github\.com\/([^/]+)\/([^/]+)\/pull\/(\d+)/;
 
 const query = /* GraphQL */ `
   query ($owner: String!, $repo: String!, $number: Int!) {

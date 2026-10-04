@@ -4,6 +4,7 @@ import { useTRPC } from '../utils/trpc';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
 import { PullRequestStatus } from './PullRequestStatus';
+import { formatLink } from '@/lib/formatLink';
 
 interface TaskUrlFieldProps {
   nodeId: string;
@@ -43,7 +44,7 @@ export function TaskUrlField({ nodeId, url }: TaskUrlFieldProps) {
             rel="noreferrer"
             className="min-w-0 truncate text-sm text-blue-600 hover:underline"
           >
-            {url}
+            {formatLink(url)}
           </a>
           <PullRequestStatus url={url} />
         </div>
