@@ -17,6 +17,12 @@ in
       type = lib.types.port;
       description = "Port the server listens on, for the reverse proxy in front of it.";
     };
+
+    environmentFile = lib.mkOption {
+      type = lib.types.nullOr lib.types.path;
+      default = null;
+      description = "File with `GITHUB_TOKEN=...`, a read-only token for showing the pull request state of linked tasks.";
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -59,6 +65,7 @@ in
         User = "taskgraph";
         Group = "taskgraph";
         Restart = "on-failure";
+        EnvironmentFile = lib.mkIf (cfg.environmentFile != null) cfg.environmentFile;
       };
     };
   };

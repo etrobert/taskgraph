@@ -22,10 +22,12 @@ import { archiveCompleted } from './routers/archiveCompleted.js';
 import { graph } from './routers/graph.js';
 import { dragNodes } from './routers/dragNodes.js';
 import { createUser, users } from './routers/users.js';
+import { pullRequestStatus } from './routers/pullRequestStatus.js';
 
 export const appRouter = t.router({
   users,
   createUser,
+  pullRequestStatus,
 
   // Only ids the caller already holds: listing them all would leak every link.
   organizations: publicProcedure

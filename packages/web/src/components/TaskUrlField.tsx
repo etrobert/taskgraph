@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useTRPC } from '../utils/trpc';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
+import { PullRequestStatus } from './PullRequestStatus';
 
 interface TaskUrlFieldProps {
   nodeId: string;
@@ -35,14 +36,17 @@ export function TaskUrlField({ nodeId, url }: TaskUrlFieldProps) {
         }}
       />
       {url && (
-        <a
-          href={url}
-          target="_blank"
-          rel="noreferrer"
-          className="truncate text-sm text-blue-600 hover:underline"
-        >
-          {url}
-        </a>
+        <div className="flex min-w-0 items-center gap-2">
+          <a
+            href={url}
+            target="_blank"
+            rel="noreferrer"
+            className="min-w-0 truncate text-sm text-blue-600 hover:underline"
+          >
+            {url}
+          </a>
+          <PullRequestStatus url={url} />
+        </div>
       )}
     </>
   );

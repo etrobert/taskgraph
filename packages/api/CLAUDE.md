@@ -46,6 +46,8 @@ This file provides guidance for working with the TaskGraph API package.
 - `createTaskFrom` - Create task with dependencies from existing task
 - `deleteTasks` - Remove multiple tasks by IDs
 - `onTasksChange` - WebSocket subscription for real-time updates
+- `pullRequestStatus` - State and CI status of a GitHub pull request URL, or
+  null for other URLs
 
 ## Environment Setup
 
@@ -53,6 +55,7 @@ Required environment variables in `.env`:
 
 - `DATABASE_URL` - PostgreSQL connection string
 - `PORT` - Server port (defaults to 3001)
+- `GITHUB_TOKEN` - Read-only token for `pullRequestStatus`
 - `NODE_ENV` - Environment mode (development/production)
 
 ## CLI Usage
