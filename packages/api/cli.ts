@@ -1,7 +1,7 @@
 #!/usr/bin/env -S npx tsx
 import 'dotenv/config';
-import { createCli } from 'trpc-cli';
+import { createCli, lineByLineConsoleLogger } from 'trpc-cli';
 import { appRouter } from './src/router.js';
 
-// Create and run the CLI
-createCli({ router: appRouter }).run();
+// The default yaml/table logger prints Date fields as {}
+createCli({ router: appRouter }).run({ logger: lineByLineConsoleLogger });
