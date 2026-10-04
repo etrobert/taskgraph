@@ -24,6 +24,7 @@ import type { TaskNodeType } from './TaskNode';
 import { statusValues } from 'api/db/schema';
 import { HiddenDependenciesInfo } from './HiddenDependenciesInfo';
 import { TaskUrlField } from './TaskUrlField';
+import { TaskImportantField } from './TaskImportantField';
 
 interface TaskPropertiesPanelProps {
   selectedNode: TaskNodeType;
@@ -150,6 +151,11 @@ export function TaskPropertiesPanel({
             />
 
             <TaskUrlField nodeId={selectedTask.id} url={selectedTask.url} />
+
+            <TaskImportantField
+              nodeId={selectedTask.id}
+              important={selectedTask.important}
+            />
 
             <HiddenDependenciesInfo nodeId={selectedTask.id} />
 
