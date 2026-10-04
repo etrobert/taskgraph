@@ -11,8 +11,8 @@ const minute = 60 * second;
 const hour = 60 * minute;
 const day = 24 * hour;
 
-function getStaleIndicator(updatedAt: Date) {
-  const daysSinceUpdate = (Date.now() - updatedAt.getTime()) / day;
+function getStaleIndicator(updatedAt: string) {
+  const daysSinceUpdate = (Date.now() - Date.parse(updatedAt)) / day;
 
   if (daysSinceUpdate < 7) return null;
 

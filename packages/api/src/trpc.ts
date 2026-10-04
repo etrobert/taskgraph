@@ -1,7 +1,6 @@
 import { initTRPC } from '@trpc/server';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import EventEmitter from 'node:events';
-import superjson from 'superjson';
 import { requireEnv } from './requireEnv.js';
 
 export const db = drizzle({
@@ -11,7 +10,7 @@ export const db = drizzle({
 
 export const ee = new EventEmitter();
 
-export const t = initTRPC.create({ transformer: superjson });
+export const t = initTRPC.create();
 export const publicProcedure = t.procedure;
 
 export type DatabaseType = typeof db;
