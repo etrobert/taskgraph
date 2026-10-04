@@ -82,6 +82,7 @@ export const taskDetailsTable = pgTable('task_details', {
   projectId: uuid().references(() => nodesTable.id, { onDelete: 'set null' }),
   description: text(),
   url: text(),
+  important: boolean().notNull().default(false),
   assignedTo: uuid().references(() => usersTable.id, { onDelete: 'set null' }),
   updatedAt: timestamp()
     .notNull()

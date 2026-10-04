@@ -35,9 +35,11 @@ export function TaskNode({ data, selected }: NodeProps<TaskNodeType>) {
           getStatusColor(data.status),
           selected && 'border-blue-300 ring-2 ring-blue-300',
           data.archivedAt && 'border-dashed bg-gray-50',
+          data.important && 'outline-2 outline-offset-2 outline-red-500',
         )}
       >
         <div className="flex items-center gap-2">
+          {data.important && <span title="Important">❗</span>}
           <span className="cursor-pointer text-lg">
             {getStatusIcon(data.status)}
           </span>
