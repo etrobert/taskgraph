@@ -40,6 +40,7 @@
     "@eslint/js": "^10.0.1",
     "@rolldown/plugin-babel": "^0.2.4",
     "@trpc/server": "^11.5.1",
+    "@types/node": "^24.19.1",
     "@types/react": "^19.1.10",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.1.1",
