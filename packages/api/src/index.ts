@@ -42,7 +42,7 @@ app.use(express.json());
 app.use('/trpc', trpcExpress.createExpressMiddleware({ router: appRouter }));
 
 app.use(express.static(webDist));
-app.get('*', (_, res) => res.sendFile(`${webDist}/index.html`));
+app.get('/{*splat}', (_, res) => res.sendFile(`${webDist}/index.html`));
 
 // Create HTTP server
 const server = createServer(app);
