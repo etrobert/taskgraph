@@ -21,13 +21,7 @@ export const graph = publicProcedure
             ...getTableColumns(taskDetailsTable),
             nodeUpdatedAt: nodesTable.updatedAt,
             taskDetailsUpdatedAt: taskDetailsTable.updatedAt,
-            // TODO: do not list the columns manually
-            assignee: {
-              id: usersTable.id,
-              name: usersTable.name,
-              email: usersTable.email,
-              createdAt: usersTable.createdAt,
-            },
+            assignee: getTableColumns(usersTable),
           })
           .from(nodesTable)
           .innerJoin(

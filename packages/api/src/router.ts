@@ -10,14 +10,8 @@ import {
   edgesTable,
   organizationsUpdateSchema,
 } from './db/schema.js';
-import { eq, inArray, or } from 'drizzle-orm';
-import {
-  db,
-  ee,
-  t,
-  organizationOwnerProcedure,
-  publicProcedure,
-} from './trpc.js';
+import { eq, inArray } from 'drizzle-orm';
+import { db, ee, t, publicProcedure } from './trpc.js';
 import z from 'zod';
 import { on } from 'node:events';
 import { createTaskFrom } from './routers/createTaskFrom.js';
@@ -27,49 +21,47 @@ import { groupTasks } from './routers/groupTasks.js';
 import { archiveCompleted } from './routers/archiveCompleted.js';
 import { graph } from './routers/graph.js';
 import { dragNodes } from './routers/dragNodes.js';
-import { adminRouter, login, me, signup, users } from './routers/auth.js';
+import { createUser, users } from './routers/users.js';
 
 export const appRouter = t.router({
-  // TODO: Require min length for password
-  signup,
-  login,
-  me,
   users,
+  createUser,
 
-  organizations: publicProcedure.query(async ({ ctx }) => {
-    const userId = ctx.auth?.user.id;
-
-    return db
-      .select()
-      .from(organizationsTable)
-      .where(
-        or(
-          eq(organizationsTable.visibility, 'public'),
-          userId ? eq(organizationsTable.ownerId, userId) : undefined,
-        ),
-      );
-  }),
+  // Only ids the caller already holds: listing them all would leak every link.
+  organizations: publicProcedure
+    .input(z.object({ ids: z.array(z.string().uuid()) }))
+    .query(({ input: { ids } }) =>
+      db
+        .select()
+        .from(organizationsTable)
+        .where(inArray(organizationsTable.id, ids)),
+    ),
   createOrganization,
   resizeProject,
   groupTasks,
   archiveCompleted,
-  deleteOrganization: organizationOwnerProcedure.mutation(
-    async ({ input: { organizationId } }) => {
+  deleteOrganization: publicProcedure
+    .input(z.object({ organizationId: z.string().uuid() }))
+    .mutation(async ({ input: { organizationId } }) => {
       await db
         .delete(organizationsTable)
         .where(eq(organizationsTable.id, organizationId));
       ee.emit('update');
       return 'done';
-    },
-  ),
+    }),
 
-  updateOrganization: organizationOwnerProcedure
-    .input(z.object({ updates: organizationsUpdateSchema }))
-    .mutation(async ({ input: { updates }, ctx }) => {
+  updateOrganization: publicProcedure
+    .input(
+      z.object({
+        organizationId: z.string().uuid(),
+        updates: organizationsUpdateSchema,
+      }),
+    )
+    .mutation(async ({ input: { organizationId, updates } }) => {
       await db
         .update(organizationsTable)
         .set(updates)
-        .where(eq(organizationsTable.id, ctx.organization.id));
+        .where(eq(organizationsTable.id, organizationId));
       ee.emit('update');
       return 'done';
     }),
@@ -144,8 +136,6 @@ export const appRouter = t.router({
       yield 'update';
     }
   }),
-
-  ...(process.env.NODE_ENV === 'development' ? { admin: adminRouter } : {}),
 });
 
 export type AppRouter = typeof appRouter;

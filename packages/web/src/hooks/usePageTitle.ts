@@ -1,12 +1,10 @@
 import { useEffect } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { useTRPC } from '@/utils/trpc';
+import { useKnownOrganizations } from './useKnownOrganizations';
 import { useOrganizationId } from './useOrganizationId';
 
 export function usePageTitle() {
-  const trpc = useTRPC();
   const organizationId = useOrganizationId();
-  const organizations = useQuery(trpc.organizations.queryOptions());
+  const organizations = useKnownOrganizations();
 
   useEffect(() => {
     const currentOrg = organizations.data?.find(

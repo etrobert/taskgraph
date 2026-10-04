@@ -29,15 +29,19 @@ This file provides guidance for working with the TaskGraph API package.
 
 ## Database Schema
 
-- `organizations`: Top-level containers for projects
+- `organizations`: Top-level containers for projects. The id is the access key:
+  whoever has the `?org=<id>` link can read and edit, and no route lists them
+- `users`: People and AI agents (`is_ai`) of one organization; no passwords
 - `tasks`: Individual tasks with position, status, and organization reference
 - `dependencies`: Task dependency relationships
 - `projects`: Project groupings within organizations
 
 ## API Routes
 
-- `organizations` - List all organizations
-- `createOrganization` - Create new organization with default task
+- `organizations` - Get the organizations with the given ids
+- `createOrganization` - Create new organization with a default task and a
+  Claude AI user
+- `users` / `createUser` - List or add an organization's users
 - `deleteOrganization` - Remove organization by ID
 - `createTask` - Add new task to organization
 - `graph` - Get complete task graph for organization

@@ -8,6 +8,20 @@
       "when": 1791120842949,
       "tag": "0000_powerful_professor_monster",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1791122016576,
+      "tag": "0001_remove-login",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1791122020915,
+      "tag": "0002_users-per-organization",
+      "breakpoints": true
     }
   ]
 }

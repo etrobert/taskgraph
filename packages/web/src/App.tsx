@@ -1,16 +1,14 @@
 import { ReactFlowProvider } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { TaskGraphFlow } from './components/flow/TaskGraphFlow';
-import {
-  QueryClient,
-  QueryClientProvider,
-  useQuery,
-} from '@tanstack/react-query';
-import { TRPCProvider, useTRPC } from './utils/trpc';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { TRPCProvider } from './utils/trpc';
 import { SidebarProvider, SidebarTrigger } from './components/ui/sidebar';
 import { AppSidebar } from './components/AppSidebar';
-import { SignupScreen } from './components/SignupScreen';
-import { LoginScreen } from './components/LoginScreen';
+import { HomeScreen } from './components/HomeScreen';
+import { WhoAreYouScreen } from './components/WhoAreYouScreen';
+import { useOrganizationId } from './hooks/useOrganizationId';
+import { useCurrentUser } from './hooks/useCurrentUser';
 import {
   createTRPCClient,
   httpBatchLink,
@@ -73,20 +71,30 @@ function TrpcWrapper() {
 }
 
 function AppContent() {
-  const trpc = useTRPC();
-  const me = useQuery(trpc.me.queryOptions());
-  const showSignup = false; // TODO: Implement
+  const organizationId = useOrganizationId();
+  if (organizationId === undefined) return <HomeScreen />;
+  return <OrganizationContent organizationId={organizationId} />;
+}
 
-  if (me.isLoading) return <div>Loading...</div>;
-  if (me.error) return <div>Error: {me.error.message}</div>;
+function OrganizationContent({ organizationId }: { organizationId: string }) {
+  const { users, user, select } = useCurrentUser(organizationId);
 
-  // Not logged in
-  if (me.data === null) return showSignup ? <SignupScreen /> : <LoginScreen />;
+  if (users.isLoading) return <div>Loading...</div>;
+  if (users.error) return <div>Error: {users.error.message}</div>;
+
+  if (user === undefined)
+    return (
+      <WhoAreYouScreen
+        organizationId={organizationId}
+        users={users.data ?? []}
+        onSelect={select}
+      />
+    );
 
   return (
     <SidebarProvider>
       <ReactFlowProvider>
-        <AppSidebar />
+        <AppSidebar currentUser={user} onSwitchUser={() => select(null)} />
         <TaskGraphFlow />
         <SidebarTrigger className="absolute top-2 left-2" />
       </ReactFlowProvider>
