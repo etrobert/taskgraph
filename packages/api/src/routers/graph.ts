@@ -10,7 +10,7 @@ import { db, publicProcedure } from '../trpc.js';
 import { eq, and, getTableColumns } from 'drizzle-orm';
 
 export const graph = publicProcedure
-  .input(z.object({ organizationId: z.string().uuid() }))
+  .input(z.object({ organizationId: z.uuid() }))
   .query(async ({ input: { organizationId } }) => {
     try {
       const [tasksRaw, projects, dependencies] = await Promise.all([

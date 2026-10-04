@@ -4,7 +4,7 @@ import { usersTable } from '../db/schema.js';
 import { db, ee, publicProcedure } from '../trpc.js';
 
 export const users = publicProcedure
-  .input(z.object({ organizationId: z.string().uuid() }))
+  .input(z.object({ organizationId: z.uuid() }))
   .query(({ input: { organizationId } }) =>
     db
       .select()
@@ -16,7 +16,7 @@ export const users = publicProcedure
 export const createUser = publicProcedure
   .input(
     z.object({
-      organizationId: z.string().uuid(),
+      organizationId: z.uuid(),
       name: z.string().trim().min(1),
     }),
   )

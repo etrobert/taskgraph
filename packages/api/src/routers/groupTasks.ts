@@ -10,8 +10,8 @@ import { and, eq, inArray, sql } from 'drizzle-orm';
 export const groupTasks = publicProcedure
   .input(
     z.object({
-      taskIds: z.array(z.string().uuid()),
-      organizationId: z.string().uuid(),
+      taskIds: z.array(z.uuid()),
+      organizationId: z.uuid(),
       projectBounds: z.object({
         x: z.number(),
         y: z.number(),

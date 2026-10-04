@@ -24,8 +24,6 @@ This file provides guidance for working with the TaskGraph API package.
 - Real-time task updates via WebSocket subscriptions
 - Type-safe API operations with Zod validation
 - CLI interface for database operations
-- Development UI panel at `/panel` endpoint
-- Auto-generated API documentation
 
 ## Database Schema
 

@@ -29,7 +29,7 @@ export const appRouter = t.router({
 
   // Only ids the caller already holds: listing them all would leak every link.
   organizations: publicProcedure
-    .input(z.object({ ids: z.array(z.string().uuid()) }))
+    .input(z.object({ ids: z.array(z.uuid()) }))
     .query(({ input: { ids } }) =>
       db
         .select()
@@ -41,7 +41,7 @@ export const appRouter = t.router({
   groupTasks,
   archiveCompleted,
   deleteOrganization: publicProcedure
-    .input(z.object({ organizationId: z.string().uuid() }))
+    .input(z.object({ organizationId: z.uuid() }))
     .mutation(async ({ input: { organizationId } }) => {
       await db
         .delete(organizationsTable)
@@ -53,7 +53,7 @@ export const appRouter = t.router({
   updateOrganization: publicProcedure
     .input(
       z.object({
-        organizationId: z.string().uuid(),
+        organizationId: z.uuid(),
         updates: organizationsUpdateSchema,
       }),
     )
@@ -67,9 +67,7 @@ export const appRouter = t.router({
     }),
 
   updateProjectDetails: publicProcedure
-    .input(
-      z.object({ id: z.string().uuid(), updates: projectDetailsUpdateSchema }),
-    )
+    .input(z.object({ id: z.uuid(), updates: projectDetailsUpdateSchema }))
     .mutation(async ({ input: { id, updates } }) => {
       await db
         .update(projectDetailsTable)
@@ -94,7 +92,7 @@ export const appRouter = t.router({
   dragNodes,
 
   updateNode: publicProcedure
-    .input(z.object({ id: z.string().uuid(), updates: nodesUpdateSchema }))
+    .input(z.object({ id: z.uuid(), updates: nodesUpdateSchema }))
     .mutation(async ({ input: { id, updates } }) => {
       await db.update(nodesTable).set(updates).where(eq(nodesTable.id, id));
       ee.emit('update');
@@ -102,9 +100,7 @@ export const appRouter = t.router({
     }),
 
   updateTaskDetails: publicProcedure
-    .input(
-      z.object({ nodeId: z.string().uuid(), updates: taskDetailsUpdateSchema }),
-    )
+    .input(z.object({ nodeId: z.uuid(), updates: taskDetailsUpdateSchema }))
     .mutation(async ({ input: { nodeId, updates } }) => {
       await db
         .update(taskDetailsTable)
@@ -115,7 +111,7 @@ export const appRouter = t.router({
     }),
 
   deleteNodes: publicProcedure
-    .input(z.array(z.string().uuid()))
+    .input(z.array(z.uuid()))
     .mutation(async ({ input }) => {
       await db.delete(nodesTable).where(inArray(nodesTable.id, input));
       ee.emit('update');
@@ -123,7 +119,7 @@ export const appRouter = t.router({
     }),
 
   deleteEdges: publicProcedure
-    .input(z.array(z.string().uuid()))
+    .input(z.array(z.uuid()))
     .mutation(async ({ input }) => {
       await db.delete(edgesTable).where(inArray(edgesTable.id, input));
       ee.emit('update');

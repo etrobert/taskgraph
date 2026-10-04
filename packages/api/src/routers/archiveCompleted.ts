@@ -8,7 +8,7 @@ import { eq, and, isNull, inArray } from 'drizzle-orm';
 import z from 'zod';
 
 export const archiveCompleted = publicProcedure
-  .input(z.object({ organizationId: z.string().uuid() }))
+  .input(z.object({ organizationId: z.uuid() }))
   .mutation(async ({ input: { organizationId } }) => {
     const now = new Date();
 

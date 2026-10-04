@@ -13,10 +13,10 @@ export const createTaskFrom = publicProcedure
   .input(
     z.object({
       position: z.object({ x: z.number(), y: z.number() }),
-      organizationId: z.string().uuid(),
-      from: z.string().uuid(),
+      organizationId: z.uuid(),
+      from: z.uuid(),
       newTaskType: z.enum(['blocking', 'blocked']),
-      projectId: z.string().uuid().optional(),
+      projectId: z.uuid().optional(),
     }),
   )
   .mutation(

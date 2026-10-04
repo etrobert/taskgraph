@@ -10,7 +10,7 @@ import z from 'zod';
 export const resizeProject = publicProcedure
   .input(
     z.object({
-      id: z.string().uuid(),
+      id: z.uuid(),
       position: z.object({ x: z.number(), y: z.number() }),
       width: z.number(),
       height: z.number(),
