@@ -114,7 +114,8 @@ export function ProjectPropertiesPanel({
               <>
                 <Label>Archive Information</Label>
                 <div className="text-muted-foreground text-sm">
-                  Archived: {selectedProject.archivedAt.toLocaleString()}
+                  Archived:{' '}
+                  {new Date(selectedProject.archivedAt).toLocaleString()}
                 </div>
               </>
             )}

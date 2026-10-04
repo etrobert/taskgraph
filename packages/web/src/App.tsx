@@ -16,7 +16,6 @@ import {
   wsLink,
 } from '@trpc/client';
 import { useState } from 'react';
-import superjson from 'superjson';
 import { createWSClient } from '@trpc/client';
 import type { AppRouter } from 'api/src/index';
 
@@ -52,11 +51,9 @@ function TrpcWrapper() {
           condition: (op) => op.type === 'subscription',
           true: wsLink({
             client: wsClient,
-            transformer: superjson,
           }),
           false: httpBatchLink({
             url: '/trpc',
-            transformer: superjson,
           }),
         }),
       ],

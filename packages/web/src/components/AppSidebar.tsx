@@ -24,7 +24,7 @@ import { useCreateOrganization } from '../hooks/useCreateOrganization';
 import { useState } from 'react';
 import { OrganizationEditDialog } from './OrganizationEditDialog';
 import { Button } from './ui/button';
-import type { Organization, User } from 'api/db/schema';
+import type { Organization, User } from '@/utils/trpc';
 
 interface AppSidebarProps {
   currentUser: User;

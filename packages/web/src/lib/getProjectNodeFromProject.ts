@@ -1,7 +1,7 @@
-import type { ExtendedProject } from 'api/src/db/schema';
+import type { Project } from '@/utils/trpc';
 
 export const getProjectNodeFromProject = (
-  { id, position, width, height, ...data }: ExtendedProject,
+  { id, position, width, height, ...data }: Project,
   selection: { id: string }[],
 ) =>
   ({

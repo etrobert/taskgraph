@@ -1,7 +1,7 @@
 import { useState, type FormEventHandler } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTRPC } from '@/utils/trpc';
-import type { User } from 'api/db/schema';
+import type { User } from '@/utils/trpc';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { FullScreenCard } from './FullScreenCard';

@@ -167,7 +167,7 @@ export function TaskPropertiesPanel({
               <>
                 <Label>Archive Information</Label>
                 <div className="text-muted-foreground text-sm">
-                  Archived: {selectedTask.archivedAt.toLocaleString()}
+                  Archived: {new Date(selectedTask.archivedAt).toLocaleString()}
                 </div>
               </>
             )}
