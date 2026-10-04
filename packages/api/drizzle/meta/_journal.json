@@ -22,6 +22,13 @@
       "when": 1791122020915,
       "tag": "0002_users-per-organization",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1791126361231,
+      "tag": "0003_task-url",
+      "breakpoints": true
     }
   ]
 }

@@ -14,6 +14,7 @@ import {
   createSelectSchema,
   createUpdateSchema,
 } from 'drizzle-zod';
+import z from 'zod';
 
 export const statusValues = [
   'pending',
@@ -80,6 +81,7 @@ export const taskDetailsTable = pgTable('task_details', {
   status: statusEnum().notNull(),
   projectId: uuid().references(() => nodesTable.id, { onDelete: 'set null' }),
   description: text(),
+  url: text(),
   assignedTo: uuid().references(() => usersTable.id, { onDelete: 'set null' }),
   updatedAt: timestamp()
     .notNull()
@@ -99,8 +101,14 @@ export const projectDetailsTable = pgTable('project_details', {
 export const nodesSelectSchema = createSelectSchema(nodesTable);
 export const nodesUpdateSchema = createUpdateSchema(nodesTable);
 export const nodesInsertSchema = createInsertSchema(nodesTable);
-export const taskDetailsUpdateSchema = createUpdateSchema(taskDetailsTable);
-export const taskDetailsInsertSchema = createInsertSchema(taskDetailsTable);
+// http(s) only: the url is rendered as a link, so javascript: must not get in
+const taskUrl = () => z.url({ protocol: /^https?$/ });
+export const taskDetailsUpdateSchema = createUpdateSchema(taskDetailsTable, {
+  url: taskUrl,
+});
+export const taskDetailsInsertSchema = createInsertSchema(taskDetailsTable, {
+  url: taskUrl,
+});
 export const projectDetailsUpdateSchema =
   createUpdateSchema(projectDetailsTable);
 export const projectDetailsInsertSchema =

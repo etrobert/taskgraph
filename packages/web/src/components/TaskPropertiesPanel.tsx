@@ -23,6 +23,7 @@ import type { TaskNodeData } from '@/lib/getTaskNodeFromTask';
 import type { TaskNodeType } from './TaskNode';
 import { statusValues } from 'api/db/schema';
 import { HiddenDependenciesInfo } from './HiddenDependenciesInfo';
+import { TaskUrlField } from './TaskUrlField';
 
 interface TaskPropertiesPanelProps {
   selectedNode: TaskNodeType;
@@ -147,6 +148,8 @@ export function TaskPropertiesPanel({
               onBlur={() => setDraftDescription(undefined)}
               className="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive min-h-[6rem] w-full min-w-0 rounded-md border bg-transparent px-3 py-2 text-base shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
             />
+
+            <TaskUrlField nodeId={selectedTask.id} url={selectedTask.url} />
 
             <HiddenDependenciesInfo nodeId={selectedTask.id} />
 

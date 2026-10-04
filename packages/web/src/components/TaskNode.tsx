@@ -67,6 +67,16 @@ export function TaskNode({ data, selected }: NodeProps<TaskNodeType>) {
             {data.description}
           </p>
         )}
+        {data.url && (
+          <a
+            href={data.url}
+            target="_blank"
+            rel="noreferrer"
+            className="mt-1 block max-w-[180px] truncate text-xs text-blue-600 hover:underline"
+          >
+            🔗 {data.url.replace(/^https?:\/\//, '')}
+          </a>
+        )}
       </div>
       <FlowHandle type="source" position={Position.Right} />
     </div>
