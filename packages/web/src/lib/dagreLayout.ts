@@ -48,11 +48,14 @@ export const applyDagreLayout = (
       y: parentNode.y - parentNode.height / 2,
     };
 
+    // A task pinned to its measured size, rounded to whole pixels, truncates its label
+    const isProject = node.type === 'project';
+
     return {
       ...node,
       hidden: isHidden(node),
-      width: width === 0 ? undefined : width,
-      height: height === 0 ? undefined : height,
+      width: isProject && width !== 0 ? width : undefined,
+      height: isProject && height !== 0 ? height : undefined,
       position: {
         x: x - width / 2 - parentPos.x,
         y: y - height / 2 - parentPos.y,
