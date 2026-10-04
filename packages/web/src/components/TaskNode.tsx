@@ -3,6 +3,7 @@ import { type Node, Position, type NodeProps } from '@xyflow/react';
 import { type TaskNodeData } from '@/lib/getTaskNodeFromTask';
 import { getStatusColor, getStatusIcon } from '@/lib/statusHelpers';
 import { FlowHandle } from './flow/FlowHandle';
+import { PullRequestStatus } from './PullRequestStatus';
 
 export type TaskNodeType = Node<TaskNodeData, 'task'>;
 
@@ -70,14 +71,17 @@ export function TaskNode({ data, selected }: NodeProps<TaskNodeType>) {
           </p>
         )}
         {data.url && (
-          <a
-            href={data.url}
-            target="_blank"
-            rel="noreferrer"
-            className="mt-1 block max-w-[180px] truncate text-xs text-blue-600 hover:underline"
-          >
-            🔗 {data.url.replace(/^https?:\/\//, '')}
-          </a>
+          <div className="mt-1 flex items-center gap-2">
+            <a
+              href={data.url}
+              target="_blank"
+              rel="noreferrer"
+              className="block max-w-[180px] truncate text-xs text-blue-600 hover:underline"
+            >
+              🔗 {data.url.replace(/^https?:\/\//, '')}
+            </a>
+            <PullRequestStatus url={data.url} />
+          </div>
         )}
       </div>
       <FlowHandle type="source" position={Position.Right} />
