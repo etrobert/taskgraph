@@ -4,6 +4,7 @@ import { type TaskNodeData } from '@/lib/getTaskNodeFromTask';
 import { getStatusColor, getStatusIcon } from '@/lib/statusHelpers';
 import { FlowHandle } from './flow/FlowHandle';
 import { PullRequestStatus } from './PullRequestStatus';
+import { formatLink } from '@/lib/formatLink';
 
 export type TaskNodeType = Node<TaskNodeData, 'task'>;
 
@@ -78,7 +79,7 @@ export function TaskNode({ data, selected }: NodeProps<TaskNodeType>) {
               rel="noreferrer"
               className="block max-w-[180px] truncate text-xs text-blue-600 hover:underline"
             >
-              🔗 {data.url.replace(/^https?:\/\//, '')}
+              🔗 {formatLink(data.url)}
             </a>
             <PullRequestStatus url={data.url} />
           </div>
