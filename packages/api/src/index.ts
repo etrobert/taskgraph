@@ -103,4 +103,7 @@ process.on('SIGTERM', () => {
   console.log('SIGTERM');
   handler.broadcastReconnectNotification();
   wss.close();
+  server.close(() => process.exit(0));
+  // Upgraded WebSocket sockets would otherwise keep server.close() waiting.
+  for (const client of wss.clients) client.terminate();
 });
